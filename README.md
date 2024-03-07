@@ -1,71 +1,103 @@
-# heykeploy README
+# Keploy-VsCode 
 
-This is the README for your extension "heykeploy". After writing up a brief description, we recommend including the following sections.
+Try it out: [Vscode Extension](https://marketplace.visualstudio.com/items?itemName=Akash-Singh04.heykeploy)
+
+### NOTE : This Extension is a prototype and not ready for productions uses.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Keploy-VsCode offers the following features:
 
-For example if there is an image subfolder under your extension project workspace:
+- **Keploy Record** :  Record Testcases with Keploy 
+- **Keploy Test** : Replay Recorded Testcases with Keploy
+- **Keploy Update** :  Update your Keploy to the latest version
+- **Keploy Version Display**: Get the latest version of Keploy directly in your Visual Studio Code.
 
-\!\[feature X\]\(images/feature-x.png\)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 2.1.0
+-  Wrote Integration tests for the extension
+-  Implemented Integration tests In CI pipeline
 
-### 1.0.0
 
-Initial release of ...
+### 2.0.0
+- Added support for Keploy Test Command
 
-### 1.0.1
-
-Fixed issue #.
+### 1.2.2
+- Added support for installing Keploy
+- Better UI Updates
 
 ### 1.1.0
+- Added Support for Keploy Record
 
-Added features X, Y, and Z.
+### 1.0.0
+- Integrated Svelte using rollup instead of using plain HTML!
 
----
+### 0.2.2
+- Added better error handling.
+- More UI updates
 
-## Following extension guidelines
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+### 0.2.0
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+- Added support for docker and other OS
 
-## Working with Markdown
+### 0.1.3
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+- Added check for current keploy version
+- Added better error Handling 
 
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
+### 0.1.2
 
-## For more information
+- Added Keploy Update to update the keploy binary 
 
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+### 0.1.1
 
-**Enjoy!**
+- Added Css Styling and logo
+- Added boilerplate for keploy update
+
+### 0.1.0
+
+- Added SidePanel View to extension
+- Created button to fetch latest keploy version
+
+### 0.0.3
+
+- Added link to Keploy repository
+
+### 0.0.2
+
+- Added Keploy logo.
+- Added Github Actions workflow to automatically publish to VScode Marketplace
+
+### 0.0.1
+
+- Initial release of Keploy-VsCode.
+- Added functionality to display the latest Keploy version.
+
+
+## Limitations
+
+Currently there is no way for us to know if the executed command in the terminal was successful or not as the VScode Terminal API has depricated [Terminal.onDidWriteData](https://github.com/microsoft/vscode/issues/78574): 
+
+Reference: [Issue](https://stackoverflow.com/a/62774501)
+
+A workaround patch for this is documented here, which i have implemented partially in my code in conjuction with the VSCode Terminal API: [Solution](https://stackoverflow.com/a/67732928)
+
+## Requirements
+
+There are no specific requirements or dependencies for using Keploy-VsCode. Simply install the extension and start enjoying its features!
+
+## Extension Settings
+
+Keploy-VsCode doesn't add any custom settings to Visual Studio Code at the moment.
+
+## Following Extension Guidelines
+
+Keploy-VsCode follows the [Visual Studio Code Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines) to ensure a seamless experience for users.
+
+
+
+Enjoy using Keploy-VsCode! If you find it helpful, consider leaving a review or starring the repository on GitHub. Thank you!

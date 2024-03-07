@@ -1,5 +1,6 @@
-out
 dist
 node_modules
 .vscode-test/
-*.vsix
+keploy_record_script.log
+keploy_test_script.log
+intellijpublish.yml

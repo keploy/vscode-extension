@@ -1,17 +1,24 @@
 {
 	"compilerOptions": {
-		"module": "Node16",
-		"target": "ES2022",
+		"module": "commonjs",
+		"target": "es6",
 		"outDir": "out",
 		"lib": [
-			"ES2022"
+			"es6" , "dom"
 		],
 		"sourceMap": true,
 		"rootDir": "src",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
 		"strict": true   /* enable all strict type-checking options */
 		/* Additional Checks */
 		// "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
 		// "noFallthroughCasesInSwitch": true, /* Report errors for fallthrough cases in switch statement. */
 		// "noUnusedParameters": true,  /* Report errors on unused parameters. */
-	}
+	},
+	"exclude": [
+		"webviews",
+		"node_modules",
+		".vscode-test"
+	]
 }
