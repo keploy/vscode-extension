@@ -2,7 +2,7 @@
   "name": "heykeploy",
   "displayName": "Keploy VSCode Extension",
   "description": "Hello Keploy Community!",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "publisher": "Akash-Singh04",
   "icon": "media/logo.png",
   "repository": {

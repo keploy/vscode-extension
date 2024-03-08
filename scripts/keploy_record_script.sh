@@ -18,7 +18,7 @@ else
     keploycmd="/usr/local/bin/keploybin"
 fi
 # Execute the keploy record command, redirecting output to the log file
-$keploycmd record -c "$command" "$filepath" | tee -a "$log_file_path"
+sudo $keploycmd record -c "$command" "$filepath" | tee -a "$log_file_path"
 # keploy record -c "/home/akash/Desktop/samples-go/gin-mongo/test-app-url-shortener" | tee -a "$log_file_path" 
 
 

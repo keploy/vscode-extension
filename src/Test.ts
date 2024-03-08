@@ -90,11 +90,11 @@ export async function startTesting(command: string, filepath: string,wslscriptPa
 
                 terminal.show();
                 if (process.platform === 'win32') {
-                    const testCmd = `${wslscriptPath} ${command} "${filepath}" ${wsllogfilePath} ;exit 0 `;
+                    const testCmd = `${wslscriptPath} "${command}" "${filepath}" "${wsllogfilePath}" ;exit 0 `;
                     terminal.sendText(testCmd);
                 }
                 else{
-                const testCmd = `sudo ${scriptPath} ${command} "${filepath}" ${logfilePath} ;exit 0 `;
+                const testCmd = `sudo ${scriptPath} "${command}" "${filepath}" "${logfilePath}" ;exit 0 `;
                 // const exitCmd = 'exit';
                 terminal.sendText(testCmd);
                 }

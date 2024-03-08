@@ -75,11 +75,11 @@ export async function startRecording(command: string, filepath: string,wslscript
 
                 terminal.show();
                 if (process.platform === 'win32'){
-                    const recordCmd = `${wslscriptPath} ${command} "${filepath}" ${wsllogfilePath} ; exit 0`;
+                    const recordCmd = `${wslscriptPath} "${command}" "${filepath}" "${wsllogfilePath}" ; exit 0`;
                     terminal.sendText(recordCmd);
                 }
                 else{
-                    const recordCmd = `sudo ${scriptPath} ${command} "${filepath}" ${logfilePath} ; exit 0`;
+                    const recordCmd = `sudo ${scriptPath} "${command}" "${filepath}" "${logfilePath}" ; exit 0`;
                 // const exitCmd = 'exit';
                 terminal.sendText(recordCmd);
                 }
