@@ -98,7 +98,7 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Installing Keploy binary...');
-                        yield (0, updateKeploy_1.downloadAndInstallKeployBinary)("https://github.com/keploy/keploy/releases/latest/download/keploy_linux_amd64.tar.gz", (_d = this._view) === null || _d === void 0 ? void 0 : _d.webview);
+                        yield (0, updateKeploy_1.downloadAndInstallKeployBinary)((_d = this._view) === null || _d === void 0 ? void 0 : _d.webview);
                         (_e = this._view) === null || _e === void 0 ? void 0 : _e.webview.postMessage({ type: 'success', value: 'Keploy binary installed!' });
                     }
                     catch (error) {

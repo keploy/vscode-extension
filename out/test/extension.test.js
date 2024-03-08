@@ -133,9 +133,6 @@ suite('Sidebar Test Suite', () => {
         sidebarProvider.resolveWebviewView(view);
         // Ensure that the webview content is set correctly
         assert_1.strict.strictEqual(webview.html.includes('<link href="http://www.example.com/some/path/media/vscode.css" rel="stylesheet">'), true);
-        // assert.strictEqual(webview.html.includes('<button id="updateKeployButton">Update Your Keploy</button>'), true);
-        // assert.strictEqual(webview.html.includes('<button id="recordButton">Record Test Cases</button>'), true);
-        // assert.strictEqual(webview.html.includes('<button id="testButton">Run Test Cases</button>'), true);
     }));
 });
 //# sourceMappingURL=extension.test.js.map
