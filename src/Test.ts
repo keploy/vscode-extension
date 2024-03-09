@@ -22,6 +22,11 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
         const startIndex = logLines.findIndex(line => line.includes('COMPLETE TESTRUN SUMMARY.'));
         if (startIndex === -1) {
             console.log('Start index not found');
+            webview.postMessage({
+                type: 'testResults',
+                value: 'Test Failed',
+                textSummary: "Error Replaying Test Cases. Please try again."
+            });
             return;
         }
 
@@ -29,6 +34,11 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
         const endIndex = logLines.findIndex((line, index) => index > startIndex && line.includes('<=========================================>'));
         if (endIndex === -1) {
             console.log('End index not found');
+            webview.postMessage({
+                type: 'testResults',
+                value: 'Test Failed',
+                textSummary: "Error Replaying Test Cases. Please try again."
+            });
             return;
         }
 
@@ -39,7 +49,7 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
             webview.postMessage({
                 type: 'testResults',
                 value: 'Test Failed',
-                textSummary: "Error testing. Please try again."
+                textSummary: "Error Replaying Test Cases. Please try again."
             });
             return;
         }
@@ -49,6 +59,8 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
         console.log(cleanSummary);
         const testSummaryList = cleanSummary.split('\n');
         console.log(testSummaryList);
+        //remove last line of summary which is pattern
+        testSummaryList.pop();
         testSummaryList.forEach((line, index) => {
             webview.postMessage({
                 type: 'testResults',
