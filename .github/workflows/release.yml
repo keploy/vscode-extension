@@ -1,10 +1,10 @@
 name: Release
 
 on:
-    workflow_run:
-      workflows: ["Test VsCode Extension"]
-      types:
-        - completed
+  workflow_run:
+    workflows: ["Disabled"]
+    types:
+      - completed
 
 jobs:
   package:
@@ -43,16 +43,18 @@ jobs:
       - name: Setup tag
         id: setup-tag
         run: |
-          $version = (Get-Content ./package.json -Raw | ConvertFrom-Json).version
-          Write-Host "tag: release/$version"
-          Write-Host "::set-output name=tag::release/$version"
-          Write-Host "::set-output name=version::$version"
-        shell: pwsh 
+          version=$(node -p "require('./package.json').version")
+          majorVersion=$(echo $version | cut -d '.' -f 1)
+          echo "tag: release/$majorVersion"
+          echo "::set-output name=tag::release/$majorVersion"
+          echo "::set-output name=version::$version"
+        shell: bash
   
   publishGH:
     name: Publish to GitHub releases
     runs-on: ubuntu-latest
     needs: package
+    if: startsWith(needs.package.outputs.tag, 'release/') && needs.package.outputs.tag != github.ref
     steps:
       - uses: actions/download-artifact@v2
         with:

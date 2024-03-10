@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -i
 
 # Command to execute
 command="$1"
@@ -11,14 +11,17 @@ touch "$log_file_path"
 
 # Set permissions of the log file
 chmod 666 "$log_file_path"
-# Check if the current operating system is Windows
-if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+
+keploycmd="/usr/local/bin/keploybin"
+
+# Check if keploy command is available in PATH
+
+if command -v keploy &> /dev/null; then
     keploycmd="keploy"
-else
-    keploycmd="/usr/local/bin/keploybin"
 fi
+
 # Execute the keploy record command, redirecting output to the log file
 sudo $keploycmd record -c "$command" "$filepath" | tee -a "$log_file_path"
-# keploy record -c "/home/akash/Desktop/samples-go/gin-mongo/test-app-url-shortener" | tee -a "$log_file_path" 
+# $keploycmd  record -c "/home/akash/Desktop/samples-go/gin-mongo/test-app-url-shortener" | tee -a "$log_file_path" 
 
 
