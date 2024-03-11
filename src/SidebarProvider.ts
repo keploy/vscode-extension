@@ -4,12 +4,20 @@ import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDo
 import { startRecording , stopRecording } from './Record';
 import { startTesting , stopTesting } from "./Test";
 
-const options: vscode.OpenDialogOptions = {
-  canSelectFiles: true,
+const recordOptions: vscode.OpenDialogOptions = {
+  canSelectFolders: true,
   canSelectMany: false,
-  openLabel: 'Select file to record test cases for',
-  title: 'Select file to record test cases for',
+  openLabel: 'Select folder to record test cases for',
+  title: 'Select folder to record test cases for',
 };
+
+const testOptions: vscode.OpenDialogOptions = {
+  canSelectFolders: true,
+  canSelectMany: false,
+  openLabel: 'Select folder to run test cases for',
+  title: 'Select folder to run test cases for',
+};
+
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
@@ -96,7 +104,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             return;
           } try {
             console.log('Record button clicked');
-            vscode.window.showOpenDialog(options).then(async fileUri => {
+            vscode.window.showOpenDialog(recordOptions).then(async fileUri => {
               if (fileUri && fileUri[0]) {
                 console.log('Selected file: ' + fileUri[0].fsPath);
                 this._view?.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
@@ -164,7 +172,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Test button clicked');
-            vscode.window.showOpenDialog(options).then(async fileUri => {
+            vscode.window.showOpenDialog(testOptions).then(async fileUri => {
               if (fileUri && fileUri[0]) {
                 console.log('Selected file: ' + fileUri[0].fsPath);
                 this._view?.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });

@@ -17,6 +17,9 @@ Keploy-VsCode offers the following features:
 
 ## Release Notes
 
+## 2.2.0
+- Bug Fixes, UI imporvements, Script Improvements
+
 ### 2.1.0
 -  Wrote Integration tests for the extension
 -  Implemented Integration tests In CI pipeline

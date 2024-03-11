@@ -11,15 +11,24 @@
   
 version: 2.0.0-alpha76
 
-🐰 Keploy: 2024-03-11T02:29:55+05:30 	[34mINFO[0m	Keploy config not found, continuing without configuration
-🐰 Keploy: 2024-03-11T02:29:55+05:30 	[34mINFO[0m		{"keploy test and mock path": "/home/akash/keploy"}
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Proxy started at port:16789
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[31mERROR[0m	userApplication failed to run with the following error. Please check application logs	{"error": "exit status 127"}
-🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Exiting keploy program gracefully.
-🐰 Keploy: 2024-03-11T02:29:59+05:30 	[34mINFO[0m	eBPF resources released successfully...
-🐰 Keploy: 2024-03-11T02:29:59+05:30 	[34mINFO[0m	Tcp Dns server stopped
-🐰 Keploy: 2024-03-11T02:29:59+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-03-12T03:25:30+05:30 	[34mINFO[0m	Keploy config not found, continuing without configuration
+🐰 Keploy: 2024-03-12T03:25:30+05:30 	[34mINFO[0m		{"keploy test and mock path": "/home/akash/Desktop/samples-go/gin-mongo/keploy"}
+🐰 Keploy: 2024-03-12T03:25:32+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	Received signal to exit keploy program..
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	keploy has initiated the shutdown of the user application.
+🐰 Keploy: 2024-03-12T03:25:33+05:30 	[34mINFO[0m	keploy terminated user application
+🐰 Keploy: 2024-03-12T03:25:34+05:30 	[34mINFO[0m	eBPF resources released successfully...
+🐰 Keploy: 2024-03-12T03:25:34+05:30 	[34mINFO[0m	Tcp Dns server stopped
+🐰 Keploy: 2024-03-12T03:25:34+05:30 	[34mINFO[0m	proxy stopped...

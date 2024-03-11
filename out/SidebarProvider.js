@@ -38,11 +38,17 @@ const getNonce_1 = require("./getNonce");
 const updateKeploy_1 = require("./updateKeploy");
 const Record_1 = require("./Record");
 const Test_1 = require("./Test");
-const options = {
-    canSelectFiles: true,
+const recordOptions = {
+    canSelectFolders: true,
     canSelectMany: false,
-    openLabel: 'Select file to record test cases for',
-    title: 'Select file to record test cases for',
+    openLabel: 'Select folder to record test cases for',
+    title: 'Select folder to record test cases for',
+};
+const testOptions = {
+    canSelectFolders: true,
+    canSelectMany: false,
+    openLabel: 'Select folder to run test cases for',
+    title: 'Select folder to run test cases for',
 };
 class SidebarProvider {
     constructor(_extensionUri) {
@@ -125,7 +131,7 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Record button clicked');
-                        vscode.window.showOpenDialog(options).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
+                        vscode.window.showOpenDialog(recordOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
                             var _s;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
@@ -193,7 +199,7 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Test button clicked');
-                        vscode.window.showOpenDialog(options).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
+                        vscode.window.showOpenDialog(testOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
                             var _t;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);

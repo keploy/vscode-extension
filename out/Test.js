@@ -174,7 +174,7 @@ function stopTesting() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.sendText("^C");
+            (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.dispose();
             return;
         }
         catch (error) {

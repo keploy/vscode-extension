@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0] - 2024-03-12
+
+- Bug Fixes, UI imporvements, Script Improvements
+
+
+
 ## [2.0.0] - 2024-03-07
 
 -  Added Support for Test command

@@ -58,7 +58,7 @@ function downloadAndUpdate(downloadUrl, webview) {
             });
         }
         catch (error) {
-            if (error.toString().includes("keploybin: not found") || error.toString().includes("keploybin: command not found") || error.toString().includes("keploybin: no such file or directory")) {
+            if (error.toString().toLowerCase().includes("not found") || error.toString().toLowerCase().includes("command not found") || error.toString().toLowerCase().includes("no such file or directory")) {
                 //post message to webview
                 webview.postMessage({ type: 'onError', value: `Keploy binary not found. Installing Keploy binary first.` });
                 downloadAndInstallKeployBinary(webview).then(() => {

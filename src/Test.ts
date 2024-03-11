@@ -138,7 +138,7 @@ export async function startTesting(command: string, filepath: string,wslscriptPa
 
 export async function stopTesting(): Promise<void> {
     try {
-        vscode.window.activeTerminal?.sendText("^C");
+        vscode.window.activeTerminal?.dispose();
         return;
     }
     catch (error) {

@@ -48,7 +48,7 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
 
 export async function stopRecording(){
     try{
-    vscode.window.activeTerminal?.sendText("^C");
+    vscode.window.activeTerminal?.dispose();
     return;
     }
     catch(error){
