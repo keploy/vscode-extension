@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import getKeployVersion from './version';
+import {getKeployVersion} from './version';
 import { SidebarProvider } from './SidebarProvider';
 
 

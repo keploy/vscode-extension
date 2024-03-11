@@ -1,0 +1,25 @@
+
+       ▓██▓▄
+    ▓▓▓▓██▓█▓▄
+     ████████▓▒
+          ▀▓▓███▄      ▄▄   ▄               ▌
+         ▄▌▌▓▓████▄    ██ ▓█▀  ▄▌▀▄  ▓▓▌▄   ▓█  ▄▌▓▓▌▄ ▌▌   ▓
+       ▓█████████▌▓▓   ██▓█▄  ▓█▄▓▓ ▐█▌  ██ ▓█  █▌  ██  █▌ █▓
+      ▓▓▓▓▀▀▀▀▓▓▓▓▓▓▌  ██  █▓  ▓▌▄▄ ▐█▓▄▓█▀ █▓█ ▀█▄▄█▀   █▓█
+       ▓▌                           ▐█▌                   █▌
+        ▓
+  
+version: 2.0.0-alpha76
+
+🐰 Keploy: 2024-03-11T02:29:55+05:30 	[34mINFO[0m	Keploy config not found, continuing without configuration
+🐰 Keploy: 2024-03-11T02:29:55+05:30 	[34mINFO[0m		{"keploy test and mock path": "/home/akash/keploy"}
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[31mERROR[0m	userApplication failed to run with the following error. Please check application logs	{"error": "exit status 127"}
+🐰 Keploy: 2024-03-11T02:29:58+05:30 	[34mINFO[0m	Exiting keploy program gracefully.
+🐰 Keploy: 2024-03-11T02:29:59+05:30 	[34mINFO[0m	eBPF resources released successfully...
+🐰 Keploy: 2024-03-11T02:29:59+05:30 	[34mINFO[0m	Tcp Dns server stopped
+🐰 Keploy: 2024-03-11T02:29:59+05:30 	[34mINFO[0m	proxy stopped...

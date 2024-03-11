@@ -22,13 +22,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
-const version_1 = __importDefault(require("./version"));
+const version_1 = require("./version");
 const SidebarProvider_1 = require("./SidebarProvider");
 function activate(context) {
     const logo = `
@@ -54,7 +51,7 @@ function activate(context) {
         vscode.ViewColumn.One, // Editor column to show the new  panel in
         {});
         // Get the Keploy version and update the Webview content
-        (0, version_1.default)().then(version => {
+        (0, version_1.getKeployVersion)().then(version => {
             panel.webview.html = `
                 <html>
                     <body>

@@ -223,12 +223,14 @@ window.addEventListener('message', event => {
   }
   else if (message.type === 'testcaserecorded') {
     console.log("message.textContent", message.textContent);
+    stopRecordingButton.style.display = 'none';
     const testCaseElement = document.createElement('p');
     testCaseElement.textContent = message.textContent;
     recordedTestCasesDiv.appendChild(testCaseElement); // Append the testCaseElement itself instead of its text content
   }
   else if(message.type === "testResults"){
-    console.log("message.value", message.value);
+      console.log("message.value", message.value);
+      stopTestButton.style.display = 'none';
       console.log("message.textSummary", message.textSummary);
       const testCaseElement = document.createElement('pre');
       testCaseElement.textContent = message.textSummary;

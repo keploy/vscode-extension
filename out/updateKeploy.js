@@ -31,34 +31,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.downloadAndInstallKeployBinary = exports.downloadAndUpdateDocker = exports.downloadAndUpdate = void 0;
 const vscode = __importStar(require("vscode"));
-const execShell_1 = require("./execShell");
-const version_1 = __importDefault(require("./version"));
+const version_1 = require("./version");
 function downloadAndUpdate(downloadUrl, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let output = '';
-            if (process.platform === 'win32') {
-                output = yield (0, execShell_1.execShell)('keploy  --version');
-            }
-            else {
-                output = yield (0, execShell_1.execShell)('/usr/local/bin/keploybin --version');
-            }
-            // const output = await execShell('alias keploy');
-            console.log('output:', output);
-            const keployIndex = output.indexOf('Keploy');
-            console.log('keployIndex:', keployIndex);
-            let keployVersion = '';
-            if (keployIndex !== -1) {
-                keployVersion = output.substring(keployIndex + 'Keploy'.length).trim();
-            }
-            console.log('Current Keploy version:', keployVersion);
-            const latestVersion = yield (0, version_1.default)();
+            const keployVersion = yield (0, version_1.getCurrentKeployVersion)();
+            const latestVersion = yield (0, version_1.getKeployVersion)();
             // Remove "v" from the beginning of the latest version string, if present
             const formattedLatestVersion = latestVersion.startsWith('v') ? latestVersion.substring(1) : latestVersion;
             console.log('Latest Keploy version:', formattedLatestVersion);
@@ -117,7 +98,7 @@ function downloadAndUpdateDocker() {
                 });
                 // Show the terminal
                 terminal.show();
-                const dockerCmd = 'docker pull ghcr.io/keploy/keploy:latest && exit 0';
+                const dockerCmd = 'docker pull ghcr.io/keploy/keploy:latest ; exit 0';
                 terminal.sendText(dockerCmd);
                 vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
                 // Listen for terminal close event
@@ -130,7 +111,8 @@ function downloadAndUpdateDocker() {
                 });
             }
             catch (error) {
-                reject(error); // Reject the promise if an error occurs during execution
+                throw error;
+                // reject(error); // Reject the promise if an error occurs during execution
             }
         });
     });

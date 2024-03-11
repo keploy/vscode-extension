@@ -9,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getCurrentKeployVersion = exports.getKeployVersion = void 0;
+const execShell_1 = require("./execShell");
 function getKeployVersion() {
     return __awaiter(this, void 0, void 0, function* () {
         // GitHub repository details
@@ -22,5 +24,33 @@ function getKeployVersion() {
         return latestVersion;
     });
 }
-exports.default = getKeployVersion;
+exports.getKeployVersion = getKeployVersion;
+function getCurrentKeployVersion() {
+    return __awaiter(this, void 0, void 0, function* () {
+        let output = '';
+        try {
+            output = yield (0, execShell_1.execShell)('keploy  --version');
+        }
+        catch (error) {
+            console.log("Error Fetching version with Alias " + error);
+            try {
+                output = yield (0, execShell_1.execShell)('/usr/local/bin/keploybin --version');
+            }
+            catch (error) {
+                console.log("Error Fetching version With Absolute path " + error);
+                throw error;
+            }
+        }
+        console.log('output:', output);
+        const keployIndex = output.indexOf('Keploy');
+        console.log('keployIndex:', keployIndex);
+        let keployVersion = '';
+        if (keployIndex !== -1) {
+            keployVersion = output.substring(keployIndex + 'Keploy'.length).trim();
+        }
+        console.log('Current Keploy version:', keployVersion);
+        return keployVersion;
+    });
+}
+exports.getCurrentKeployVersion = getCurrentKeployVersion;
 //# sourceMappingURL=version.js.map
