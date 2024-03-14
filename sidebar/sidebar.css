@@ -13,6 +13,23 @@ button{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
 }
+button:disabled{
+    background-color: rgb(80, 79, 79);
+    cursor: not-allowed;
+}
+.recordedTestCase{
+    background-color: rgb(85, 85, 85);
+    margin: 10px;
+    }
+.recordedTestCase:hover{
+    animation: changeColor 0.5s;
+}
+
+@keyframes changeColor {
+    0% { background-color: rgb(85, 85, 85); }
+    100% { background-color: rgb(1, 99, 1); }
+}
+
 #versionDisplay{
     font-size: 20px;
     font-weight: bold;
@@ -54,18 +71,31 @@ button{
     margin-top: 20px;
 }
 
-#Progress .success{
+.success{
     color: rgb(10, 223, 10);
     text-align: center;
     margin-top: 20px;
 }
 
-#Progress .error{
+.error{
     color: red;
     text-align: center;
     margin-top: 20px;
 }
-
+.homebutton{
+    width: 30%;
+    font-size: small;
+    text-align: center;
+    margin: 5px ;
+    background-color: rgb(70, 70, 70);
+    padding: 5px auto ;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+  }
+  .homebutton:hover{
+    background-color: rgb(13, 13, 13);
+  }
 #updateKeployDockerButton{
     /* display: none; */
     background-color: #00b1d9;
@@ -220,7 +250,7 @@ button{
 #stopRecordingButton{
     display: none;
 }
-#stopTestButton{
+#stopTestingButton{
     display: none;
 
 }

@@ -11,20 +11,20 @@
   
 version: 2.0.0-alpha76
 
-🐰 Keploy: 2024-03-12T03:09:22+05:30 	[34mINFO[0m	Keploy config not found, continuing without configuration
-🐰 Keploy: 2024-03-12T03:09:22+05:30 	[33mWARN[0m	Delay is set to 5 seconds, incase your app takes more time to start use --delay to set custom delay
-🐰 Keploy: 2024-03-12T03:09:22+05:30 	[34mINFO[0m	Example usage: sudo -E env PATH=$PATH keploy test -c "/path/to/user/app" --delay 6
-🐰 Keploy: 2024-03-12T03:09:22+05:30 	[34mINFO[0m		{"keploy test and mock path": "/home/akash/Desktop/samples-go/gin-mongo/keploy"}
-🐰 Keploy: 2024-03-12T03:09:22+05:30 	[34mINFO[0m		{"keploy testReport path": "/home/akash/Desktop/samples-go/gin-mongo/keploy/testReports/test-run-8"}
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	Keploy has hijacked the DNS resolution mechanism, your application may misbehave in keploy test mode if you have provided wrong domain name in your application code.
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	Proxy started at port:16789
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m	running user application for	{"test-set": "test-set-2"}
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[34mINFO[0m		{"no of test cases": 2, "test-set": "test-set-2"}
+🐰 Keploy: 2024-03-14T08:40:25+05:30 	[34mINFO[0m	Keploy config not found, continuing without configuration
+🐰 Keploy: 2024-03-14T08:40:25+05:30 	[33mWARN[0m	Delay is set to 5 seconds, incase your app takes more time to start use --delay to set custom delay
+🐰 Keploy: 2024-03-14T08:40:25+05:30 	[34mINFO[0m	Example usage: sudo -E env PATH=$PATH keploy test -c "/path/to/user/app" --delay 6
+🐰 Keploy: 2024-03-14T08:40:25+05:30 	[34mINFO[0m		{"keploy test and mock path": "/home/akash/Desktop/samples-go/gin-mongo/keploy"}
+🐰 Keploy: 2024-03-14T08:40:25+05:30 	[34mINFO[0m		{"keploy testReport path": "/home/akash/Desktop/samples-go/gin-mongo/keploy/testReports/test-run-7"}
+🐰 Keploy: 2024-03-14T08:40:27+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-03-14T08:40:27+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-03-14T08:40:27+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-03-14T08:40:28+05:30 	[34mINFO[0m	Keploy has hijacked the DNS resolution mechanism, your application may misbehave in keploy test mode if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-03-14T08:40:28+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-03-14T08:40:28+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-03-14T08:40:28+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-03-14T08:40:28+05:30 	[34mINFO[0m	running user application for	{"test-set": "test-set-2"}
+🐰 Keploy: 2024-03-14T08:40:28+05:30 	[34mINFO[0m		{"no of test cases": 2, "test-set": "test-set-2"}
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -33,18 +33,411 @@ version: 2.0.0-alpha76
 
 [GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
 [GIN-debug] POST   /url                      --> main.putURL (3 handlers)
-🐰 Keploy: 2024-03-12T03:09:25+05:30 	[31mERROR[0m	userApplication failed to run with the following error. Please check application logs	{"error": "exit status 1"}
-🐰 Keploy: 2024-03-12T03:09:30+05:30 	[34mINFO[0m	test report for test-set-2: 	{"name: ": "report-1", "path: ": "/home/akash/Desktop/samples-go/gin-mongo/keploy/report-1"}
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-2"}
+[GIN] 2024/03/14 - 08:40:33 | 200 |    2.392669ms |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.710382573476006e+18,                    | +  "ts": 1.7103858331486285e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m		{"matched mocks": ["mock-3"]}
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-2", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-2"}
+[GIN] 2024/03/14 - 08:40:33 | 200 |    1.806251ms |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-2[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-2                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103825917270226e+18,                   | +  "ts": 1.7103858331564925e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m		{"matched mocks": ["mock-4", "mock-3"]}
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-2", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	test report for test-set-2: 	{"name: ": "report-1", "path: ": "/home/akash/Desktop/samples-go/gin-mongo/keploy/report-1"}
 
  <=========================================> 
-  TESTRUN SUMMARY. For testrun with id: [32m[1m"[0m[32mtest-set-2[0m[32m[1m"[0m
-	Total tests: [34m[1m0[0m
+  TESTRUN SUMMARY. For testrun with id: [31m[1m"[0m[31mtest-set-2[0m[31m[1m"[0m
+	Total tests: [34m[1m2[0m
 	Total test passed: [34m[1m0[0m
-	Total test failed: [34m[1m0[0m
+	Total test failed: [34m[1m2[0m
  <=========================================> 
 
-🐰 Keploy: 2024-03-12T03:09:30+05:30 	[34mINFO[0m	Exiting keploy program gracefully.
-🐰 Keploy: 2024-03-12T03:09:31+05:30 	[34mINFO[0m	eBPF resources released successfully...
-🐰 Keploy: 2024-03-12T03:09:31+05:30 	[34mINFO[0m	Udp Dns server stopped
-🐰 Keploy: 2024-03-12T03:09:31+05:30 	[34mINFO[0m	Tcp Dns server stopped
-🐰 Keploy: 2024-03-12T03:09:31+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	keploy has initiated the shutdown of the user application.
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	keploy terminated user application
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m	running user application for	{"test-set": "test-set-1"}
+🐰 Keploy: 2024-03-14T08:40:33+05:30 	[34mINFO[0m		{"no of test cases": 3, "test-set": "test-set-1"}
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-1"}
+[GIN] 2024/03/14 - 08:40:38 | 200 |    2.569235ms |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103823006897516e+18,                   | +  "ts": 1.7103858382108956e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m		{"matched mocks": ["mock-3", "mock-4"]}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-1", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-1"}
+[GIN] 2024/03/14 - 08:40:38 | 200 |     919.302µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-2[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-2                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.710382301748573e+18,                    | +  "ts": 1.710385838216644e+18,                      |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m		{"matched mocks": ["mock-3", "mock-4"]}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-1", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-3", "test set": "test-set-1"}
+[GIN] 2024/03/14 - 08:40:38 | 200 |     914.141µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-3[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-3                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103823030126687e+18,                   | +  "ts": 1.7103858382214738e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m		{"matched mocks": ["mock-3", "mock-4", "mock-5"]}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	result	{"testcase id": "test-3", "testset id": "test-set-1", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	test report for test-set-1: 	{"name: ": "report-2", "path: ": "/home/akash/Desktop/samples-go/gin-mongo/keploy/report-2"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For testrun with id: [31m[1m"[0m[31mtest-set-1[0m[31m[1m"[0m
+	Total tests: [34m[1m3[0m
+	Total test passed: [34m[1m0[0m
+	Total test failed: [34m[1m3[0m
+ <=========================================> 
+
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	keploy has initiated the shutdown of the user application.
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	keploy terminated user application
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m	running user application for	{"test-set": "test-set-3"}
+🐰 Keploy: 2024-03-14T08:40:38+05:30 	[34mINFO[0m		{"no of test cases": 3, "test-set": "test-set-3"}
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-3"}
+[GIN] 2024/03/14 - 08:40:43 | 200 |    3.489725ms |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.710383353055647e+18,                    | +  "ts": 1.7103858432724342e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m		{"matched mocks": ["mock-3", "mock-4", "mock-5"]}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-3", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-3"}
+[GIN] 2024/03/14 - 08:40:43 | 200 |     997.375µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-2[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-2                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103833553391716e+18,                   | +  "ts": 1.7103858432772296e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m		{"matched mocks": ["mock-5", "mock-3", "mock-4"]}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-3", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-3", "test set": "test-set-3"}
+[GIN] 2024/03/14 - 08:40:43 | 200 |     888.799µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-3[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-3                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.71038335868565e+18,                     | +  "ts": 1.7103858432822587e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m		{"matched mocks": ["mock-5", "mock-3", "mock-4"]}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	result	{"testcase id": "test-3", "testset id": "test-set-3", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	test report for test-set-3: 	{"name: ": "report-3", "path: ": "/home/akash/Desktop/samples-go/gin-mongo/keploy/report-3"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For testrun with id: [31m[1m"[0m[31mtest-set-3[0m[31m[1m"[0m
+	Total tests: [34m[1m3[0m
+	Total test passed: [34m[1m0[0m
+	Total test failed: [34m[1m3[0m
+ <=========================================> 
+
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	keploy has initiated the shutdown of the user application.
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	keploy terminated user application
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m	running user application for	{"test-set": "test-set-0"}
+🐰 Keploy: 2024-03-14T08:40:43+05:30 	[34mINFO[0m		{"no of test cases": 5, "test-set": "test-set-0"}
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[31mERROR[0m	failed to write the health check opmsg to mongo client	{"Client IP Address": "192.168.1.8:42352", "Client ConnectionID": 6, "Destination ConnectionID": 7, "error": "write tcp 192.168.1.8:16789->192.168.1.8:42352: write: broken pipe"}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-0"}
+[GIN] 2024/03/14 - 08:40:48 | 200 |    2.985201ms |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103818259262474e+18,                   | +  "ts": 1.7103858483343532e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m		{"matched mocks": ["mock-1", "mock-3", "mock-4", "mock-5"]}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-0", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-0"}
+[GIN] 2024/03/14 - 08:40:48 | 200 |       706.1µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-2[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-2                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103818274872218e+18,                   | +  "ts": 1.7103858483396787e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m		{"matched mocks": ["mock-2", "mock-3", "mock-4", "mock-5", "mock-1"]}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-0", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-3", "test set": "test-set-0"}
+[GIN] 2024/03/14 - 08:40:48 | 200 |     509.713µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-3[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-3                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.710381828315538e+18,                    | +  "ts": 1.7103858483442422e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m		{"matched mocks": ["mock-2", "mock-3", "mock-4", "mock-5", "mock-1"]}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	result	{"testcase id": "test-3", "testset id": "test-set-0", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-4", "test set": "test-set-0"}
+[GIN] 2024/03/14 - 08:40:48 | 200 |     356.143µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-4[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-4                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103818289885514e+18,                   | +  "ts": 1.7103858483465508e+18,                     |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m		{"matched mocks": ["mock-2", "mock-3", "mock-4", "mock-5", "mock-1"]}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	result	{"testcase id": "test-4", "testset id": "test-set-0", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-5", "test set": "test-set-0"}
+[GIN] 2024/03/14 - 08:40:48 | 200 |     369.951µs |             ::1 | POST     "/url"
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-5[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-5                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|   -  "ts": 1.7103818296017203e+18,                   | +  "ts": 1.710385848348736e+18,                      |
+|      "url": "http://localhost:8080/Lhr4BWAi"         |    "url": "http://localhost:8080/Lhr4BWAi"           |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m		{"matched mocks": ["mock-5", "mock-1", "mock-2", "mock-3", "mock-4"]}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	result	{"testcase id": "test-5", "testset id": "test-set-0", "passed": "false"}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	test report for test-set-0: 	{"name: ": "report-4", "path: ": "/home/akash/Desktop/samples-go/gin-mongo/keploy/report-4"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For testrun with id: [31m[1m"[0m[31mtest-set-0[0m[31m[1m"[0m
+	Total tests: [34m[1m5[0m
+	Total test passed: [34m[1m0[0m
+	Total test failed: [34m[1m5[0m
+ <=========================================> 
+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	keploy has initiated the shutdown of the user application.
+
+ <=========================================> 
+  COMPLETE TESTRUN SUMMARY. 
+	Total tests: [34m[1m13[0m
+	Total test passed: [34m[1m0[0m
+	Total test failed: [34m[1m13[0m
+
+	Test Suite Name		Total Test	Passed		Failed	
+
+	[31m[1m"[0m[31mtest-set-0[0m[31m[1m"[0m		[34m[1m5[0m		[34m[1m0[0m		[34m[1m5[0m
+	[31m[1m"[0m[31mtest-set-1[0m[31m[1m"[0m		[34m[1m3[0m		[34m[1m0[0m		[34m[1m3[0m
+	[31m[1m"[0m[31mtest-set-2[0m[31m[1m"[0m		[34m[1m2[0m		[34m[1m0[0m		[34m[1m2[0m
+	[31m[1m"[0m[31mtest-set-3[0m[31m[1m"[0m		[34m[1m3[0m		[34m[1m0[0m		[34m[1m3[0m
+<=========================================> 
+
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	test run completed	{"passed overall": false}
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	Exiting keploy program gracefully.
+🐰 Keploy: 2024-03-14T08:40:48+05:30 	[34mINFO[0m	keploy terminated user application
+🐰 Keploy: 2024-03-14T08:40:49+05:30 	[34mINFO[0m	eBPF resources released successfully...
+🐰 Keploy: 2024-03-14T08:40:49+05:30 	[34mINFO[0m	Udp Dns server stopped
+🐰 Keploy: 2024-03-14T08:40:49+05:30 	[34mINFO[0m	Tcp Dns server stopped
+🐰 Keploy: 2024-03-14T08:40:49+05:30 	[34mINFO[0m	proxy stopped...

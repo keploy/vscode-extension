@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "file": "Main.css",
+  "file": "Home.css",
   "sources": [
     "Home.svelte"
   ],

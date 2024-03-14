@@ -23,6 +23,34 @@ export function activate(context: vscode.ExtensionContext) {
             sidebarProvider
         )
     );
+
+    let updateKeployDisposable = vscode.commands.registerCommand('heykeploy.updateKeploy', () => {
+            // Logic to update the Keploy
+            vscode.window.showInformationMessage('Feature coming soon!');
+
+        });
+        context.subscriptions.push(updateKeployDisposable);
+
+    let getLatestKeployDisposable = vscode.commands.registerCommand('heykeploy.KeployVersion', () => {
+        // Logic to get the latest Keploy
+        vscode.window.showInformationMessage('Feature coming soon!');
+    }
+    );
+    context.subscriptions.push(getLatestKeployDisposable);
+    
+    let viewChangeLogDisposable = vscode.commands.registerCommand('heykeploy.viewChangeLog', () => {
+        // Logic to view the change log
+        vscode.window.showInformationMessage('Feature coming soon!');
+    }
+    );
+    context.subscriptions.push(viewChangeLogDisposable);
+
+    let viewDocumentationDisposable = vscode.commands.registerCommand('heykeploy.viewDocumentation', () => {
+        // Logic to view the documentation
+        vscode.window.showInformationMessage('Feature coming soon!');
+    }
+    );
+    context.subscriptions.push(viewDocumentationDisposable);
     
 
     let hellocommand = vscode.commands.registerCommand('heykeploy.HeyKeploy', () => {
@@ -31,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(hellocommand);
 
-    let versioncommand = vscode.commands.registerCommand('heykeploy.KeployVersion', () => {
+    let versioncommand = vscode.commands.registerCommand('heykeploy.getLatestVersion', () => {
         const panel = vscode.window.createWebviewPanel(
             'keployVersion', // Identifies the type of the webview. Used internally
             'Keploy Version', // Title of the panel displayed to the webviewuser

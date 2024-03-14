@@ -1,5 +1,10 @@
 # Changelog
 
+# [2.3.0] - 2024-03-13
+
+- Brand new UI with different pages
+
+
 ## [2.2.0] - 2024-03-12
 
 - Bug Fixes, UI imporvements, Script Improvements

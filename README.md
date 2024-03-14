@@ -17,6 +17,9 @@ Keploy-VsCode offers the following features:
 
 ## Release Notes
 
+### 2.3.0
+- Implemented New UI with Separate Pages
+
 ## 2.2.0
 - Bug Fixes, UI imporvements, Script Improvements
 
@@ -54,7 +57,7 @@ Keploy-VsCode offers the following features:
 
 ### 0.1.2
 
-- Added Keploy Update to update the keploy binary 
+- Added Keploy Update to update the keploy binary zzzzzzzz
 
 ### 0.1.1
 

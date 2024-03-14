@@ -62,7 +62,8 @@ function displayTestCases(logfilePath, webview) {
                 webview.postMessage({
                     type: 'testResults',
                     value: 'Test Failed',
-                    textSummary: "Error Replaying Test Cases. Please try again."
+                    textSummary: "Error Replaying Test Cases. Please try again.",
+                    error: true
                 });
                 return;
             }
@@ -73,7 +74,8 @@ function displayTestCases(logfilePath, webview) {
                 webview.postMessage({
                     type: 'testResults',
                     value: 'Test Failed',
-                    textSummary: "Error Replaying Test Cases. Please try again."
+                    textSummary: "Error Replaying Test Cases. Please try again.",
+                    error: true
                 });
                 return;
             }
@@ -84,7 +86,8 @@ function displayTestCases(logfilePath, webview) {
                 webview.postMessage({
                     type: 'testResults',
                     value: 'Test Failed',
-                    textSummary: "Error Replaying Test Cases. Please try again."
+                    textSummary: "Error Replaying Test Cases. Please try again.",
+                    error: true
                 });
                 return;
             }
@@ -96,19 +99,19 @@ function displayTestCases(logfilePath, webview) {
             console.log(testSummaryList);
             //remove last line of summary which is pattern
             testSummaryList.pop();
+            //remove first line of summary which is header
+            testSummaryList.shift();
+            //send first three lines of summary
             testSummaryList.forEach((line, index) => {
+                if (index > 2) {
+                    return;
+                }
                 webview.postMessage({
                     type: 'testResults',
                     value: 'Test Summary Generated',
                     textSummary: line
                 });
             });
-            // webview.postMessage({
-            //         type: 'testResults',
-            //         value: 'Test Summary Generated',
-            //         textSummary: cleanSummary
-            //     });
-            // recordedTestCasesDiv.appendChild(testCaseElement);
         }
         catch (error) {
             console.log(error);

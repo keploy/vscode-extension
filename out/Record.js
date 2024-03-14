@@ -60,25 +60,31 @@ function displayRecordedTestCases(logfilePath, webview) {
                 webview.postMessage({
                     type: 'testcaserecorded',
                     value: 'Test Case has been recorded',
-                    textContent: "No test cases captured. Please try again."
+                    textContent: "No test cases captured. Please try again.",
+                    noTestCases: true
                 });
                 return;
             }
             capturedTestLines.forEach(testLine => {
                 const testCaseInfo = JSON.parse(testLine.substring(testLine.indexOf('{')));
-                // const testCaseElement = document.createElement('div');
-                console.log(testCaseInfo);
-                const textContent = `Test case "${testCaseInfo['testcase name']}" captured at ${testCaseInfo.path}`;
+                const textContent = `Test case "${testCaseInfo['testcase name']}"`;
+                const path = testCaseInfo.path + '/' + testCaseInfo['testcase name'] + '.yaml';
                 webview.postMessage({
                     type: 'testcaserecorded',
                     value: 'Test Case has been recorded',
-                    textContent: textContent
+                    textContent: textContent,
+                    path: path
                 });
-                // recordedTestCasesDiv.appendChild(testCaseElement);
             });
         }
         catch (error) {
             console.log(error);
+            webview.postMessage({
+                type: 'testcaserecorded',
+                value: 'Test Case has been recorded',
+                textContent: error,
+                error: true
+            });
             vscode.window.showErrorMessage('Error occurred Keploy Record: ' + error);
             throw error;
         }

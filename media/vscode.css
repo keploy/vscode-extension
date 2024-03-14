@@ -14,7 +14,7 @@
     font-family: var(--vscode-font-family);
     background-color: var(--vscode-editor-background);
   }
-  button {
+  button , select {
     background-color: var(--vscode-editor-background);
   }
   ol,
@@ -46,7 +46,7 @@
     font-family: var(--vscode-editor-font-family);
   }
   
-  button {
+  button , select {
     border: none;
     padding: var(--input-padding-vertical) var(--input-padding-horizontal);
     width: 100%;
@@ -55,6 +55,16 @@
     outline-offset: 2px !important;
     color: var(--vscode-button-foreground);
     background: var(--vscode-button-background);
+  }
+
+  .secondaryDiv{
+    background: var(--vscode-button-secondaryBackground);
+    padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+    width: 100%;
+    text-align: center;
+    outline: 1px solid transparent;
+    outline-offset: 2px !important;
+    color: var(--vscode-button-secondaryForeground);
   }
   
   /* span {
@@ -73,7 +83,7 @@
     color: #569cd6;
   } */
   
-  button:hover {
+  button:hover ,  select:hover {
     cursor: pointer;
     background: var(--vscode-button-hoverBackground);
   }

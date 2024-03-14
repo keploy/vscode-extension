@@ -41,8 +41,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
       ],
     };
-
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
+    const scriptUri = webviewView.webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.js")
+    );
+    const compiledCSSUri = webviewView.webview.asWebviewUri(
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.css")
+    );
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview ,  compiledCSSUri , scriptUri);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
@@ -99,17 +104,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
-        case "record": {
+        case "selectRecordFolder": {
           if (!data.value) {
             return;
           } try {
-            console.log('Record button clicked');
+            console.log('Opening Record Dialogue Box...');
             vscode.window.showOpenDialog(recordOptions).then(async fileUri => {
               if (fileUri && fileUri[0]) {
                 console.log('Selected file: ' + fileUri[0].fsPath);
                 this._view?.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
-                // console.log(this._view?.webview.html.getElementById('filePathDiv'));
-                // this._view?.webview.html.getElementById('filePathDiv')!.innerHTML = `<p>Your Selected File is ${fileUri[0].fsPath}</p>`;
               }
             });
           } catch (error) {
@@ -166,12 +169,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "test":{
+        case "selectTestFolder":{
           if (!data.value) {
             return;
           }
           try {
-            console.log('Test button clicked');
+            console.log('Opening Test Dialogue Box...');
             vscode.window.showOpenDialog(testOptions).then(async fileUri => {
               if (fileUri && fileUri[0]) {
                 console.log('Selected file: ' + fileUri[0].fsPath);
@@ -226,7 +229,43 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+        case "navigate" : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Navigate to ' + data.value);
+            const recordPageJs = webviewView.webview.asWebviewUri(
+              vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${data.value}.js`)
+            );
+            const recordPageCss = webviewView.webview.asWebviewUri(
+              vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${data.value}.css`)
+            );
+            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview ,  recordPageCss , recordPageJs);
+            this._view?.webview.postMessage({ type: 'openRecordPage', value: 'Record Page opened' });
+        
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open record page ${error}` });
+          }
+          break;
+        }
+        case "openRecordedTestFile": {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Opening Recorded Test File...' + data.value);
+            vscode.workspace.openTextDocument(data.value).then(doc => {
+              vscode.window.showTextDocument(doc, { preview: false });
+            });
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open recorded test file ${error}` });
+          }
+          break;
+        }
+        
       }
+
     });
   }
 
@@ -234,16 +273,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     this._view = panel;
   }
 
-  private _getHtmlForWebview(webview: vscode.Webview) {
+  private _getHtmlForWebview(webview: vscode.Webview , compiledCSSUri: vscode.Uri , scriptUri: vscode.Uri) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
     );
-    const scriptUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Main.js")
-    );
-    const compiledCSSUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Main.css")
-    );
+    
     const styleMainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "sidebar", "sidebar.css")
     );

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { readFileSync, appendFile } from 'fs';
 
 export async function displayTestCases(logfilePath: string, webview: any): Promise<void> {
+
     console.log('Displaying test cases');
     let logData;
     try {
@@ -25,7 +26,8 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
             webview.postMessage({
                 type: 'testResults',
                 value: 'Test Failed',
-                textSummary: "Error Replaying Test Cases. Please try again."
+                textSummary: "Error Replaying Test Cases. Please try again.",
+                error : true
             });
             return;
         }
@@ -37,7 +39,8 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
             webview.postMessage({
                 type: 'testResults',
                 value: 'Test Failed',
-                textSummary: "Error Replaying Test Cases. Please try again."
+                textSummary: "Error Replaying Test Cases. Please try again.",
+                error : true
             });
             return;
         }
@@ -49,7 +52,8 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
             webview.postMessage({
                 type: 'testResults',
                 value: 'Test Failed',
-                textSummary: "Error Replaying Test Cases. Please try again."
+                textSummary: "Error Replaying Test Cases. Please try again.",
+                error : true
             });
             return;
         }
@@ -61,7 +65,13 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
         console.log(testSummaryList);
         //remove last line of summary which is pattern
         testSummaryList.pop();
+        //remove first line of summary which is header
+        testSummaryList.shift();
+        //send first three lines of summary
         testSummaryList.forEach((line, index) => {
+            if (index > 2) {
+                return;
+            }
             webview.postMessage({
                 type: 'testResults',
                 value: 'Test Summary Generated',
@@ -69,12 +79,6 @@ export async function displayTestCases(logfilePath: string, webview: any): Promi
             });
         }); 
         
-        // webview.postMessage({
-        //         type: 'testResults',
-        //         value: 'Test Summary Generated',
-        //         textSummary: cleanSummary
-        //     });
-            // recordedTestCasesDiv.appendChild(testCaseElement);
         }
     catch (error) {
         console.log(error);

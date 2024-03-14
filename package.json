@@ -2,7 +2,7 @@
   "name": "heykeploy",
   "displayName": "Keploy VSCode Extension",
   "description": "Hello Keploy Community!",
-  "version": "2.2.0",
+  "version": "2.3.2",
   "publisher": "Akash-Singh04",
   "icon": "media/logo.png",
   "repository": {
@@ -34,7 +34,29 @@
           "id": "Keploy-Sidebar",
           "name": "Keploy",
           "icon": "media/beaker.svg",
-          "contextualTitle": "VSinder"
+          "webviewOptions": {
+            "retainContextWhenHidden": true
+          }
+        }
+      ]
+    },
+    "menus" : {
+      "view/title": [
+        {
+          "command": "heykeploy.updateKeploy"
+        },
+        {
+          "command": "heykeploy.getLatestVersion"
+          
+        },
+        {
+          "command": "heykeploy.KeployVersion"
+        },
+        {
+          "command": "heykeploy.viewChangeLog"
+        },
+        {
+          "command": "heykeploy.viewDocumentation"
         }
       ]
     },
@@ -44,15 +66,31 @@
         "title": "HeyKeploy"
       },
       {
+        "command": "heykeploy.updateKeploy",
+        "title": "Update your Keploy"
+      },
+      {
         "command": "heykeploy.KeployVersion",
-        "title": "KeployVersion"
+        "title": "View Your Keploy Version"
+      },
+      {
+        "command": "heykeploy.getLatestVersion",
+        "title": "Get Latest Version"
+      },
+      {
+        "command": "heykeploy.viewChangeLog",
+        "title": "View Change Log"
+      },
+      {
+        "command": "heykeploy.viewDocumentation",
+        "title": "View Docs"
       }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "rollup": "rollup -c --bundleConfigAsCjs",
+    "rollup": "rollup -c -w --bundleConfigAsCjs",
     "watch": "rollup -c --bundleConfigAsCjs && tsc -watch -p ./",
     "debug": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
