@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import {getKeployVersion} from './version';
+import {downloadAndUpdate ,downloadAndUpdateDocker } from './updateKeploy';
 import { SidebarProvider } from './SidebarProvider';
 
 
@@ -25,8 +26,34 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     let updateKeployDisposable = vscode.commands.registerCommand('heykeploy.updateKeploy', () => {
-            // Logic to update the Keploy
-            vscode.window.showInformationMessage('Feature coming soon!');
+            //open popup to ask user to choose beteween keploy docker or keploy binary
+            const options = [
+                { label: "Keploy Docker", description: "Update using Keploy Docker" },
+                { label: "Keploy Binary", description: "Update using Keploy Binary" }
+            ];
+        
+            vscode.window.showQuickPick(options, {
+                placeHolder: "Choose how to update Keploy"
+            }).then(async selection => {
+                if (selection) {
+                    // Handle the user's choice here
+                    if (selection.label === "Keploy Docker") {
+                        try{
+                        await downloadAndUpdateDocker();
+                            vscode.window.showInformationMessage('Keploy Docker updated!');
+                    }catch(error){
+                            vscode.window.showErrorMessage(`Failed to update Keploy Docker: ${error}`);
+                        }
+                    } else if (selection.label === "Keploy Binary") {
+                        try {
+                            await downloadAndUpdate();
+                            // this._view?.webview.postMessage({ type: 'success', value: 'Keploy binary updated!' });
+                        } catch (error) {
+                            vscode.window.showErrorMessage(`Failed to update Keploy binary: ${error}`);
+                        }
+                    }
+                }
+            });
 
         });
         context.subscriptions.push(updateKeployDisposable);

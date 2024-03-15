@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import {getKeployVersion , getCurrentKeployVersion} from './version';
 
-export async function downloadAndUpdate(downloadUrl: string , webview : any): Promise<void> {
+export async function downloadAndUpdate(): Promise<void> {
     try {
         const keployVersion = await getCurrentKeployVersion();
         const latestVersion = await getKeployVersion();
@@ -17,7 +17,7 @@ export async function downloadAndUpdate(downloadUrl: string , webview : any): Pr
 
         console.log('Downloading and updating Keploy binary...');
         vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
-        downloadAndInstallKeployBinary(webview).then(() => {
+        downloadAndInstallKeployBinary().then(() => {
             vscode.window.showInformationMessage('Updated Keploy binary successfully!');
         }
         ).catch(error => {
@@ -31,8 +31,8 @@ export async function downloadAndUpdate(downloadUrl: string , webview : any): Pr
     } catch (error : any) {
         if (error.toString().toLowerCase().includes("not found") || error.toString().toLowerCase().includes("command not found") || error.toString().toLowerCase().includes("no such file or directory")){
             //post message to webview
-            webview.postMessage({ type: 'onError', value: `Keploy binary not found. Installing Keploy binary first.` });
-            downloadAndInstallKeployBinary(webview).then(() => {
+            // webview.postMessage({ type: 'onError', value: `Keploy binary not found. Installing Keploy binary first.` });
+            downloadAndInstallKeployBinary().then(() => {
                 vscode.window.showInformationMessage('Updated Keploy binary successfully!');
             }
             ).catch(error => {
@@ -90,7 +90,7 @@ export async function downloadAndUpdateDocker(): Promise<void> {
         );
     }
     
-export async function downloadAndInstallKeployBinary( webview : any): Promise<void> {
+export async function downloadAndInstallKeployBinary(): Promise<void> {
     console.log('Downloading and installing Keploy binary...');
     return new Promise<void>((resolve, reject) => {
 

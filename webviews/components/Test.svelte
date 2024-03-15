@@ -80,11 +80,12 @@
     <div id="testCommandDiv">
       <h1 id="generatedTestCommand">keploy test -c ""</h1>
     </div>
+    <div class="loader" id="loader"></div>
     <button id="stopTestingButton">Stop Testing</button>
     <h3 id="testStatus"> </h3>
     <div id="testResults">
     </div>
-    <button id="viewCompleteSummaryButton" disabled=true>View Complete Test Summary</button>
+    <button id="viewCompleteSummaryButton">View Complete Test Summary</button>
 
   </div>
 </body>
@@ -98,12 +99,6 @@
   }
   .keploylogo {
     width: 50%;
-  }
-  hr {
-    margin: 0;
-    width: 80%;
-    text-align: center;
-    margin: 20px auto;
   }
   #selectTestCases {
     margin: 20px auto;
@@ -169,5 +164,8 @@
       display: none;
       width: 75%;
       margin: 10px auto;
+    }
+    .loader{
+      display: none;
     }
 </style>

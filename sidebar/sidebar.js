@@ -18,6 +18,13 @@ const upperOutputDiv = document.getElementById('upperOutputDiv');
 const generatedRecordCommandDiv = document.getElementById('recordCommandDiv');
 const generatedTestCommandDiv = document.getElementById('testCommandDiv');
 const viewCompleteSummaryButton = document.getElementById('viewCompleteSummaryButton');
+const lastTestResultsDiv = document.getElementById('lastTestResults');
+const testSuiteNameDiv = document.getElementById('testSuiteName');
+const totalTestCasesDiv = document.getElementById('totalTestCases');
+const testCasesPassedDiv = document.getElementById('testCasesPassed');
+const testCasesFailedDiv = document.getElementById('testCasesFailed');
+const rerunTestSuiteButton = document.getElementById('rerunTestSuiteButton');
+const loader = document.getElementById('loader');
 let FilePath = "";
 
 //cleanup required
@@ -41,9 +48,19 @@ if (navigateHomeButton) {
     });
   });
 }
-if(openTestPageButton){
+if (openTestPageButton) {
   openTestPageButton.addEventListener('click', async () => {
     console.log("openTestPageButton clicked");
+    vscode.postMessage({
+      type: "navigate",
+      value: "Test"
+    });
+  });
+
+}
+if(rerunTestSuiteButton){
+  rerunTestSuiteButton.addEventListener('click', async () => {
+    console.log("rerunTestSuiteButton clicked");
     vscode.postMessage({
       type: "navigate",
       value: "Test"
@@ -167,6 +184,7 @@ if (startRecordingButton) {
   startRecordingButton.addEventListener('click', async () => {
     console.log("startRecordingButton clicked");
     stopRecordingButton.style.display = 'block';
+    loader.style.display = "block";
     const commandValue = recordCommandInput.value;
     recordedTestCasesDiv.innerHTML = "";
     console.log('Command value:', commandValue);
@@ -179,9 +197,10 @@ if (startRecordingButton) {
     });
   });
 }
-if(stopRecordingButton){
+if (stopRecordingButton) {
   stopRecordingButton.addEventListener('click', async () => {
     console.log("stopRecordingButton clicked");
+    loader.style.display = "none";
     vscode.postMessage({
       type: "stopRecordingCommand",
       value: `Stop Recording`
@@ -191,7 +210,9 @@ if(stopRecordingButton){
 if (startTestButton) {
   startTestButton.addEventListener('click', async () => {
     console.log("startTestButton clicked");
+    loader.style.display = "block";
     stopTestButton.style.display = 'block';
+    testStatus.innerHTML = "";
     const commandValue = testCommandInput.value;
     console.log('Command value:', commandValue);
     FilePath = document.getElementById('testProjectFolder').value;
@@ -203,13 +224,9 @@ if (startTestButton) {
     });
   });
 }
-if(stopTestButton){
+if (stopTestButton) {
   stopTestButton.addEventListener('click', async () => {
     console.log("stopTestButton clicked");
-    // vscode.postMessage({
-    //   type: "navigate",
-    //   value: `Testresults`
-    // });
     vscode.postMessage({
       type: "stopTestingCommand",
       value: `Stop Testing`
@@ -217,7 +234,22 @@ if(stopTestButton){
   });
 }
 
+if (viewCompleteSummaryButton) {
+  viewCompleteSummaryButton.addEventListener('click', async () => {
+    console.log("viewCompleteSummaryButton clicked");
 
+    vscode.postMessage({
+      type: "navigate",
+      value: `Testresults`
+    });
+
+    vscode.postMessage({
+      type: "viewCompleteSummary",
+      value: `View Complete Summary`
+    });
+  });
+
+}
 
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
@@ -249,12 +281,12 @@ window.addEventListener('message', event => {
     recordStatus.style.display = "block";
     upperOutputDiv.style.display = "none";
     generatedRecordCommandDiv.style.display = "none";
-    if(message.error === true){
+    if (message.error === true) {
       recordStatus.textContent = `Failed To Record Test Cases`;
       recordStatus.classList.add("error");
       const errorMessage = document.createElement('p class="error"');
       errorMessage.textContent = message.textContent;
-      recordedTestCasesDiv.appendChild(errorMessage); 
+      recordedTestCasesDiv.appendChild(errorMessage);
       return;
     }
     if (message.noTestCases === true) {
@@ -276,35 +308,80 @@ window.addEventListener('message', event => {
     );
 
     testCaseElement.textContent = message.textContent;
-    recordedTestCasesDiv.appendChild(testCaseElement); 
+    recordedTestCasesDiv.appendChild(testCaseElement);
   }
-  else if(message.type === "testResults"){
-      console.log("message.value", message.value);
-      stopTestButton.style.display = 'none';
-      upperOutputDiv.style.display = "none";
-      generatedTestCommandDiv.style.display = "none";
-      testStatus.style.display = "block";
-      viewCompleteSummaryButton.style.display = "block";
-      if(message.error === true){
+  else if (message.type === "testResults") {
+    console.log("message.value", message.value);
+    loader.style.display = "none";
+    
+    const testCaseElement = document.createElement('p');
+    testCaseElement.textContent = message.textSummary;
+    if (message.textSummary.includes("test passed")) {
+      testCaseElement.classList.add("success");
+    }
+    else if (message.textSummary.includes("test failed")) {
+      testCaseElement.classList.add("error");
+    }
+    else {
+      testCaseElement.classList.add("info");
+    }
+    if (message.isCompleteSummary === true) {
+      console.log("message.isCompleteSummary", message.isCompleteSummary);
+      let messageList = message.textSummary.split("\t");
+      //remove all "" from the list
+      messageList = messageList.filter(function (el) {
+        return el !== '';
+      });
+      console.log("messageList", messageList);
+      const testSuiteNameElement = document.createElement('p');
+      testSuiteNameElement.textContent = messageList[0];
+      testSuiteNameDiv.appendChild(testSuiteNameElement);
+      const testCasesTotalElement = document.createElement('p');
+      testCasesTotalElement.textContent = messageList[1];
+      totalTestCasesDiv.appendChild(testCasesTotalElement);
+      const testCasesPassedElement = document.createElement('p');
+      testCasesPassedElement.textContent = messageList[2];
+      testCasesPassedDiv.appendChild(testCasesPassedElement);
+      const testCasesFailedElement = document.createElement('p');
+      testCasesFailedElement.textContent = messageList[3];
+      testCasesFailedDiv.appendChild(testCasesFailedElement);
+      return;
+    }
+    if (message.isHomePage === true) {
+      if (message.error === true) {
+        if (lastTestResultsDiv) {
+          lastTestResultsDiv.innerHTML = `<p class="error">${message.value}</p>`;
+          return;
+        }
+      }
+      else {
+        lastTestResultsDiv.appendChild(testCaseElement);
+      }
+      return;
+    }
+
+    stopTestButton.style.display = 'none';
+    upperOutputDiv.style.display = "none";
+    generatedTestCommandDiv.style.display = "none";
+    testStatus.style.display = "block";
+    if (message.error === true) {
+      viewCompleteSummaryButton.style.display = "none";
+    }
+    else{
+    viewCompleteSummaryButton.style.display = "block";
+    }
+    if (message.error === true) {
+      if (testStatus) {
         testStatus.textContent = message.value;
         testStatus.classList.add("error");
-        return;
       }
-      console.log("message.textSummary", message.textSummary);
-      const testCaseElement = document.createElement('p');
-      if(message.textSummary.includes("test passed")){
-        testCaseElement.classList.add("success");
+      else {
+        testResultsDiv.innerHTML = `<p class="error">${message.value}</p>`;
       }
-      else if (message.textSummary.includes("test failed")){
-        testCaseElement.classList.add("error");
-      }
-      else{
-        testCaseElement.classList.add("info");
-      }
-      testCaseElement.textContent = message.textSummary;
-      testResultsDiv.appendChild(testCaseElement); 
+    }
+    testResultsDiv.appendChild(testCaseElement);
   }
-  else if(message.type === "testfile"){
+  else if (message.type === "testfile") {
     const testProjectFolder = document.getElementById('testProjectFolder');
     if (testProjectFolder) {
       testProjectFolder.value = message.value;

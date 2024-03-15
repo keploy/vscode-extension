@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.stopTesting = exports.startTesting = exports.displayTestCases = void 0;
 const vscode = __importStar(require("vscode"));
 const fs_1 = require("fs");
-function displayTestCases(logfilePath, webview) {
+function displayTestCases(logfilePath, webview, isHomePage, isCompleteSummary) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Displaying test cases');
         let logData;
@@ -63,7 +63,9 @@ function displayTestCases(logfilePath, webview) {
                     type: 'testResults',
                     value: 'Test Failed',
                     textSummary: "Error Replaying Test Cases. Please try again.",
-                    error: true
+                    error: true,
+                    isHomePage: isHomePage,
+                    isCompleteSummary: isCompleteSummary
                 });
                 return;
             }
@@ -75,7 +77,9 @@ function displayTestCases(logfilePath, webview) {
                     type: 'testResults',
                     value: 'Test Failed',
                     textSummary: "Error Replaying Test Cases. Please try again.",
-                    error: true
+                    error: true,
+                    isHomePage: isHomePage,
+                    isCompleteSummary: isCompleteSummary
                 });
                 return;
             }
@@ -87,7 +91,9 @@ function displayTestCases(logfilePath, webview) {
                     type: 'testResults',
                     value: 'Test Failed',
                     textSummary: "Error Replaying Test Cases. Please try again.",
-                    error: true
+                    error: true,
+                    isHomePage: isHomePage,
+                    isCompleteSummary: isCompleteSummary
                 });
                 return;
             }
@@ -101,17 +107,34 @@ function displayTestCases(logfilePath, webview) {
             testSummaryList.pop();
             //remove first line of summary which is header
             testSummaryList.shift();
-            //send first three lines of summary
-            testSummaryList.forEach((line, index) => {
-                if (index > 2) {
-                    return;
-                }
-                webview.postMessage({
-                    type: 'testResults',
-                    value: 'Test Summary Generated',
-                    textSummary: line
+            if (isCompleteSummary) {
+                //remove fist 7 lines of summary
+                testSummaryList.splice(0, 7);
+                testSummaryList.forEach((line, index) => {
+                    webview.postMessage({
+                        type: 'testResults',
+                        value: 'Test Summary Generated',
+                        textSummary: line,
+                        isHomePage: false,
+                        isCompleteSummary: isCompleteSummary
+                    });
                 });
-            });
+            }
+            else {
+                //send first three lines of summary
+                testSummaryList.forEach((line, index) => {
+                    if (index > 2) {
+                        return;
+                    }
+                    webview.postMessage({
+                        type: 'testResults',
+                        value: 'Test Summary Generated',
+                        textSummary: line,
+                        isHomePage: isHomePage,
+                        isCompleteSummary: isCompleteSummary
+                    });
+                });
+            }
         }
         catch (error) {
             console.log(error);
@@ -153,7 +176,7 @@ function startTesting(command, filepath, wslscriptPath, wsllogfilePath, scriptPa
                         console.log('Terminal closed');
                         if (eventTerminal === terminal) {
                             disposable.dispose(); // Dispose the listener
-                            displayTestCases(logfilePath, webview); // Call function when terminal is closed
+                            displayTestCases(logfilePath, webview, false, false); // Call function when terminal is closed
                             resolve(); // Resolve the promise
                         }
                     });

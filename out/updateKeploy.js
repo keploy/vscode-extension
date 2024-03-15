@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.downloadAndInstallKeployBinary = exports.downloadAndUpdateDocker = exports.downloadAndUpdate = void 0;
 const vscode = __importStar(require("vscode"));
 const version_1 = require("./version");
-function downloadAndUpdate(downloadUrl, webview) {
+function downloadAndUpdate() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const keployVersion = yield (0, version_1.getCurrentKeployVersion)();
@@ -49,7 +49,7 @@ function downloadAndUpdate(downloadUrl, webview) {
             }
             console.log('Downloading and updating Keploy binary...');
             vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
-            downloadAndInstallKeployBinary(webview).then(() => {
+            downloadAndInstallKeployBinary().then(() => {
                 vscode.window.showInformationMessage('Updated Keploy binary successfully!');
             }).catch(error => {
                 console.error('Failed to update Keploy binary:', error);
@@ -60,8 +60,8 @@ function downloadAndUpdate(downloadUrl, webview) {
         catch (error) {
             if (error.toString().toLowerCase().includes("not found") || error.toString().toLowerCase().includes("command not found") || error.toString().toLowerCase().includes("no such file or directory")) {
                 //post message to webview
-                webview.postMessage({ type: 'onError', value: `Keploy binary not found. Installing Keploy binary first.` });
-                downloadAndInstallKeployBinary(webview).then(() => {
+                // webview.postMessage({ type: 'onError', value: `Keploy binary not found. Installing Keploy binary first.` });
+                downloadAndInstallKeployBinary().then(() => {
                     vscode.window.showInformationMessage('Updated Keploy binary successfully!');
                 }).catch(error => {
                     console.error('Failed to update Keploy binary here:', error);
@@ -118,7 +118,7 @@ function downloadAndUpdateDocker() {
     });
 }
 exports.downloadAndUpdateDocker = downloadAndUpdateDocker;
-function downloadAndInstallKeployBinary(webview) {
+function downloadAndInstallKeployBinary() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Downloading and installing Keploy binary...');
         return new Promise((resolve, reject) => {
