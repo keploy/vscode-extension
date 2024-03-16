@@ -23,6 +23,6 @@ fi
 cd "$folderpath"
 
 # Execute the keploy record command, redirecting output to the log file
-sudo $keploycmd test -c "$command"  | tee -a "$log_file_path"
+sudo $keploycmd $command  | tee -a "$log_file_path"
 # $keploycmd test -c "/home/akash/Desktop/samples-go/gin-mongo/test-app-url-shortener" | tee -a "$log_file_path" 
 

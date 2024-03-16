@@ -1,30 +1,74 @@
-
-
 <script>
-    import { onMount } from "svelte";
-onMount(()=>{
-    document.getElementById('recordProjectFolder').addEventListener('input',()=>{
-      if(document.getElementById('recordProjectFolder').value && document.getElementById('recordCommand').value){
-        document.getElementById('startRecordingButton').disabled = false;
+  import { onMount } from "svelte";
+
+  let flags = {
+    "config-path": "",
+    "delay": "",
+    "passThroughPorts": "",
+    "path": "",
+    "proxyport": "",
+    "debug": "",
+  };
+
+  onMount(() => {
+    document
+      .getElementById("recordProjectFolder")
+      .addEventListener("input", () => {
+        if (
+          document.getElementById("recordProjectFolder").value &&
+          document.getElementById("recordCommand").value
+        ) {
+          document.getElementById("startRecordingButton").disabled = false;
+        }
+      });
+    document.getElementById("recordCommand").addEventListener("input", () => {
+      if (
+        document.getElementById("recordProjectFolder").value &&
+        document.getElementById("recordCommand").value
+      ) {
+        document.getElementById("startRecordingButton").disabled = false;
       }
-    })
-    document.getElementById('recordCommand').addEventListener('input',()=>{
-      if(document.getElementById('recordProjectFolder').value && document.getElementById('recordCommand').value){
-        document.getElementById('startRecordingButton').disabled = false;
-      }
-    })
+    });
     //change the value of the generatedRecordCommand when the recordCommand is filled
-    document.getElementById('recordCommand').addEventListener('input',()=>{
-      document.getElementById('generatedRecordCommand').innerText = `keploy record -c "${document.getElementById('recordCommand').value}"`;
-    })
+    document.getElementById("recordCommand").addEventListener("input", () => {
+      document.getElementById("generatedRecordCommand").innerText =
+        `keploy record -c "${document.getElementById("recordCommand").value}"`;
+    });
+    const selectFlagsElement = document.getElementById("selectflags");
+    selectFlagsElement.addEventListener("change", () =>
+      handleFlagValueChange(),
+    );
+    const flagValueInput = document.getElementById("flagValueInput");
+    flagValueInput.addEventListener("input", () => handleFlagValueChange());
+    function handleFlagValueChange() {
+      const e = document.getElementById("selectflags");
+      var selectedFlag = e.options[e.selectedIndex].value;
+      console.log("selectedFlag : " + selectedFlag);
+      const flagValue = document.getElementById("flagValueInput").value;
+      console.log("flagValue : " + flagValue);
+      flags[selectedFlag] = flagValue;
+      console.log(flags);
+      updateGeneratedCommand();
+    }
 
-
-  })
+    function updateGeneratedCommand() {
+      let currentCommand = `keploy record -c "${document.getElementById(
+        "recordCommand",
+      ).value}"`;
+      for (const [flag, value] of Object.entries(flags)) {
+        if (value) {
+          currentCommand += ` --${flag}="${value}"`;
+        }
+      }
+      document.getElementById("generatedRecordCommand").innerText =
+        currentCommand;
+    }
+  });
 </script>
 
 <body>
-    <a id="navigateHomeButton" class="homebutton"> Home </a>
-  
+  <a id="navigateHomeButton" class="homebutton"> Home </a>
+
   <div id="selectFolderDiv">
     <button id="selectRecordFolderButton" class="secondary"
       >Select Project Folder</button
@@ -50,19 +94,18 @@ onMount(()=>{
   <div id="flagsDiv">
     <div id="flags">
       <select id="selectflags">
-        <option value="manual">Flag 1</option>
-        <option value="record">Flag 2</option>
+        <option value="" disabled selected>Select Flag</option>
+        {#each Object.keys(flags) as flag}
+          <option value={flag}>{flag}</option>
+        {/each}
       </select>
     </div>
     <div id="flagValue">
-      <select id="selectflagValue">
-        <option value="manual">True</option>
-        <option value="record">False</option>
-      </select>
+      <input type="text" id="flagValueInput" placeholder="Enter Value" />
     </div>
   </div>
   <button id="startRecordingButton" disabled="true">Start Recording</button>
-  
+
   <hr />
   <div id="outputDiv">
     <div id="upperOutputDiv">
@@ -74,14 +117,12 @@ onMount(()=>{
       <h3>Command</h3>
     </div>
     <div id="recordCommandDiv">
-      <h1 id="generatedRecordCommand">keploy record -c ""</h1>
+      <h1 id="generatedRecordCommand">keploy record</h1>
     </div>
     <div class="loader" id="loader"></div>
     <button id="stopRecordingButton">Stop Recording</button>
     <h3 id="recordStatus"> </h3>
-    <div id="recordedTestCases">
-      
-    </div>
+    <div id="recordedTestCases"></div>
   </div>
 </body>
 
@@ -117,43 +158,40 @@ onMount(()=>{
     width: 95%;
     margin: 10px;
   }
-  #selectflags,
-  #selectflagValue {
+  #selectflags {
     width: 2fr;
     margin: auto 0;
   }
-  #generatedRecordCommand{
+  #generatedRecordCommand {
     margin: 0 auto;
     text-align: center;
   }
-  #navigateHomeButton{
+  #navigateHomeButton {
     width: 20%;
     font-size: small;
     text-align: center;
     margin: 0;
   }
-  #stopRecordingButton{
+  #stopRecordingButton {
     width: 75%;
     background-color: red;
-    margin: 10px auto ;
+    margin: 10px auto;
   }
-  #startRecordingButton:disabled{
+  #startRecordingButton:disabled {
     background-color: rgb(80, 79, 79);
   }
-  #recordStatus{
+  #recordStatus {
     text-align: center;
     display: none;
     margin: 20px;
     font-weight: bold;
   }
-  #recordedTestCases{
+  #recordedTestCases {
     display: grid;
     grid-template-columns: 1fr;
     place-items: center;
-
   }
-  .loader{
+  .loader {
     display: none;
   }
-  
 </style>

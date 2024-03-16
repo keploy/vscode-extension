@@ -128,9 +128,7 @@ class SidebarProvider {
                         }
                         console.log("script path" + wslscriptPath);
                         console.log(wsllogPath);
-                        // console.log(script.fsPath);
-                        // console.log(logfilePath.fsPath);
-                        yield (0, Record_1.startRecording)(data.command, data.filePath, wslscriptPath, wsllogPath, script.fsPath, logfilePath.fsPath, (_b = this._view) === null || _b === void 0 ? void 0 : _b.webview);
+                        yield (0, Record_1.startRecording)(data.command, data.filePath, data.generatedRecordCommand, wslscriptPath, wsllogPath, script.fsPath, logfilePath.fsPath, (_b = this._view) === null || _b === void 0 ? void 0 : _b.webview);
                         // this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
                         // this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
                     }
@@ -194,7 +192,7 @@ class SidebarProvider {
                         }
                         console.log("script path" + wslscriptPath);
                         console.log(wsllogPath);
-                        yield (0, Test_1.startTesting)(data.command, data.filePath, wslscriptPath, wsllogPath, script.fsPath, logfilePath.fsPath, (_f = this._view) === null || _f === void 0 ? void 0 : _f.webview);
+                        yield (0, Test_1.startTesting)(data.command, data.filePath, data.generatedTestCommand, wslscriptPath, wsllogPath, script.fsPath, logfilePath.fsPath, (_f = this._view) === null || _f === void 0 ? void 0 : _f.webview);
                     }
                     catch (error) {
                         (_g = this._view) === null || _g === void 0 ? void 0 : _g.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
@@ -277,7 +275,7 @@ class SidebarProvider {
         //call the function below after 3 seconds
         setTimeout(() => {
             (0, Test_1.displayTestCases)(logfilePath.fsPath, webview, true, false);
-        }, 1000);
+        }, 3000);
         // displayTestCases(logfilePath.fsPath, webview);
         return `<!DOCTYPE html>
 			<html lang="en">

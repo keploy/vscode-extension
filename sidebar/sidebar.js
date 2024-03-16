@@ -189,11 +189,13 @@ if (startRecordingButton) {
     recordedTestCasesDiv.innerHTML = "";
     console.log('Command value:', commandValue);
     FilePath = document.getElementById('recordProjectFolder').value;
+    const generatedRecordCommand = document.getElementById('generatedRecordCommand');
     vscode.postMessage({
       type: "startRecordingCommand",
       value: `Recording Command...`,
       command: commandValue,
-      filePath: FilePath
+      filePath: FilePath,
+      generatedRecordCommand: generatedRecordCommand.innerHTML
     });
   });
 }
@@ -216,11 +218,13 @@ if (startTestButton) {
     const commandValue = testCommandInput.value;
     console.log('Command value:', commandValue);
     FilePath = document.getElementById('testProjectFolder').value;
+    const generatedTestCommand = document.getElementById('generatedTestCommand');
     vscode.postMessage({
       type: "startTestingCommand",
       value: `Testing Command...`,
       command: commandValue,
-      filePath: FilePath
+      filePath: FilePath,
+      generatedTestCommand: generatedTestCommand.innerHTML
     });
   });
 }
@@ -257,15 +261,13 @@ window.addEventListener('message', event => {
   console.log("message", message);
   if (message.type === 'updateStatus') {
     console.log("message.value", message.value);
-    progressDiv.innerHTML = `<p class="info">${message.value}</p>`;
+
   }
   else if (message.type === 'error') {
     console.error(message.value);
-    progressDiv.innerHTML = `<p class="error">${message.value}</p>`;
   }
   else if (message.type === 'success') {
     console.log(message.value);
-    progressDiv.innerHTML = `<p class="success">${message.value}</p>`;
   }
   else if (message.type === 'recordfile') {
     console.log(message.value);
@@ -282,8 +284,8 @@ window.addEventListener('message', event => {
     upperOutputDiv.style.display = "none";
     generatedRecordCommandDiv.style.display = "none";
     if (message.error === true) {
-      recordStatus.textContent = `Failed To Record Test Cases`;
-      recordStatus.classList.add("error");
+      recordStatus.textContent = `Failed To Test Test Cases`;
+      recordStatus.Testist.add("error");
       const errorMessage = document.createElement('p class="error"');
       errorMessage.textContent = message.textContent;
       recordedTestCasesDiv.appendChild(errorMessage);
@@ -350,7 +352,7 @@ window.addEventListener('message', event => {
     if (message.isHomePage === true) {
       if (message.error === true) {
         if (lastTestResultsDiv) {
-          lastTestResultsDiv.innerHTML = `<p class="error">${message.value}</p>`;
+          lastTestResultsDiv.innerHTML = `<p class="error">No Test Runs Found</p>`;
           return;
         }
       }

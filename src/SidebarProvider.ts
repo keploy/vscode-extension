@@ -105,9 +105,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             }
             console.log("script path" + wslscriptPath);
             console.log(wsllogPath);
-            // console.log(script.fsPath);
-            // console.log(logfilePath.fsPath);
-            await startRecording(data.command , data.filePath , wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath , this._view?.webview );
+
+            
+            await startRecording(data.command , data.filePath , data.generatedRecordCommand ,  wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath , this._view?.webview );
             // this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
             // this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
           } catch (error) {
@@ -171,7 +171,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             }
             console.log("script path" + wslscriptPath);
             console.log(wsllogPath);
-            await startTesting(data.command , data.filePath , wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath ,this._view?.webview );
+            await startTesting(data.command , data.filePath , data.generatedTestCommand  ,wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath ,this._view?.webview );
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
           }
@@ -272,7 +272,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     //call the function below after 3 seconds
     setTimeout(() => {
       displayTestCases(logfilePath.fsPath, webview ,  true , false);
-    }, 1000);
+    }, 3000);
     // displayTestCases(logfilePath.fsPath, webview);
 
     return `<!DOCTYPE html>

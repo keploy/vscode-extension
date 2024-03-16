@@ -111,7 +111,7 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
 }
 
 
-export async function startTesting(command: string, filepath: string, wslscriptPath: string, wsllogfilePath: string, scriptPath: string, logfilePath: string, webview: any): Promise<void> {
+export async function startTesting(command: string, filepath: string,generatedTestCommand:string, wslscriptPath: string, wsllogfilePath: string, scriptPath: string, logfilePath: string, webview: any): Promise<void> {
     try {
         return new Promise<void>((resolve, reject) => {
             try {
@@ -121,6 +121,8 @@ export async function startTesting(command: string, filepath: string, wslscriptP
                 } else {
                     bashPath = '/bin/bash';
                 }
+                //remove keploy from the command
+                generatedTestCommand = generatedTestCommand.replace('keploy', '');
 
                 const terminal = vscode.window.createTerminal({
                     name: 'Keploy Terminal',
@@ -129,11 +131,11 @@ export async function startTesting(command: string, filepath: string, wslscriptP
 
                 terminal.show();
                 if (process.platform === 'win32') {
-                    const testCmd = `${wslscriptPath} "${command}" "${filepath}" "${wsllogfilePath}" ;exit 0 `;
+                    const testCmd = `${wslscriptPath} "${generatedTestCommand}" "${filepath}" "${wsllogfilePath}" ;exit 0 `;
                     terminal.sendText(testCmd);
                 }
                 else {
-                    const testCmd = `sudo ${scriptPath} "${command}" "${filepath}" "${logfilePath}" ;exit 0 `;
+                    const testCmd = `sudo ${scriptPath} "${generatedTestCommand}" "${filepath}" "${logfilePath}" ;exit 0 `;
                     // const exitCmd = 'exit';
                     terminal.sendText(testCmd);
                 }

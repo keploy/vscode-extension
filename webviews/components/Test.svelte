@@ -1,7 +1,22 @@
 
 <script>
       import { onMount } from "svelte";
-
+      let flags = {
+        "apiTimeout" : "",
+    "config-path": "",
+    "delay": "",
+    "mongoPassword" : "",
+    "passThroughPorts": "",
+    "testsets" : "",
+    "generateTestReport" : "",
+    "removeUnusedMocks" : "",
+    "ignoreOrdering" : "",
+    "coverage" : "",
+    "withCoverage" : "",
+    "path": "",
+    "proxyport": "",
+    "debug": "",
+  };
   //enable the startTestingButton when the testProjectFolder and testCommand are filled
   onMount(()=>{
     document.getElementById('testProjectFolder').addEventListener('input',()=>{
@@ -18,7 +33,35 @@
     document.getElementById('testCommand').addEventListener('input',()=>{
       document.getElementById('generatedTestCommand').innerText = `keploy test -c "${document.getElementById('testCommand').value}"`;
     })
+    const selectFlagsElement = document.getElementById("selectflags");
+    selectFlagsElement.addEventListener("change", () =>
+      handleFlagValueChange(),
+    );
+    const flagValueInput = document.getElementById("flagValueInput");
+    flagValueInput.addEventListener("input", () => handleFlagValueChange());
+    function handleFlagValueChange() {
+      const e = document.getElementById("selectflags");
+      var selectedFlag = e.options[e.selectedIndex].value;
+      console.log("selectedFlag : " + selectedFlag);
+      const flagValue = document.getElementById("flagValueInput").value;
+      console.log("flagValue : " + flagValue);
+      flags[selectedFlag] = flagValue;
+      console.log(flags);
+      updateGeneratedCommand();
+    }
 
+    function updateGeneratedCommand() {
+      let currentCommand = `keploy test -c "${document.getElementById(
+        "testCommand",
+      ).value}"`;
+      for (const [flag, value] of Object.entries(flags)) {
+        if (value) {
+          currentCommand += ` --${flag}="${value}"`;
+        }
+      }
+      document.getElementById("generatedTestCommand").innerText =
+        currentCommand;
+    }
 
   })
 </script>
@@ -50,21 +93,18 @@
   <div id="flagsDiv">
     <div id="flags">
       <select id="selectflags">
-        <option value="manual">Flag 1</option>
-        <option value="record">Flag 2</option>
+        <option value="" disabled selected>Select Flag</option>
+        {#each Object.keys(flags) as flag}
+          <option value={flag}>{flag}</option>
+        {/each}
       </select>
     </div>
     <div id="flagValue">
-      <select id="selectflagValue">
-        <option value="manual">True</option>
-        <option value="record">False</option>
-      </select>
+      <input type="text" id="flagValueInput" placeholder="Enter Value" />
     </div>
   </div>
   <select id="selectTestCases" >
     <option value="Run all test cases">Run all test cases</option>
-    <option value="Test-Case-1">Test-Case-1</option>
-    <option value="Test-Case-2">Test-Case-2</option>
   </select>
   <button id="startTestingButton" disabled="true">Start Testing</button>
   <hr />
@@ -126,8 +166,7 @@
     width: 95%;
     margin: 10px;
   }
-  #selectflags,
-  #selectflagValue {
+  #selectflags{
     width: 2fr;
     margin: auto 0;
   }
