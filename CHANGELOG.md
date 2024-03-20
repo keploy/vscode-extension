@@ -1,5 +1,8 @@
 # Changelog
 
+# [2.6.0] - 2024-03-20
+-  UI Improvements
+
 # [2.5.0] - 2024-03-16
 
 - Added Support for Flags

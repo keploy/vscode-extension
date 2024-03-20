@@ -66,7 +66,20 @@
   })
 </script>
 <a id="navigateHomeButton" class="homebutton"> Home </a>
-
+<div id="outputDiv">
+  <div id="upperOutputDiv">
+    <img
+      class="keploylogo"
+      src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
+      alt="Keploy Logo"
+    />
+    <h4>Command</h4>
+  </div>
+  <div id="testCommandDiv">
+    <h4 id="generatedTestCommand">keploy test -c ""</h4>
+  </div>
+</div>
+<hr id="upperHR" />
 <body>
   <div id="selectFolderDiv">
     <button id="selectTestFolderButton" class="secondary"
@@ -107,27 +120,13 @@
     <option value="Run all test cases">Run all test cases</option>
   </select>
   <button id="startTestingButton" disabled="true">Start Testing</button>
-  <hr />
-  <div id="outputDiv">
-    <div id="upperOutputDiv">
-      <img
-        class="keploylogo"
-        src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
-        alt="Keploy Logo"
-      />
-      <h3>Command</h3>
-    </div>
-    <div id="testCommandDiv">
-      <h1 id="generatedTestCommand">keploy test -c ""</h1>
-    </div>
+    <hr id="lowerHR" />
     <div class="loader" id="loader"></div>
     <button id="stopTestingButton">Stop Testing</button>
     <h3 id="testStatus"> </h3>
     <div id="testResults">
     </div>
     <button id="viewCompleteSummaryButton">View Complete Test Summary</button>
-
-  </div>
 </body>
 
 <style>
@@ -137,8 +136,17 @@
     grid-template-columns: 1fr 1fr;
     place-items: center;
   }
+  #outputDiv {
+    font-size: medium;
+  }
+  #flagsDiv {
+    margin: 10px;
+  }
+  #lowerHR {
+    display: none;
+  }
   .keploylogo {
-    width: 50%;
+    width: 40%;
   }
   #selectTestCases {
     margin: 20px auto;
@@ -153,13 +161,16 @@
     border-radius: 5px;
     border: none;
   }
+  #lowerHR{
+    display: none;
+  }
   #selectFolderDiv,
   #appCommandDiv {
     display: grid;
     place-items: center;
   }
   #selectFolderDiv {
-    margin: 20px;
+    margin:  0 20px;
   }
 
   input {
@@ -207,4 +218,7 @@
     .loader{
       display: none;
     }
+    button{
+    font-size: small;
+  }
 </style>

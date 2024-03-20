@@ -68,7 +68,21 @@
 
 <body>
   <a id="navigateHomeButton" class="homebutton"> Home </a>
-
+  <div id="outputDiv">
+    <div id="upperOutputDiv">
+      <img
+        class="keploylogo"
+        src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
+        alt="Keploy Logo"
+      />
+      <h4>Command</h4>
+    </div>
+    <div id="recordCommandDiv">
+      <h4 id="generatedRecordCommand">keploy record</h4>
+    </div>
+    
+  </div>
+  <hr id="upperHR" />
   <div id="selectFolderDiv">
     <button id="selectRecordFolderButton" class="secondary"
       >Select Project Folder</button
@@ -105,25 +119,11 @@
     </div>
   </div>
   <button id="startRecordingButton" disabled="true">Start Recording</button>
-
-  <hr />
-  <div id="outputDiv">
-    <div id="upperOutputDiv">
-      <img
-        class="keploylogo"
-        src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
-        alt="Keploy Logo"
-      />
-      <h3>Command</h3>
-    </div>
-    <div id="recordCommandDiv">
-      <h1 id="generatedRecordCommand">keploy record</h1>
-    </div>
-    <div class="loader" id="loader"></div>
+  <hr id="lowerHR" />
+  <div class="loader" id="loader"></div>
     <button id="stopRecordingButton">Stop Recording</button>
     <h3 id="recordStatus"> </h3>
-    <div id="recordedTestCases"></div>
-  </div>
+    <div id="recordedTestCases"></div>  
 </body>
 
 <style>
@@ -133,8 +133,17 @@
     grid-template-columns: 1fr 1fr;
     place-items: center;
   }
+  #flagsDiv {
+    margin: 10px;
+  }
+  #lowerHR{
+    display: none;
+  }
   .keploylogo {
-    width: 50%;
+    width: 40%;
+  }
+  #outputDiv {
+    font-size: medium;
   }
   #startRecordingButton {
     margin: 20px auto;
@@ -151,7 +160,7 @@
     place-items: center;
   }
   #selectFolderDiv {
-    margin: 20px;
+    margin:  0 20px;
   }
 
   input {
@@ -193,5 +202,8 @@
   }
   .loader {
     display: none;
+  }
+  button{
+    font-size: small;
   }
 </style>

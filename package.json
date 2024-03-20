@@ -2,7 +2,7 @@
   "name": "heykeploy",
   "displayName": "Keploy VSCode Extension",
   "description": "Hello Keploy Community!",
-  "version": "2.5.0",
+  "version": "2.6.1",
   "publisher": "Akash-Singh04",
   "icon": "media/logo.png",
   "repository": {
@@ -23,7 +23,7 @@
         {
           "id": "Keploy-Sidebar",
           "title": "Keploy",
-          "icon": "media/beaker.svg"
+          "icon": "media/logo.png"
         }
       ]
     },
@@ -33,7 +33,7 @@
           "type": "webview",
           "id": "Keploy-Sidebar",
           "name": "Keploy",
-          "icon": "media/beaker.svg",
+          "icon": "media/logo.png",
           "webviewOptions": {
             "retainContextWhenHidden": true
           }

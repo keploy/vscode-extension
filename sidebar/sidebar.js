@@ -24,6 +24,8 @@ const totalTestCasesDiv = document.getElementById('totalTestCases');
 const testCasesPassedDiv = document.getElementById('testCasesPassed');
 const testCasesFailedDiv = document.getElementById('testCasesFailed');
 const rerunTestSuiteButton = document.getElementById('rerunTestSuiteButton');
+const upperHR = document.getElementById('upperHR');
+const lowerHR = document.getElementById('lowerHR');
 const loader = document.getElementById('loader');
 let FilePath = "";
 
@@ -184,6 +186,7 @@ if (startRecordingButton) {
   startRecordingButton.addEventListener('click', async () => {
     console.log("startRecordingButton clicked");
     stopRecordingButton.style.display = 'block';
+    lowerHR.style.display = 'block';
     loader.style.display = "block";
     const commandValue = recordCommandInput.value;
     recordedTestCasesDiv.innerHTML = "";
@@ -214,6 +217,7 @@ if (startTestButton) {
     console.log("startTestButton clicked");
     loader.style.display = "block";
     stopTestButton.style.display = 'block';
+    lowerHR.style.display = 'block';
     testStatus.innerHTML = "";
     const commandValue = testCommandInput.value;
     console.log('Command value:', commandValue);
@@ -231,6 +235,7 @@ if (startTestButton) {
 if (stopTestButton) {
   stopTestButton.addEventListener('click', async () => {
     console.log("stopTestButton clicked");
+    loader.style.display = "none";
     vscode.postMessage({
       type: "stopTestingCommand",
       value: `Stop Testing`
@@ -280,8 +285,12 @@ window.addEventListener('message', event => {
   else if (message.type === 'testcaserecorded') {
     console.log("message.textContent", message.textContent);
     stopRecordingButton.style.display = 'none';
+    loader.style.display = "none";
     recordStatus.style.display = "block";
     upperOutputDiv.style.display = "none";
+    if(upperHR){
+    upperHR.style.display = 'none';
+    }
     generatedRecordCommandDiv.style.display = "none";
     if (message.error === true) {
       recordStatus.textContent = `Failed To Test Test Cases`;
@@ -315,7 +324,9 @@ window.addEventListener('message', event => {
   else if (message.type === "testResults") {
     console.log("message.value", message.value);
     loader.style.display = "none";
-    
+    if(upperHR){
+    upperHR.style.display = 'none';
+    }
     const testCaseElement = document.createElement('p');
     testCaseElement.textContent = message.textSummary;
     if (message.textSummary.includes("test passed")) {

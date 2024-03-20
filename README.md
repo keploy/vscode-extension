@@ -17,6 +17,9 @@ Keploy-VsCode offers the following features:
 
 ## Release Notes
 
+### 2.6.0
+-  UI Improvements
+
 ### 2.5.0
 - Added Support for Flags
 
