@@ -3,8 +3,7 @@ const progressDiv = document.getElementById('Progress');
 const filePathDiv = document.getElementById('filePathDiv');
 const recordedTestCasesDiv = document.getElementById('recordedTestCases');
 const testResultsDiv = document.getElementById('testResults');
-const recordCommandInput = document.getElementById('recordCommand');
-const testCommandInput = document.getElementById('testCommand');
+const appCommand = document.getElementById('appCommand');
 const stopRecordingButton = document.getElementById("stopRecordingButton");
 const startRecordingButton = document.getElementById('startRecordingButton');
 const startTestButton = document.getElementById('startTestingButton');
@@ -31,12 +30,51 @@ let FilePath = "";
 
 //cleanup required
 
+
+function resetUI() {
+  if (recordedTestCasesDiv) {
+    recordedTestCasesDiv.innerHTML = "";
+  }
+  if (recordStatus) {
+    recordStatus.style.display = "none";
+    recordStatus.textContent = "";
+  }
+  if (testResultsDiv) {
+    testResultsDiv.innerHTML = "";
+  }
+  if (testStatus) {
+    testStatus.textContent = "";
+    testStatus.style.display = "none";
+  }
+  if (testSuiteNameDiv) {
+    testSuiteNameDiv.innerHTML = "";
+  }
+  if (totalTestCasesDiv) {
+    totalTestCasesDiv.innerHTML = "";
+  }
+  if (testCasesPassedDiv) {
+    testCasesPassedDiv.innerHTML = "";
+  }
+  if (testCasesFailedDiv) {
+    testCasesFailedDiv.innerHTML = "";
+  }
+  if (lastTestResultsDiv) {
+    lastTestResultsDiv.innerHTML = "";
+  }
+  if (viewCompleteSummaryButton) {
+    viewCompleteSummaryButton.style.display = "none";
+  }
+  if (upperOutputDiv) {
+    upperOutputDiv.style.display = "none";
+  }
+}
+
 if (openRecordPageButton) {
   openRecordPageButton.addEventListener('click', async () => {
     console.log("openRecordPageButton clicked");
     vscode.postMessage({
       type: "navigate",
-      value: "Record"
+      value: "Keploy"
     });
   });
 }
@@ -65,7 +103,7 @@ if(rerunTestSuiteButton){
     console.log("rerunTestSuiteButton clicked");
     vscode.postMessage({
       type: "navigate",
-      value: "Test"
+      value: "Keploy"
     });
   });
 
@@ -142,70 +180,30 @@ if (getVersionButton) {
 }
 
 
-
-const updateButton = document.getElementById('updateKeployButton');
-if (updateButton) {
-  updateButton.addEventListener('click', async () => {
-    const updateButtons = document.getElementById('updateButtons');
-    if (updateButtons) {
-      if (updateButtons.style.display === "grid") {
-        updateButtons.style.display = "none";
-      }
-      else {
-        updateButtons.style.display = "grid";
-      }
-    }
-  });
-}
-
-const updateKeployBinaryButton = document.getElementById('updateKeployBinaryButton');
-if (updateKeployBinaryButton) {
-  updateKeployBinaryButton.addEventListener('click', async () => {
-    console.log("updateKeployBinaryButton clicked");
-    vscode.postMessage({
-      type: "updateKeploy",
-      value: `Updating Keploy...`
-    });
-  });
-}
-
-const updateKeployDockerButton = document.getElementById('updateKeployDockerButton');
-if (updateKeployDockerButton) {
-  updateKeployDockerButton.addEventListener('click', async () => {
-    console.log("updateKeployDockerButton clicked");
-    // Get the Progress div
-    vscode.postMessage({
-      type: "updateKeployDocker",
-      value: `Updating Keploy Docker...`
-    });
-  });
-}
-
-
 if (startRecordingButton) {
   startRecordingButton.addEventListener('click', async () => {
     console.log("startRecordingButton clicked");
-    stopRecordingButton.style.display = 'block';
-    lowerHR.style.display = 'block';
-    loader.style.display = "block";
-    const commandValue = recordCommandInput.value;
-    recordedTestCasesDiv.innerHTML = "";
+    resetUI();
+    let  commandValue = appCommand.value;
+    
     console.log('Command value:', commandValue);
-    FilePath = document.getElementById('recordProjectFolder').value;
-    const generatedRecordCommand = document.getElementById('generatedRecordCommand');
+    FilePath = document.getElementById('projectFolder').value;
+    if (FilePath === "") {
+      FilePath = "./";
+    }
+    // const generatedRecordCommand = document.getElementById('generatedRecordCommand');
     vscode.postMessage({
       type: "startRecordingCommand",
       value: `Recording Command...`,
       command: commandValue,
       filePath: FilePath,
-      generatedRecordCommand: generatedRecordCommand.innerHTML
+      generatedRecordCommand: "" 
     });
   });
 }
 if (stopRecordingButton) {
   stopRecordingButton.addEventListener('click', async () => {
     console.log("stopRecordingButton clicked");
-    loader.style.display = "none";
     vscode.postMessage({
       type: "stopRecordingCommand",
       value: `Stop Recording`
@@ -215,27 +213,28 @@ if (stopRecordingButton) {
 if (startTestButton) {
   startTestButton.addEventListener('click', async () => {
     console.log("startTestButton clicked");
-    loader.style.display = "block";
-    stopTestButton.style.display = 'block';
-    lowerHR.style.display = 'block';
-    testStatus.innerHTML = "";
-    const commandValue = testCommandInput.value;
+    resetUI();
+    
+    const commandValue = appCommand.value;
     console.log('Command value:', commandValue);
-    FilePath = document.getElementById('testProjectFolder').value;
-    const generatedTestCommand = document.getElementById('generatedTestCommand');
+    FilePath = document.getElementById('projectFolder').value;
+    if (FilePath === "") {
+      FilePath = "./";
+    }
+    // const generatedTestCommand = document.getElementById('generatedTestCommand');
     vscode.postMessage({
       type: "startTestingCommand",
       value: `Testing Command...`,
       command: commandValue,
       filePath: FilePath,
-      generatedTestCommand: generatedTestCommand.innerHTML
+      generatedTestCommand: ""
     });
   });
 }
 if (stopTestButton) {
   stopTestButton.addEventListener('click', async () => {
     console.log("stopTestButton clicked");
-    loader.style.display = "none";
+    
     vscode.postMessage({
       type: "stopTestingCommand",
       value: `Stop Testing`
@@ -276,22 +275,17 @@ window.addEventListener('message', event => {
   }
   else if (message.type === 'recordfile') {
     console.log(message.value);
-    const recordProjectFolder = document.getElementById('recordProjectFolder');
-    if (recordProjectFolder) {
-      recordProjectFolder.value = message.value;
+    const projectFolder = document.getElementById('projectFolder');
+    if (projectFolder) {
+      projectFolder.style.display = "block";
+      projectFolder.value = message.value;
       FilePath = message.value;
     }
   }
   else if (message.type === 'testcaserecorded') {
     console.log("message.textContent", message.textContent);
-    stopRecordingButton.style.display = 'none';
-    loader.style.display = "none";
     recordStatus.style.display = "block";
-    upperOutputDiv.style.display = "none";
-    if(upperHR){
-    upperHR.style.display = 'none';
-    }
-    generatedRecordCommandDiv.style.display = "none";
+    recordedTestCasesDiv.style.display = "grid";
     if (message.error === true) {
       recordStatus.textContent = `Failed To Test Test Cases`;
       recordStatus.Testist.add("error");
@@ -323,10 +317,6 @@ window.addEventListener('message', event => {
   }
   else if (message.type === "testResults") {
     console.log("message.value", message.value);
-    loader.style.display = "none";
-    if(upperHR){
-    upperHR.style.display = 'none';
-    }
     const testCaseElement = document.createElement('p');
     testCaseElement.textContent = message.textSummary;
     if (message.textSummary.includes("test passed")) {
@@ -372,11 +362,6 @@ window.addEventListener('message', event => {
       }
       return;
     }
-
-    stopTestButton.style.display = 'none';
-    upperOutputDiv.style.display = "none";
-    generatedTestCommandDiv.style.display = "none";
-    testStatus.style.display = "block";
     if (message.error === true) {
       viewCompleteSummaryButton.style.display = "none";
     }
@@ -395,9 +380,9 @@ window.addEventListener('message', event => {
     testResultsDiv.appendChild(testCaseElement);
   }
   else if (message.type === "testfile") {
-    const testProjectFolder = document.getElementById('testProjectFolder');
-    if (testProjectFolder) {
-      testProjectFolder.value = message.value;
+    const projectFolder = document.getElementById('projectFolder');
+    if (projectFolder) {
+      projectFolder.value = message.value;
       FilePath = message.value;
     }
     const testCommandDiv = document.getElementById('testCommandInput');

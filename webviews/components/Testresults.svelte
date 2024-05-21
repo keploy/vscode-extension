@@ -3,7 +3,6 @@
 
 <body>
     <div class="loader" id="loader"></div>
-    <a id="navigateHomeButton" class="homebutton"> Home </a>
     <div id="topGrid">
         <img
             class="keploylogo"
@@ -55,8 +54,10 @@
         margin: 10px;
         grid-template-columns: 1fr;
     }
-    #rerunTestSuiteButton{
-        margin: 20px auto;
-        width: 75%;
+    button {
+        margin: 5px auto;
+        width: 100%;
+        height: 30px;
+        padding: 5px;
     }
 </style>

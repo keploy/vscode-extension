@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
-import { getNonce } from "./getNonce";
-import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
-import { startRecording , stopRecording } from './Record';
+// import context from "vscode";
+import { getNonce } from "./Utils";
+// import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
+import { startRecording , stopRecording } from "./Record";
 import { startTesting , stopTesting ,  displayTestCases } from "./Test";
 
 const recordOptions: vscode.OpenDialogOptions = {
@@ -23,7 +24,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
 
-  constructor(private readonly _extensionUri: vscode.Uri) { }
+  constructor(private readonly _extensionUri: vscode.Uri) {
+   }
+
+   public postMessage(type: any, value: any) {
+    console.log('postMessage');
+    this._view?.webview.postMessage({ type: type, value: value });
+  }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -108,8 +115,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
             
             await startRecording(data.command , data.filePath , data.generatedRecordCommand ,  wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath , this._view?.webview );
-            // this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
-            // this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
+            this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
+            this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
           }
@@ -247,7 +254,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
-
   private _getHtmlForWebview(webview: vscode.Webview , compiledCSSUri: vscode.Uri , scriptUri: vscode.Uri) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
@@ -266,14 +272,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
+    //read the global state to check if the user is signed in
+    
 
     // webview.postMessage({ type: 'displayPreviousTestResults', value: 'Displaying Previous Test Results' });
-    const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+    // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
     //call the function below after 3 seconds
-    setTimeout(() => {
-      displayTestCases(logfilePath.fsPath, webview ,  true , false);
-    }, 3000);
+    // setTimeout(() => {
+    //   displayTestCases(logfilePath.fsPath, webview ,  true , false);
+    // }, 3000);
     // displayTestCases(logfilePath.fsPath, webview);
+   
 
     return `<!DOCTYPE html>
 			<html lang="en">

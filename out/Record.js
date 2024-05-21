@@ -105,7 +105,7 @@ function stopRecording() {
     });
 }
 exports.stopRecording = stopRecording;
-function startRecording(command, filepath, generatedRecordCommand, wslscriptPath, wsllogfilePath, scriptPath, logfilePath, webview) {
+function startRecording(command, folderPath, generatedRecordCommand, wslscriptPath, wsllogfilePath, scriptPath, logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             return new Promise((resolve, reject) => {
@@ -118,18 +118,20 @@ function startRecording(command, filepath, generatedRecordCommand, wslscriptPath
                         bashPath = '/bin/bash';
                     }
                     //remove keploy from the command
-                    generatedRecordCommand = generatedRecordCommand.replace('keploy', '');
+                    // generatedRecordCommand = generatedRecordCommand.replace('keploy', '');
+                    command = "record -c " + command;
                     const terminal = vscode.window.createTerminal({
                         name: 'Keploy Terminal',
                         shellPath: bashPath,
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const recordCmd = `${wslscriptPath} "${generatedRecordCommand}" "${filepath}" "${wsllogfilePath}" ; exit 0`;
+                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}"; exit 0`;
                         terminal.sendText(recordCmd);
                     }
                     else {
-                        const recordCmd = `sudo ${scriptPath} "${generatedRecordCommand}" "${filepath}" "${logfilePath}" ; exit 0 `;
+                        const recordCmd = `sudo "${scriptPath}" "${logfilePath}" "${folderPath}" "${command}";ecit 0 `;
+                        console.log(recordCmd);
                         // const exitCmd = 'exit';
                         terminal.sendText(recordCmd);
                     }

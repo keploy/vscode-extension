@@ -1,16 +1,16 @@
 {
-  "name": "heykeploy",
-  "displayName": "Keploy VSCode Extension",
-  "description": "Hello Keploy Community!",
-  "version": "2.6.1",
+  "name": "keploy",
+  "displayName": "Keploy",
+  "description": "E2E testing directly from your IDE",
+  "version": "0.0.1",
   "publisher": "Akash-Singh04",
   "icon": "media/logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Akash-Singh04/KeployVScodeExtension"
+    "url": "https://github.com/Akash-Singh04/Keploy-VsCode-Extension-Beta"
   },
   "engines": {
-    "vscode": "^1.86.0"
+    "vscode": "^1.89.0"
   },
   "categories": [
     "Other"
@@ -24,16 +24,17 @@
           "id": "Keploy-Sidebar",
           "title": "Keploy",
           "icon": "media/logo.png"
+          
         }
       ]
     },
     "views": {
       "Keploy-Sidebar": [
         {
-          "type": "webview",
           "id": "Keploy-Sidebar",
           "name": "Keploy",
           "icon": "media/logo.png",
+          "type": "webview",
           "webviewOptions": {
             "retainContextWhenHidden": true
           }
@@ -43,46 +44,52 @@
     "menus" : {
       "view/title": [
         {
-          "command": "heykeploy.updateKeploy"
+          "command": "keploy.updateKeploy"
         },
         {
-          "command": "heykeploy.getLatestVersion"
+          "command": "keploy.getLatestVersion"
           
         },
         {
-          "command": "heykeploy.KeployVersion"
+          "command": "keploy.KeployVersion"
         },
         {
-          "command": "heykeploy.viewChangeLog"
+          "command": "keploy.viewChangeLog"
         },
         {
-          "command": "heykeploy.viewDocumentation"
+          "command": "keploy.viewDocumentation"
+        },
+        {
+          "command": "keploy.SignIn",
+          "group": "navigation",
+        "when": "keploy.signedIn != true"
         }
       ]
     },
     "commands": [
       {
-        "command": "heykeploy.HeyKeploy",
-        "title": "HeyKeploy"
+        "command": "keploy.SignIn",
+        "title": "Sign In",
+        "when": "keploy.signedIn != true"
       },
       {
-        "command": "heykeploy.updateKeploy",
+        "command": "keploy.updateKeploy",
         "title": "Update your Keploy"
       },
       {
-        "command": "heykeploy.KeployVersion",
+        "command": "keploy.KeployVersion",
         "title": "View Your Keploy Version"
       },
       {
-        "command": "heykeploy.getLatestVersion",
+        "command": "keploy.getLatestVersion",
         "title": "Get Latest Version"
       },
       {
-        "command": "heykeploy.viewChangeLog",
+        "command": "keploy.viewChangeLog",
         "title": "View Change Log"
       },
       {
-        "command": "heykeploy.viewDocumentation",
+        "command": "keploy.viewDocumentation",
         "title": "View Docs"
       }
     ]
@@ -91,7 +98,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "rollup": "rollup -c -w --bundleConfigAsCjs",
-    "watch": "rollup -c --bundleConfigAsCjs && tsc -watch -p ./",
+    "watch": "tsc -watch -p ./",
     "debug": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
