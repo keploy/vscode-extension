@@ -132,11 +132,11 @@ export async function startTesting(command: string, folderPath: string,generated
 
                 terminal.show();
                 if (process.platform === 'win32') {
-                    const testCmd = `${wslscriptPath}  "${wsllogfilePath}" "${folderPath}" "${command}" ;exit 0 `;
+                    const testCmd = `${wslscriptPath}  "${wsllogfilePath}" "${folderPath}" "${command}" ;  `;
                     terminal.sendText(testCmd);
                 }
                 else {
-                    const testCmd = `sudo "${scriptPath}" "${logfilePath}" "${folderPath}" "${command}" ;exit 0 `;
+                    const testCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}" ;  `;
                     // const exitCmd = 'exit';
                     terminal.sendText(testCmd);
                 }
@@ -168,8 +168,12 @@ export async function startTesting(command: string, folderPath: string,generated
 
 export async function stopTesting(): Promise<void> {
     try {
-        vscode.window.activeTerminal?.dispose();
-        return;
+        vscode.window.activeTerminal?.sendText('\x03', true);
+        //set timeout for 5 seconds
+        setTimeout(() => {
+            vscode.window.activeTerminal?.dispose();
+        }, 5000);
+        return ;
     }
     catch (error) {
         console.log(error);

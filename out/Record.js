@@ -95,7 +95,12 @@ function stopRecording() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.dispose();
+            (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.sendText('\x03', true);
+            //set timeout for 5 seconds
+            setTimeout(() => {
+                var _a;
+                (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.dispose();
+            }, 5000);
             return;
         }
         catch (error) {
@@ -126,11 +131,11 @@ function startRecording(command, folderPath, generatedRecordCommand, wslscriptPa
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}"; exit 0`;
+                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";  `;
                         terminal.sendText(recordCmd);
                     }
                     else {
-                        const recordCmd = `sudo "${scriptPath}" "${logfilePath}" "${folderPath}" "${command}";ecit 0 `;
+                        const recordCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
                         console.log(recordCmd);
                         // const exitCmd = 'exit';
                         terminal.sendText(recordCmd);

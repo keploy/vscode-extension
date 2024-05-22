@@ -90,6 +90,7 @@ button:disabled{
     height: 40px;
     animation: spin 1s linear infinite;
     margin: 5px auto;
+    margin-bottom: 10px;
   }
   
   @keyframes spin {

@@ -17,10 +17,6 @@ chmod 666 "$log_file_path"
 # Adding sudo here worked
 keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 
-# Check if keploy command is available in PATH
-if command -v keploy &> /dev/null; then
-    keploycmd="keploy"
-fi
 
 cd "$folderpath"
 

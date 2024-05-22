@@ -15,10 +15,6 @@ chmod 666 "$log_file_path"
 
 keploycmd="/usr/local/bin/keploybin"
 
-# Check if keploy command is available in PATH
-if command -v keploy &> /dev/null; then
-    keploycmd="keploy"
-fi
 
 cd "$folderpath"
 

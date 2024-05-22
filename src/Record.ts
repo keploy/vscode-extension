@@ -54,7 +54,12 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
 
 export async function stopRecording(){
     try{
-    vscode.window.activeTerminal?.dispose();
+        vscode.window.activeTerminal?.sendText('\x03', true);
+        //set timeout for 5 seconds
+        setTimeout(() => {
+            vscode.window.activeTerminal?.dispose();
+        }, 5000);
+
     return;
     }
     catch(error){
@@ -83,11 +88,11 @@ export async function startRecording(command: string, folderPath: string, genera
 
                 terminal.show();
                 if (process.platform === 'win32'){
-                    const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}"; exit 0`;
+                    const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";  `;
                     terminal.sendText(recordCmd);
                 }
                 else{
-                    const recordCmd = `sudo "${scriptPath}" "${logfilePath}" "${folderPath}" "${command}";ecit 0 `;
+                    const recordCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
                     console.log(recordCmd);
                 // const exitCmd = 'exit';
                 terminal.sendText(recordCmd);

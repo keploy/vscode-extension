@@ -165,11 +165,11 @@ function startTesting(command, folderPath, generatedTestCommand, wslscriptPath, 
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const testCmd = `${wslscriptPath}  "${wsllogfilePath}" "${folderPath}" "${command}" ;exit 0 `;
+                        const testCmd = `${wslscriptPath}  "${wsllogfilePath}" "${folderPath}" "${command}" ;  `;
                         terminal.sendText(testCmd);
                     }
                     else {
-                        const testCmd = `sudo "${scriptPath}" "${logfilePath}" "${folderPath}" "${command}" ;exit 0 `;
+                        const testCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}" ;  `;
                         // const exitCmd = 'exit';
                         terminal.sendText(testCmd);
                     }
@@ -203,7 +203,12 @@ function stopTesting() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.dispose();
+            (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.sendText('\x03', true);
+            //set timeout for 5 seconds
+            setTimeout(() => {
+                var _a;
+                (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.dispose();
+            }, 5000);
             return;
         }
         catch (error) {
