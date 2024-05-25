@@ -124,18 +124,21 @@ function startRecording(command, folderPath, generatedRecordCommand, wslscriptPa
                     }
                     //remove keploy from the command
                     // generatedRecordCommand = generatedRecordCommand.replace('keploy', '');
-                    command = "record -c " + command;
+                    // //add double quotes to the command
+                    // command = "'" + command + "'";
+                    // console.log('command is ' + command);
+                    // command = "record -c " + command;
                     const terminal = vscode.window.createTerminal({
                         name: 'Keploy Terminal',
                         shellPath: bashPath,
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";  `;
+                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";exit 0  `;
                         terminal.sendText(recordCmd);
                     }
                     else {
-                        const recordCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
+                        const recordCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}";exit 0`;
                         console.log(recordCmd);
                         // const exitCmd = 'exit';
                         terminal.sendText(recordCmd);

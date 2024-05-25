@@ -13,7 +13,13 @@ touch "$log_file_path"
 # Set permissions of the log file
 chmod 666 "$log_file_path"
 
-keploycmd="/usr/local/bin/keploybin"
+if [[ "$command" =~ .*"go".* ]]; then
+#   echo "Go is present."
+  go mod download
+  go build -o application
+fi 
+
+keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 
 
 cd "$folderpath"
@@ -31,7 +37,8 @@ cat_pid=$!
 dummy_pid=$!
 
 # Execute the keploy command, redirecting output to the named pipe
-sudo $keploycmd $command > "$fifo" 2>&1
+echo $keploycmd test -c "$command"
+sudo $keploycmd test -c "$command" > "$fifo" 2>&1
 
 # Clean up: Wait for keploy command to finish
 wait $!

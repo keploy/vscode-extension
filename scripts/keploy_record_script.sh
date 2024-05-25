@@ -13,7 +13,12 @@ touch "$log_file_path"
 # Set permissions of the log file
 chmod 666 "$log_file_path"
 
-# Try adding sudo here
+if [[ "$command" =~ .*"go".* ]]; then
+#   echo "Go is present."
+  go mod download
+  go build -o application
+fi 
+
 # Adding sudo here worked
 keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 
@@ -33,7 +38,8 @@ cat_pid=$!
 dummy_pid=$!
 
 # Execute the keploy command, redirecting output to the named pipe
-sudo $keploycmd $command > "$fifo" 2>&1
+# echo $keploycmd record -c "$command"
+sudo $keploycmd record -c "$command" > "$fifo" 2>&1
 
 # Clean up: Wait for keploy command to finish
 wait $!

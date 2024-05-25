@@ -6,9 +6,10 @@ export default async function SignIn() {
             'Content-Type': 'application/json',
         }
     });
-    const data = await response.json();
-    // const data = {
-    //     accessToken : "1234567890"
-    // };
+    // const data = await response.json();
+    const data = {
+        accessToken : "1234567890"
+    };
+    console.log("API CALL WAS MADE WITH DUMMY DATA");
     return data ;
 }
