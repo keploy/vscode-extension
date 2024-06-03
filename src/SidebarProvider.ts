@@ -3,7 +3,8 @@ import * as vscode from "vscode";
 import { getNonce } from "./Utils";
 // import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
 import { startRecording , stopRecording } from "./Record";
-import { startTesting , stopTesting ,  displayTestCases } from "./Test";
+import { startTesting , stopTesting ,  displayTestCases , displayPreviousTestResults } from "./Test";
+import { existsSync } from "fs";
 
 const recordOptions: vscode.OpenDialogOptions = {
   canSelectFolders: true,
@@ -245,6 +246,60 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
 
+        }
+
+        case "viewPreviousTestResults" : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Opening Previous Test Results...');
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            displayPreviousTestResults( this._view?.webview);
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open previous test results ${error}` });
+          }
+          break;
+
+        }
+
+        case "aggregatedTestResults" : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Opening Aggregated Test Results...');
+            this._view?.webview.postMessage({ type: 'aggregatedTestResults', data: data.data , error: data.error , value : data.value});
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open aggregated test results ${error}` });
+          }
+          break;
+
+        }
+
+        case "openConfigFile" : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Opening Config File...' + data.value);
+            //get the path of the current opened folder in vscode
+            const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+            const configFilePath = folderPath + '/keploy.yml';
+            //check if the file exists
+            if (!existsSync(configFilePath)){
+              this._view?.webview.postMessage({ type: 'configNotFound', value: 'Config file not found in the current workspace :(' });
+            return ;
+            }
+                vscode.workspace.openTextDocument(configFilePath).then(doc => {
+                  vscode.window.showTextDocument(doc, { preview: false });
+            });
+          } catch (error) {
+
+            console.log('Config file not found here in catch');
+            this._view?.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
+          }
+          break;
         }
       }
 

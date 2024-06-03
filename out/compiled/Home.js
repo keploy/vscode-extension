@@ -803,7 +803,7 @@ var app = (function () {
 				h50.textContent = "Integrate Keploy by installing the open-source agent locally. No code-changes required.";
 				t10 = space();
 				pre0 = element("pre");
-				pre0.textContent = "curl -O\n  https://raw.githubusercontent.com/\n  keploy/keploy/main/keploy.sh\n  && source";
+				pre0.textContent = "curl -O -L\n  https://keploy.io/install.sh \n  && source install.sh\n  ";
 				t12 = space();
 				h24 = element("h2");
 				h24.textContent = "2. Record 🎬";
@@ -845,18 +845,18 @@ var app = (function () {
 				attr_dev(pre0, "class", "terminal svelte-1gz4lgf");
 				add_location(pre0, file, 32, 0, 940);
 				attr_dev(h24, "class", "step svelte-1gz4lgf");
-				add_location(h24, file, 37, 0, 1176);
-				add_location(h51, file, 38, 0, 1211);
+				add_location(h24, file, 37, 0, 1146);
+				add_location(h51, file, 38, 0, 1181);
 				attr_dev(pre1, "class", "terminal svelte-1gz4lgf");
-				add_location(pre1, file, 42, 0, 1452);
+				add_location(pre1, file, 42, 0, 1422);
 				attr_dev(h25, "class", "step svelte-1gz4lgf");
-				add_location(h25, file, 44, 0, 1581);
-				add_location(h52, file, 45, 0, 1614);
+				add_location(h25, file, 44, 0, 1551);
+				add_location(h52, file, 45, 0, 1584);
 				attr_dev(pre2, "class", "terminal svelte-1gz4lgf");
-				add_location(pre2, file, 49, 0, 1840);
+				add_location(pre2, file, 49, 0, 1810);
 				attr_dev(button, "id", "openRecordPageButton");
 				attr_dev(button, "class", "svelte-1gz4lgf");
-				add_location(button, file, 51, 0, 1987);
+				add_location(button, file, 51, 0, 1957);
 				attr_dev(div2, "class", "gettingStartedContainer svelte-1gz4lgf");
 				add_location(div2, file, 25, 4, 609);
 				attr_dev(div3, "id", "mainGrid");
@@ -952,7 +952,7 @@ var app = (function () {
 			if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<Home> was created with unknown prop '${key}'`);
 		});
 
-		const click_handler = () => copyToClipboard('curl -O https://raw.githubusercontent.com/ keploy/keploy/main/keploy.sh && source');
+		const click_handler = () => copyToClipboard(' curl --silent -O -L https://keploy.io/install.sh && source install.sh');
 		const click_handler_1 = () => copyToClipboard('keploy record -c CMD_TO_RUN_APP');
 		const click_handler_2 = () => copyToClipboard('keploy test -c CMD_TO_RUN_APP --delay 10');
 		$$self.$capture_state = () => ({ copyToClipboard });

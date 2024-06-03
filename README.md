@@ -8,6 +8,10 @@ Keploy is a Visual Studio Code extension designed to help developers record and 
 
 ### Record Test Cases
 ### Replay Test Cases
+### View Previous Test Results
+### View Keploy Config File
+
+
 
 
 ## Installation

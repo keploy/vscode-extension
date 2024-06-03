@@ -30,10 +30,10 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<pre class="terminal" on:click={() => copyToClipboard('curl -O https://raw.githubusercontent.com/ keploy/keploy/main/keploy.sh && source')}>curl -O
-  https://raw.githubusercontent.com/
-  keploy/keploy/main/keploy.sh
-  && source</pre>
+<pre class="terminal" on:click={() => copyToClipboard(' curl --silent -O -L https://keploy.io/install.sh && source install.sh')}>curl -O -L
+  https://keploy.io/install.sh 
+  && source install.sh
+  </pre>
  
 <h2 class="step">2. Record 🎬</h2>
 <h5>Start your app with keploy to convert API calls as tests and mocks/stubs. Make some API calls to your app.</h5>

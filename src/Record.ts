@@ -30,7 +30,7 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
     }
     capturedTestLines.forEach(testLine => {
         const testCaseInfo = JSON.parse(testLine.substring(testLine.indexOf('{')));
-        const textContent = `Test case "${testCaseInfo['testcase name']}"`;
+        const textContent = `"${testCaseInfo['testcase name']}"`;
         const path = testCaseInfo.path + '/' + testCaseInfo['testcase name'] + '.yaml';
         webview.postMessage({
             type: 'testcaserecorded',

@@ -17,6 +17,9 @@ const upperOutputDiv = document.getElementById('upperOutputDiv');
 const generatedRecordCommandDiv = document.getElementById('recordCommandDiv');
 const generatedTestCommandDiv = document.getElementById('testCommandDiv');
 const viewCompleteSummaryButton = document.getElementById('viewCompleteSummaryButton');
+const displayPreviousTestResults = document.getElementById('displayPreviousTestResults');
+const openConfigButton = document.getElementById('openConfig');
+const completeTestSummaryDiv = document.getElementById('completeTestSummaryGrid');
 const lastTestResultsDiv = document.getElementById('lastTestResults');
 const testSuiteNameDiv = document.getElementById('testSuiteName');
 const totalTestCasesDiv = document.getElementById('totalTestCases');
@@ -259,6 +262,27 @@ if (viewCompleteSummaryButton) {
 
 }
 
+if (displayPreviousTestResults) {
+  displayPreviousTestResults.addEventListener('click', async () => {
+    console.log("displayPreviousTestResults clicked");
+    vscode.postMessage({
+      type: "viewPreviousTestResults",
+      value: `viewPreviousTestResults`
+    });
+  });
+  
+}
+
+if (openConfigButton) {
+  openConfigButton.addEventListener('click', async () => {
+    console.log("openConfigButton clicked");
+    vscode.postMessage({
+      type: "openConfigFile",
+      value: `/keploy.yml`
+    });
+  });
+}
+
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
   const message = event.data;
@@ -350,18 +374,6 @@ window.addEventListener('message', event => {
       testCasesFailedDiv.appendChild(testCasesFailedElement);
       return;
     }
-    if (message.isHomePage === true) {
-      if (message.error === true) {
-        if (lastTestResultsDiv) {
-          lastTestResultsDiv.innerHTML = `<p class="error">No Test Runs Found</p>`;
-          return;
-        }
-      }
-      else {
-        lastTestResultsDiv.appendChild(testCaseElement);
-      }
-      return;
-    }
     if (message.error === true) {
       viewCompleteSummaryButton.style.display = "none";
     }
@@ -391,7 +403,38 @@ window.addEventListener('message', event => {
     }
 
   }
-});
+
+  else if (message.type === "configNotFound") {
+    const configNotFound = document.getElementById('keployConfigInfo');
+    if (configNotFound) {
+      configNotFound.classList.add("error");
+      configNotFound.textContent = message.value;
+    }
+  }
+
+    if (message.type === 'aggregatedTestResults') {
+      console.log("message.value", message.value);
+      if (message.error === true) {
+        if (lastTestResultsDiv) {
+          lastTestResultsDiv.innerHTML = `<p class="error">No Test Runs Found</p>`;
+          return;
+        }
+      } else {
+        const testCasesTotalElement = document.createElement('p');
+        testCasesTotalElement.textContent = `Total Test Cases : ${message.data.total}`;
+        totalTestCasesDiv.appendChild(testCasesTotalElement);
+        const testSuiteNameElement = document.createElement('p');
+        testSuiteNameElement.textContent = `Previous Test Suite Results`;
+        testSuiteNameDiv.appendChild(testSuiteNameElement);
+        const testCasesPassedElement = document.createElement('p');
+        testCasesPassedElement.textContent = `Test Cases Passed : ${message.data.success}`;
+        testCasesPassedDiv.appendChild(testCasesPassedElement);
+        const testCasesFailedElement = document.createElement('p');
+        testCasesFailedElement.textContent = `Test Cases Failed : ${message.data.failure}`;
+        testCasesFailedDiv.appendChild(testCasesFailedElement);
+      }
+    
+}});
 
 
 

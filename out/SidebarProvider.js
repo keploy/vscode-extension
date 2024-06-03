@@ -39,6 +39,7 @@ const Utils_1 = require("./Utils");
 // import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
 const Record_1 = require("./Record");
 const Test_1 = require("./Test");
+const fs_1 = require("fs");
 const recordOptions = {
     canSelectFolders: true,
     canSelectMany: false,
@@ -77,7 +78,7 @@ class SidebarProvider {
         const compiledCSSUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.css"));
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
         webviewView.webview.onDidReceiveMessage((data) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
             switch (data.type) {
                 case "onInfo": {
                     if (!data.value) {
@@ -100,10 +101,10 @@ class SidebarProvider {
                     try {
                         console.log('Opening Record Dialogue Box...');
                         vscode.window.showOpenDialog(recordOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
-                            var _r;
+                            var _y;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
-                                (_r = this._view) === null || _r === void 0 ? void 0 : _r.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
+                                (_y = this._view) === null || _y === void 0 ? void 0 : _y.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
                             }
                         }));
                     }
@@ -164,10 +165,10 @@ class SidebarProvider {
                     try {
                         console.log('Opening Test Dialogue Box...');
                         vscode.window.showOpenDialog(testOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
-                            var _s;
+                            var _z;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
-                                (_s = this._view) === null || _s === void 0 ? void 0 : _s.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
+                                (_z = this._view) === null || _z === void 0 ? void 0 : _z.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
                             }
                         }));
                     }
@@ -261,6 +262,57 @@ class SidebarProvider {
                     }
                     catch (error) {
                         (_q = this._view) === null || _q === void 0 ? void 0 : _q.webview.postMessage({ type: 'error', value: `Failed to open complete summary ${error}` });
+                    }
+                    break;
+                }
+                case "viewPreviousTestResults": {
+                    if (!data.value) {
+                        return;
+                    }
+                    try {
+                        console.log('Opening Previous Test Results...');
+                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+                        (0, Test_1.displayPreviousTestResults)((_r = this._view) === null || _r === void 0 ? void 0 : _r.webview);
+                    }
+                    catch (error) {
+                        (_s = this._view) === null || _s === void 0 ? void 0 : _s.webview.postMessage({ type: 'error', value: `Failed to open previous test results ${error}` });
+                    }
+                    break;
+                }
+                case "aggregatedTestResults": {
+                    if (!data.value) {
+                        return;
+                    }
+                    try {
+                        console.log('Opening Aggregated Test Results...');
+                        (_t = this._view) === null || _t === void 0 ? void 0 : _t.webview.postMessage({ type: 'aggregatedTestResults', data: data.data, error: data.error, value: data.value });
+                    }
+                    catch (error) {
+                        (_u = this._view) === null || _u === void 0 ? void 0 : _u.webview.postMessage({ type: 'error', value: `Failed to open aggregated test results ${error}` });
+                    }
+                    break;
+                }
+                case "openConfigFile": {
+                    if (!data.value) {
+                        return;
+                    }
+                    try {
+                        console.log('Opening Config File...' + data.value);
+                        //get the path of the current opened folder in vscode
+                        const folderPath = (_v = vscode.workspace.workspaceFolders) === null || _v === void 0 ? void 0 : _v[0].uri.fsPath;
+                        const configFilePath = folderPath + '/keploy.yml';
+                        //check if the file exists
+                        if (!(0, fs_1.existsSync)(configFilePath)) {
+                            (_w = this._view) === null || _w === void 0 ? void 0 : _w.webview.postMessage({ type: 'configNotFound', value: 'Config file not found in the current workspace :(' });
+                            return;
+                        }
+                        vscode.workspace.openTextDocument(configFilePath).then(doc => {
+                            vscode.window.showTextDocument(doc, { preview: false });
+                        });
+                    }
+                    catch (error) {
+                        console.log('Config file not found here in catch');
+                        (_x = this._view) === null || _x === void 0 ? void 0 : _x.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
                     }
                     break;
                 }

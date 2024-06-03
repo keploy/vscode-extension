@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 import { readFileSync, appendFile } from 'fs';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as yaml from 'yaml';
 
 export async function displayTestCases(logfilePath: string, webview: any, isHomePage: boolean, isCompleteSummary: boolean): Promise<void> {
     console.log('Displaying test cases');
@@ -110,6 +113,67 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
     }
 }
 
+
+
+export async function displayPreviousTestResults(webview: any): Promise<void> {
+    console.log('Displaying previous test results');
+    try {
+        const reportsFolder = vscode.workspace.workspaceFolders?.[0].uri.fsPath + '/keploy/reports';
+
+        if (!fs.existsSync(reportsFolder)) {
+            webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 } , error: true , value : 'Run keploy test to generate test reports.'});
+            // throw new Error('Reports directory does not exist');
+        }
+
+        const testRunDirs = fs.readdirSync(reportsFolder).filter(dir => 
+            fs.statSync(path.join(reportsFolder, dir)).isDirectory());
+
+        if (testRunDirs.length === 0) {
+            webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 } , error: true , value : 'Run keploy test to generate test reports.'});
+            // throw new Error('No test run directories found');
+
+        }
+
+        // Sort directories to find the latest test run
+        testRunDirs.sort((a, b) => parseInt(b.split('-').pop()!) - parseInt(a.split('-').pop()!));
+        const latestTestRunDir = testRunDirs[0];
+        const latestTestRunPath = path.join(reportsFolder, latestTestRunDir);
+
+        console.log(`Reading reports from the latest test run directory: ${latestTestRunDir}`);
+
+        const testFiles = fs.readdirSync(latestTestRunPath).filter(file => 
+            file.startsWith('test-set-') && file.endsWith('-report.yaml'));
+
+        let totalSuccess = 0;
+        let totalFailure = 0;
+        let totalTests = 0;
+
+        for (const testFile of testFiles) {
+            const testFilePath = path.join(latestTestRunPath, testFile);
+            const fileContents = fs.readFileSync(testFilePath, 'utf8');
+            const report = yaml.parse(fileContents);
+
+            totalSuccess += report.success;
+            totalFailure += report.failure;
+            totalTests += report.total;
+        }
+
+        const aggregatedResults = {
+            success: totalSuccess,
+            failure: totalFailure,
+            total: totalTests
+        };
+
+        console.log('Aggregated Results:', aggregatedResults);
+        // You can also pass this to the webview or process it further as needed
+        webview.postMessage({ type: 'aggregatedTestResults', data: aggregatedResults });
+
+    } catch (error : any) {
+        console.log(error);
+        webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 } , error: true , value : 'Run keploy test to generate test reports.'});
+
+    }   
+}
 
 export async function startTesting(command: string, folderPath: string,generatedTestCommand:string, wslscriptPath: string, wsllogfilePath: string, scriptPath: string, logfilePath: string, webview: any): Promise<void> {
     try {
