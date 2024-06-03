@@ -123,6 +123,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
         if (!fs.existsSync(reportsFolder)) {
             webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 } , error: true , value : 'Run keploy test to generate test reports.'});
             // throw new Error('Reports directory does not exist');
+            return;
         }
 
         const testRunDirs = fs.readdirSync(reportsFolder).filter(dir => 

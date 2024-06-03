@@ -271,7 +271,6 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Opening Previous Test Results...');
-                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
                         (0, Test_1.displayPreviousTestResults)((_r = this._view) === null || _r === void 0 ? void 0 : _r.webview);
                     }
                     catch (error) {

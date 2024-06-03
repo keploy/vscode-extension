@@ -35,10 +35,12 @@
         const totalTestCases = document.getElementById('totalTestCases');
         const testCasesPassed = document.getElementById('testCasesPassed');
         const testCasesFailed = document.getElementById('testCasesFailed');
+        const lastTestResultsDiv = document.getElementById('lastTestResults');
         if (testSuiteName) testSuiteName.textContent = '';
         if (totalTestCases) totalTestCases.textContent = '';
         if (testCasesPassed) testCasesPassed.textContent = '';
         if (testCasesFailed) testCasesFailed.textContent = '';
+        if (lastTestResultsDiv) lastTestResultsDiv.innerHTML = '';
 
     };
 
@@ -305,6 +307,8 @@
         </div>
         <hr/>
         
+        
+        {#if selectedIconButton === 1}
         <h3 id="recordStatus"> </h3>
         <div id="recordedTestCases"></div>
         <div class="pagination-buttons" id="pagination-buttons">
@@ -315,7 +319,6 @@
         <h3 id="testStatus"> </h3>
         <div id="testResults"></div>
         <button id="viewCompleteSummaryButton">View Complete Test Summary</button>
-        {#if selectedIconButton === 1}
             <button id="startRecordingButton" class="button" disabled={isRecording && isTesting} on:click={toggleRecording} bind:this={startRecordingButton}>
                 Start Recording
             </button>

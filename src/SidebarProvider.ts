@@ -254,7 +254,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Opening Previous Test Results...');
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
             displayPreviousTestResults( this._view?.webview);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to open previous test results ${error}` });
