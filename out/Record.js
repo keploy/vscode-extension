@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.startRecording = exports.stopRecording = exports.displayRecordedTestCases = void 0;
 const vscode = __importStar(require("vscode"));
 const fs_1 = require("fs");
+const child_process = __importStar(require("child_process"));
 function displayRecordedTestCases(logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Displaying Recorded test  cases');
@@ -110,40 +111,51 @@ function stopRecording() {
     });
 }
 exports.stopRecording = stopRecording;
-function startRecording(command, folderPath, generatedRecordCommand, wslscriptPath, wsllogfilePath, scriptPath, logfilePath, webview) {
+function startRecording(command, folderPath, wslscriptPath, wsllogfilePath, bashScriptPath, zshScriptPath, logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             return new Promise((resolve, reject) => {
                 try {
-                    let bashPath;
+                    let terminalPath;
+                    let currentShell = '';
                     if (process.platform === 'win32') {
-                        bashPath = 'wsl.exe';
+                        terminalPath = 'wsl.exe';
                     }
                     else {
-                        bashPath = '/bin/bash';
+                        terminalPath = '/bin/bash';
+                        // Get the default shell for the current user
+                        currentShell = process.env.SHELL || '';
+                        if (!currentShell) {
+                            // Fallback method if process.env.SHELL is not set
+                            currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
+                        }
+                        console.log(`Current default shell: ${currentShell}`);
+                        terminalPath = currentShell;
                     }
-                    //remove keploy from the command
-                    // generatedRecordCommand = generatedRecordCommand.replace('keploy', '');
-                    // //add double quotes to the command
-                    // command = "'" + command + "'";
-                    // console.log('command is ' + command);
-                    // command = "record -c " + command;
+                    console.log(`Terminal path: ${terminalPath}`);
                     const terminal = vscode.window.createTerminal({
                         name: 'Keploy Terminal',
-                        shellPath: bashPath,
+                        shellPath: terminalPath,
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";exit 0  `;
+                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";exit 0`;
                         terminal.sendText(recordCmd);
                     }
                     else {
-                        const recordCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}";exit 0`;
+                        let recordCmd;
+                        if (currentShell.includes('zsh')) {
+                            // Use a Zsh-specific script if needed
+                            console.log('Using Zsh script');
+                            recordCmd = `"${zshScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
+                        }
+                        else {
+                            // Default to Bash script
+                            recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}";exit 0`;
+                        }
                         console.log(recordCmd);
-                        // const exitCmd = 'exit';
                         terminal.sendText(recordCmd);
                     }
-                    // terminal.sendText('exit', true);
                     // Listen for terminal close event
                     const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                         console.log('Terminal closed');

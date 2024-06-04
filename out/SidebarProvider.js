@@ -119,9 +119,10 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Start Recording button clicked');
-                        const script = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
+                        const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
+                        const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
                         const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.log");
-                        let wslscriptPath = script.fsPath;
+                        let wslscriptPath = bashScript.fsPath;
                         let wsllogPath = logfilePath.fsPath;
                         if (process.platform === 'win32') {
                             //convert filepaths to windows format
@@ -134,9 +135,9 @@ class SidebarProvider {
                             wslscriptPath = wslscriptPath.replace(/:/g, '');
                             wsllogPath = wsllogPath.replace(/:/g, '');
                         }
-                        console.log("script path" + wslscriptPath);
+                        console.log("bashScript path" + wslscriptPath);
                         console.log(wsllogPath);
-                        yield (0, Record_1.startRecording)(data.command, data.filePath, data.generatedRecordCommand, wslscriptPath, wsllogPath, script.fsPath, logfilePath.fsPath, (_b = this._view) === null || _b === void 0 ? void 0 : _b.webview);
+                        yield (0, Record_1.startRecording)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_b = this._view) === null || _b === void 0 ? void 0 : _b.webview);
                         (_c = this._view) === null || _c === void 0 ? void 0 : _c.webview.postMessage({ type: 'success', value: 'Recording Started' });
                         (_d = this._view) === null || _d === void 0 ? void 0 : _d.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
                     }
@@ -183,9 +184,10 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Start Testing button clicked');
-                        const script = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
+                        const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
+                        const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
                         const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
-                        let wslscriptPath = script.fsPath;
+                        let wslscriptPath = bashScript.fsPath;
                         let wsllogPath = logfilePath.fsPath;
                         if (process.platform === 'win32') {
                             //convert filepaths to windows format
@@ -198,9 +200,7 @@ class SidebarProvider {
                             wslscriptPath = wslscriptPath.replace(/:/g, '');
                             wsllogPath = wsllogPath.replace(/:/g, '');
                         }
-                        console.log("script path" + wslscriptPath);
-                        console.log(wsllogPath);
-                        yield (0, Test_1.startTesting)(data.command, data.filePath, data.generatedTestCommand, wslscriptPath, wsllogPath, script.fsPath, logfilePath.fsPath, (_h = this._view) === null || _h === void 0 ? void 0 : _h.webview);
+                        yield (0, Test_1.startTesting)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_h = this._view) === null || _h === void 0 ? void 0 : _h.webview);
                     }
                     catch (error) {
                         (_j = this._view) === null || _j === void 0 ? void 0 : _j.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });

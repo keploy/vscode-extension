@@ -18,8 +18,9 @@ button:disabled{
     cursor: not-allowed;
 }
 .recordedTestCase{
-    background-color: rgb(85, 85, 85);
+    background-color: rgb(184, 89, 0);
     margin: 10px;
+    border: black 1px solid;
     }
 .recordedTestCase:hover{
     animation: changeColor 0.5s;
@@ -78,7 +79,7 @@ button:disabled{
 }
 
 .error{
-    color: red;
+    color: #9c1a0c;
     text-align: center;
     margin-top: 5px;
 }

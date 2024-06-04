@@ -326,11 +326,6 @@
         {/if}
         {#if selectedIconButton === 3}
         <div id="keployConfigInfoDiv">
-            <img
-      class="keploylogo"
-      src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
-      alt="Keploy Logo"
-    />
             <h3 class="info" id="keployConfigInfo"> Please make changes to the Keploy Config File</h3>
          </div>
         {/if}

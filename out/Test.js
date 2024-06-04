@@ -38,6 +38,7 @@ const fs_1 = require("fs");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const yaml = __importStar(require("yaml"));
+const child_process = __importStar(require("child_process"));
 function displayTestCases(logfilePath, webview, isHomePage, isCompleteSummary) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Displaying test cases');
@@ -196,24 +197,31 @@ function displayPreviousTestResults(webview) {
     });
 }
 exports.displayPreviousTestResults = displayPreviousTestResults;
-function startTesting(command, folderPath, generatedTestCommand, wslscriptPath, wsllogfilePath, scriptPath, logfilePath, webview) {
+function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashScriptPath, zshScriptPath, logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             return new Promise((resolve, reject) => {
                 try {
-                    let bashPath;
+                    let terminalPath;
+                    let currentShell = '';
                     if (process.platform === 'win32') {
-                        bashPath = 'wsl.exe';
+                        terminalPath = 'wsl.exe';
                     }
                     else {
-                        bashPath = '/bin/bash';
+                        terminalPath = '/bin/bash';
+                        // Get the default shell for the current user
+                        currentShell = process.env.SHELL || '';
+                        if (!currentShell) {
+                            // Fallback method if process.env.SHELL is not set
+                            currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
+                        }
+                        console.log(`Current default shell: ${currentShell}`);
+                        terminalPath = currentShell;
                     }
-                    //remove keploy from the command
-                    // generatedTestCommand = generatedTestCommand.replace('keploy', '');
-                    // command = "test -c" + command;
+                    console.log(`Terminal path: ${terminalPath}`);
                     const terminal = vscode.window.createTerminal({
                         name: 'Keploy Terminal',
-                        shellPath: bashPath,
+                        shellPath: terminalPath,
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
@@ -221,7 +229,16 @@ function startTesting(command, folderPath, generatedTestCommand, wslscriptPath, 
                         terminal.sendText(testCmd);
                     }
                     else {
-                        const testCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0 `;
+                        let testCmd;
+                        if (currentShell.includes('zsh')) {
+                            // Use a Zsh-specific script if needed
+                            console.log('Using Zsh script');
+                            testCmd = `"${zshScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
+                        }
+                        else {
+                            // Default to Bash script
+                            testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0 `;
+                        }
                         // const exitCmd = 'exit';
                         terminal.sendText(testCmd);
                     }

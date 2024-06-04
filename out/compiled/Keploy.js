@@ -40,23 +40,6 @@ var app = (function () {
 		return a != a ? b == b : a !== b || (a && typeof a === 'object') || typeof a === 'function';
 	}
 
-	let src_url_equal_anchor;
-
-	/**
-	 * @param {string} element_src
-	 * @param {string} url
-	 * @returns {boolean}
-	 */
-	function src_url_equal(element_src, url) {
-		if (element_src === url) return true;
-		if (!src_url_equal_anchor) {
-			src_url_equal_anchor = document.createElement('a');
-		}
-		// This is actually faster than doing URL(..).href
-		src_url_equal_anchor.href = url;
-		return element_src === src_url_equal_anchor.href;
-	}
-
 	/** @returns {boolean} */
 	function is_empty(obj) {
 		return Object.keys(obj).length === 0;
@@ -1035,33 +1018,22 @@ var app = (function () {
 	// (327:8) {#if selectedIconButton === 3}
 	function create_if_block(ctx) {
 		let div;
-		let img;
-		let img_src_value;
-		let t0;
 		let h3;
 
 		const block = {
 			c: function create() {
 				div = element("div");
-				img = element("img");
-				t0 = space();
 				h3 = element("h3");
 				h3.textContent = "Please make changes to the Keploy Config File";
-				attr_dev(img, "class", "keploylogo svelte-1qbsu14");
-				if (!src_url_equal(img.src, img_src_value = "https://avatars.githubusercontent.com/u/92252339?s=200&v=4")) attr_dev(img, "src", img_src_value);
-				attr_dev(img, "alt", "Keploy Logo");
-				add_location(img, file, 328, 12, 12651);
 				attr_dev(h3, "class", "info");
 				attr_dev(h3, "id", "keployConfigInfo");
-				add_location(h3, file, 333, 12, 12795);
+				add_location(h3, file, 328, 12, 12651);
 				attr_dev(div, "id", "keployConfigInfoDiv");
 				attr_dev(div, "class", "svelte-1qbsu14");
 				add_location(div, file, 327, 8, 12608);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
-				append_dev(div, img);
-				append_dev(div, t0);
 				append_dev(div, h3);
 			},
 			d: function destroy(detaching) {
@@ -1242,29 +1214,29 @@ var app = (function () {
 				add_location(hr, file, 307, 8, 11576);
 				attr_dev(div3, "id", "testSuiteName");
 				attr_dev(div3, "class", "info");
-				add_location(div3, file, 338, 16, 13015);
+				add_location(div3, file, 333, 16, 12871);
 				attr_dev(div4, "id", "totalTestCases");
 				attr_dev(div4, "class", "info");
-				add_location(div4, file, 340, 16, 13092);
+				add_location(div4, file, 335, 16, 12948);
 				attr_dev(div5, "id", "testCasesPassed");
 				attr_dev(div5, "class", "success");
-				add_location(div5, file, 342, 16, 13170);
+				add_location(div5, file, 337, 16, 13026);
 				attr_dev(div6, "id", "testCasesFailed");
 				attr_dev(div6, "class", "error");
-				add_location(div6, file, 344, 16, 13252);
+				add_location(div6, file, 339, 16, 13108);
 				attr_dev(div7, "id", "completeTestSummaryGrid");
-				add_location(div7, file, 337, 12, 12964);
+				add_location(div7, file, 332, 12, 12820);
 				attr_dev(div8, "id", "lastTestResults");
-				add_location(div8, file, 336, 8, 12924);
+				add_location(div8, file, 331, 8, 12780);
 				attr_dev(div9, "class", "loader svelte-1qbsu14");
 				attr_dev(div9, "id", "loader");
-				add_location(div9, file, 349, 8, 13375);
+				add_location(div9, file, 344, 8, 13231);
 				attr_dev(button4, "id", "stopRecordingButton");
 				attr_dev(button4, "class", "svelte-1qbsu14");
-				add_location(button4, file, 350, 8, 13422);
+				add_location(button4, file, 345, 8, 13278);
 				attr_dev(button5, "id", "stopTestingButton");
 				attr_dev(button5, "class", "svelte-1qbsu14");
-				add_location(button5, file, 351, 8, 13514);
+				add_location(button5, file, 346, 8, 13370);
 				attr_dev(div10, "class", "menu");
 				add_location(div10, file, 272, 4, 8401);
 				attr_dev(main, "class", "svelte-1qbsu14");

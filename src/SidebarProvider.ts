@@ -96,9 +96,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           try {
             console.log('Start Recording button clicked');
 
-            const script =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
+            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
             const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.log");
-            let wslscriptPath = script.fsPath;
+            let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
               //convert filepaths to windows format
@@ -111,11 +112,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               wslscriptPath = wslscriptPath.replace(/:/g, '');
               wsllogPath = wsllogPath.replace(/:/g, '');
             }
-            console.log("script path" + wslscriptPath);
+            console.log("bashScript path" + wslscriptPath);
             console.log(wsllogPath);
 
             
-            await startRecording(data.command , data.filePath , data.generatedRecordCommand ,  wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath , this._view?.webview );
+            await startRecording(data.command , data.filePath ,  wslscriptPath , wsllogPath , bashScript.fsPath , zshScript.fsPath ,logfilePath.fsPath , this._view?.webview );
             this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
             this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
           } catch (error) {
@@ -162,9 +163,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Start Testing button clicked');
-            const script =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
+            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
             const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
-            let wslscriptPath = script.fsPath;
+            let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
               //convert filepaths to windows format
@@ -177,9 +179,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               wslscriptPath = wslscriptPath.replace(/:/g, '');
               wsllogPath = wsllogPath.replace(/:/g, '');
             }
-            console.log("script path" + wslscriptPath);
-            console.log(wsllogPath);
-            await startTesting(data.command , data.filePath , data.generatedTestCommand  ,wslscriptPath , wsllogPath , script.fsPath , logfilePath.fsPath ,this._view?.webview );
+            await startTesting(data.command , data.filePath , wslscriptPath , wsllogPath , bashScript.fsPath ,zshScript.fsPath, logfilePath.fsPath ,this._view?.webview );
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
           }

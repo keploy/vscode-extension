@@ -3,6 +3,9 @@ import { readFileSync, appendFile } from 'fs';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'yaml';
+import * as child_process from 'child_process';
+import * as os from 'os';
+
 
 export async function displayTestCases(logfilePath: string, webview: any, isHomePage: boolean, isCompleteSummary: boolean): Promise<void> {
     console.log('Displaying test cases');
@@ -176,23 +179,32 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
     }   
 }
 
-export async function startTesting(command: string, folderPath: string,generatedTestCommand:string, wslscriptPath: string, wsllogfilePath: string, scriptPath: string, logfilePath: string, webview: any): Promise<void> {
+export async function startTesting(command: string, folderPath: string, wslscriptPath: string, wsllogfilePath: string, bashScriptPath: string, zshScriptPath:string, logfilePath: string, webview: any): Promise<void> {
     try {
         return new Promise<void>((resolve, reject) => {
             try {
-                let bashPath: string;
-                if (process.platform === 'win32') {
-                    bashPath = 'wsl.exe';
-                } else {
-                    bashPath = '/bin/bash';
-                }
-                //remove keploy from the command
-                // generatedTestCommand = generatedTestCommand.replace('keploy', '');
-                // command = "test -c" + command;
+                let terminalPath: string;
+                let currentShell ='';
 
+                if (process.platform === 'win32') {
+                    terminalPath = 'wsl.exe';
+                } else {
+                    terminalPath = '/bin/bash';
+                    // Get the default shell for the current user
+                    currentShell = process.env.SHELL || '';
+
+                    if (!currentShell) {
+                        // Fallback method if process.env.SHELL is not set
+                        currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
+                    }
+
+                    console.log(`Current default shell: ${currentShell}`);
+                    terminalPath = currentShell;
+                }
+                console.log(`Terminal path: ${terminalPath}`);
                 const terminal = vscode.window.createTerminal({
                     name: 'Keploy Terminal',
-                    shellPath: bashPath,
+                    shellPath: terminalPath,
                 });
 
                 terminal.show();
@@ -201,7 +213,15 @@ export async function startTesting(command: string, folderPath: string,generated
                     terminal.sendText(testCmd);
                 }
                 else {
-                    const testCmd = `"${scriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0 `;
+                    let testCmd: string;
+                    if (currentShell.includes('zsh')) {
+                        // Use a Zsh-specific script if needed
+                        console.log('Using Zsh script');
+                        testCmd = `"${zshScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
+                    } else {
+                        // Default to Bash script
+                         testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0 `;
+                    }
                     // const exitCmd = 'exit';
                     terminal.sendText(testCmd);
                 }
