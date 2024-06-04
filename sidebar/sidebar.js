@@ -342,6 +342,10 @@ window.addEventListener('message', event => {
   else if (message.type === "testResults") {
     console.log("message.value", message.value);
     const testCaseElement = document.createElement('p');
+    //click the stop testing button
+    if(stopTestButton){
+    stopTestButton.click();
+    }
     testCaseElement.textContent = message.textSummary;
     if (message.textSummary.includes("test passed")) {
       testCaseElement.classList.add("success");

@@ -56,7 +56,7 @@
     }
     button {
         margin: 5px auto;
-        width: 100%;
+        width: 90%;
         height: 30px;
         padding: 5px;
     }

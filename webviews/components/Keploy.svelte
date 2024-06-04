@@ -40,7 +40,7 @@
         if (totalTestCases) totalTestCases.textContent = '';
         if (testCasesPassed) testCasesPassed.textContent = '';
         if (testCasesFailed) testCasesFailed.textContent = '';
-        if (lastTestResultsDiv) lastTestResultsDiv.innerHTML = '';
+        // if (lastTestResultsDiv) lastTestResultsDiv.innerHTML = '';
 
     };
 

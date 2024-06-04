@@ -92,7 +92,7 @@ export async function startRecording(command: string, folderPath: string, wslscr
                     }
 
                     console.log(`Current default shell: ${currentShell}`);
-                    terminalPath = currentShell;
+                    // terminalPath = currentShell;
                 }
                 console.log(`Terminal path: ${terminalPath}`);
                 const terminal = vscode.window.createTerminal({
@@ -109,7 +109,7 @@ export async function startRecording(command: string, folderPath: string, wslscr
                     if (currentShell.includes('zsh')) {
                         // Use a Zsh-specific script if needed
                         console.log('Using Zsh script');
-                        recordCmd = `"${zshScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
+                        recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
                     } else {
                         // Default to Bash script
                         recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}";exit 0`;
