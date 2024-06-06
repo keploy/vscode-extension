@@ -39,7 +39,7 @@ dummy_pid=$!
 
 # Execute the keploy command, redirecting output to the named pipe
 # echo $keploycmd record -c "$command"
-sudo $keploycmd record -c "$command" > "$fifo" 2>&1
+sudo -E $keploycmd record -c "$command" > "$fifo" 2>&1
 
 # Clean up: Wait for keploy command to finish
 wait $!
