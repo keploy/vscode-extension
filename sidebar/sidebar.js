@@ -452,29 +452,117 @@ window.addEventListener('message', event => {
 
   
 
-    if (message.type === 'aggregatedTestResults') {
-      console.log("message.value", message.value);
-      if (message.error === true) {
+  if (message.type === 'aggregatedTestResults') {
+    console.log("message.value", message.value);
+    const lastTestResultsDiv = document.getElementById('lastTestResults');
+    const totalTestCasesDiv = document.getElementById('totalTestCases');
+    const testSuiteNameDiv = document.getElementById('testSuiteName');
+    const testCasesPassedDiv = document.getElementById('testCasesPassed');
+    const testCasesFailedDiv = document.getElementById('testCasesFailed');
+
+    // Clear previous content
+    if (totalTestCasesDiv) { totalTestCasesDiv.innerHTML = ''; }
+    if (testSuiteNameDiv) { testSuiteNameDiv.innerHTML = ''; }
+    if (testCasesPassedDiv) { testCasesPassedDiv.innerHTML = ''; }
+    if (testCasesFailedDiv) { testCasesFailedDiv.innerHTML = ''; }
+
+    if (message.error === true) {
         if (lastTestResultsDiv) {
-          lastTestResultsDiv.innerHTML = `<p class="error">No Test Runs Found</p>`;
-          return;
+          errorElement = document.createElement('p');
+          errorElement.textContent = "No Test Runs Found";
+          errorElement.classList.add("error");
+          errorElement.id = "errorElement";
+            lastTestResultsDiv.appendChild(errorElement);
         }
-      } else {
-        const testCasesTotalElement = document.createElement('p');
-        testCasesTotalElement.textContent = `Total Test Cases : ${message.data.total}`;
-        totalTestCasesDiv.appendChild(testCasesTotalElement);
+    } else {
+        // Group tests by date
+        const testsByDate = {};
+        message.data.testResults.forEach(test => {
+            const date = test.date;
+            if (!testsByDate[date]) {
+                testsByDate[date] = [];
+            }
+            testsByDate[date].push(test);
+        });
+
+        // Append new data
         const testSuiteNameElement = document.createElement('p');
         testSuiteNameElement.textContent = `Previous Test Suite Results`;
-        testSuiteNameDiv.appendChild(testSuiteNameElement);
+        if (testSuiteNameDiv) { testSuiteNameDiv.appendChild(testSuiteNameElement); }
+
+        const testCasesTotalElement = document.createElement('p');
+        testCasesTotalElement.textContent = `Total Test Cases : ${message.data.total}`;
+        if (totalTestCasesDiv) { totalTestCasesDiv.appendChild(testCasesTotalElement); }
+
         const testCasesPassedElement = document.createElement('p');
         testCasesPassedElement.textContent = `Test Cases Passed : ${message.data.success}`;
-        testCasesPassedDiv.appendChild(testCasesPassedElement);
+        if (testCasesPassedDiv) { testCasesPassedDiv.appendChild(testCasesPassedElement); }
+
         const testCasesFailedElement = document.createElement('p');
         testCasesFailedElement.textContent = `Test Cases Failed : ${message.data.failure}`;
-        testCasesFailedDiv.appendChild(testCasesFailedElement);
-      }
-    
-}});
+        if (testCasesFailedDiv) { testCasesFailedDiv.appendChild(testCasesFailedElement); }
+
+        // Create and append dropdown structure based on testsByDate
+        const dropdownContainer = document.createElement('div');
+        dropdownContainer.className = 'dropdown-container';
+
+        for (const date in testsByDate) {
+            if (testsByDate.hasOwnProperty(date)) {
+                const tests = testsByDate[date];
+
+                const dropdownHeader = document.createElement('div');
+                dropdownHeader.className = 'dropdown-header';
+                dropdownHeader.textContent = `${date}`;
+                
+                dropdownHeader.onclick = () => {
+                    const content = document.getElementById(`dropdown${date}`);
+                    if (content) { content.classList.toggle('show'); }
+                };
+
+                const dropdownContent = document.createElement('div');
+                dropdownContent.id = `dropdown${date}`;
+                dropdownContent.className = 'dropdown-content';
+
+                tests.forEach((test, index) => {
+                    // Append individual test details
+                    const testMethod = document.createElement('div');
+                    testMethod.textContent = `${test.method}`;
+                    if(test.status === 'PASSED'){
+                      testMethod.classList.add("testSuccess");
+                    }
+                    else{
+                      testMethod.classList.add("testError");
+                    }
+                    dropdownContent.appendChild(testMethod);
+
+                    const testName = document.createElement('div');
+                    testName.textContent = `${test.name}`;
+                    testName.classList.add("testName");
+                    dropdownContent.appendChild(testName);
+
+                   testName.addEventListener('click', async () => {
+                    vscode.postMessage({
+                      type: "openTestFile",
+                      value: test.testCasePath
+                    });
+                    testMethod.addEventListener('click', async () => {  
+                      vscode.postMessage({
+                        type: "openTestFile",
+                        value: test.testCasePath
+                      });
+                    });
+                  });
+                });
+
+                dropdownContainer.appendChild(dropdownHeader);
+                dropdownContainer.appendChild(dropdownContent);
+            }
+        }
+
+        if (lastTestResultsDiv) { lastTestResultsDiv.appendChild(dropdownContainer); }
+    }
+}
+});
 
 
 

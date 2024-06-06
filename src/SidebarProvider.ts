@@ -303,6 +303,21 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+
+        case "openTestFile" : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Opening Test File...' + data.value);
+            vscode.workspace.openTextDocument(data.value).then(doc => {
+              vscode.window.showTextDocument(doc, { preview: false });
+            });
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open test file ${error}` });
+          }
+          break;
+        }
       }
 
     });

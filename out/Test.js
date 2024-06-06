@@ -37,8 +37,9 @@ const vscode = __importStar(require("vscode"));
 const fs_1 = require("fs");
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-const yaml = __importStar(require("yaml"));
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const child_process = __importStar(require("child_process"));
+const jsyaml = __importStar(require("js-yaml"));
 function displayTestCases(logfilePath, webview, isHomePage, isCompleteSummary) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Displaying test cases');
@@ -155,44 +156,75 @@ function displayPreviousTestResults(webview) {
         try {
             const reportsFolder = ((_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0].uri.fsPath) + '/keploy/reports';
             if (!fs.existsSync(reportsFolder)) {
-                webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 }, error: true, value: 'Run keploy test to generate test reports.' });
-                // throw new Error('Reports directory does not exist');
+                webview.postMessage({
+                    type: 'aggregatedTestResults',
+                    data: { success: 0, failure: 0, total: 0 },
+                    error: true,
+                    value: 'Run keploy test to generate test reports.'
+                });
                 return;
             }
             const testRunDirs = fs.readdirSync(reportsFolder).filter(dir => fs.statSync(path.join(reportsFolder, dir)).isDirectory());
             if (testRunDirs.length === 0) {
-                webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 }, error: true, value: 'Run keploy test to generate test reports.' });
-                // throw new Error('No test run directories found');
+                webview.postMessage({
+                    type: 'aggregatedTestResults',
+                    data: { success: 0, failure: 0, total: 0 },
+                    error: true,
+                    value: 'Run keploy test to generate test reports.'
+                });
+                return;
             }
-            // Sort directories to find the latest test run
-            testRunDirs.sort((a, b) => parseInt(b.split('-').pop()) - parseInt(a.split('-').pop()));
-            const latestTestRunDir = testRunDirs[0];
-            const latestTestRunPath = path.join(reportsFolder, latestTestRunDir);
-            console.log(`Reading reports from the latest test run directory: ${latestTestRunDir}`);
-            const testFiles = fs.readdirSync(latestTestRunPath).filter(file => file.startsWith('test-set-') && file.endsWith('-report.yaml'));
+            // Sort directories to find the latest test run by date
+            testRunDirs.sort((a, b) => {
+                const aTime = fs.statSync(path.join(reportsFolder, a)).birthtime.getTime();
+                const bTime = fs.statSync(path.join(reportsFolder, b)).birthtime.getTime();
+                return bTime - aTime;
+            });
             let totalSuccess = 0;
             let totalFailure = 0;
             let totalTests = 0;
-            for (const testFile of testFiles) {
-                const testFilePath = path.join(latestTestRunPath, testFile);
-                const fileContents = fs.readFileSync(testFilePath, 'utf8');
-                const report = yaml.parse(fileContents);
-                totalSuccess += report.success;
-                totalFailure += report.failure;
-                totalTests += report.total;
+            const testResults = [];
+            for (const testRunDir of testRunDirs) {
+                const testRunPath = path.join(reportsFolder, testRunDir);
+                const testFiles = fs.readdirSync(testRunPath).filter(file => file.startsWith('test-set-') && file.endsWith('-report.yaml'));
+                for (const testFile of testFiles) {
+                    const testFilePath = path.join(testRunPath, testFile);
+                    const fileContents = fs.readFileSync(testFilePath, 'utf8');
+                    const report = jsyaml.load(fileContents);
+                    totalSuccess += report.success;
+                    totalFailure += report.failure;
+                    totalTests += report.total;
+                    if (report.tests) {
+                        report.tests.forEach(test => {
+                            testResults.push({
+                                date: new Date(test.req.timestamp).toISOString().split('T')[0],
+                                method: test.req.method,
+                                name: test.name,
+                                status: test.status,
+                                testCasePath: testFilePath
+                            });
+                        });
+                    }
+                }
             }
             const aggregatedResults = {
                 success: totalSuccess,
                 failure: totalFailure,
-                total: totalTests
+                total: totalTests,
+                testResults
             };
             console.log('Aggregated Results:', aggregatedResults);
-            // You can also pass this to the webview or process it further as needed
+            // Send the aggregated results to the webview
             webview.postMessage({ type: 'aggregatedTestResults', data: aggregatedResults });
         }
         catch (error) {
             console.log(error);
-            webview.postMessage({ type: 'aggregatedTestResults', data: { success: 0, failure: 0, total: 0 }, error: true, value: 'Run keploy test to generate test reports.' });
+            webview.postMessage({
+                type: 'aggregatedTestResults',
+                data: { success: 0, failure: 0, total: 0 },
+                error: true,
+                value: 'Run keploy test to generate test reports.'
+            });
         }
     });
 }

@@ -1,0 +1,135 @@
+
+       ▓██▓▄
+    ▓▓▓▓██▓█▓▄
+     ████████▓▒
+          ▀▓▓███▄      ▄▄   ▄               ▌
+         ▄▌▌▓▓████▄    ██ ▓█▀  ▄▌▀▄  ▓▓▌▄   ▓█  ▄▌▓▓▌▄ ▌▌   ▓
+       ▓█████████▌▓▓   ██▓█▄  ▓█▄▓▓ ▐█▌  ██ ▓█  █▌  ██  █▌ █▓
+      ▓▓▓▓▀▀▀▀▓▓▓▓▓▓▌  ██  █▓  ▓▌▄▄ ▐█▓▄▓█▀ █▓█ ▀█▄▄█▀   █▓█
+       ▓▌                           ▐█▌                   █▌
+        ▓
+  
+version: 2.1.0-alpha23
+
+🐰 Keploy: 2024-06-06T16:05:24+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-06-06T16:05:24+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-06-06T16:05:24+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-06T16:05:24+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-06T16:05:25+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-06-06T16:05:25+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-06-06T16:05:25+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-06-06T16:05:25+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+PID: 223884
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+[GIN] 2024/06/06 - 16:05:30 | 200 |   17.763881ms |             ::1 | POST     "/url"
+🐰 Keploy: 2024-06-06T16:05:32+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-3/tests", "testcase name": "test-1"}
+[GIN] 2024/06/06 - 16:05:32 | 200 |    7.308559ms |             ::1 | POST     "/url"
+🐰 Keploy: 2024-06-06T16:05:34+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-3/tests", "testcase name": "test-2"}
+
+
+[31m2024/06/06 16:05:36 [Recovery] 2024/06/06 - 16:05:36 panic recovered:
+GET /url HTTP/1.1
+Host: localhost:8080
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 32
+Content-Type: application/json
+Postman-Token: 025b84f9-4a32-413b-a47b-3070032ea131
+User-Agent: PostmanRuntime/7.37.3
+
+
+runtime error: invalid memory address or nil pointer dereference
+/usr/local/go/src/runtime/panic.go:261 (0x451db7)
+	panicmem: panic(memoryError)
+/usr/local/go/src/runtime/signal_unix.go:881 (0x451d85)
+	sigpanic: panicmem()
+/home/akash/go/pkg/mod/go.uber.org/zap@v1.19.1/logger.go:268 (0x8fbe05)
+	(*Logger).check: if lvl < zapcore.DPanicLevel && !log.core.Enabled(lvl) {
+/home/akash/go/pkg/mod/go.uber.org/zap@v1.19.1/logger.go:207 (0x8fbc77)
+	(*Logger).Error: if ce := log.check(ErrorLevel, msg); ce != nil {
+/home/akash/Desktop/samples-go/gin-mongo/handler.go:61 (0x90052f)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go:168 (0x789df9)
+	(*Context).Next: c.handlers[c.index](c)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/recovery.go:99 (0x789de7)
+	CustomRecoveryWithWriter.func1: c.Next()
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go:168 (0x788f7c)
+	(*Context).Next: c.handlers[c.index](c)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/logger.go:241 (0x788f63)
+	LoggerWithConfig.func1: c.Next()
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go:168 (0x7884cd)
+	(*Context).Next: c.handlers[c.index](c)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/gin.go:555 (0x78815c)
+	(*Engine).handleHTTPRequest: c.Next()
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/gin.go:511 (0x787de6)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:3137 (0x67e04d)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:2039 (0x67a1a7)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1695 (0x46f880)
+	goexit: BYTE	$0x90	// NOP
+[0m
+[GIN] 2024/06/06 - 16:05:36 | 500 |    1.831184ms |             ::1 | GET      "/url"
+
+
+[31m2024/06/06 16:05:38 [Recovery] 2024/06/06 - 16:05:38 panic recovered:
+GET /url HTTP/1.1
+Host: localhost:8080
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 32
+Content-Type: application/json
+Postman-Token: 8ec6eda3-d57f-4659-a040-6edc98636e97
+User-Agent: PostmanRuntime/7.37.3
+
+
+runtime error: invalid memory address or nil pointer dereference
+/usr/local/go/src/runtime/panic.go:261 (0x451db7)
+	panicmem: panic(memoryError)
+/usr/local/go/src/runtime/signal_unix.go:881 (0x451d85)
+	sigpanic: panicmem()
+/home/akash/go/pkg/mod/go.uber.org/zap@v1.19.1/logger.go:268 (0x8fbe05)
+	(*Logger).check: if lvl < zapcore.DPanicLevel && !log.core.Enabled(lvl) {
+/home/akash/go/pkg/mod/go.uber.org/zap@v1.19.1/logger.go:207 (0x8fbc77)
+	(*Logger).Error: if ce := log.check(ErrorLevel, msg); ce != nil {
+/home/akash/Desktop/samples-go/gin-mongo/handler.go:61 (0x90052f)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go:168 (0x789df9)
+	(*Context).Next: c.handlers[c.index](c)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/recovery.go:99 (0x789de7)
+	CustomRecoveryWithWriter.func1: c.Next()
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go:168 (0x788f7c)
+	(*Context).Next: c.handlers[c.index](c)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/logger.go:241 (0x788f63)
+	LoggerWithConfig.func1: c.Next()
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/context.go:168 (0x7884cd)
+	(*Context).Next: c.handlers[c.index](c)
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/gin.go:555 (0x78815c)
+	(*Engine).handleHTTPRequest: c.Next()
+/home/akash/go/pkg/mod/github.com/gin-gonic/gin@v1.7.7/gin.go:511 (0x787de6)
+	(*Engine).ServeHTTP: engine.handleHTTPRequest(c)
+/usr/local/go/src/net/http/server.go:3137 (0x67e04d)
+	serverHandler.ServeHTTP: handler.ServeHTTP(rw, req)
+/usr/local/go/src/net/http/server.go:2039 (0x67a1a7)
+	(*conn).serve: serverHandler{c.server}.ServeHTTP(w, w.req)
+/usr/local/go/src/runtime/asm_amd64.s:1695 (0x46f880)
+	goexit: BYTE	$0x90	// NOP
+[0m
+[GIN] 2024/06/06 - 16:05:38 | 500 |    2.168104ms |             ::1 | GET      "/url"
+🐰 Keploy: 2024-06-06T16:05:38+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-3/tests", "testcase name": "test-3"}
+🐰 Keploy: 2024-06-06T16:05:40+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-3/tests", "testcase name": "test-4"}
+[GIN] 2024/06/06 - 16:05:40 | 200 |    2.438474ms |             ::1 | POST     "/url"
+🐰 Keploy: 2024-06-06T16:05:42+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-3/tests", "testcase name": "test-5"}
+Signal received, canceling context...
+{"level":"info","ts":1717670146.9094684,"caller":"gin-mongo/main.go:71","msg":"server exiting"}
+2024/06/06 16:05:46 sync /dev/stderr: invalid argument
+🐰 Keploy: 2024-06-06T16:05:47+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-06-06T16:05:48+05:30 	[34mINFO[0m	eBPF resources released successfully...

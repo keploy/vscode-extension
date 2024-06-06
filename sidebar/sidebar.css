@@ -61,6 +61,32 @@ button:disabled{
     margin-bottom: 10px;
     font-size: 10px;
   }
+/* Add this CSS to your stylesheet */
+
+.dropdown-container {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.dropdown-header {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-header:hover {
+    background-color: #eb6410;
+}
+
+.dropdown-content {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
+    font-size: medium;
+}
+
+.dropdown-content.show {
+    display: grid;
+}
 
 /* #updateKeployButton{
     background-color: #00d936;
@@ -92,7 +118,7 @@ button:disabled{
 .success{
     color: rgb(10, 223, 10);
     text-align: center;
-    margin-top: 5px;
+    margin-top: 5px
 }
 
 .error{
@@ -100,6 +126,32 @@ button:disabled{
     text-align: center;
     margin-top: 5px;
 }
+
+.testSuccess{
+    color: rgb(10, 223, 10);
+    text-align: left;
+    margin-top: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.testError{
+    color: #9c1a0c;
+    text-align: left;
+    margin-top: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.testName{
+    color: #d1a30a;
+    text-align: left;
+    margin-top: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
 .loader {
     border: 4px solid rgba(0, 0, 0, 0);
     border-left-color: #1a73e8; /* Change color as needed */

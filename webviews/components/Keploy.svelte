@@ -36,14 +36,23 @@
         const testCasesPassed = document.getElementById('testCasesPassed');
         const testCasesFailed = document.getElementById('testCasesFailed');
         const lastTestResultsDiv = document.getElementById('lastTestResults');
+        const errorElement = document.getElementById('errorElement');
         if (testSuiteName) testSuiteName.textContent = '';
         if (totalTestCases) totalTestCases.textContent = '';
         if (testCasesPassed) testCasesPassed.textContent = '';
         if (testCasesFailed) testCasesFailed.textContent = '';
         // if (lastTestResultsDiv) lastTestResultsDiv.innerHTML = '';
+        if (errorElement) errorElement.style.display = 'none';
+
 
     };
-
+// Function to toggle dropdown visibility
+function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        if (dropdown) {
+            dropdown.style.display = dropdown.style.display === 'none' ? 'grid' : 'none';
+        }
+    }
     const updatePagination = () => {
         //set timeout here to allow the DOM to update
             const recordedTestCases = document.getElementById('recordedTestCases');
@@ -174,6 +183,10 @@
         place-items: center;
     }
     input {
+        width: 100%;
+        margin: 10px auto;
+    }
+    .configInput{
         width: 90%;
         margin: 10px auto;
     }
@@ -237,6 +250,11 @@
     .icon-button:hover {
         color: #ff9933;
     }
+    #testSuiteName {
+        text-align: center;
+        font-weight: bold;
+        color : #ff6600;
+    }
     #projectFolder {
         display: none;
     }
@@ -271,6 +289,7 @@
         justify-content: center;
         margin: 10px auto;
     }
+    
 </style>
 
 <main>
@@ -335,26 +354,26 @@
          <div id="initialiseConfig">
             <h3 class="info">Initialise The Keploy Config File</h3>
             <!-- //Command, path , noise , re-record , normalise -->
-            <input type="text" id="configCommand" name="command" placeholder="Command" />
-            <input type="text" id="configPath" name="path" placeholder="Path" />
+            <input class="configInput" type="text" id="configCommand" name="command" placeholder="Command" />
+            <input class="configInput" type="text" id="configPath" name="path" placeholder="Path" />
             <button id="initialiseConfigButton" class="button">Initialise Config</button>
          </div>
         {/if}
-        <div id="lastTestResults" >
-            <div id="completeTestSummaryGrid">
-                <div id="testSuiteName" class="info">
+        {#if selectedIconButton === 2}
+        <div id="lastTestResults">
+            <h3 id="testSuiteName"> </h3>
+            <!-- Dropdown structure
+            <div class="dropdown-container">
+                <div class="dropdown-header" on:click="{() => toggleDropdown('dropdown1')}"></div>
+                <div id="dropdown1" class="dropdown-content">
                 </div>
-                <div id="totalTestCases" class="info">
-                </div>
-                <div id="testCasesPassed" class="success">
-                </div>
-                <div id="testCasesFailed" class="error">
-                </div>
-                
-            </div>
+            </div> -->
         </div>
+        {/if}
         <div class="loader" id="loader"></div>
         <button id="stopRecordingButton" on:click={toggleRecording}>Stop Recording</button>
         <button id="stopTestingButton" on:click={toggleTesting}>Stop Testing</button>
     </div>
 </main>
+
+
