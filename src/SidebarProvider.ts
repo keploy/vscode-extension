@@ -5,6 +5,7 @@ import { getNonce } from "./Utils";
 import { startRecording , stopRecording } from "./Record";
 import { startTesting , stopTesting ,  displayTestCases , displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";
+import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
 
 const recordOptions: vscode.OpenDialogOptions = {
   canSelectFolders: true,
@@ -282,21 +283,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Opening Config File...' + data.value);
-            //get the path of the current opened folder in vscode
-            const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-            const configFilePath = folderPath + '/keploy.yml';
-            //check if the file exists
-            if (!existsSync(configFilePath)){
-              this._view?.webview.postMessage({ type: 'configNotFound', value: 'Config file not found in the current workspace :(' });
-            return ;
-            }
-                vscode.workspace.openTextDocument(configFilePath).then(doc => {
-                  vscode.window.showTextDocument(doc, { preview: false });
-            });
+            handleOpenKeployConfigFile(this._view?.webview);
           } catch (error) {
 
             console.log('Config file not found here in catch');
             this._view?.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
+          }
+          break;
+        }
+        case "initialiseConfig" : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Initialising Config File...');
+            handleInitializeKeployConfigFile(this._view?.webview , data.path , data.command);
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to initialise config file ${error}` });
           }
           break;
         }

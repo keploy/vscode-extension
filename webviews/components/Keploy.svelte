@@ -174,14 +174,18 @@
         place-items: center;
     }
     input {
-        width: 100%;
-        margin: 10px;
+        width: 90%;
+        margin: 10px auto;
     }
-    .keploylogo{
-        margin: auto;
-        width: 100px;
-        
+    
+    #initialiseConfig {
+        display: none;
+        text-align: center;
+        grid-template-columns: 1fr;
+        align-items: center;
+        justify-content: center;
     }
+
     #stopRecordingButton , #stopTestingButton {
         background-color: #EF546B;
         margin-top: 10px;
@@ -327,6 +331,13 @@
         {#if selectedIconButton === 3}
         <div id="keployConfigInfoDiv">
             <h3 class="info" id="keployConfigInfo"> Please make changes to the Keploy Config File</h3>
+         </div>
+         <div id="initialiseConfig">
+            <h3 class="info">Initialise The Keploy Config File</h3>
+            <!-- //Command, path , noise , re-record , normalise -->
+            <input type="text" id="configCommand" name="command" placeholder="Command" />
+            <input type="text" id="configPath" name="path" placeholder="Path" />
+            <button id="initialiseConfigButton" class="button">Initialise Config</button>
          </div>
         {/if}
         <div id="lastTestResults" >

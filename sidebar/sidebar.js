@@ -9,6 +9,7 @@ const startRecordingButton = document.getElementById('startRecordingButton');
 const startTestButton = document.getElementById('startTestingButton');
 const stopTestButton = document.getElementById('stopTestingButton');
 const openRecordPageButton = document.getElementById('openRecordPageButton');
+const configNotFound = document.getElementById('keployConfigInfo');
 const openTestPageButton = document.getElementById('openTestPageButton');
 const navigateHomeButton = document.getElementById('navigateHomeButton');
 const recordStatus = document.getElementById('recordStatus');
@@ -26,6 +27,7 @@ const totalTestCasesDiv = document.getElementById('totalTestCases');
 const testCasesPassedDiv = document.getElementById('testCasesPassed');
 const testCasesFailedDiv = document.getElementById('testCasesFailed');
 const rerunTestSuiteButton = document.getElementById('rerunTestSuiteButton');
+const initialiseConfigButton = document.getElementById('initialiseConfigButton');
 const upperHR = document.getElementById('upperHR');
 const lowerHR = document.getElementById('lowerHR');
 const loader = document.getElementById('loader');
@@ -262,6 +264,20 @@ if (viewCompleteSummaryButton) {
 
 }
 
+if (initialiseConfigButton) {
+  initialiseConfigButton.addEventListener('click', async () => {
+    console.log("initialiseConfigButton clicked");
+    const path = document.getElementById('configPath').value;
+    const command = document.getElementById('configCommand').value;
+    vscode.postMessage({
+      type: "initialiseConfig",
+      value: `Initialise Config`,
+      command: command,
+      path: path
+    });
+  });
+}
+
 if (displayPreviousTestResults) {
   displayPreviousTestResults.addEventListener('click', async () => {
     console.log("displayPreviousTestResults clicked");
@@ -409,12 +425,32 @@ window.addEventListener('message', event => {
   }
 
   else if (message.type === "configNotFound") {
-    const configNotFound = document.getElementById('keployConfigInfo');
+ 
     if (configNotFound) {
       configNotFound.classList.add("error");
-      configNotFound.textContent = message.value;
+      configNotFound.textContent = message.value ;
+      const configInstruction = document.createElement('pre');
+      configInstruction.classList.add("info");
+      configInstruction.textContent = `Run the below command to generate the config file`;
+      configNotFound.appendChild(configInstruction);
+      const configCommand = document.createElement('pre');
+      configCommand.classList.add("terminal");
+      configCommand.textContent = `keploy config --generate`;
+      configCommand.addEventListener('click', async () => {
+        navigator.clipboard.writeText('keploy config --generate');
+      });
+      configNotFound.appendChild(configCommand);
     }
   }
+
+  else if (message.type === "configUninitialized") {
+    const initialiseConfigDiv = document.getElementById('initialiseConfig');
+    const keployConfigInfo = document.getElementById('keployConfigInfo');
+    keployConfigInfo.style.display = "none";
+    initialiseConfigDiv.style.display = "grid";
+  }
+
+  
 
     if (message.type === 'aggregatedTestResults') {
       console.log("message.value", message.value);

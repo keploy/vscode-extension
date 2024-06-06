@@ -39,7 +39,7 @@ const Utils_1 = require("./Utils");
 // import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
 const Record_1 = require("./Record");
 const Test_1 = require("./Test");
-const fs_1 = require("fs");
+const Config_1 = require("./Config");
 const recordOptions = {
     canSelectFolders: true,
     canSelectMany: false,
@@ -78,7 +78,7 @@ class SidebarProvider {
         const compiledCSSUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.css"));
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
         webviewView.webview.onDidReceiveMessage((data) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y;
             switch (data.type) {
                 case "onInfo": {
                     if (!data.value) {
@@ -101,10 +101,10 @@ class SidebarProvider {
                     try {
                         console.log('Opening Record Dialogue Box...');
                         vscode.window.showOpenDialog(recordOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
-                            var _y;
+                            var _z;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
-                                (_y = this._view) === null || _y === void 0 ? void 0 : _y.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
+                                (_z = this._view) === null || _z === void 0 ? void 0 : _z.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
                             }
                         }));
                     }
@@ -166,10 +166,10 @@ class SidebarProvider {
                     try {
                         console.log('Opening Test Dialogue Box...');
                         vscode.window.showOpenDialog(testOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
-                            var _z;
+                            var _0;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
-                                (_z = this._view) === null || _z === void 0 ? void 0 : _z.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
+                                (_0 = this._view) === null || _0 === void 0 ? void 0 : _0.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
                             }
                         }));
                     }
@@ -297,21 +297,24 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Opening Config File...' + data.value);
-                        //get the path of the current opened folder in vscode
-                        const folderPath = (_v = vscode.workspace.workspaceFolders) === null || _v === void 0 ? void 0 : _v[0].uri.fsPath;
-                        const configFilePath = folderPath + '/keploy.yml';
-                        //check if the file exists
-                        if (!(0, fs_1.existsSync)(configFilePath)) {
-                            (_w = this._view) === null || _w === void 0 ? void 0 : _w.webview.postMessage({ type: 'configNotFound', value: 'Config file not found in the current workspace :(' });
-                            return;
-                        }
-                        vscode.workspace.openTextDocument(configFilePath).then(doc => {
-                            vscode.window.showTextDocument(doc, { preview: false });
-                        });
+                        (0, Config_1.handleOpenKeployConfigFile)((_v = this._view) === null || _v === void 0 ? void 0 : _v.webview);
                     }
                     catch (error) {
                         console.log('Config file not found here in catch');
-                        (_x = this._view) === null || _x === void 0 ? void 0 : _x.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
+                        (_w = this._view) === null || _w === void 0 ? void 0 : _w.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
+                    }
+                    break;
+                }
+                case "initialiseConfig": {
+                    if (!data.value) {
+                        return;
+                    }
+                    try {
+                        console.log('Initialising Config File...');
+                        (0, Config_1.handleInitializeKeployConfigFile)((_x = this._view) === null || _x === void 0 ? void 0 : _x.webview, data.path, data.command);
+                    }
+                    catch (error) {
+                        (_y = this._view) === null || _y === void 0 ? void 0 : _y.webview.postMessage({ type: 'error', value: `Failed to initialise config file ${error}` });
                     }
                     break;
                 }

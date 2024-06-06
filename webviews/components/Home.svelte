@@ -55,14 +55,7 @@
 </body>
 
 <style>
-.terminal {
-  cursor:copy;
-  background-color: #212121; 
-  color: #fff; 
-  font-family: 'Courier New', Courier, monospace; 
-  padding: 10px 5px;
-  border-radius: 5px;
-}
+
 
 #topGrid {
   display: grid;
@@ -71,9 +64,7 @@
   /* gap: 10px; */
 }
 
-.terminal:hover {
-  background-color: #333;
-}
+
 #mainGrid {
   display: grid;
   place-items: center;
@@ -108,11 +99,7 @@ h2 {
   margin-bottom: 10px;
 }
 
- pre{
-  color: #ff914d;
-  margin-bottom: 10px;
-  font-size: 10px;
-}
+
  
 button {
   background-color: #C95919;
