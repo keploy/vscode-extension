@@ -92,14 +92,14 @@ export async function startRecording(command: string, folderPath: string, wslscr
                     }
 
                     console.log(`Current default shell: ${currentShell}`);
-                    // terminalPath = currentShell;
+                    //uncomment the below line if you want to use the default shell (for zsh test)
+                    // terminalPath = currentShell; 
                 }
                 console.log(`Terminal path: ${terminalPath}`);
                 const terminal = vscode.window.createTerminal({
                     name: 'Keploy Terminal',
                     shellPath: terminalPath,
                 });
-
                 terminal.show();
                 if (process.platform === 'win32') {
                     const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";exit 0`;
@@ -108,7 +108,7 @@ export async function startRecording(command: string, folderPath: string, wslscr
                     let recordCmd: string;
                     if (currentShell.includes('zsh')) {
                         // Use a Zsh-specific script if needed
-                        console.log('Using Zsh script');
+                        //replace bashScriptPaht with zshScriptPath for zsh
                         recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
                     } else {
                         // Default to Bash script

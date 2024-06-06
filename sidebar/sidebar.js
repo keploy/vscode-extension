@@ -426,8 +426,6 @@ window.addEventListener('message', event => {
   }
 
   else if (message.type === "configNotFound") {
- 
-    if (configNotFound) {
       configNotFound.classList.add("error");
       configNotFound.textContent = message.value ;
       const configInstruction = document.createElement('pre');
@@ -442,7 +440,6 @@ window.addEventListener('message', event => {
       });
       configNotFound.appendChild(configCommand);
     }
-  }
 
   else if (message.type === "configUninitialized") {
     try{
@@ -476,7 +473,7 @@ window.addEventListener('message', event => {
 
     if (message.error === true) {
         if (lastTestResultsDiv) {
-          errorElement = document.createElement('p');
+          const errorElement = document.createElement('p');
           errorElement.textContent = "No Test Runs Found";
           errorElement.classList.add("error");
           errorElement.id = "errorElement";

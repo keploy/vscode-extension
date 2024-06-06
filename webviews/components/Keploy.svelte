@@ -20,6 +20,17 @@
             if (initialiseConfigButton) {
                 initialiseConfigButton.style.display = 'none';
             }
+            const initialiseConfig = document.getElementById('initialiseConfig');
+            if (initialiseConfig) {
+                initialiseConfig.style.display = 'none';
+            }
+            const keployConfigInfoDiv = document.getElementById('keployConfigInfoDiv');
+            if (keployConfigInfoDiv) {
+                keployConfigInfoDiv.style.display = 'none';
+            }
+        }
+        if(buttonNumber ===3){
+            keployConfigInfoDiv.style.display = 'grid';
         }
     };
 
@@ -289,7 +300,7 @@ function toggleDropdown(id) {
         margin: 0 5px;
     }
     #keployConfigInfoDiv {
-        display: grid;
+        display: none;
         text-align: center;
         align-items: center;
         justify-content: center;
@@ -356,7 +367,6 @@ function toggleDropdown(id) {
             </button>
             <button id="startTestingButton" class="button" disabled={isRecording && isTesting} on:click={toggleTesting} bind:this={startTestingButton}>Start Testing</button>
         {/if}
-        {#if selectedIconButton === 3}
         <div id="keployConfigInfoDiv">
             <h3 class="info" id="keployConfigInfo"> Please make changes to the Keploy Config File</h3>
          </div>
@@ -366,7 +376,6 @@ function toggleDropdown(id) {
             <input class="configInput" type="text" id="configCommand" name="command" placeholder="Command" />
             <input class="configInput" type="text" id="configPath" name="path" placeholder="Path" />
          </div>
-        {/if}
         <button id="initialiseConfigButton" class="button">Initialise Config</button>
         {#if selectedIconButton === 2}
         <div id="lastTestResults">

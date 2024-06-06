@@ -314,6 +314,7 @@ export async function startTesting(command: string, folderPath: string, wslscrip
                     }
 
                     console.log(`Current default shell: ${currentShell}`);
+                    //uncomment the below line if you want to use the default shell (for zsh test)
                     // terminalPath = currentShell;
                 }
                 console.log(`Terminal path: ${terminalPath}`);
@@ -332,6 +333,7 @@ export async function startTesting(command: string, folderPath: string, wslscrip
                     if (currentShell.includes('zsh')) {
                         // Use a Zsh-specific script if needed
                         console.log('Using Zsh script');
+                        //replace bashScriptPath with zshScriptPath for zsh
                         testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"; exit 0`;
                     } else {
                         // Default to Bash script
@@ -369,10 +371,7 @@ export async function startTesting(command: string, folderPath: string, wslscrip
 export async function stopTesting(): Promise<void> {
     try {
         vscode.window.activeTerminal?.sendText('\x03', true);
-        //set timeout for 5 seconds
-        setTimeout(() => {
-            vscode.window.activeTerminal?.dispose();
-        }, 5000);
+        vscode.window.activeTerminal?.dispose();
         return ;
     }
     catch (error) {
