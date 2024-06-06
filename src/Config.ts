@@ -22,6 +22,7 @@ export async function handleOpenKeployConfigFile(webview: any) {
 
   if (!isInitialized) {
     webview.postMessage({ type: 'configUninitialized', value: 'Config file is not initialized. Please initialize the config file.' });
+    console.log('Config file is not initialized. Please initialize the config file.');
     return;
   }
 

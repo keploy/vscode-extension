@@ -265,6 +265,7 @@ if (viewCompleteSummaryButton) {
 }
 
 if (initialiseConfigButton) {
+  console.log("initialiseConfigButton inside if", initialiseConfigButton);
   initialiseConfigButton.addEventListener('click', async () => {
     console.log("initialiseConfigButton clicked");
     const path = document.getElementById('configPath').value;
@@ -444,11 +445,18 @@ window.addEventListener('message', event => {
   }
 
   else if (message.type === "configUninitialized") {
-    const initialiseConfigDiv = document.getElementById('initialiseConfig');
+    try{
+      const initialiseConfigDiv = document.getElementById('initialiseConfig');
     const keployConfigInfo = document.getElementById('keployConfigInfo');
     keployConfigInfo.style.display = "none";
     initialiseConfigDiv.style.display = "grid";
-  }
+    initialiseConfigButton.style.display = "block";
+  
+    }
+    catch(error){
+      console.log("error", error);
+    }
+    }
 
   
 

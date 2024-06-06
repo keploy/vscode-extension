@@ -296,7 +296,7 @@ class SidebarProvider {
                         return;
                     }
                     try {
-                        console.log('Opening Config File...' + data.value);
+                        console.log('Calling handleOpenKeployConfigFile' + data.value);
                         (0, Config_1.handleOpenKeployConfigFile)((_v = this._view) === null || _v === void 0 ? void 0 : _v.webview);
                     }
                     catch (error) {

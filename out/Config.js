@@ -53,6 +53,7 @@ function handleOpenKeployConfigFile(webview) {
         const isInitialized = configFileContent.trim().endsWith(initComment);
         if (!isInitialized) {
             webview.postMessage({ type: 'configUninitialized', value: 'Config file is not initialized. Please initialize the config file.' });
+            console.log('Config file is not initialized. Please initialize the config file.');
             return;
         }
         // Open the config file in the editor

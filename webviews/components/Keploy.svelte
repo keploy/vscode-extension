@@ -15,6 +15,12 @@
         if (buttonNumber !== 2) {
             clearLastTestResults();
         }
+        if(buttonNumber !==3){
+            const initialiseConfigButton = document.getElementById('initialiseConfigButton');
+            if (initialiseConfigButton) {
+                initialiseConfigButton.style.display = 'none';
+            }
+        }
     };
 
     const toggleRecording = () => {
@@ -289,6 +295,9 @@ function toggleDropdown(id) {
         justify-content: center;
         margin: 10px auto;
     }
+    #initialiseConfigButton{
+        display: none;
+    }
     
 </style>
 
@@ -356,9 +365,9 @@ function toggleDropdown(id) {
             <!-- //Command, path , noise , re-record , normalise -->
             <input class="configInput" type="text" id="configCommand" name="command" placeholder="Command" />
             <input class="configInput" type="text" id="configPath" name="path" placeholder="Path" />
-            <button id="initialiseConfigButton" class="button">Initialise Config</button>
          </div>
         {/if}
+        <button id="initialiseConfigButton" class="button">Initialise Config</button>
         {#if selectedIconButton === 2}
         <div id="lastTestResults">
             <h3 id="testSuiteName"> </h3>

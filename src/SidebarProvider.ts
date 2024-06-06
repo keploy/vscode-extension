@@ -282,7 +282,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             return;
           }
           try {
-            console.log('Opening Config File...' + data.value);
+            console.log('Calling handleOpenKeployConfigFile' + data.value);
             handleOpenKeployConfigFile(this._view?.webview);
           } catch (error) {
 
