@@ -63,13 +63,6 @@
 
 
     };
-// Function to toggle dropdown visibility
-function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        if (dropdown) {
-            dropdown.style.display = dropdown.style.display === 'none' ? 'grid' : 'none';
-        }
-    }
     const updatePagination = () => {
         //set timeout here to allow the DOM to update
             const recordedTestCases = document.getElementById('recordedTestCases');
@@ -117,7 +110,7 @@ function toggleDropdown(id) {
         const recordedTestCases = document.getElementById('recordedTestCases');
         if (recordedTestCases) {
             if (recordedTestCases.innerHTML.length === 0) {
-                recordedTestCases.style.display = 'none';
+                // recordedTestCases.style.display = 'none';
             } else {
                 console.log('updating pagination');
                 setTimeout(() => {
@@ -236,7 +229,7 @@ function toggleDropdown(id) {
     }
     #recordedTestCases {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         place-items: center;
     }
     .loader {
@@ -353,7 +346,8 @@ function toggleDropdown(id) {
         
         {#if selectedIconButton === 1}
         <h3 id="recordStatus"> </h3>
-        <div id="recordedTestCases"></div>
+        <div id="recordedTestCases">
+        </div>
         <div class="pagination-buttons" id="pagination-buttons">
             <button id="prevPageButton" on:click={prevPage}>Previous</button>
             <!-- <span id="paginationInfo"></span> -->
@@ -374,7 +368,7 @@ function toggleDropdown(id) {
             <h3 class="info">Initialise The Keploy Config File</h3>
             <!-- //Command, path , noise , re-record , normalise -->
             <input class="configInput" type="text" id="configCommand" name="command" placeholder="Command" />
-            <input class="configInput" type="text" id="configPath" name="path" placeholder="Path" />
+            <input class="configInput" type="text" id="configPath" name="path" placeholder="Path (Default value : ./)"  />
          </div>
         <button id="initialiseConfigButton" class="button">Initialise Config</button>
         {#if selectedIconButton === 2}

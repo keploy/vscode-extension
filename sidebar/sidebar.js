@@ -348,18 +348,54 @@ window.addEventListener('message', event => {
     recordStatus.textContent = `Test Cases Recorded`;
     recordStatus.classList.add("success");
     console.log(message.textContent);
-    const testCaseElement = document.createElement('button');
-    testCaseElement.classList.add("recordedTestCase");
-    testCaseElement.addEventListener('click', async () => {
-      vscode.postMessage({
-        type: "openRecordedTestFile",
-        value: message.path
+    if (recordedTestCasesDiv) {
+      let testSetDropdown = document.getElementById(message.testSetName);
+  
+      if (!testSetDropdown) {
+          // Create a dropdown for the new test set
+          testSetDropdown = document.createElement('div');
+          testSetDropdown.id = message.testSetName;
+          testSetDropdown.classList.add("dropdown-container");
+  
+          // Create a button to act as the dropdown toggle
+          const dropdownToggle = document.createElement('button');
+          dropdownToggle.textContent = message.testSetName;
+          dropdownToggle.classList.add("dropdown-header");
+  
+          // Create a container for the test cases
+          const testCaseContainer = document.createElement('div');
+          testCaseContainer.classList.add("dropdown-content");
+          testCaseContainer.style.display = "none"; // Hide initially
+  
+          // Add toggle functionality
+          dropdownToggle.addEventListener('click', () => {
+              testCaseContainer.style.display = testCaseContainer.style.display === "none" ? "block" : "none";
+          });
+  
+          // Append the toggle and container to the dropdown
+          testSetDropdown.appendChild(dropdownToggle);
+          testSetDropdown.appendChild(testCaseContainer);
+  
+          recordedTestCasesDiv.appendChild(testSetDropdown);
+      }
+  
+      // Create the test case element
+      const testCaseElement = document.createElement('button');
+      testCaseElement.classList.add("recordedTestCase");
+      testCaseElement.addEventListener('click', async () => {
+          vscode.postMessage({
+              type: "openRecordedTestFile",
+              value: message.path
+          });
       });
-    }
-    );
-
-    testCaseElement.textContent = message.textContent;
-    recordedTestCasesDiv.appendChild(testCaseElement);
+  
+      testCaseElement.textContent = message.textContent;
+  
+      // Find the container and append the test case element
+      const testCaseContainer = testSetDropdown.querySelector('.dropdown-content');
+      testCaseContainer.appendChild(testCaseElement);
+  }
+  
   }
   else if (message.type === "testResults") {
     console.log("message.value", message.value);
@@ -532,10 +568,6 @@ window.addEventListener('message', event => {
                 const yesterday = new Date(currentDate);
                 yesterday.setDate(currentDate.getDate() - 1);
                 const yesterdayDateString = formatDate(yesterday);
-
-                
-
-                console.log("currentDateString , yesterdayDateString , date", currentDateString, yesterdayDateString, date);
                 
                 if (currentDateString === date){
                 dropdownHeader.textContent = `Today`;                

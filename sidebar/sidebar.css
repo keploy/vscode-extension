@@ -18,9 +18,12 @@ button:disabled{
     cursor: not-allowed;
 }
 .recordedTestCase{
-    background-color: rgb(184, 89, 0);
+    /* background-color: rgb(184, 89, 0); */
     margin: 10px;
     border: black 1px solid;
+    font-size: 16px;
+    padding: 2px;
+    cursor: pointer;
     }
 .recordedTestCase:hover{
     animation: changeColor 0.5s;
@@ -28,8 +31,10 @@ button:disabled{
 
 @keyframes changeColor {
     0% { background-color: rgb(85, 85, 85); }
-    100% { background-color: rgb(1, 99, 1); }
+    100% { background-color: rgb(164, 126, 0); }
 }
+
+
 
 #versionDisplay{
     font-size: 20px;

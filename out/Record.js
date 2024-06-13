@@ -36,6 +36,14 @@ exports.startRecording = exports.stopRecording = exports.displayRecordedTestCase
 const vscode = __importStar(require("vscode"));
 const fs_1 = require("fs");
 const child_process = __importStar(require("child_process"));
+function extractTestSetName(logContent) {
+    // Define the regular expression pattern to find the test set name
+    const regex = /Keploy has captured test cases for the user's application\.\s*{"path": ".*\/(test-set-\d+)\/tests"/;
+    // Execute the regular expression on the log content
+    const match = regex.exec(logContent);
+    // Check if a match was found and return the test set name, otherwise return null
+    return match ? match[1] : null;
+}
 function displayRecordedTestCases(logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Displaying Recorded test  cases');
@@ -52,6 +60,7 @@ function displayRecordedTestCases(logfilePath, webview) {
                 });
                 logData = (0, fs_1.readFileSync)(logfilePath, 'utf8');
             }
+            const testSetName = extractTestSetName(logData);
             // Split the log data into lines
             const logLines = logData.split('\n');
             // Filter out the lines containing the desired information
@@ -74,7 +83,8 @@ function displayRecordedTestCases(logfilePath, webview) {
                     type: 'testcaserecorded',
                     value: 'Test Case has been recorded',
                     textContent: textContent,
-                    path: path
+                    path: path,
+                    testSetName: testSetName
                 });
             });
         }

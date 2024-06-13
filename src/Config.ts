@@ -18,7 +18,7 @@ export async function handleOpenKeployConfigFile(webview: any) {
   const initComment = "# This config file has been initialized";
 
   // Check if the comment is present at the end of the file
-  const isInitialized = configFileContent.trim().endsWith(initComment);
+  const isInitialized = configFileContent.trim().includes(initComment);
 
   if (!isInitialized) {
     webview.postMessage({ type: 'configUninitialized', value: 'Config file is not initialized. Please initialize the config file.' });
@@ -32,13 +32,15 @@ export async function handleOpenKeployConfigFile(webview: any) {
   });
 }
 
-
 export async function handleInitializeKeployConfigFile(webview: any, path: string, command: string) {
   console.log('Initializing config file');
   
-    const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+  const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   const configFilePath = folderPath + '/keploy.yml';
 
+  if(path === ''){
+    path = "./";
+  }
 
   // Initialize the config file with the provided path and command
   const initContent = `
@@ -84,13 +86,16 @@ keployNetwork: "keploy-network"
 # This config file has been initialized
   `;
 
+  const finalContent = `${initContent.trim()}
+
+# Visit https://keploy.io/docs/running-keploy/configuration-file/ to learn about using Keploy through the configuration file.
+  `;
+
   // Write the content to the config file
-  await vscode.workspace.fs.writeFile(vscode.Uri.file(configFilePath), Buffer.from(initContent));
+  await vscode.workspace.fs.writeFile(vscode.Uri.file(configFilePath), Buffer.from(finalContent));
   
   // Open the config file in the editor
   vscode.workspace.openTextDocument(configFilePath).then(doc => {
     vscode.window.showTextDocument(doc, { preview: false });
   });
 }
-
-  
