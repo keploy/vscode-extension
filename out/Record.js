@@ -130,7 +130,8 @@ function startRecording(command, folderPath, wslscriptPath, wsllogfilePath, bash
                             currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
                         }
                         console.log(`Current default shell: ${currentShell}`);
-                        // terminalPath = currentShell;
+                        //uncomment the below line if you want to use the default shell (for zsh test)
+                        // terminalPath = currentShell; 
                     }
                     console.log(`Terminal path: ${terminalPath}`);
                     const terminal = vscode.window.createTerminal({
@@ -146,7 +147,7 @@ function startRecording(command, folderPath, wslscriptPath, wsllogfilePath, bash
                         let recordCmd;
                         if (currentShell.includes('zsh')) {
                             // Use a Zsh-specific script if needed
-                            console.log('Using Zsh script');
+                            //replace bashScriptPaht with zshScriptPath for zsh
                             recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
                         }
                         else {

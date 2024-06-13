@@ -228,11 +228,11 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
             return;
         }
 
-        // Sort directories to find the latest test run by date
+        // Sort directories to find the latest test run by date in opposite order
         testRunDirs.sort((a, b) => {
             const aTime = fs.statSync(path.join(reportsFolder, a)).birthtime.getTime();
             const bTime = fs.statSync(path.join(reportsFolder, b)).birthtime.getTime();
-            return bTime - aTime;
+            return aTime - bTime;
         });
 
         let totalSuccess = 0;
@@ -259,11 +259,11 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
                 if (report.tests) {
                     report.tests.forEach(test => {
                         testResults.push({
-                            date: new Date(test.req.timestamp).toISOString().split('T')[0],
+                            date: new Date(test.resp.header.Date).toLocaleDateString('en-GB'),
                             method: test.req.method,
                             name: test.name,
                             status: test.status,
-                            testCasePath : testFilePath
+                            testCasePath: testFilePath
                         });
                     });
                 }

@@ -174,11 +174,11 @@ function displayPreviousTestResults(webview) {
                 });
                 return;
             }
-            // Sort directories to find the latest test run by date
+            // Sort directories to find the latest test run by date in opposite order
             testRunDirs.sort((a, b) => {
                 const aTime = fs.statSync(path.join(reportsFolder, a)).birthtime.getTime();
                 const bTime = fs.statSync(path.join(reportsFolder, b)).birthtime.getTime();
-                return bTime - aTime;
+                return aTime - bTime;
             });
             let totalSuccess = 0;
             let totalFailure = 0;
@@ -197,7 +197,7 @@ function displayPreviousTestResults(webview) {
                     if (report.tests) {
                         report.tests.forEach(test => {
                             testResults.push({
-                                date: new Date(test.req.timestamp).toISOString().split('T')[0],
+                                date: new Date(test.resp.header.Date).toLocaleDateString('en-GB'),
                                 method: test.req.method,
                                 name: test.name,
                                 status: test.status,
@@ -248,6 +248,7 @@ function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashSc
                             currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
                         }
                         console.log(`Current default shell: ${currentShell}`);
+                        //uncomment the below line if you want to use the default shell (for zsh test)
                         // terminalPath = currentShell;
                     }
                     console.log(`Terminal path: ${terminalPath}`);
@@ -265,6 +266,7 @@ function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashSc
                         if (currentShell.includes('zsh')) {
                             // Use a Zsh-specific script if needed
                             console.log('Using Zsh script');
+                            //replace bashScriptPath with zshScriptPath for zsh
                             testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"; exit 0`;
                         }
                         else {
@@ -301,15 +303,11 @@ function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashSc
 }
 exports.startTesting = startTesting;
 function stopTesting() {
-    var _a;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.sendText('\x03', true);
-            //set timeout for 5 seconds
-            setTimeout(() => {
-                var _a;
-                (_a = vscode.window.activeTerminal) === null || _a === void 0 ? void 0 : _a.dispose();
-            }, 5000);
+            (_b = vscode.window.activeTerminal) === null || _b === void 0 ? void 0 : _b.dispose();
             return;
         }
         catch (error) {

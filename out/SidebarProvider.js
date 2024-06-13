@@ -370,9 +370,10 @@ class SidebarProvider {
         <link href="${compiledCSSUri}" rel="stylesheet">
 			</head>
       <body>
-				<script nonce="${nonce}" src="${scriptUri}"></script>
-        <script type="module" nonce="${nonce}" src="${scriptMainUri}"></script>
+				
 			</body>
+      <script nonce="${nonce}" src="${scriptUri}"></script>
+        <script type="module" nonce="${nonce}" src="${scriptMainUri}"></script>
 			</html>`;
     }
 }

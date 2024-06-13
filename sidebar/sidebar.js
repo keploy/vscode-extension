@@ -35,7 +35,12 @@ let FilePath = "";
 
 //cleanup required
 
-
+function formatDate(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
 function resetUI() {
   if (recordedTestCasesDiv) {
     recordedTestCasesDiv.innerHTML = "";
@@ -490,6 +495,7 @@ window.addEventListener('message', event => {
             testsByDate[date].push(test);
         });
 
+        
         // Append new data
         const testSuiteNameElement = document.createElement('p');
         testSuiteNameElement.textContent = `Previous Test Suite Results`;
@@ -517,8 +523,30 @@ window.addEventListener('message', event => {
 
                 const dropdownHeader = document.createElement('div');
                 dropdownHeader.className = 'dropdown-header';
-                dropdownHeader.textContent = `${date}`;
+
+                // Get current date
+                const currentDate = new Date();
+                const currentDateString = formatDate(currentDate);
+
+                // Get yesterday's date
+                const yesterday = new Date(currentDate);
+                yesterday.setDate(currentDate.getDate() - 1);
+                const yesterdayDateString = formatDate(yesterday);
+
                 
+
+                console.log("currentDateString , yesterdayDateString , date", currentDateString, yesterdayDateString, date);
+                
+                if (currentDateString === date){
+                dropdownHeader.textContent = `Today`;                
+                }
+                else if(yesterdayDateString === date){
+                dropdownHeader.textContent = `Yesterday`;                
+                }
+                else{
+                dropdownHeader.textContent = `${date}`;                
+                }
+
                 dropdownHeader.onclick = () => {
                     const content = document.getElementById(`dropdown${date}`);
                     if (content) { content.classList.toggle('show'); }
@@ -527,7 +555,6 @@ window.addEventListener('message', event => {
                 const dropdownContent = document.createElement('div');
                 dropdownContent.id = `dropdown${date}`;
                 dropdownContent.className = 'dropdown-content';
-
                 tests.forEach((test, index) => {
                     // Append individual test details
                     const testMethod = document.createElement('div');
