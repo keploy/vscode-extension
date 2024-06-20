@@ -11,33 +11,38 @@
   
 version: 2.1.0-alpha23
 
-🐰 Keploy: 2024-06-13T18:16:53+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
-🐰 Keploy: 2024-06-13T18:16:54+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
-🐰 Keploy: 2024-06-13T18:16:54+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-06-13T18:16:54+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-06-13T18:16:55+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
-🐰 Keploy: 2024-06-13T18:16:55+05:30 	[34mINFO[0m	Proxy started at port:16789
-🐰 Keploy: 2024-06-13T18:16:55+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
-🐰 Keploy: 2024-06-13T18:16:55+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
-PID: 341436
-[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
-
-[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
- - using env:	export GIN_MODE=release
- - using code:	gin.SetMode(gin.ReleaseMode)
-
-[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
-[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
-[GIN] 2024/06/13 - 18:16:58 | 200 |   10.025623ms |             ::1 | POST     "/url"
-🐰 Keploy: 2024-06-13T18:17:00+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-14/tests", "testcase name": "test-1"}
-[GIN] 2024/06/13 - 18:17:00 | 200 |    7.898274ms |             ::1 | POST     "/url"
-🐰 Keploy: 2024-06-13T18:17:02+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-14/tests", "testcase name": "test-2"}
-[GIN] 2024/06/13 - 18:17:03 | 200 |    7.138231ms |             ::1 | POST     "/url"
-🐰 Keploy: 2024-06-13T18:17:05+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-14/tests", "testcase name": "test-3"}
-[GIN] 2024/06/13 - 18:17:06 | 200 |    3.032491ms |             ::1 | POST     "/url"
-🐰 Keploy: 2024-06-13T18:17:08+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-go/gin-mongo/keploy/test-set-14/tests", "testcase name": "test-4"}
+🐰 Keploy: 2024-06-20T09:40:25+05:30 	[34mINFO[0m	config file not found; proceeding with flags only
+🐰 Keploy: 2024-06-20T09:40:25+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-06-20T09:40:26+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-06-20T09:40:26+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-20T09:40:26+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+ * Serving Flask app 'app'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:6000
+ * Running on http://172.20.10.2:6000
+Press CTRL+C to quit
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 111-806-683
 Signal received, canceling context...
-{"level":"info","ts":1718282829.8403118,"caller":"gin-mongo/main.go:71","msg":"server exiting"}
-2024/06/13 18:17:09 sync /dev/stderr: invalid argument
-🐰 Keploy: 2024-06-13T18:17:09+05:30 	[34mINFO[0m	proxy stopped...
-🐰 Keploy: 2024-06-13T18:17:11+05:30 	[34mINFO[0m	eBPF resources released successfully...
+Exception ignored in atexit callback: <function _shutdown_resources at 0x7db7d827dc60>
+Traceback (most recent call last):
+  File "/home/akash/.local/lib/python3.10/site-packages/pymongo/monitor.py", line 442, in _shutdown_resources
+    shutdown()
+  File "/home/akash/.local/lib/python3.10/site-packages/pymongo/periodic_executor.py", line 182, in _shutdown_executors
+    executor.join(1)
+  File "/home/akash/.local/lib/python3.10/site-packages/pymongo/periodic_executor.py", line 100, in join
+    self._thread.join(timeout)
+  File "/usr/lib/python3.10/threading.py", line 1100, in join
+    self._wait_for_tstate_lock(timeout=max(timeout, 0))
+  File "/usr/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
+    if lock.acquire(block, timeout):
+KeyboardInterrupt: 
+🐰 Keploy: 2024-06-20T09:40:29+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-06-20T09:40:31+05:30 	[34mINFO[0m	eBPF resources released successfully...

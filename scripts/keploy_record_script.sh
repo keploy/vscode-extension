@@ -17,8 +17,24 @@ if [[ "$command" =~ .*"go".* ]]; then
 #   echo "Go is present."
   go mod download
   go build -o application
-fi 
 
+
+elif [[ "$command" =~ .*"python3".* ]]; then
+  # echo "Python is present, Activating Virtual Environment 🐍"
+  python3 -m venv venv
+  source venv/bin/activate
+  # echo 'Installing requirements 📦'
+  pip install -r requirements.txt
+  # echo 'Test Mode Starting 🎉'
+
+elif [[ "$command" =~ .*"python".* ]] ; then
+  # echo "Python is present, Activating Virtual Environment 🐍"
+  python -m venv venv
+  source venv/bin/activate
+  # echo 'Installing requirements 📦'
+  pip install -r requirements.txt
+  # echo 'Test Mode Starting 🎉'
+fi 
 # Adding sudo here worked
 keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 
