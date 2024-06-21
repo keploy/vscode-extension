@@ -1,0 +1,342 @@
+
+       ▓██▓▄
+    ▓▓▓▓██▓█▓▄
+     ████████▓▒
+          ▀▓▓███▄      ▄▄   ▄               ▌
+         ▄▌▌▓▓████▄    ██ ▓█▀  ▄▌▀▄  ▓▓▌▄   ▓█  ▄▌▓▓▌▄ ▌▌   ▓
+       ▓█████████▌▓▓   ██▓█▄  ▓█▄▓▓ ▐█▌  ██ ▓█  █▌  ██  █▌ █▓
+      ▓▓▓▓▀▀▀▀▓▓▓▓▓▓▌  ██  █▓  ▓▌▄▄ ▐█▓▄▓█▀ █▓█ ▀█▄▄█▀   █▓█
+       ▓▌                           ▐█▌                   █▌
+        ▓
+  
+version: 2.1.0-alpha23
+
+🐰 Keploy: 2024-06-21T15:51:23+05:30 	[34mINFO[0m	config file not found; proceeding with flags only
+🐰 Keploy: 2024-06-21T15:51:23+05:30 	[33mWARN[0m	Delay is set to 5 seconds, incase your app takes more time to start use --delay to set custom delay
+🐰 Keploy: 2024-06-21T15:51:23+05:30 	[34mINFO[0m	Example usage: keploy test -c "/path/to/user/app" --delay 6
+🐰 Keploy: 2024-06-21T15:51:23+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-06-21T15:51:23+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	running	{"test-set": "test-set-2"}
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-06-21T15:51:24+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2024-06-21 15:51:25.275  INFO 46067 --- [           main] com.example.demo.SamplesJavaApplication  : Starting SamplesJavaApplication v0.0.1-SNAPSHOT using Java 11.0.23 on akash-Victus-by-HP-15-6-inch-Gaming-Laptop-PC-15-fa0092TX with PID 46067 (/home/akash/Desktop/Keploy/samples-java/employee-manager/target/springbootapp-0.0.1-SNAPSHOT.jar started by root in /home/akash/Desktop/Keploy/samples-java/employee-manager)
+2024-06-21 15:51:25.277  INFO 46067 --- [           main] com.example.demo.SamplesJavaApplication  : No active profile set, falling back to 1 default profile: "default"
+2024-06-21 15:51:25.731  INFO 46067 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-06-21 15:51:25.769  INFO 46067 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 1 JPA repository interfaces.
+2024-06-21 15:51:26.116  INFO 46067 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-06-21 15:51:26.124  INFO 46067 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-21 15:51:26.124  INFO 46067 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2024-06-21 15:51:26.188  INFO 46067 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-21 15:51:26.188  INFO 46067 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 871 ms
+2024-06-21 15:51:26.250  INFO 46067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-06-21 15:51:26.395  INFO 46067 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-06-21 15:51:26.456  INFO 46067 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-21 15:51:26.500  INFO 46067 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2024-06-21 15:51:26.614  INFO 46067 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-06-21 15:51:26.689  INFO 46067 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-06-21 15:51:27.088  INFO 46067 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-06-21 15:51:27.093  INFO 46067 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:27.310  WARN 46067 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-06-21 15:51:27.554  INFO 46067 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-06-21 15:51:27.560  INFO 46067 --- [           main] com.example.demo.SamplesJavaApplication  : Started SamplesJavaApplication in 2.578 seconds (JVM running for 2.829)
+🐰 Keploy: 2024-06-21T15:51:29+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-2"}
+2024-06-21 15:51:29.791  INFO 46067 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-21 15:51:29.792  INFO 46067 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-06-21 15:51:29.794  INFO 46067 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|      "email": "mt@gmail.com",                        |    "email": "mt@gmail.com",                          |
+|      "firstName": "Myke",                            |    "firstName": "Myke",                              |
+|      "id": 1,                                        |    "id": 1,                                          |
+|      "lastName": "Tyson",                            |    "lastName": "Tyson",                              |
+|   -  "timestamp": 1.718965056e+09                    | +  "timestamp": 1.718965289e+09                      |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-06-21T15:51:29+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-2", "passed": "false"}
+🐰 Keploy: 2024-06-21T15:51:29+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-2"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-2[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:30+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-2", "passed": "true"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For test-set: [31m[1m"[0m[31mtest-set-2[0m[31m[1m"[0m
+	Total tests: [34m[1m2[0m
+	Total test passed: [34m[1m1[0m
+	Total test failed: [34m[1m1[0m
+ <=========================================> 
+
+2024-06-21 15:51:31.063  INFO 46067 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:31.064  INFO 46067 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-06-21 15:51:31.067  INFO 46067 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+🐰 Keploy: 2024-06-21T15:51:31+05:30 	[34mINFO[0m	running	{"test-set": "test-set-1"}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2024-06-21 15:51:31.677  INFO 46381 --- [           main] com.example.demo.SamplesJavaApplication  : Starting SamplesJavaApplication v0.0.1-SNAPSHOT using Java 11.0.23 on akash-Victus-by-HP-15-6-inch-Gaming-Laptop-PC-15-fa0092TX with PID 46381 (/home/akash/Desktop/Keploy/samples-java/employee-manager/target/springbootapp-0.0.1-SNAPSHOT.jar started by root in /home/akash/Desktop/Keploy/samples-java/employee-manager)
+2024-06-21 15:51:31.679  INFO 46381 --- [           main] com.example.demo.SamplesJavaApplication  : No active profile set, falling back to 1 default profile: "default"
+2024-06-21 15:51:32.131  INFO 46381 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-06-21 15:51:32.169  INFO 46381 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 1 JPA repository interfaces.
+2024-06-21 15:51:32.510  INFO 46381 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-06-21 15:51:32.518  INFO 46381 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-21 15:51:32.518  INFO 46381 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2024-06-21 15:51:32.581  INFO 46381 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-21 15:51:32.582  INFO 46381 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 864 ms
+2024-06-21 15:51:32.668  INFO 46381 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-06-21 15:51:32.799  INFO 46381 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-06-21 15:51:32.862  INFO 46381 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-21 15:51:32.916  INFO 46381 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2024-06-21 15:51:33.024  INFO 46381 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-06-21 15:51:33.099  INFO 46381 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-06-21 15:51:33.495  INFO 46381 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-06-21 15:51:33.501  INFO 46381 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:33.688  WARN 46381 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-06-21 15:51:33.906  INFO 46381 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-06-21 15:51:33.913  INFO 46381 --- [           main] com.example.demo.SamplesJavaApplication  : Started SamplesJavaApplication in 2.539 seconds (JVM running for 2.782)
+🐰 Keploy: 2024-06-21T15:51:36+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-1"}
+2024-06-21 15:51:36.175  INFO 46381 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-21 15:51:36.175  INFO 46381 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-06-21 15:51:36.176  INFO 46381 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|      "email": "mt@gmail.com",                        |    "email": "mt@gmail.com",                          |
+|      "firstName": "Myke",                            |    "firstName": "Myke",                              |
+|      "id": 1,                                        |    "id": 1,                                          |
+|      "lastName": "Tyson",                            |    "lastName": "Tyson",                              |
+|   -  "timestamp": 1.718964927e+09                    | +  "timestamp": 1.718965296e+09                      |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-06-21T15:51:36+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-1", "passed": "false"}
+🐰 Keploy: 2024-06-21T15:51:36+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-1"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-2[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:36+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-1", "passed": "true"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For test-set: [31m[1m"[0m[31mtest-set-1[0m[31m[1m"[0m
+	Total tests: [34m[1m2[0m
+	Total test passed: [34m[1m1[0m
+	Total test failed: [34m[1m1[0m
+ <=========================================> 
+
+2024-06-21 15:51:37.431  INFO 46381 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:37.433  INFO 46381 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-06-21 15:51:37.435  INFO 46381 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+🐰 Keploy: 2024-06-21T15:51:37+05:30 	[34mINFO[0m	running	{"test-set": "test-set-3"}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2024-06-21 15:51:38.074  INFO 46670 --- [           main] com.example.demo.SamplesJavaApplication  : Starting SamplesJavaApplication v0.0.1-SNAPSHOT using Java 11.0.23 on akash-Victus-by-HP-15-6-inch-Gaming-Laptop-PC-15-fa0092TX with PID 46670 (/home/akash/Desktop/Keploy/samples-java/employee-manager/target/springbootapp-0.0.1-SNAPSHOT.jar started by root in /home/akash/Desktop/Keploy/samples-java/employee-manager)
+2024-06-21 15:51:38.077  INFO 46670 --- [           main] com.example.demo.SamplesJavaApplication  : No active profile set, falling back to 1 default profile: "default"
+2024-06-21 15:51:38.535  INFO 46670 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-06-21 15:51:38.570  INFO 46670 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 1 JPA repository interfaces.
+2024-06-21 15:51:38.965  INFO 46670 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-06-21 15:51:38.973  INFO 46670 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-21 15:51:38.974  INFO 46670 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2024-06-21 15:51:39.042  INFO 46670 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-21 15:51:39.042  INFO 46670 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 912 ms
+2024-06-21 15:51:39.123  INFO 46670 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-06-21 15:51:39.258  INFO 46670 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-06-21 15:51:39.309  INFO 46670 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-21 15:51:39.356  INFO 46670 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2024-06-21 15:51:39.759  INFO 46670 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-06-21 15:51:39.880  INFO 46670 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-06-21 15:51:40.276  INFO 46670 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-06-21 15:51:40.281  INFO 46670 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:40.478  WARN 46670 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-06-21 15:51:40.688  INFO 46670 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-06-21 15:51:40.695  INFO 46670 --- [           main] com.example.demo.SamplesJavaApplication  : Started SamplesJavaApplication in 2.949 seconds (JVM running for 3.206)
+🐰 Keploy: 2024-06-21T15:51:42+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-3"}
+2024-06-21 15:51:42.538  INFO 46670 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-21 15:51:42.538  INFO 46670 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-06-21 15:51:42.539  INFO 46670 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Testrun failed for testcase with id: [31m[1m"[0m[31mtest-1[0m[31m[1m"[0m
+
+--------------------------------------------------------------------
+
++-------------------------------------------------------------------------------------------------------------+
+| [91m                                               DIFFS TEST-1                                                [0m |
++-------------------------------------------------------------------------------------------------------------+
+|                     EXPECT HEADER                    |                   ACTUAL HEADER                      |
+| -----------------------------------------------------+----------------------------------------------------- |
+|                                                      |                                                      |
+|                                                                                                             |
+|                      EXPECT BODY                     |                    ACTUAL BODY                       |
+| -----------------------------------------------------+----------------------------------------------------- |
+|    {                                                 |  {                                                   |
+|      "email": "mt@gmail.com",                        |    "email": "mt@gmail.com",                          |
+|      "firstName": "Myke",                            |    "firstName": "Myke",                              |
+|      "id": 1,                                        |    "id": 1,                                          |
+|      "lastName": "Tyson",                            |    "lastName": "Tyson",                              |
+|   -  "timestamp": 1.718965234e+09                    | +  "timestamp": 1.718965302e+09                      |
+|    }                                                 |  }                                                   |
+|                                                      |                                                      |
+|                                                                                                             |
++-------------------------------------------------------------------------------------------------------------+
+🐰 Keploy: 2024-06-21T15:51:42+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-3", "passed": "false"}
+🐰 Keploy: 2024-06-21T15:51:42+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-3"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-2[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:42+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-3", "passed": "true"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For test-set: [31m[1m"[0m[31mtest-set-3[0m[31m[1m"[0m
+	Total tests: [34m[1m2[0m
+	Total test passed: [34m[1m1[0m
+	Total test failed: [34m[1m1[0m
+ <=========================================> 
+
+2024-06-21 15:51:43.789  INFO 46670 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:43.791  INFO 46670 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-06-21 15:51:43.796  INFO 46670 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+🐰 Keploy: 2024-06-21T15:51:43+05:30 	[34mINFO[0m	running	{"test-set": "test-set-0"}
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2024-06-21 15:51:44.458  INFO 47035 --- [           main] com.example.demo.SamplesJavaApplication  : Starting SamplesJavaApplication v0.0.1-SNAPSHOT using Java 11.0.23 on akash-Victus-by-HP-15-6-inch-Gaming-Laptop-PC-15-fa0092TX with PID 47035 (/home/akash/Desktop/Keploy/samples-java/employee-manager/target/springbootapp-0.0.1-SNAPSHOT.jar started by root in /home/akash/Desktop/Keploy/samples-java/employee-manager)
+2024-06-21 15:51:44.460  INFO 47035 --- [           main] com.example.demo.SamplesJavaApplication  : No active profile set, falling back to 1 default profile: "default"
+2024-06-21 15:51:44.970  INFO 47035 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-06-21 15:51:45.009  INFO 47035 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 1 JPA repository interfaces.
+2024-06-21 15:51:45.354  INFO 47035 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-06-21 15:51:45.362  INFO 47035 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-21 15:51:45.363  INFO 47035 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2024-06-21 15:51:45.421  INFO 47035 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-21 15:51:45.421  INFO 47035 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 917 ms
+2024-06-21 15:51:45.487  INFO 47035 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-06-21 15:51:45.626  INFO 47035 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-06-21 15:51:45.678  INFO 47035 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-21 15:51:45.715  INFO 47035 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2024-06-21 15:51:45.853  INFO 47035 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-06-21 15:51:45.924  INFO 47035 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-06-21 15:51:46.381  INFO 47035 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-06-21 15:51:46.389  INFO 47035 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:46.586  WARN 47035 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-06-21 15:51:46.802  INFO 47035 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-06-21 15:51:46.814  INFO 47035 --- [           main] com.example.demo.SamplesJavaApplication  : Started SamplesJavaApplication in 2.642 seconds (JVM running for 2.951)
+🐰 Keploy: 2024-06-21T15:51:48+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-1", "test set": "test-set-0"}
+2024-06-21 15:51:48.906  INFO 47035 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-21 15:51:48.906  INFO 47035 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-06-21 15:51:48.907  INFO 47035 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-1[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	result	{"testcase id": "test-1", "testset id": "test-set-0", "passed": "true"}
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-2", "test set": "test-set-0"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-2[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	result	{"testcase id": "test-2", "testset id": "test-set-0", "passed": "true"}
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-3", "test set": "test-set-0"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-3[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	result	{"testcase id": "test-3", "testset id": "test-set-0", "passed": "true"}
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-4", "test set": "test-set-0"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-4[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	result	{"testcase id": "test-4", "testset id": "test-set-0", "passed": "true"}
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	starting test for of	{"test case": "test-5", "test set": "test-set-0"}
+Testrun passed for testcase with id: [32m[1m"[0m[32mtest-5[0m[32m[1m"[0m
+
+--------------------------------------------------------------------
+
+🐰 Keploy: 2024-06-21T15:51:49+05:30 	[34mINFO[0m	result	{"testcase id": "test-5", "testset id": "test-set-0", "passed": "true"}
+
+ <=========================================> 
+  TESTRUN SUMMARY. For test-set: [32m[1m"[0m[32mtest-set-0[0m[32m[1m"[0m
+	Total tests: [34m[1m5[0m
+	Total test passed: [34m[1m5[0m
+	Total test failed: [34m[1m0[0m
+ <=========================================> 
+
+2024-06-21 15:51:50.413  INFO 47035 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:51:50.415  INFO 47035 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-06-21 15:51:50.418  INFO 47035 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+
+ <=========================================> 
+  COMPLETE TESTRUN SUMMARY. 
+	Total tests: [34m[1m11[0m
+	Total test passed: [34m[1m8[0m
+	Total test failed: [34m[1m3[0m
+
+	Test Suite Name		Total Test	Passed		Failed	
+
+	[32m[1m"[0m[32mtest-set-0[0m[32m[1m"[0m		[34m[1m5[0m		[34m[1m5[0m		[34m[1m0[0m
+	[31m[1m"[0m[31mtest-set-1[0m[31m[1m"[0m		[34m[1m2[0m		[34m[1m1[0m		[34m[1m1[0m
+	[31m[1m"[0m[31mtest-set-2[0m[31m[1m"[0m		[34m[1m2[0m		[34m[1m1[0m		[34m[1m1[0m
+	[31m[1m"[0m[31mtest-set-3[0m[31m[1m"[0m		[34m[1m2[0m		[34m[1m1[0m		[34m[1m1[0m
+<=========================================> 
+
+🐰 Keploy: 2024-06-21T15:51:50+05:30 	[34mINFO[0m	test run completed	{"passed overall": false}
+🐰 Keploy: 2024-06-21T15:51:50+05:30 	[34mINFO[0m	stopping Keploy	{"reason": "replay completed successfully"}
+🐰 Keploy: 2024-06-21T15:51:50+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-06-21T15:51:52+05:30 	[34mINFO[0m	eBPF resources released successfully...

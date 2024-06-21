@@ -11,38 +11,53 @@
   
 version: 2.1.0-alpha23
 
-🐰 Keploy: 2024-06-20T09:40:25+05:30 	[34mINFO[0m	config file not found; proceeding with flags only
-🐰 Keploy: 2024-06-20T09:40:25+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
-🐰 Keploy: 2024-06-20T09:40:26+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
-🐰 Keploy: 2024-06-20T09:40:26+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-06-20T09:40:26+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
-🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	Proxy started at port:16789
-🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
-🐰 Keploy: 2024-06-20T09:40:27+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
- * Serving Flask app 'app'
- * Debug mode: on
-WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
- * Running on all addresses (0.0.0.0)
- * Running on http://127.0.0.1:6000
- * Running on http://172.20.10.2:6000
-Press CTRL+C to quit
- * Restarting with stat
- * Debugger is active!
- * Debugger PIN: 111-806-683
+🐰 Keploy: 2024-06-21T15:52:49+05:30 	[34mINFO[0m	config file not found; proceeding with flags only
+🐰 Keploy: 2024-06-21T15:52:49+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-06-21T15:52:50+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-06-21T15:52:50+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-21T15:52:51+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-21T15:52:52+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-06-21T15:52:52+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-06-21T15:52:52+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-06-21T15:52:52+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
+
+2024-06-21 15:52:53.745  INFO 52582 --- [           main] com.example.demo.SamplesJavaApplication  : Starting SamplesJavaApplication v0.0.1-SNAPSHOT using Java 11.0.23 on akash-Victus-by-HP-15-6-inch-Gaming-Laptop-PC-15-fa0092TX with PID 52582 (/home/akash/Desktop/Keploy/samples-java/employee-manager/target/springbootapp-0.0.1-SNAPSHOT.jar started by root in /home/akash/Desktop/Keploy/samples-java/employee-manager)
+2024-06-21 15:52:53.747  INFO 52582 --- [           main] com.example.demo.SamplesJavaApplication  : No active profile set, falling back to 1 default profile: "default"
+2024-06-21 15:52:54.879  INFO 52582 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-06-21 15:52:54.951  INFO 52582 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 66 ms. Found 1 JPA repository interfaces.
+2024-06-21 15:52:55.494  INFO 52582 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2024-06-21 15:52:55.508  INFO 52582 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-21 15:52:55.508  INFO 52582 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2024-06-21 15:52:55.596  INFO 52582 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-21 15:52:55.596  INFO 52582 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1694 ms
+2024-06-21 15:52:55.699  INFO 52582 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-06-21 15:52:55.940  INFO 52582 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-06-21 15:52:56.045  INFO 52582 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-06-21 15:52:56.212  INFO 52582 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.10.Final
+2024-06-21 15:52:56.378  INFO 52582 --- [           main] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2024-06-21 15:52:56.586  INFO 52582 --- [           main] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2024-06-21 15:52:57.198  INFO 52582 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-06-21 15:52:57.203  INFO 52582 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:52:57.421  WARN 52582 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-06-21 15:52:57.825  INFO 52582 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2024-06-21 15:52:57.832  INFO 52582 --- [           main] com.example.demo.SamplesJavaApplication  : Started SamplesJavaApplication in 4.708 seconds (JVM running for 5.196)
+2024-06-21 15:53:00.256  INFO 52582 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-06-21 15:53:00.257  INFO 52582 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-06-21 15:53:00.258  INFO 52582 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+🐰 Keploy: 2024-06-21T15:53:03+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-java/employee-manager/keploy/test-set-4/tests", "testcase name": "test-1"}
+🐰 Keploy: 2024-06-21T15:53:04+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-java/employee-manager/keploy/test-set-4/tests", "testcase name": "test-2"}
+🐰 Keploy: 2024-06-21T15:53:06+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-java/employee-manager/keploy/test-set-4/tests", "testcase name": "test-3"}
 Signal received, canceling context...
-Exception ignored in atexit callback: <function _shutdown_resources at 0x7db7d827dc60>
-Traceback (most recent call last):
-  File "/home/akash/.local/lib/python3.10/site-packages/pymongo/monitor.py", line 442, in _shutdown_resources
-    shutdown()
-  File "/home/akash/.local/lib/python3.10/site-packages/pymongo/periodic_executor.py", line 182, in _shutdown_executors
-    executor.join(1)
-  File "/home/akash/.local/lib/python3.10/site-packages/pymongo/periodic_executor.py", line 100, in join
-    self._thread.join(timeout)
-  File "/usr/lib/python3.10/threading.py", line 1100, in join
-    self._wait_for_tstate_lock(timeout=max(timeout, 0))
-  File "/usr/lib/python3.10/threading.py", line 1116, in _wait_for_tstate_lock
-    if lock.acquire(block, timeout):
-KeyboardInterrupt: 
-🐰 Keploy: 2024-06-20T09:40:29+05:30 	[34mINFO[0m	proxy stopped...
-🐰 Keploy: 2024-06-20T09:40:31+05:30 	[34mINFO[0m	eBPF resources released successfully...
+2024-06-21 15:53:08.225  INFO 52582 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-06-21 15:53:08.226  INFO 52582 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-06-21 15:53:08.245  INFO 52582 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+🐰 Keploy: 2024-06-21T15:53:08+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-06-21T15:53:10+05:30 	[34mINFO[0m	eBPF resources released successfully...
