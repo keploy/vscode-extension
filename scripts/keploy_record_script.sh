@@ -6,6 +6,7 @@ log_file_path="$1"
 # Command is all of the CLI args after the 2nd arg
 command="${@:3}"
 
+
 # Create log file if it doesn't exist
 touch "$log_file_path"
 > "$log_file_path" # Clear the log file
@@ -14,13 +15,12 @@ touch "$log_file_path"
 chmod 666 "$log_file_path"
 
 if [[ "$command" =~ .*"go".* ]]; then
-#   echo "Go is present."
+  # echo "Go is present."
   go mod download
   go build -o application
 
-
 elif [[ "$command" =~ .*"python3".* ]]; then
-  # echo "Python is present, Activating Virtual Environment 🐍"
+  # echo "Python 3 is present, Activating Virtual Environment 🐍"
   python3 -m venv venv
   source venv/bin/activate
   # echo 'Installing requirements 📦'
@@ -35,17 +35,28 @@ elif [[ "$command" =~ .*"python".* ]] ; then
   pip install -r requirements.txt
   # echo 'Test Mode Starting 🎉'
 
-elif [[ "$COMMAND" =~ .*"node".* ]]; then
-  echo "Node is present."
+elif [[ "$command" =~ .*"node".* ]]; then
+  # echo "Node is present."
   npm install
 
-elif [[ "$COMMAND" =~ .*"java".* ]]  || [[ "$COMMAND" =~ .*"mvn".* ]]; then
-  echo "Java is present."
+elif [[ "$command" =~ .*"java".* ]]  || [[ "$command" =~ .*"mvn".* ]]; then
+  # echo "Java is present."
   mvn clean install
 fi 
-# Adding sudo here worked
-keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 
+# Check if running on WSL
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+  # echo "Running on WSL"
+  # Temporarily modify PATH
+  export PATH=$(echo "$PATH" | tr ' ' '\n' | grep -v " " | tr '\n' ':')
+  keploycmd="sudo -E keploybin"
+else
+  # echo "Not running on WSL"
+  # Original PATH handling
+  keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
+fi
+
+echo "Keploy command: $keploycmd"
 
 cd "$folderpath"
 
@@ -62,7 +73,6 @@ cat_pid=$!
 dummy_pid=$!
 
 # Execute the keploy command, redirecting output to the named pipe
-# echo $keploycmd record -c "$command"
 sudo -E $keploycmd record -c "$command" > "$fifo" 2>&1
 
 # Clean up: Wait for keploy command to finish
