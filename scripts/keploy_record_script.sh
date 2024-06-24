@@ -34,6 +34,14 @@ elif [[ "$command" =~ .*"python".* ]] ; then
   # echo 'Installing requirements 📦'
   pip install -r requirements.txt
   # echo 'Test Mode Starting 🎉'
+
+elif [[ "$COMMAND" =~ .*"node".* ]]; then
+  echo "Node is present."
+  npm install
+
+elif [[ "$COMMAND" =~ .*"java".* ]]  || [[ "$COMMAND" =~ .*"mvn".* ]]; then
+  echo "Java is present."
+  mvn clean install
 fi 
 # Adding sudo here worked
 keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
