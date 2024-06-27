@@ -2,7 +2,7 @@
 
 Keploy is a Visual Studio Code extension designed to help developers record and replay test cases directly within the IDE.
 
-#### Note:  This extension currently supports only Go programming language.
+#### Note:  This extension currently supports only Go, Node, Python and Java programming language.
 
 ## Features
 

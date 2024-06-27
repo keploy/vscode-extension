@@ -39,9 +39,12 @@ exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 const SidebarProvider_1 = require("./SidebarProvider");
 const SignIn_1 = __importDefault(require("./SignIn"));
+const OneClickInstall_1 = __importDefault(require("./OneClickInstall"));
 function activate(context) {
     const sidebarProvider = new SidebarProvider_1.SidebarProvider(context.extensionUri);
     context.subscriptions.push(vscode.window.registerWebviewViewProvider("Keploy-Sidebar", sidebarProvider));
+    (0, OneClickInstall_1.default)();
+    // add one click installation upon activation
     let signedIn = context.globalState.get('accessToken');
     if (signedIn) {
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);

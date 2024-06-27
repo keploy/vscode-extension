@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { SidebarProvider } from './SidebarProvider';
 import SignIn  from './SignIn';
-
+import oneClickInstall from './OneClickInstall';
 
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
@@ -11,6 +11,9 @@ export function activate(context: vscode.ExtensionContext) {
                 sidebarProvider
             )
         );
+    oneClickInstall();
+    
+        // add one click installation upon activation
 
     let signedIn = context.globalState.get('accessToken');
     if(signedIn){
