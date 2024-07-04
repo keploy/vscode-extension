@@ -44,8 +44,8 @@ function activate(context) {
     const sidebarProvider = new SidebarProvider_1.SidebarProvider(context.extensionUri);
     context.subscriptions.push(vscode.window.registerWebviewViewProvider("Keploy-Sidebar", sidebarProvider));
     (0, OneClickInstall_1.default)();
-    // add one click installation upon activation
-    let signedIn = context.globalState.get('accessToken');
+    let signedIn = context.globalState.get('ourToken');
+    console.log(context.globalState);
     if (signedIn) {
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
         sidebarProvider.postMessage('navigate', 'Keploy');

@@ -337,7 +337,7 @@ export async function startTesting(command: string, folderPath: string, wslscrip
                         testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"; exit 0`;
                     } else {
                         // Default to Bash script
-                         testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0 `;
+                         testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ;`;
                     }
                     // const exitCmd = 'exit';
                     terminal.sendText(testCmd);

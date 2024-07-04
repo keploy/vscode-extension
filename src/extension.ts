@@ -13,16 +13,15 @@ export function activate(context: vscode.ExtensionContext) {
         );
     oneClickInstall();
     
-        // add one click installation upon activation
-
-    let signedIn = context.globalState.get('accessToken');
+    let signedIn = context.globalState.get('ourToken');
+    console.log(context.globalState)
     if(signedIn){
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
         sidebarProvider.postMessage('navigate','Keploy');
     }
     	let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
            
-            const response = await SignIn();
+            const response : any = await SignIn();
             context.globalState.update('accessToken', response.accessToken);
             vscode.window.showInformationMessage('You are now signed in!');
             vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);

@@ -11,15 +11,15 @@
   
 version: 2.1.0-alpha23
 
-🐰 Keploy: 2024-06-25T17:16:23+05:30 	[34mINFO[0m	config file not found; proceeding with flags only
-🐰 Keploy: 2024-06-25T17:16:23+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
-🐰 Keploy: 2024-06-25T17:16:23+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
-🐰 Keploy: 2024-06-25T17:16:24+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-06-25T17:16:24+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-06-25T17:16:24+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
-🐰 Keploy: 2024-06-25T17:16:24+05:30 	[34mINFO[0m	Proxy started at port:16789
-🐰 Keploy: 2024-06-25T17:16:24+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
-🐰 Keploy: 2024-06-25T17:16:24+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-06-27T16:20:53+05:30 	[34mINFO[0m	config file not found; proceeding with flags only
+🐰 Keploy: 2024-06-27T16:20:53+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-06-27T16:20:53+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-06-27T16:20:53+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-27T16:20:53+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-06-27T16:20:54+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-06-27T16:20:54+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-06-27T16:20:54+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-06-27T16:20:54+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
  * Serving Flask app 'app'
  * Debug mode: on
 WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
@@ -29,13 +29,15 @@ WARNING: This is a development server. Do not use it in a production deployment.
 Press CTRL+C to quit
  * Restarting with stat
  * Debugger is active!
- * Debugger PIN: 581-427-302
-127.0.0.1 - - [25/Jun/2024 17:17:08] "POST /api/tasks HTTP/1.1" 404 -
-🐰 Keploy: 2024-06-25T17:17:10+05:30 	[33mWARN[0m	Malformed request	{"ExpectedRecvBytes": 0, "ActualRecvBytes": 0}
-🐰 Keploy: 2024-06-25T17:17:10+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-python/flask-mongo/keploy/test-set-1/tests", "testcase name": "test-1"}
-127.0.0.1 - - [25/Jun/2024 17:17:15] "POST /api/tasks HTTP/1.1" 404 -
-🐰 Keploy: 2024-06-25T17:17:17+05:30 	[33mWARN[0m	Malformed request	{"ExpectedRecvBytes": 0, "ActualRecvBytes": 0}
-🐰 Keploy: 2024-06-25T17:17:17+05:30 	[34mINFO[0m	🟠 Keploy has captured test cases for the user's application.	{"path": "/home/akash/Desktop/Keploy/samples-python/flask-mongo/keploy/test-set-1/tests", "testcase name": "test-2"}
+ * Debugger PIN: 136-811-912
 Signal received, canceling context...
-🐰 Keploy: 2024-06-25T17:17:21+05:30 	[34mINFO[0m	proxy stopped...
-🐰 Keploy: 2024-06-25T17:17:23+05:30 	[34mINFO[0m	eBPF resources released successfully...
+Traceback (most recent call last):
+  File "/home/akash/Desktop/Keploy/samples-python/flask-mongo/app.py", line 42, in <module>
+    app.run(host='0.0.0.0', port=6000, debug=True)
+  File "/home/akash/.local/lib/python3.10/site-packages/flask/app.py", line 1191, in run
+    run_simple(t.cast(str, host), port, self, **options)
+  File "/home/akash/.local/lib/python3.10/site-packages/werkzeug/serving.py", line 1090, in run_simple
+    run_with_reloader(
+KeyboardInterrupt
+🐰 Keploy: 2024-06-27T16:20:57+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-06-27T16:20:58+05:30 	[34mINFO[0m	eBPF resources released successfully...

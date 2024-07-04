@@ -271,7 +271,7 @@ function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashSc
                         }
                         else {
                             // Default to Bash script
-                            testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0 `;
+                            testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ;`;
                         }
                         // const exitCmd = 'exit';
                         terminal.sendText(testCmd);
