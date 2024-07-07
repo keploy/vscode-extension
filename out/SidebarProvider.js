@@ -39,6 +39,7 @@ const Utils_1 = require("./Utils");
 // import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
 const Record_1 = require("./Record");
 const Test_1 = require("./Test");
+const fs_1 = require("fs");
 const Config_1 = require("./Config");
 const recordOptions = {
     canSelectFolders: true,
@@ -62,6 +63,7 @@ class SidebarProvider {
         (_a = this._view) === null || _a === void 0 ? void 0 : _a.webview.postMessage({ type: type, value: value });
     }
     resolveWebviewView(webviewView) {
+        var _a;
         this._view = webviewView;
         webviewView.webview.options = {
             // Allow scripts in the webview
@@ -74,11 +76,18 @@ class SidebarProvider {
                 vscode.Uri.joinPath(this._extensionUri, "scripts"),
             ],
         };
-        const scriptUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.js"));
-        const compiledCSSUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.css"));
+        let scriptUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.js"));
+        let compiledCSSUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.css"));
+        //if config file is already present then navigate to keploy page
+        const folderPath = (_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0].uri.fsPath;
+        const configFilePath = folderPath + '/keploy.yml';
+        if ((0, fs_1.existsSync)(configFilePath)) {
+            scriptUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Operations.js"));
+            compiledCSSUri = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Operations.css"));
+        }
         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
         webviewView.webview.onDidReceiveMessage((data) => __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z;
+            var _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
             switch (data.type) {
                 case "onInfo": {
                     if (!data.value) {
@@ -101,15 +110,15 @@ class SidebarProvider {
                     try {
                         console.log('Opening Record Dialogue Box...');
                         vscode.window.showOpenDialog(recordOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
-                            var _0;
+                            var _1;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
-                                (_0 = this._view) === null || _0 === void 0 ? void 0 : _0.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
+                                (_1 = this._view) === null || _1 === void 0 ? void 0 : _1.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
                             }
                         }));
                     }
                     catch (error) {
-                        (_a = this._view) === null || _a === void 0 ? void 0 : _a.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
+                        (_b = this._view) === null || _b === void 0 ? void 0 : _b.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
                     }
                     break;
                 }
@@ -137,12 +146,12 @@ class SidebarProvider {
                         }
                         console.log("bashScript path" + wslscriptPath);
                         console.log(wsllogPath);
-                        yield (0, Record_1.startRecording)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_b = this._view) === null || _b === void 0 ? void 0 : _b.webview);
-                        (_c = this._view) === null || _c === void 0 ? void 0 : _c.webview.postMessage({ type: 'success', value: 'Recording Started' });
-                        (_d = this._view) === null || _d === void 0 ? void 0 : _d.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
+                        yield (0, Record_1.startRecording)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_c = this._view) === null || _c === void 0 ? void 0 : _c.webview);
+                        (_d = this._view) === null || _d === void 0 ? void 0 : _d.webview.postMessage({ type: 'success', value: 'Recording Started' });
+                        (_e = this._view) === null || _e === void 0 ? void 0 : _e.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
                     }
                     catch (error) {
-                        (_e = this._view) === null || _e === void 0 ? void 0 : _e.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
+                        (_f = this._view) === null || _f === void 0 ? void 0 : _f.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
                     }
                     break;
                 }
@@ -155,7 +164,7 @@ class SidebarProvider {
                         yield (0, Record_1.stopRecording)();
                     }
                     catch (error) {
-                        (_f = this._view) === null || _f === void 0 ? void 0 : _f.webview.postMessage({ type: 'error', value: `Failed to Stop record ${error}` });
+                        (_g = this._view) === null || _g === void 0 ? void 0 : _g.webview.postMessage({ type: 'error', value: `Failed to Stop record ${error}` });
                     }
                     break;
                 }
@@ -166,15 +175,15 @@ class SidebarProvider {
                     try {
                         console.log('Opening Test Dialogue Box...');
                         vscode.window.showOpenDialog(testOptions).then((fileUri) => __awaiter(this, void 0, void 0, function* () {
-                            var _1;
+                            var _2;
                             if (fileUri && fileUri[0]) {
                                 console.log('Selected file: ' + fileUri[0].fsPath);
-                                (_1 = this._view) === null || _1 === void 0 ? void 0 : _1.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
+                                (_2 = this._view) === null || _2 === void 0 ? void 0 : _2.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
                             }
                         }));
                     }
                     catch (error) {
-                        (_g = this._view) === null || _g === void 0 ? void 0 : _g.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
+                        (_h = this._view) === null || _h === void 0 ? void 0 : _h.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
                     }
                     break;
                 }
@@ -200,10 +209,10 @@ class SidebarProvider {
                             wslscriptPath = wslscriptPath.replace(/:/g, '');
                             wsllogPath = wsllogPath.replace(/:/g, '');
                         }
-                        yield (0, Test_1.startTesting)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_h = this._view) === null || _h === void 0 ? void 0 : _h.webview);
+                        yield (0, Test_1.startTesting)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_j = this._view) === null || _j === void 0 ? void 0 : _j.webview);
                     }
                     catch (error) {
-                        (_j = this._view) === null || _j === void 0 ? void 0 : _j.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
+                        (_k = this._view) === null || _k === void 0 ? void 0 : _k.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
                     }
                     break;
                 }
@@ -216,7 +225,7 @@ class SidebarProvider {
                         yield (0, Test_1.stopTesting)();
                     }
                     catch (error) {
-                        (_k = this._view) === null || _k === void 0 ? void 0 : _k.webview.postMessage({ type: 'error', value: `Failed to Stop Testing ${error}` });
+                        (_l = this._view) === null || _l === void 0 ? void 0 : _l.webview.postMessage({ type: 'error', value: `Failed to Stop Testing ${error}` });
                     }
                     break;
                 }
@@ -229,10 +238,10 @@ class SidebarProvider {
                         const recordPageJs = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${data.value}.js`));
                         const recordPageCss = webviewView.webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${data.value}.css`));
                         webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, recordPageCss, recordPageJs);
-                        (_l = this._view) === null || _l === void 0 ? void 0 : _l.webview.postMessage({ type: 'openRecordPage', value: 'Record Page opened' });
+                        (_m = this._view) === null || _m === void 0 ? void 0 : _m.webview.postMessage({ type: 'openRecordPage', value: 'Record Page opened' });
                     }
                     catch (error) {
-                        (_m = this._view) === null || _m === void 0 ? void 0 : _m.webview.postMessage({ type: 'error', value: `Failed to open record page ${error}` });
+                        (_o = this._view) === null || _o === void 0 ? void 0 : _o.webview.postMessage({ type: 'error', value: `Failed to open record page ${error}` });
                     }
                     break;
                 }
@@ -247,7 +256,7 @@ class SidebarProvider {
                         });
                     }
                     catch (error) {
-                        (_o = this._view) === null || _o === void 0 ? void 0 : _o.webview.postMessage({ type: 'error', value: `Failed to open recorded test file ${error}` });
+                        (_p = this._view) === null || _p === void 0 ? void 0 : _p.webview.postMessage({ type: 'error', value: `Failed to open recorded test file ${error}` });
                     }
                     break;
                 }
@@ -258,10 +267,10 @@ class SidebarProvider {
                     try {
                         console.log('Opening Complete Summary...');
                         const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
-                        (0, Test_1.displayTestCases)(logfilePath.fsPath, (_p = this._view) === null || _p === void 0 ? void 0 : _p.webview, false, true);
+                        (0, Test_1.displayTestCases)(logfilePath.fsPath, (_q = this._view) === null || _q === void 0 ? void 0 : _q.webview, false, true);
                     }
                     catch (error) {
-                        (_q = this._view) === null || _q === void 0 ? void 0 : _q.webview.postMessage({ type: 'error', value: `Failed to open complete summary ${error}` });
+                        (_r = this._view) === null || _r === void 0 ? void 0 : _r.webview.postMessage({ type: 'error', value: `Failed to open complete summary ${error}` });
                     }
                     break;
                 }
@@ -271,10 +280,10 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Opening Previous Test Results...');
-                        (0, Test_1.displayPreviousTestResults)((_r = this._view) === null || _r === void 0 ? void 0 : _r.webview);
+                        (0, Test_1.displayPreviousTestResults)((_s = this._view) === null || _s === void 0 ? void 0 : _s.webview);
                     }
                     catch (error) {
-                        (_s = this._view) === null || _s === void 0 ? void 0 : _s.webview.postMessage({ type: 'error', value: `Failed to open previous test results ${error}` });
+                        (_t = this._view) === null || _t === void 0 ? void 0 : _t.webview.postMessage({ type: 'error', value: `Failed to open previous test results ${error}` });
                     }
                     break;
                 }
@@ -284,10 +293,10 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Opening Aggregated Test Results...');
-                        (_t = this._view) === null || _t === void 0 ? void 0 : _t.webview.postMessage({ type: 'aggregatedTestResults', data: data.data, error: data.error, value: data.value });
+                        (_u = this._view) === null || _u === void 0 ? void 0 : _u.webview.postMessage({ type: 'aggregatedTestResults', data: data.data, error: data.error, value: data.value });
                     }
                     catch (error) {
-                        (_u = this._view) === null || _u === void 0 ? void 0 : _u.webview.postMessage({ type: 'error', value: `Failed to open aggregated test results ${error}` });
+                        (_v = this._view) === null || _v === void 0 ? void 0 : _v.webview.postMessage({ type: 'error', value: `Failed to open aggregated test results ${error}` });
                     }
                     break;
                 }
@@ -297,11 +306,11 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Calling handleOpenKeployConfigFile' + data.value);
-                        (0, Config_1.handleOpenKeployConfigFile)((_v = this._view) === null || _v === void 0 ? void 0 : _v.webview);
+                        (0, Config_1.handleOpenKeployConfigFile)((_w = this._view) === null || _w === void 0 ? void 0 : _w.webview);
                     }
                     catch (error) {
                         console.log('Config file not found here in catch');
-                        (_w = this._view) === null || _w === void 0 ? void 0 : _w.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
+                        (_x = this._view) === null || _x === void 0 ? void 0 : _x.webview.postMessage({ type: 'configNotFound', value: `Failed to open config file ${error}` });
                     }
                     break;
                 }
@@ -311,13 +320,15 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Initialising Config File...');
-                        (0, Config_1.handleInitializeKeployConfigFile)((_x = this._view) === null || _x === void 0 ? void 0 : _x.webview, data.path, data.command);
+                        (0, Config_1.handleInitializeKeployConfigFile)((_y = this._view) === null || _y === void 0 ? void 0 : _y.webview, data.path, data.command);
                     }
                     catch (error) {
-                        (_y = this._view) === null || _y === void 0 ? void 0 : _y.webview.postMessage({ type: 'error', value: `Failed to initialise config file ${error}` });
+                        (_z = this._view) === null || _z === void 0 ? void 0 : _z.webview.postMessage({ type: 'error', value: `Failed to initialise config file ${error}` });
                     }
                     break;
                 }
+                // case "setupConfigFile" : {
+                // }
                 case "openTestFile": {
                     if (!data.value) {
                         return;
@@ -329,7 +340,7 @@ class SidebarProvider {
                         });
                     }
                     catch (error) {
-                        (_z = this._view) === null || _z === void 0 ? void 0 : _z.webview.postMessage({ type: 'error', value: `Failed to open test file ${error}` });
+                        (_0 = this._view) === null || _0 === void 0 ? void 0 : _0.webview.postMessage({ type: 'error', value: `Failed to open test file ${error}` });
                     }
                     break;
                 }

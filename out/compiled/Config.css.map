@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "Config.css",
+  "sources": [
+    "Config.svelte"
+  ],
+  "sourcesContent": [
+    "<style>\n    .configInput{\n        width: 90%;\n        margin: 10px auto;\n    }\n    \n    #initialiseConfig {\n        display: none;\n        text-align: center;\n        grid-template-columns: 1fr;\n        align-items: center;\n        justify-content: center;\n    }\n\n</style>\n<main>\n<div id=\"initialiseConfig\">\n    <h3 class=\"info\">Initialise The Keploy Config File</h3>\n    <!-- //Command, path , noise , re-record , normalise -->\n    <input class=\"configInput\" type=\"text\" id=\"configCommand\" name=\"command\" placeholder=\"Command\" />\n    <input class=\"configInput\" type=\"text\" id=\"configPath\" name=\"path\" placeholder=\"Path (Default value : ./)\"  />\n </div>\n</main>"
+  ],
+  "names": [],
+  "mappings": "AACI,2BAAY,CACR,KAAK,CAAE,GAAG,CACV,MAAM,CAAE,IAAI,CAAC,IACjB,CAEA,gCAAkB,CACd,OAAO,CAAE,IAAI,CACb,UAAU,CAAE,MAAM,CAClB,qBAAqB,CAAE,GAAG,CAC1B,WAAW,CAAE,MAAM,CACnB,eAAe,CAAE,MACrB"
+}

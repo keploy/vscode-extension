@@ -40,26 +40,44 @@ function handleOpenKeployConfigFile(webview) {
     return __awaiter(this, void 0, void 0, function* () {
         const folderPath = (_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0].uri.fsPath;
         const configFilePath = folderPath + '/keploy.yml';
-        // Check if the file exists
-        if (!(0, fs_1.existsSync)(configFilePath)) {
-            webview.postMessage({ type: 'configNotFound', value: 'Config file not found in the current workspace.' });
+        // Function to check if the config file exists
+        const checkConfigExists = () => {
+            return (0, fs_1.existsSync)(configFilePath);
+        };
+        // Function to open the config file in the editor
+        const openConfigFile = () => {
+            vscode.workspace.openTextDocument(configFilePath).then(doc => {
+                vscode.window.showTextDocument(doc, { preview: false });
+            });
+        };
+        // Check if the config file exists
+        if (checkConfigExists()) {
+            openConfigFile();
             return;
         }
-        // Read the config file content
-        const configFileContent = (0, fs_1.readFileSync)(configFilePath, 'utf8');
-        // Define the comment to check for
-        const initComment = "# This config file has been initialized";
-        // Check if the comment is present at the end of the file
-        const isInitialized = configFileContent.trim().includes(initComment);
-        if (!isInitialized) {
-            webview.postMessage({ type: 'configUninitialized', value: 'Config file is not initialized. Please initialize the config file.' });
-            console.log('Config file is not initialized. Please initialize the config file.');
-            return;
+        // Create a terminal and execute 'keploy config --generate'
+        const terminal = vscode.window.createTerminal('Keploy Config Generator');
+        terminal.sendText('keploy config --generate');
+        terminal.show();
+        // Polling function to check if the config file is created
+        const checkFileExists = () => {
+            return new Promise((resolve) => {
+                const interval = setInterval(() => {
+                    if (checkConfigExists()) {
+                        clearInterval(interval);
+                        resolve(true);
+                    }
+                }, 2000); // Check every 2 seconds
+            });
+        };
+        // Wait for the config file to be created
+        const fileExists = yield checkFileExists();
+        if (fileExists) {
+            webview.postMessage({ type: 'navigate', value: 'Config' });
         }
-        // Open the config file in the editor
-        vscode.workspace.openTextDocument(configFilePath).then(doc => {
-            vscode.window.showTextDocument(doc, { preview: false });
-        });
+        else {
+            webview.postMessage({ type: 'configNotFound', value: 'Config file could not be generated.' });
+        }
     });
 }
 exports.handleOpenKeployConfigFile = handleOpenKeployConfigFile;
@@ -68,7 +86,7 @@ function handleInitializeKeployConfigFile(webview, path, command) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Initializing config file');
         const folderPath = (_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0].uri.fsPath;
-        const configFilePath = folderPath + '/keploy.yml';
+        const configFilePath = `${folderPath}/keploy.yml`;
         if (path === '') {
             path = "./";
         }

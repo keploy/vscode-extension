@@ -56,9 +56,9 @@ else
   keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 fi
 
-echo "Keploy command: $keploycmd"
+# echo "Keploy command: $keploycmd"
 
-cd "$folderpath"
+# cd "$folderpath"
 
 # Create a named pipe
 fifo=$(mktemp -u)

@@ -14,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
     oneClickInstall();
     
     let signedIn = context.globalState.get('ourToken');
-    console.log(context.globalState)
+    console.log(context.globalState);
     if(signedIn){
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
         sidebarProvider.postMessage('navigate','Keploy');

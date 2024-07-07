@@ -3,7 +3,7 @@ const progressDiv = document.getElementById('Progress');
 const filePathDiv = document.getElementById('filePathDiv');
 const recordedTestCasesDiv = document.getElementById('recordedTestCases');
 const testResultsDiv = document.getElementById('testResults');
-const appCommand = document.getElementById('appCommand');
+// const appCommand = document.getElementById('appCommand');
 const stopRecordingButton = document.getElementById("stopRecordingButton");
 const startRecordingButton = document.getElementById('startRecordingButton');
 const startTestButton = document.getElementById('startTestingButton');
@@ -20,6 +20,7 @@ const generatedTestCommandDiv = document.getElementById('testCommandDiv');
 const viewCompleteSummaryButton = document.getElementById('viewCompleteSummaryButton');
 const displayPreviousTestResults = document.getElementById('displayPreviousTestResults');
 const openConfigButton = document.getElementById('openConfig');
+const setupConfigButton = document.getElementById('setupConfig');
 const completeTestSummaryDiv = document.getElementById('completeTestSummaryGrid');
 const lastTestResultsDiv = document.getElementById('lastTestResults');
 const testSuiteNameDiv = document.getElementById('testSuiteName');
@@ -194,20 +195,21 @@ if (startRecordingButton) {
   startRecordingButton.addEventListener('click', async () => {
     console.log("startRecordingButton clicked");
     resetUI();
-    let  commandValue = appCommand.value;
+    // let  commandValue = appCommand.value;
     
-    console.log('Command value:', commandValue);
-    FilePath = document.getElementById('projectFolder').value;
-    if (FilePath === "") {
-      FilePath = "./";
-    }
+    // console.log('Command value:', commandValue);
+
+    // FilePath = document.getElementById('projectFolder').value;
+    // if (FilePath === "") {
+    //   FilePath = "./";
+    // }
     // const generatedRecordCommand = document.getElementById('generatedRecordCommand');
     vscode.postMessage({
       type: "startRecordingCommand",
       value: `Recording Command...`,
-      command: commandValue,
-      filePath: FilePath,
-      generatedRecordCommand: "" 
+      command: "./test-app-url-shortener",
+      filePath: "./",
+      // generatedRecordCommand: "" 
     });
   });
 }
@@ -298,6 +300,15 @@ if (displayPreviousTestResults) {
 if (openConfigButton) {
   openConfigButton.addEventListener('click', async () => {
     console.log("openConfigButton clicked");
+    vscode.postMessage({
+      type: "openConfigFile",
+      value: `/keploy.yml`
+    });
+  });
+}
+if(setupConfigButton){
+  setupConfigButton.addEventListener('click', async =>{
+    console.log("setupConfigButton clicked");
     vscode.postMessage({
       type: "openConfigFile",
       value: `/keploy.yml`
@@ -467,9 +478,11 @@ window.addEventListener('message', event => {
   }
 
   else if (message.type === "configNotFound") {
+    if(configNotFound){
       configNotFound.classList.add("error");
       configNotFound.textContent = message.value ;
-      const configInstruction = document.createElement('pre');
+    }
+    const configInstruction = document.createElement('pre');
       configInstruction.classList.add("info");
       configInstruction.textContent = `Run the below command to generate the config file`;
       configNotFound.appendChild(configInstruction);

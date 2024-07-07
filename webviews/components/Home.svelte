@@ -1,114 +1,83 @@
 <script>
-  function copyToClipboard(text) {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        console.log('Text copied to clipboard');
-      })
-      .catch((error) => {
-        console.error('Failed to copy text to clipboard:', error);
-      });
-  }
+  // You can add any necessary script here
 </script>
 
-<body>
-  <div id="mainGrid">
-    <div id="topGrid">
-    <img
-      class="keploylogo"
-      src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
-      alt="Keploy Logo"
-    />
-      <div>
-    <h2 class="mainHeading">AI Generated Tests</h2>
-      <h2 class="mainHeading">that actually work!</h2>
-  </div>
-  </div>
-    <div class="gettingStartedContainer">
-     <h2> Getting Started</h2>
-<h2 class="step" >1. Installing 📥</h2>
-<h5>Integrate Keploy by installing the open-source agent locally. No code-changes required.</h5>
-
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<pre class="terminal" on:click={() => copyToClipboard(' curl --silent -O -L https://keploy.io/install.sh && source install.sh')}>curl -O -L
-  https://keploy.io/install.sh 
-  && source install.sh
-  </pre>
- 
-<h2 class="step">2. Record 🎬</h2>
-<h5>Start your app with keploy to convert API calls as tests and mocks/stubs. Make some API calls to your app.</h5>
-
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<pre class="terminal" on:click={() => copyToClipboard('keploy record -c CMD_TO_RUN_APP')}>keploy record -c CMD_TO_RUN_APP</pre>
-
-<h2 class="step">3. Test 🧪</h2>
-<h5>Shut down Database , Redis , Kafka and other services. Keploy don't need those during test.</h5>
-
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-<pre class="terminal" on:click={() => copyToClipboard('keploy test -c CMD_TO_RUN_APP --delay 10')}>keploy test -c CMD_TO_RUN_APP --delay 10</pre>
-
-<button id="openRecordPageButton">Try It Now</button>
-    </div>
-  </div>
-</body>
-
 <style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    height: 100vh;
+    /* background-color:  var(--vscode-foreground); */
+    padding: 20px;
+  }
 
+  .image-container {
+    position: relative;
+    width: 250px;
+    height: 150px;
+    background: url('/path/to/your/image.png') no-repeat center center;
+    background-size: contain;
+  }
 
-#topGrid {
-  display: grid;
-  place-items: center;
-  grid-template-columns: 1fr ;
-  /* gap: 10px; */
-}
+  .tag {
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    padding: 2px 10px;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 
+  .tag-html { top: 100px; left: 10px; }
+  .tag-api { top: 10px; left: 50px; }
+  .tag-test { top: 10px; right: 50px; }
+  .tag-mock { top: 70px; right: 10px; }
 
-#mainGrid {
-  display: grid;
-  place-items: center;
-  align-items: center;
-  text-wrap: wrap;
-  gap: 20px;
-  text-align: center;
-}
-#mainGrid img {
-  width: 100px;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
-#mainGrid{
-  height: 100%;
-}
-.gettingStartedContainer {
-  text-align: center;
-  padding: 10px ;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
+  .get-started {
+    margin-top: 150px;
+    text-align: center;
+    font-size: 18px;
+    /* color: #333; */
+  }
 
-h2 {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
+  .description {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+    /* color: #666; */
+    max-width: 300px;
+  }
 
-.step {
-  color: #ff914d;
-  font-size: 12px;
-  margin-bottom: 10px;
-}
+  .button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    margin-top: 250px;
+    background-color: #ff7e47;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
 
-
- 
-button {
-  background-color: #C95919;
-  padding: 10px; 
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;  
-  font-size: 12px;
-  margin-top: 10px;  
-}
-
+  .button:hover {
+    background-color: #ff5722;
+  }
 </style>
+
+<div class="container">
+  <div class="image-container">
+    <div class="tag tag-html">HTML</div>
+    <div class="tag tag-api">API Calls</div>
+    <div class="tag tag-test">Test Cases</div>
+    <div class="tag tag-mock">Data Mocks</div>
+  </div>
+  <div class="get-started">Get Started</div>
+  <div class="description">
+    Integrate Keploy by installing the open-source agent locally. No code-changes required.
+  </div>
+  <button class="button" id="setupConfig">Setup Keploy Config</button>
+</div>
