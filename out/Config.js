@@ -73,7 +73,7 @@ function handleOpenKeployConfigFile(webview) {
         // Wait for the config file to be created
         const fileExists = yield checkFileExists();
         if (fileExists) {
-            webview.postMessage({ type: 'navigate', value: 'Config' });
+            webview.postMessage({ type: 'navigate', value: 'Operations' });
         }
         else {
             webview.postMessage({ type: 'configNotFound', value: 'Config file could not be generated.' });
@@ -143,6 +143,7 @@ keployNetwork: "keploy-network"
         vscode.workspace.openTextDocument(configFilePath).then(doc => {
             vscode.window.showTextDocument(doc, { preview: false });
         });
+        webview.postMessage({ type: 'navigate', value: 'Operations' });
     });
 }
 exports.handleInitializeKeployConfigFile = handleInitializeKeployConfigFile;

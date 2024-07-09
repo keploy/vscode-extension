@@ -1281,15 +1281,15 @@ var app = (function () {
 				attr_dev(path0, "fill", "#ff0000");
 				attr_dev(path0, "d", "M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6");
 				attr_dev(path0, "opacity", "0.3");
-				add_location(path0, file, 261, 99, 6990);
+				add_location(path0, file, 261, 99, 7014);
 				attr_dev(path1, "fill", "#ff0000");
 				attr_dev(path1, "d", "M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6");
-				add_location(path1, file, 261, 199, 7090);
+				add_location(path1, file, 261, 199, 7114);
 				attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg, "width", "35px");
 				attr_dev(svg, "height", "35px");
 				attr_dev(svg, "viewBox", "0 0 24 24");
-				add_location(svg, file, 261, 12, 6903);
+				add_location(svg, file, 261, 12, 6927);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, svg, anchor);
@@ -1325,12 +1325,12 @@ var app = (function () {
 				path = svg_element("path");
 				attr_dev(path, "fill", "#ff0000");
 				attr_dev(path, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
-				add_location(path, file, 259, 99, 6707);
+				add_location(path, file, 259, 99, 6731);
 				attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg, "width", "35px");
 				attr_dev(svg, "height", "35px");
 				attr_dev(svg, "viewBox", "0 0 24 24");
-				add_location(svg, file, 259, 12, 6620);
+				add_location(svg, file, 259, 12, 6644);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, svg, anchor);
@@ -1371,7 +1371,7 @@ var app = (function () {
 				h1 = element("h1");
 				t = text(t_value);
 				attr_dev(h1, "class", "svelte-1gezfu");
-				add_location(h1, file, 280, 8, 9057);
+				add_location(h1, file, 280, 8, 9081);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -1411,7 +1411,7 @@ var app = (function () {
 				h1 = element("h1");
 				h1.textContent = "View Previous Test Results";
 				attr_dev(h1, "class", "svelte-1gezfu");
-				add_location(h1, file, 278, 8, 8999);
+				add_location(h1, file, 278, 8, 9023);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -1444,7 +1444,7 @@ var app = (function () {
 				h1 = element("h1");
 				h1.textContent = "Make changes to keploy config";
 				attr_dev(h1, "class", "svelte-1gezfu");
-				add_location(h1, file, 276, 8, 8910);
+				add_location(h1, file, 276, 8, 8934);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -1479,9 +1479,9 @@ var app = (function () {
 				h3 = element("h3");
 				h3.innerHTML = ``;
 				attr_dev(h3, "id", "testSuiteName");
-				add_location(h3, file, 295, 12, 9936);
+				add_location(h3, file, 295, 12, 9960);
 				attr_dev(div, "id", "lastTestResults");
-				add_location(div, file, 294, 8, 9897);
+				add_location(div, file, 294, 8, 9921);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1524,7 +1524,7 @@ var app = (function () {
 				div = element("div");
 				if (if_block) if_block.c();
 				attr_dev(div, "class", "steps svelte-1gezfu");
-				add_location(div, file, 319, 4, 10998);
+				add_location(div, file, 319, 4, 11022);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1740,7 +1740,7 @@ var app = (function () {
 				div = element("div");
 				div.textContent = `${/*step*/ ctx[26]}`;
 				attr_dev(div, "class", "step svelte-1gezfu");
-				add_location(div, file, 326, 10, 11256);
+				add_location(div, file, 326, 10, 11280);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1773,7 +1773,7 @@ var app = (function () {
 				div = element("div");
 				div.textContent = `${/*step*/ ctx[26]}`;
 				attr_dev(div, "class", "step svelte-1gezfu");
-				add_location(div, file, 322, 10, 11133);
+				add_location(div, file, 322, 10, 11157);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1942,93 +1942,93 @@ var app = (function () {
 				div15 = element("div");
 				attr_dev(button0, "id", "keploycommands");
 				attr_dev(button0, "class", button0_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-1gezfu");
-				add_location(button0, file, 257, 4, 6455);
+				add_location(button0, file, 257, 4, 6479);
 				attr_dev(path0, "fill", "#00ff11");
 				attr_dev(path0, "d", "M12 5V2.21c0-.45-.54-.67-.85-.35l-3.8 3.79c-.2.2-.2.51 0 .71l3.79 3.79c.32.31.86.09.86-.36V7c3.73 0 6.68 3.42 5.86 7.29c-.47 2.27-2.31 4.1-4.57 4.57c-3.57.75-6.75-1.7-7.23-5.01a1 1 0 0 0-.98-.85c-.6 0-1.08.53-1 1.13c.62 4.39 4.8 7.64 9.53 6.72c3.12-.61 5.63-3.12 6.24-6.24C20.84 9.48 16.94 5 12 5");
-				add_location(path0, file, 265, 95, 7507);
+				add_location(path0, file, 265, 95, 7531);
 				attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg0, "width", "35px");
 				attr_dev(svg0, "height", "35px");
 				attr_dev(svg0, "viewBox", "0 0 24 24");
-				add_location(svg0, file, 265, 8, 7420);
+				add_location(svg0, file, 265, 8, 7444);
 				attr_dev(button1, "id", "displayPreviousTestResults");
 				attr_dev(button1, "class", button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-1gezfu");
-				add_location(button1, file, 264, 4, 7273);
+				add_location(button1, file, 264, 4, 7297);
 				attr_dev(path1, "fill", "#f56e00");
 				attr_dev(path1, "d", "M19.14 12.94c.04-.3.06-.61.06-.94c0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6s3.6 1.62 3.6 3.6s-1.62 3.6-3.6 3.6");
-				add_location(path1, file, 268, 95, 8073);
+				add_location(path1, file, 268, 95, 8097);
 				attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg1, "width", "35px");
 				attr_dev(svg1, "height", "35px");
 				attr_dev(svg1, "viewBox", "0 0 24 24");
-				add_location(svg1, file, 268, 8, 7986);
+				add_location(svg1, file, 268, 8, 8010);
 				attr_dev(button2, "id", "openConfig");
 				attr_dev(button2, "class", button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-1gezfu");
-				add_location(button2, file, 267, 4, 7855);
+				add_location(button2, file, 267, 4, 7879);
 				attr_dev(div0, "class", "icon-buttons svelte-1gezfu");
-				add_location(div0, file, 256, 2, 6424);
-				add_location(hr, file, 271, 0, 8809);
+				add_location(div0, file, 256, 2, 6448);
+				add_location(hr, file, 271, 0, 8833);
 				attr_dev(span0, "class", "stop-button svelte-1gezfu");
 				attr_dev(span0, "id", "stopRecordingButton");
 				attr_dev(span0, "role", "button");
 				attr_dev(span0, "tabindex", "0");
-				add_location(span0, file, 282, 6, 9171);
+				add_location(span0, file, 282, 6, 9195);
 				attr_dev(span1, "class", "stop-button svelte-1gezfu");
 				attr_dev(span1, "id", "stopTestingButton");
 				attr_dev(span1, "role", "button");
 				attr_dev(span1, "tabindex", "0");
-				add_location(span1, file, 283, 6, 9359);
+				add_location(span1, file, 283, 6, 9383);
 				attr_dev(div1, "class", "heading svelte-1gezfu");
-				add_location(div1, file, 274, 4, 8843);
+				add_location(div1, file, 274, 4, 8867);
 				attr_dev(h30, "id", "recordStatus");
 				attr_dev(h30, "class", "svelte-1gezfu");
-				add_location(h30, file, 286, 8, 9605);
+				add_location(h30, file, 286, 8, 9629);
 				attr_dev(div2, "id", "recordedTestCases");
 				attr_dev(div2, "class", "svelte-1gezfu");
-				add_location(div2, file, 287, 8, 9642);
+				add_location(div2, file, 287, 8, 9666);
 				attr_dev(h31, "id", "testStatus");
 				attr_dev(h31, "class", "svelte-1gezfu");
-				add_location(h31, file, 288, 8, 9685);
+				add_location(h31, file, 288, 8, 9709);
 				attr_dev(div3, "id", "testResults");
 				attr_dev(div3, "class", "svelte-1gezfu");
-				add_location(div3, file, 289, 8, 9720);
+				add_location(div3, file, 289, 8, 9744);
 				attr_dev(button3, "id", "viewCompleteSummaryButton");
 				attr_dev(button3, "class", "svelte-1gezfu");
-				add_location(button3, file, 290, 8, 9757);
+				add_location(button3, file, 290, 8, 9781);
 				attr_dev(div4, "class", "statusdiv svelte-1gezfu");
 				attr_dev(div4, "id", "statusdiv");
-				add_location(div4, file, 285, 6, 9558);
+				add_location(div4, file, 285, 6, 9582);
 				attr_dev(div5, "class", "header svelte-1gezfu");
-				add_location(div5, file, 273, 2, 8818);
+				add_location(div5, file, 273, 2, 8842);
 				attr_dev(div6, "class", "card-icon svelte-1gezfu");
-				add_location(div6, file, 307, 6, 10507);
+				add_location(div6, file, 307, 6, 10531);
 				attr_dev(div7, "class", "card-text svelte-1gezfu");
-				add_location(div7, file, 308, 6, 10545);
+				add_location(div7, file, 308, 6, 10569);
 				attr_dev(div8, "class", "card-arrow svelte-1gezfu");
-				add_location(div8, file, 309, 6, 10598);
+				add_location(div8, file, 309, 6, 10622);
 				attr_dev(div9, "class", "card svelte-1gezfu");
 				attr_dev(div9, "tabindex", "0");
 				attr_dev(div9, "role", "button");
 				attr_dev(div9, "id", "startRecordingButton");
-				add_location(div9, file, 306, 4, 10312);
+				add_location(div9, file, 306, 4, 10336);
 				attr_dev(div10, "class", "card-icon svelte-1gezfu");
-				add_location(div10, file, 312, 6, 10832);
+				add_location(div10, file, 312, 6, 10856);
 				attr_dev(div11, "class", "card-text svelte-1gezfu");
-				add_location(div11, file, 313, 6, 10870);
+				add_location(div11, file, 313, 6, 10894);
 				attr_dev(div12, "class", "card-arrow svelte-1gezfu");
-				add_location(div12, file, 314, 6, 10923);
+				add_location(div12, file, 314, 6, 10947);
 				attr_dev(div13, "class", "card svelte-1gezfu");
 				attr_dev(div13, "tabindex", "0");
 				attr_dev(div13, "role", "button");
 				attr_dev(div13, "id", "startTestingButton");
-				add_location(div13, file, 311, 4, 10645);
+				add_location(div13, file, 311, 4, 10669);
 				attr_dev(div14, "class", "section svelte-1gezfu");
-				add_location(div14, file, 305, 2, 10286);
+				add_location(div14, file, 305, 2, 10310);
 				attr_dev(div15, "class", "loader svelte-1gezfu");
 				attr_dev(div15, "id", "loader");
-				add_location(div15, file, 331, 2, 11336);
+				add_location(div15, file, 331, 2, 11360);
 				attr_dev(div16, "class", "container svelte-1gezfu");
-				add_location(div16, file, 255, 0, 6398);
+				add_location(div16, file, 255, 0, 6422);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2282,17 +2282,17 @@ var app = (function () {
 		};
 
 		const recordingSteps = [
-			"Step 1: Initialize Recording",
-			"Step 2: Configure Recording Settings",
-			"Step 3: Start Recording",
+			"Step 1: Make sure the database is running",
+			"Step 2: The command is present in Config",
+			"Step 3: Make API Calls",
 			"Step 4: Save Recording"
 		];
 
 		const replayingSteps = [
 			"Step 1: Initialize Replay",
-			"Step 2: Load Test Cases",
+			"Step 2: Running Test Cases",
 			"Step 3: Execute Replay",
-			"Step 4: Verify Results"
+			"Step 4: Verify Test Results"
 		];
 
 		const writable_props = [];

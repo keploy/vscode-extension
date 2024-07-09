@@ -94,17 +94,17 @@
   }
 
   const recordingSteps = [
-    "Step 1: Initialize Recording",
-    "Step 2: Configure Recording Settings",
-    "Step 3: Start Recording",
+    "Step 1: Make sure the database is running",
+    "Step 2: The command is present in Config",
+    "Step 3: Make API Calls",
     "Step 4: Save Recording"
   ];
 
   const replayingSteps = [
     "Step 1: Initialize Replay",
-    "Step 2: Load Test Cases",
+    "Step 2: Running Test Cases",
     "Step 3: Execute Replay",
-    "Step 4: Verify Results"
+    "Step 4: Verify Test Results"
   ];
 </script>
 

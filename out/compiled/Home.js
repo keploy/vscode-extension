@@ -40,9 +40,30 @@ var app = (function () {
 		return a != a ? b == b : a !== b || (a && typeof a === 'object') || typeof a === 'function';
 	}
 
+	let src_url_equal_anchor;
+
+	/**
+	 * @param {string} element_src
+	 * @param {string} url
+	 * @returns {boolean}
+	 */
+	function src_url_equal(element_src, url) {
+		if (element_src === url) return true;
+		if (!src_url_equal_anchor) {
+			src_url_equal_anchor = document.createElement('a');
+		}
+		// This is actually faster than doing URL(..).href
+		src_url_equal_anchor.href = url;
+		return element_src === src_url_equal_anchor.href;
+	}
+
 	/** @returns {boolean} */
 	function is_empty(obj) {
 		return Object.keys(obj).length === 0;
+	}
+
+	function null_to_empty(value) {
+		return value == null ? '' : value;
 	}
 
 	/**
@@ -98,6 +119,18 @@ var app = (function () {
 	}
 
 	/**
+	 * @param {EventTarget} node
+	 * @param {string} event
+	 * @param {EventListenerOrEventListenerObject} handler
+	 * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options]
+	 * @returns {() => void}
+	 */
+	function listen(node, event, handler, options) {
+		node.addEventListener(event, handler, options);
+		return () => node.removeEventListener(event, handler, options);
+	}
+
+	/**
 	 * @param {Element} node
 	 * @param {string} attribute
 	 * @param {string} [value]
@@ -114,6 +147,12 @@ var app = (function () {
 	 */
 	function children(element) {
 		return Array.from(element.childNodes);
+	}
+
+	/**
+	 * @returns {void} */
+	function set_input_value(input, value) {
+		input.value = value == null ? '' : value;
 	}
 
 	/**
@@ -567,6 +606,38 @@ var app = (function () {
 	}
 
 	/**
+	 * @param {Node} node
+	 * @param {string} event
+	 * @param {EventListenerOrEventListenerObject} handler
+	 * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options]
+	 * @param {boolean} [has_prevent_default]
+	 * @param {boolean} [has_stop_propagation]
+	 * @param {boolean} [has_stop_immediate_propagation]
+	 * @returns {() => void}
+	 */
+	function listen_dev(
+		node,
+		event,
+		handler,
+		options,
+		has_prevent_default,
+		has_stop_propagation,
+		has_stop_immediate_propagation
+	) {
+		const modifiers =
+			options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+		if (has_prevent_default) modifiers.push('preventDefault');
+		if (has_stop_propagation) modifiers.push('stopPropagation');
+		if (has_stop_immediate_propagation) modifiers.push('stopImmediatePropagation');
+		dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+		const dispose = listen(node, event, handler, options);
+		return () => {
+			dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+			dispose();
+		};
+	}
+
+	/**
 	 * @param {Element} node
 	 * @param {string} attribute
 	 * @param {string} [value]
@@ -687,7 +758,28 @@ var app = (function () {
 		let t9;
 		let div6;
 		let t11;
-		let button;
+		let button0;
+		let div7_class_value;
+		let t13;
+		let div10;
+		let h1;
+		let t15;
+		let div8;
+		let img0;
+		let img0_src_value;
+		let t16;
+		let input0;
+		let t17;
+		let div9;
+		let img1;
+		let img1_src_value;
+		let t18;
+		let input1;
+		let t19;
+		let button1;
+		let div10_class_value;
+		let mounted;
+		let dispose;
 
 		const block = {
 			c: function create() {
@@ -711,27 +803,77 @@ var app = (function () {
 				div6 = element("div");
 				div6.textContent = "Integrate Keploy by installing the open-source agent locally. No code-changes required.";
 				t11 = space();
-				button = element("button");
-				button.textContent = "Setup Keploy Config";
-				attr_dev(div0, "class", "tag tag-html svelte-1sd9ab");
-				add_location(div0, file, 72, 4, 1427);
-				attr_dev(div1, "class", "tag tag-api svelte-1sd9ab");
-				add_location(div1, file, 73, 4, 1468);
-				attr_dev(div2, "class", "tag tag-test svelte-1sd9ab");
-				add_location(div2, file, 74, 4, 1513);
-				attr_dev(div3, "class", "tag tag-mock svelte-1sd9ab");
-				add_location(div3, file, 75, 4, 1560);
-				attr_dev(div4, "class", "image-container svelte-1sd9ab");
-				add_location(div4, file, 71, 2, 1393);
-				attr_dev(div5, "class", "get-started svelte-1sd9ab");
-				add_location(div5, file, 77, 2, 1614);
-				attr_dev(div6, "class", "description svelte-1sd9ab");
-				add_location(div6, file, 78, 2, 1659);
-				attr_dev(button, "class", "button svelte-1sd9ab");
-				attr_dev(button, "id", "setupConfig");
-				add_location(button, file, 81, 2, 1788);
-				attr_dev(div7, "class", "container svelte-1sd9ab");
-				add_location(div7, file, 70, 0, 1367);
+				button0 = element("button");
+				button0.textContent = "Setup Keploy Config";
+				t13 = space();
+				div10 = element("div");
+				h1 = element("h1");
+				h1.textContent = "Initialise Keploy Config File";
+				t15 = space();
+				div8 = element("div");
+				img0 = element("img");
+				t16 = space();
+				input0 = element("input");
+				t17 = space();
+				div9 = element("div");
+				img1 = element("img");
+				t18 = space();
+				input1 = element("input");
+				t19 = space();
+				button1 = element("button");
+				button1.textContent = "Save Configuration";
+				attr_dev(div0, "class", "tag tag-html svelte-y5drk");
+				add_location(div0, file, 106, 4, 2020);
+				attr_dev(div1, "class", "tag tag-api svelte-y5drk");
+				add_location(div1, file, 107, 4, 2061);
+				attr_dev(div2, "class", "tag tag-test svelte-y5drk");
+				add_location(div2, file, 108, 4, 2106);
+				attr_dev(div3, "class", "tag tag-mock svelte-y5drk");
+				add_location(div3, file, 109, 4, 2153);
+				attr_dev(div4, "class", "image-container svelte-y5drk");
+				add_location(div4, file, 105, 2, 1986);
+				attr_dev(div5, "class", "get-started svelte-y5drk");
+				add_location(div5, file, 111, 2, 2207);
+				attr_dev(div6, "class", "description svelte-y5drk");
+				add_location(div6, file, 112, 2, 2252);
+				attr_dev(button0, "class", "button svelte-y5drk");
+				attr_dev(button0, "id", "setupConfig");
+				add_location(button0, file, 115, 2, 2381);
+				attr_dev(div7, "class", div7_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-y5drk"));
+				add_location(div7, file, 104, 0, 1922);
+				attr_dev(h1, "class", "heading svelte-y5drk");
+				add_location(h1, file, 119, 2, 2560);
+				if (!src_url_equal(img0.src, img0_src_value = "/path/to/your/icon.png")) attr_dev(img0, "src", img0_src_value);
+				attr_dev(img0, "alt", "Icon");
+				attr_dev(img0, "class", "svelte-y5drk");
+				add_location(img0, file, 121, 4, 2649);
+				attr_dev(input0, "type", "text");
+				attr_dev(input0, "placeholder", "Enter App Command");
+				attr_dev(input0, "id", "configCommand");
+				attr_dev(input0, "class", "svelte-y5drk");
+				add_location(input0, file, 122, 4, 2699);
+				attr_dev(div8, "class", "settings-item svelte-y5drk");
+				add_location(div8, file, 120, 2, 2617);
+				if (!src_url_equal(img1.src, img1_src_value = "/path/to/your/icon.png")) attr_dev(img1, "src", img1_src_value);
+				attr_dev(img1, "alt", "Icon");
+				attr_dev(img1, "class", "svelte-y5drk");
+				add_location(img1, file, 125, 4, 2837);
+				attr_dev(input1, "type", "text");
+				attr_dev(input1, "placeholder", "Enter Path (Default : './'");
+				attr_dev(input1, "id", "configPath");
+				attr_dev(input1, "class", "svelte-y5drk");
+				add_location(input1, file, 126, 4, 2887);
+				attr_dev(div9, "class", "settings-item svelte-y5drk");
+				add_location(div9, file, 124, 2, 2805);
+				attr_dev(button1, "class", "button svelte-y5drk");
+				attr_dev(button1, "id", "initialiseConfigButton");
+				add_location(button1, file, 128, 2, 2994);
+
+				attr_dev(div10, "class", div10_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
+				? 'settings-container'
+				: 'container-hide') + " svelte-y5drk"));
+
+				add_location(div10, file, 118, 0, 2487);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -751,15 +893,65 @@ var app = (function () {
 				append_dev(div7, t9);
 				append_dev(div7, div6);
 				append_dev(div7, t11);
-				append_dev(div7, button);
+				append_dev(div7, button0);
+				insert_dev(target, t13, anchor);
+				insert_dev(target, div10, anchor);
+				append_dev(div10, h1);
+				append_dev(div10, t15);
+				append_dev(div10, div8);
+				append_dev(div8, img0);
+				append_dev(div8, t16);
+				append_dev(div8, input0);
+				set_input_value(input0, /*appCommand*/ ctx[1]);
+				append_dev(div10, t17);
+				append_dev(div10, div9);
+				append_dev(div9, img1);
+				append_dev(div9, t18);
+				append_dev(div9, input1);
+				set_input_value(input1, /*noise*/ ctx[2]);
+				append_dev(div10, t19);
+				append_dev(div10, button1);
+
+				if (!mounted) {
+					dispose = [
+						listen_dev(button0, "click", /*handleSetupConfig*/ ctx[3], false, false, false, false),
+						listen_dev(input0, "input", /*input0_input_handler*/ ctx[4]),
+						listen_dev(input1, "input", /*input1_input_handler*/ ctx[5])
+					];
+
+					mounted = true;
+				}
 			},
-			p: noop,
+			p: function update(ctx, [dirty]) {
+				if (dirty & /*showSettings*/ 1 && div7_class_value !== (div7_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-y5drk"))) {
+					attr_dev(div7, "class", div7_class_value);
+				}
+
+				if (dirty & /*appCommand*/ 2 && input0.value !== /*appCommand*/ ctx[1]) {
+					set_input_value(input0, /*appCommand*/ ctx[1]);
+				}
+
+				if (dirty & /*noise*/ 4 && input1.value !== /*noise*/ ctx[2]) {
+					set_input_value(input1, /*noise*/ ctx[2]);
+				}
+
+				if (dirty & /*showSettings*/ 1 && div10_class_value !== (div10_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
+				? 'settings-container'
+				: 'container-hide') + " svelte-y5drk"))) {
+					attr_dev(div10, "class", div10_class_value);
+				}
+			},
 			i: noop,
 			o: noop,
 			d: function destroy(detaching) {
 				if (detaching) {
 					detach_dev(div7);
+					detach_dev(t13);
+					detach_dev(div10);
 				}
+
+				mounted = false;
+				run_all(dispose);
 			}
 		};
 
@@ -774,16 +966,61 @@ var app = (function () {
 		return block;
 	}
 
-	function instance($$self, $$props) {
+	function instance($$self, $$props, $$invalidate) {
 		let { $$slots: slots = {}, $$scope } = $$props;
 		validate_slots('Home', slots, []);
+		let showSettings = false;
+		let appCommand = '';
+		let noise = '';
+		let passThroughPorts = '';
+
+		function handleSetupConfig() {
+			$$invalidate(0, showSettings = true);
+		}
+
 		const writable_props = [];
 
 		Object.keys($$props).forEach(key => {
 			if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Home> was created with unknown prop '${key}'`);
 		});
 
-		return [];
+		function input0_input_handler() {
+			appCommand = this.value;
+			$$invalidate(1, appCommand);
+		}
+
+		function input1_input_handler() {
+			noise = this.value;
+			$$invalidate(2, noise);
+		}
+
+		$$self.$capture_state = () => ({
+			showSettings,
+			appCommand,
+			noise,
+			passThroughPorts,
+			handleSetupConfig
+		});
+
+		$$self.$inject_state = $$props => {
+			if ('showSettings' in $$props) $$invalidate(0, showSettings = $$props.showSettings);
+			if ('appCommand' in $$props) $$invalidate(1, appCommand = $$props.appCommand);
+			if ('noise' in $$props) $$invalidate(2, noise = $$props.noise);
+			if ('passThroughPorts' in $$props) passThroughPorts = $$props.passThroughPorts;
+		};
+
+		if ($$props && "$$inject" in $$props) {
+			$$self.$inject_state($$props.$$inject);
+		}
+
+		return [
+			showSettings,
+			appCommand,
+			noise,
+			handleSetupConfig,
+			input0_input_handler,
+			input1_input_handler
+		];
 	}
 
 	class Home extends SvelteComponentDev {

@@ -44,7 +44,7 @@ export async function handleOpenKeployConfigFile(webview: any) {
   const fileExists = await checkFileExists();
 
   if (fileExists) {
-    webview.postMessage({ type: 'navigate', value: 'Config' });
+    webview.postMessage({ type: 'navigate', value: 'Operations' });
   } else {
     webview.postMessage({ type: 'configNotFound', value: 'Config file could not be generated.' });
   }
@@ -116,4 +116,5 @@ keployNetwork: "keploy-network"
   vscode.workspace.openTextDocument(configFilePath).then(doc => {
     vscode.window.showTextDocument(doc, { preview: false });
   });
+  webview.postMessage({ type: 'navigate', value: 'Operations' });
 }
