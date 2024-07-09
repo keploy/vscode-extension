@@ -87,6 +87,10 @@
         if (stopTestingButton) {
             stopTestingButton.style.display = isTesting ? 'inline' : 'none';
         }
+        const statusdiv = document.getElementById('statusdiv');
+        if (statusdiv) {
+            statusdiv.style.display = selectedIconButton===1?  'block' : "none";
+        }
   }
 
   const recordingSteps = [
@@ -143,6 +147,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+    text-align: center;
   }
 
   .header h1 {
@@ -270,13 +275,15 @@
     <div class="heading">
       {#if selectedIconButton === 3}
         <h1>Make changes to keploy config</h1>
+      {:else if selectedIconButton === 2}
+        <h1>View Previous Test Results</h1>
       {:else}
         <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}</h1>
       {/if}
       <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopRecordingButton" bind:this={stopRecordingButton} role="button" tabindex="0">⏹️</span>
       <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopTestingButton" bind:this={stopTestingButton} role="button" tabindex="0">⏹️</span>
-    </div>
-      <div class="statusdiv">
+    </div>    
+      <div class="statusdiv" id="statusdiv">
         <h3 id="recordStatus"> </h3>
         <div id="recordedTestCases"></div>
         <h3 id="testStatus"> </h3>
@@ -284,6 +291,17 @@
         <button id="viewCompleteSummaryButton">View Complete Test Summary</button>  
       </div>
   </div>
+  {#if selectedIconButton === 2}
+        <div id="lastTestResults">
+            <h3 id="testSuiteName"> </h3>
+            <!-- Dropdown structure
+            <div class="dropdown-container">
+                <div class="dropdown-header" on:click="{() => toggleDropdown('dropdown1')}"></div>
+                <div id="dropdown1" class="dropdown-content">
+                </div>
+            </div> -->
+        </div>
+        {/if}
 
   <div class="section">
     <div class="card" on:click={toggleRecording} on:keydown={e => e.key === 'Enter' && toggleRecording()} tabindex="0" role="button" id="startRecordingButton" bind:this={startRecordingButton}>

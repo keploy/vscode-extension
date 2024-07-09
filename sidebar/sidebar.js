@@ -237,8 +237,8 @@ if (startTestButton) {
     vscode.postMessage({
       type: "startTestingCommand",
       value: `Testing Command...`,
-      command: "./test-app-url-shortener",
-      filePath: "./",
+      // command: "./test-app-url-shortener",
+      // filePath: "./",
       // generatedTestCommand: ""
     });
   });
@@ -343,71 +343,88 @@ window.addEventListener('message', event => {
     console.log("message.textContent", message.textContent);
     recordStatus.style.display = "block";
     recordedTestCasesDiv.style.display = "grid";
+
     if (message.error === true) {
-      recordStatus.textContent = `Failed To Test Test Cases`;
-      recordStatus.Testist.add("error");
-      const errorMessage = document.createElement('p class="error"');
-      errorMessage.textContent = message.textContent;
-      recordedTestCasesDiv.appendChild(errorMessage);
-      return;
+        recordStatus.textContent = `Failed To Record Test Cases`;
+        recordStatus.classList.add("error");
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = message.textContent;
+        errorMessage.classList.add("error");
+        recordedTestCasesDiv.appendChild(errorMessage);
+        return;
     }
+
     if (message.noTestCases === true) {
-      recordStatus.textContent = `No Test Cases Recorded`;
-      recordStatus.classList.add("info");
-      return;
+        recordStatus.textContent = `No Test Cases Recorded`;
+        recordStatus.classList.add("info");
+        return;
     }
+
     recordStatus.textContent = `Test Cases Recorded`;
     recordStatus.classList.add("success");
     console.log(message.textContent);
+
     if (recordedTestCasesDiv) {
-      let testSetDropdown = document.getElementById(message.testSetName);
-  
-      if (!testSetDropdown) {
-          // Create a dropdown for the new test set
-          testSetDropdown = document.createElement('div');
-          testSetDropdown.id = message.testSetName;
-          testSetDropdown.classList.add("dropdown-container");
-  
-          // Create a button to act as the dropdown toggle
-          const dropdownToggle = document.createElement('button');
-          dropdownToggle.textContent = message.testSetName;
-          dropdownToggle.classList.add("dropdown-header");
-  
-          // Create a container for the test cases
-          const testCaseContainer = document.createElement('div');
-          testCaseContainer.classList.add("dropdown-content");
-          testCaseContainer.style.display = "none"; // Hide initially
-  
-          // Add toggle functionality
-          dropdownToggle.addEventListener('click', () => {
-              testCaseContainer.style.display = testCaseContainer.style.display === "none" ? "block" : "none";
-          });
-  
-          // Append the toggle and container to the dropdown
-          testSetDropdown.appendChild(dropdownToggle);
-          testSetDropdown.appendChild(testCaseContainer);
-  
-          recordedTestCasesDiv.appendChild(testSetDropdown);
-      }
-  
-      // Create the test case element
-      const testCaseElement = document.createElement('button');
-      testCaseElement.classList.add("recordedTestCase");
-      testCaseElement.addEventListener('click', async () => {
-          vscode.postMessage({
-              type: "openRecordedTestFile",
-              value: message.path
-          });
-      });
-  
-      testCaseElement.textContent = message.textContent;
-  
-      // Find the container and append the test case element
-      const testCaseContainer = testSetDropdown.querySelector('.dropdown-content');
-      testCaseContainer.appendChild(testCaseElement);
-  }
-  
-  }
+        let testSetDropdown = document.getElementById(message.testSetName);
+
+        if (!testSetDropdown) {
+            // Create a dropdown for the new test set
+            testSetDropdown = document.createElement('div');
+            testSetDropdown.id = message.testSetName;
+            testSetDropdown.classList.add("dropdown-container");
+
+            // Create a button to act as the dropdown toggle
+            const dropdownToggle = document.createElement('div');
+            dropdownToggle.classList.add("dropdown-header");
+
+            // Create the toggle text
+            const toggleText = document.createElement('span');
+            toggleText.textContent = message.testSetName;
+
+            // Create the dropdown icon
+            const dropdownIcon = document.createElement('span');
+            dropdownIcon.className = 'dropdown-icon';
+
+            // Append text and icon to the toggle
+            dropdownToggle.appendChild(toggleText);
+            dropdownToggle.appendChild(dropdownIcon);
+
+            // Create a container for the test cases
+            const testCaseContainer = document.createElement('div');
+            testCaseContainer.classList.add("dropdown-content");
+            testCaseContainer.style.display = "none"; // Hide initially
+
+            // Add toggle functionality
+            dropdownToggle.addEventListener('click', () => {
+                testCaseContainer.style.display = testCaseContainer.style.display === "none" ? "block" : "none";
+                dropdownIcon.classList.toggle('open'); // Update icon based on dropdown state
+            });
+
+            // Append the toggle and container to the dropdown
+            testSetDropdown.appendChild(dropdownToggle);
+            testSetDropdown.appendChild(testCaseContainer);
+
+            recordedTestCasesDiv.appendChild(testSetDropdown);
+        }
+
+        // Create the test case element
+        const testCaseElement = document.createElement('button');
+        testCaseElement.classList.add("recordedTestCase");
+        testCaseElement.addEventListener('click', async () => {
+            vscode.postMessage({
+                type: "openRecordedTestFile",
+                value: message.path
+            });
+        });
+
+        testCaseElement.textContent = message.textContent;
+
+        // Find the container and append the test case element
+        const testCaseContainer = testSetDropdown.querySelector('.dropdown-content');
+        testCaseContainer.appendChild(testCaseElement);
+    }
+}
+
   else if (message.type === "testResults") {
     console.log("message.value", message.value);
     const testCaseElement = document.createElement('p');
@@ -510,135 +527,135 @@ window.addEventListener('message', event => {
     }
 
   
-
-  if (message.type === 'aggregatedTestResults') {
-    console.log("message.value", message.value);
-    const lastTestResultsDiv = document.getElementById('lastTestResults');
-    const totalTestCasesDiv = document.getElementById('totalTestCases');
-    const testSuiteNameDiv = document.getElementById('testSuiteName');
-    const testCasesPassedDiv = document.getElementById('testCasesPassed');
-    const testCasesFailedDiv = document.getElementById('testCasesFailed');
-
-    // Clear previous content
-    if (totalTestCasesDiv) { totalTestCasesDiv.innerHTML = ''; }
-    if (testSuiteNameDiv) { testSuiteNameDiv.innerHTML = ''; }
-    if (testCasesPassedDiv) { testCasesPassedDiv.innerHTML = ''; }
-    if (testCasesFailedDiv) { testCasesFailedDiv.innerHTML = ''; }
-
-    if (message.error === true) {
-        if (lastTestResultsDiv) {
-          const errorElement = document.createElement('p');
-          errorElement.textContent = "No Test Runs Found";
-          errorElement.classList.add("error");
-          errorElement.id = "errorElement";
-            lastTestResultsDiv.appendChild(errorElement);
-        }
-    } else {
-        // Group tests by date
-        const testsByDate = {};
-        message.data.testResults.forEach(test => {
-            const date = test.date;
-            if (!testsByDate[date]) {
-                testsByDate[date] = [];
-            }
-            testsByDate[date].push(test);
-        });
-
-        
-        // Append new data
-        const testSuiteNameElement = document.createElement('p');
-        testSuiteNameElement.textContent = `Previous Test Suite Results`;
-        if (testSuiteNameDiv) { testSuiteNameDiv.appendChild(testSuiteNameElement); }
-
-        const testCasesTotalElement = document.createElement('p');
-        testCasesTotalElement.textContent = `Total Test Cases : ${message.data.total}`;
-        if (totalTestCasesDiv) { totalTestCasesDiv.appendChild(testCasesTotalElement); }
-
-        const testCasesPassedElement = document.createElement('p');
-        testCasesPassedElement.textContent = `Test Cases Passed : ${message.data.success}`;
-        if (testCasesPassedDiv) { testCasesPassedDiv.appendChild(testCasesPassedElement); }
-
-        const testCasesFailedElement = document.createElement('p');
-        testCasesFailedElement.textContent = `Test Cases Failed : ${message.data.failure}`;
-        if (testCasesFailedDiv) { testCasesFailedDiv.appendChild(testCasesFailedElement); }
-
-        // Create and append dropdown structure based on testsByDate
-        const dropdownContainer = document.createElement('div');
-        dropdownContainer.className = 'dropdown-container';
-
-        for (const date in testsByDate) {
-            if (testsByDate.hasOwnProperty(date)) {
-                const tests = testsByDate[date];
-
-                const dropdownHeader = document.createElement('div');
-                dropdownHeader.className = 'dropdown-header';
-
-                // Get current date
-                const currentDate = new Date();
-                const currentDateString = formatDate(currentDate);
-
-                // Get yesterday's date
-                const yesterday = new Date(currentDate);
-                yesterday.setDate(currentDate.getDate() - 1);
-                const yesterdayDateString = formatDate(yesterday);
-                
-                if (currentDateString === date){
-                dropdownHeader.textContent = `Today`;                
-                }
-                else if(yesterdayDateString === date){
-                dropdownHeader.textContent = `Yesterday`;                
-                }
-                else{
-                dropdownHeader.textContent = `${date}`;                
-                }
-
-                dropdownHeader.onclick = () => {
-                    const content = document.getElementById(`dropdown${date}`);
-                    if (content) { content.classList.toggle('show'); }
-                };
-
-                const dropdownContent = document.createElement('div');
-                dropdownContent.id = `dropdown${date}`;
-                dropdownContent.className = 'dropdown-content';
-                tests.forEach((test, index) => {
-                    // Append individual test details
-                    const testMethod = document.createElement('div');
-                    testMethod.textContent = `${test.method}`;
-                    if(test.status === 'PASSED'){
-                      testMethod.classList.add("testSuccess");
-                    }
-                    else{
-                      testMethod.classList.add("testError");
-                    }
-                    dropdownContent.appendChild(testMethod);
-
-                    const testName = document.createElement('div');
-                    testName.textContent = `${test.name}`;
-                    testName.classList.add("testName");
-                    dropdownContent.appendChild(testName);
-
-                   testName.addEventListener('click', async () => {
-                    vscode.postMessage({
-                      type: "openTestFile",
-                      value: test.testCasePath
-                    });
-                    testMethod.addEventListener('click', async () => {  
-                      vscode.postMessage({
-                        type: "openTestFile",
-                        value: test.testCasePath
+    if (message.type === 'aggregatedTestResults') {
+      console.log("message.value", message.value);
+      const lastTestResultsDiv = document.getElementById('lastTestResults');
+      const totalTestCasesDiv = document.getElementById('totalTestCases');
+      const testSuiteNameDiv = document.getElementById('testSuiteName');
+      const testCasesPassedDiv = document.getElementById('testCasesPassed');
+      const testCasesFailedDiv = document.getElementById('testCasesFailed');
+  
+      // Clear previous content
+      if (totalTestCasesDiv) { totalTestCasesDiv.innerHTML = ''; }
+      if (testSuiteNameDiv) { testSuiteNameDiv.innerHTML = ''; }
+      if (testCasesPassedDiv) { testCasesPassedDiv.innerHTML = ''; }
+      if (testCasesFailedDiv) { testCasesFailedDiv.innerHTML = ''; }
+  
+      if (message.error === true) {
+          if (lastTestResultsDiv) {
+              const errorElement = document.createElement('p');
+              errorElement.textContent = "No Test Runs Found";
+              errorElement.classList.add("error");
+              errorElement.id = "errorElement";
+              lastTestResultsDiv.appendChild(errorElement);
+          }
+      } else {
+          // Group tests by date
+          const testsByDate = {};
+          message.data.testResults.forEach(test => {
+              const date = test.date;
+              if (!testsByDate[date]) {
+                  testsByDate[date] = [];
+              }
+              testsByDate[date].push(test);
+          });
+          
+  
+          const testCasesTotalElement = document.createElement('p');
+          testCasesTotalElement.textContent = `Total Test Cases : ${message.data.total}`;
+          if (totalTestCasesDiv) { totalTestCasesDiv.appendChild(testCasesTotalElement); }
+  
+          const testCasesPassedElement = document.createElement('p');
+          testCasesPassedElement.textContent = `Test Cases Passed : ${message.data.success}`;
+          if (testCasesPassedDiv) { testCasesPassedDiv.appendChild(testCasesPassedElement); }
+  
+          const testCasesFailedElement = document.createElement('p');
+          testCasesFailedElement.textContent = `Test Cases Failed : ${message.data.failure}`;
+          if (testCasesFailedDiv) { testCasesFailedDiv.appendChild(testCasesFailedElement); }
+  
+          // Create and append dropdown structure based on testsByDate
+          const dropdownContainer = document.createElement('div');
+          dropdownContainer.className = 'dropdown-container';
+  
+          for (const date in testsByDate) {
+              if (testsByDate.hasOwnProperty(date)) {
+                  const tests = testsByDate[date];
+  
+                  const dropdownHeader = document.createElement('div');
+                  dropdownHeader.className = 'dropdown-header';
+  
+                  // Get current date
+                  const currentDate = new Date();
+                  const currentDateString = formatDate(currentDate);
+  
+                  // Get yesterday's date
+                  const yesterday = new Date(currentDate);
+                  yesterday.setDate(currentDate.getDate() - 1);
+                  const yesterdayDateString = formatDate(yesterday);
+  
+                  if (currentDateString === date) {
+                      dropdownHeader.textContent = `Today`;
+                  } else if (yesterdayDateString === date) {
+                      dropdownHeader.textContent = `Yesterday`;
+                  } else {
+                      dropdownHeader.textContent = `${date}`;
+                  }
+  
+                  // Add dropdown icon
+                  const dropdownIcon = document.createElement('span');
+                  dropdownIcon.className = 'dropdown-icon';
+  
+                  dropdownHeader.appendChild(dropdownIcon);
+                  dropdownHeader.onclick = () => {
+                      const content = document.getElementById(`dropdown${date}`);
+                      if (content) {
+                          content.classList.toggle('show');
+                          dropdownIcon.classList.toggle('open'); // Update icon based on dropdown state
+                      }
+                  };
+  
+                  const dropdownContent = document.createElement('div');
+                  dropdownContent.id = `dropdown${date}`;
+                  dropdownContent.className = 'dropdown-content';
+                  tests.forEach((test, index) => {
+                      // Append individual test details
+                      const testMethod = document.createElement('div');
+                      testMethod.textContent = `${test.method}`;
+                      if (test.status === 'PASSED') {
+                          testMethod.classList.add("testSuccess");
+                      } else {
+                          testMethod.classList.add("testError");
+                      }
+                      dropdownContent.appendChild(testMethod);
+  
+                      const testName = document.createElement('div');
+                      testName.textContent = `${test.name}`;
+                      testName.classList.add("testName");
+                      dropdownContent.appendChild(testName);
+  
+                      testName.addEventListener('click', async () => {
+                          vscode.postMessage({
+                              type: "openTestFile",
+                              value: test.testCasePath
+                          });
                       });
-                    });
+                      testMethod.addEventListener('click', async () => {
+                          vscode.postMessage({
+                              type: "openTestFile",
+                              value: test.testCasePath
+                          });
+                      });
                   });
-                });
-
-                dropdownContainer.appendChild(dropdownHeader);
-                dropdownContainer.appendChild(dropdownContent);
-            }
-        }
-
-        if (lastTestResultsDiv) { lastTestResultsDiv.appendChild(dropdownContainer); }
-    }
-}
+  
+                  dropdownContainer.appendChild(dropdownHeader);
+                  dropdownContainer.appendChild(dropdownContent);
+              }
+          }
+  
+          if (lastTestResultsDiv) { lastTestResultsDiv.appendChild(dropdownContainer); }
+      }
+  }
+  
 });
 
 

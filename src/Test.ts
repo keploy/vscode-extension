@@ -232,8 +232,9 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
         testRunDirs.sort((a, b) => {
             const aTime = fs.statSync(path.join(reportsFolder, a)).birthtime.getTime();
             const bTime = fs.statSync(path.join(reportsFolder, b)).birthtime.getTime();
-            return aTime - bTime;
+            return bTime - aTime;
         });
+        // console.log('Test Run Dirs:', testRunDirs);
 
         let totalSuccess = 0;
         let totalFailure = 0;
