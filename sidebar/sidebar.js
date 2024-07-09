@@ -114,7 +114,7 @@ if(rerunTestSuiteButton){
     console.log("rerunTestSuiteButton clicked");
     vscode.postMessage({
       type: "navigate",
-      value: "Keploy"
+      value: "Operations"
     });
   });
 
@@ -227,19 +227,19 @@ if (startTestButton) {
     console.log("startTestButton clicked");
     resetUI();
     
-    const commandValue = appCommand.value;
-    console.log('Command value:', commandValue);
-    FilePath = document.getElementById('projectFolder').value;
-    if (FilePath === "") {
-      FilePath = "./";
-    }
+    // const commandValue = appCommand.value;
+    // console.log('Command value:', commandValue);
+    // FilePath = document.getElementById('projectFolder').value;
+    // if (FilePath === "") {
+      // FilePath = "./";
+    // }
     // const generatedTestCommand = document.getElementById('generatedTestCommand');
     vscode.postMessage({
       type: "startTestingCommand",
       value: `Testing Command...`,
-      command: commandValue,
-      filePath: FilePath,
-      generatedTestCommand: ""
+      command: "./test-app-url-shortener",
+      filePath: "./",
+      // generatedTestCommand: ""
     });
   });
 }

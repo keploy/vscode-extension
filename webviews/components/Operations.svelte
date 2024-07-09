@@ -81,6 +81,12 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 16px;
+    flex-direction: column;
+  }
+  .heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
   }
 
   .header h1 {
@@ -92,10 +98,22 @@
     margin-bottom: 32px;
   }
 
-  .section h2 {
-    font-size: 18px;
-    margin-bottom: 16px;
-  }
+  #testResults{
+        margin: 20px auto;
+        text-align: center;
+        display: grid;
+        place-items: center;
+        grid-template-columns: 1fr;
+    }
+    #testStatus{
+        text-align: center;
+        display: none;
+    }
+    #viewCompleteSummaryButton{
+        display: none;
+        width: 75%;
+        margin: 10px auto;
+    }
   #recordStatus {
         display: none;
         text-align: center;
@@ -103,6 +121,11 @@
         font-weight: bold;
     }
     #recordedTestCases {
+        display: grid;
+        grid-template-columns: 1fr;
+        place-items: center;
+    }
+    .statusdiv{
         display: grid;
         grid-template-columns: 1fr;
         place-items: center;
@@ -170,15 +193,18 @@
 
 <div class="container">
   <div class="header">
-    <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}
+    <div class="heading">
+      <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}</h1>
       <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopRecordingButton" bind:this={stopRecordingButton} role="button" tabindex="0">⏹️</span>
       <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopTestingButton" bind:this={stopTestingButton} role="button" tabindex="0">⏹️</span>
-      <div>
+    </div>
+      <div class="statusdiv">
         <h3 id="recordStatus"> </h3>
-        <div id="recordedTestCases">
-        </div>
+        <div id="recordedTestCases"></div>
+        <h3 id="testStatus"> </h3>
+        <div id="testResults"></div>
+        <button id="viewCompleteSummaryButton">View Complete Test Summary</button>  
       </div>
-    </h1>
   </div>
 
   <div class="section">

@@ -1247,7 +1247,7 @@ var app = (function () {
 		return child_ctx;
 	}
 
-	// (197:2) {#if showSteps}
+	// (223:2) {#if showSteps}
 	function create_if_block(ctx) {
 		let div;
 		let div_transition;
@@ -1265,8 +1265,8 @@ var app = (function () {
 			c: function create() {
 				div = element("div");
 				if (if_block) if_block.c();
-				attr_dev(div, "class", "steps svelte-1505vi9");
-				add_location(div, file, 197, 4, 4976);
+				attr_dev(div, "class", "steps svelte-12ayrbz");
+				add_location(div, file, 223, 4, 5691);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1324,14 +1324,14 @@ var app = (function () {
 			block,
 			id: create_if_block.name,
 			type: "if",
-			source: "(197:2) {#if showSteps}",
+			source: "(223:2) {#if showSteps}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (203:26) 
+	// (229:26) 
 	function create_if_block_2(ctx) {
 		let each_1_anchor;
 		let each_value_1 = ensure_array_like_dev(/*replayingSteps*/ ctx[11]);
@@ -1395,14 +1395,14 @@ var app = (function () {
 			block,
 			id: create_if_block_2.name,
 			type: "if",
-			source: "(203:26) ",
+			source: "(229:26) ",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (199:6) {#if isRecording}
+	// (225:6) {#if isRecording}
 	function create_if_block_1(ctx) {
 		let each_1_anchor;
 		let each_value = ensure_array_like_dev(/*recordingSteps*/ ctx[10]);
@@ -1466,14 +1466,14 @@ var app = (function () {
 			block,
 			id: create_if_block_1.name,
 			type: "if",
-			source: "(199:6) {#if isRecording}",
+			source: "(225:6) {#if isRecording}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (204:8) {#each replayingSteps as step}
+	// (230:8) {#each replayingSteps as step}
 	function create_each_block_1(ctx) {
 		let div;
 
@@ -1481,8 +1481,8 @@ var app = (function () {
 			c: function create() {
 				div = element("div");
 				div.textContent = `${/*step*/ ctx[20]}`;
-				attr_dev(div, "class", "step svelte-1505vi9");
-				add_location(div, file, 204, 10, 5234);
+				attr_dev(div, "class", "step svelte-12ayrbz");
+				add_location(div, file, 230, 10, 5949);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1499,14 +1499,14 @@ var app = (function () {
 			block,
 			id: create_each_block_1.name,
 			type: "each",
-			source: "(204:8) {#each replayingSteps as step}",
+			source: "(230:8) {#each replayingSteps as step}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (200:8) {#each recordingSteps as step}
+	// (226:8) {#each recordingSteps as step}
 	function create_each_block(ctx) {
 		let div;
 
@@ -1514,8 +1514,8 @@ var app = (function () {
 			c: function create() {
 				div = element("div");
 				div.textContent = `${/*step*/ ctx[20]}`;
-				attr_dev(div, "class", "step svelte-1505vi9");
-				add_location(div, file, 200, 10, 5111);
+				attr_dev(div, "class", "step svelte-12ayrbz");
+				add_location(div, file, 226, 10, 5826);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -1532,7 +1532,7 @@ var app = (function () {
 			block,
 			id: create_each_block.name,
 			type: "each",
-			source: "(200:8) {#each recordingSteps as step}",
+			source: "(226:8) {#each recordingSteps as step}",
 			ctx
 		});
 
@@ -1540,8 +1540,9 @@ var app = (function () {
 	}
 
 	function create_fragment(ctx) {
-		let div13;
-		let div2;
+		let div15;
+		let div4;
+		let div0;
 		let h1;
 
 		let t0_value = (/*isRecording*/ ctx[4]
@@ -1556,36 +1557,43 @@ var app = (function () {
 		let t3;
 		let span1;
 		let t5;
-		let div1;
-		let h3;
-		let t6;
-		let div0;
-		let t7;
-		let div11;
-		let div6;
 		let div3;
+		let h30;
+		let t6;
+		let div1;
+		let t7;
+		let h31;
+		let t8;
+		let div2;
 		let t9;
-		let div4;
+		let button;
 		let t11;
+		let div13;
+		let div8;
 		let div5;
 		let t13;
-		let div10;
-		let div7;
+		let div6;
 		let t15;
-		let div8;
+		let div7;
 		let t17;
+		let div12;
 		let div9;
 		let t19;
-		let t20;
-		let div12;
+		let div10;
+		let t21;
+		let div11;
+		let t23;
+		let t24;
+		let div14;
 		let mounted;
 		let dispose;
 		let if_block = /*showSteps*/ ctx[6] && create_if_block(ctx);
 
 		const block = {
 			c: function create() {
-				div13 = element("div");
-				div2 = element("div");
+				div15 = element("div");
+				div4 = element("div");
+				div0 = element("div");
 				h1 = element("h1");
 				t0 = text(t0_value);
 				t1 = space();
@@ -1595,128 +1603,154 @@ var app = (function () {
 				span1 = element("span");
 				span1.textContent = "⏹️";
 				t5 = space();
-				div1 = element("div");
-				h3 = element("h3");
-				h3.innerHTML = ``;
-				t6 = space();
-				div0 = element("div");
-				div0.innerHTML = ``;
-				t7 = space();
-				div11 = element("div");
-				div6 = element("div");
 				div3 = element("div");
-				div3.textContent = "🎥";
+				h30 = element("h3");
+				h30.innerHTML = ``;
+				t6 = space();
+				div1 = element("div");
+				t7 = space();
+				h31 = element("h3");
+				h31.innerHTML = ``;
+				t8 = space();
+				div2 = element("div");
 				t9 = space();
-				div4 = element("div");
-				div4.textContent = "Record Test Cases";
+				button = element("button");
+				button.textContent = "View Complete Test Summary";
 				t11 = space();
-				div5 = element("div");
-				div5.textContent = "➔";
-				t13 = space();
-				div10 = element("div");
-				div7 = element("div");
-				div7.textContent = "🔄";
-				t15 = space();
+				div13 = element("div");
 				div8 = element("div");
-				div8.textContent = "Replay Test Cases";
+				div5 = element("div");
+				div5.textContent = "🎥";
+				t13 = space();
+				div6 = element("div");
+				div6.textContent = "Record Test Cases";
+				t15 = space();
+				div7 = element("div");
+				div7.textContent = "➔";
 				t17 = space();
-				div9 = element("div");
-				div9.textContent = "➔";
-				t19 = space();
-				if (if_block) if_block.c();
-				t20 = space();
 				div12 = element("div");
-				attr_dev(span0, "class", "stop-button svelte-1505vi9");
+				div9 = element("div");
+				div9.textContent = "🔄";
+				t19 = space();
+				div10 = element("div");
+				div10.textContent = "Replay Test Cases";
+				t21 = space();
+				div11 = element("div");
+				div11.textContent = "➔";
+				t23 = space();
+				if (if_block) if_block.c();
+				t24 = space();
+				div14 = element("div");
+				attr_dev(h1, "class", "svelte-12ayrbz");
+				add_location(h1, file, 196, 6, 4208);
+				attr_dev(span0, "class", "stop-button svelte-12ayrbz");
 				attr_dev(span0, "id", "stopRecordingButton");
 				attr_dev(span0, "role", "button");
 				attr_dev(span0, "tabindex", "0");
-				add_location(span0, file, 173, 6, 3762);
-				attr_dev(span1, "class", "stop-button svelte-1505vi9");
+				add_location(span0, file, 197, 6, 4310);
+				attr_dev(span1, "class", "stop-button svelte-12ayrbz");
 				attr_dev(span1, "id", "stopTestingButton");
 				attr_dev(span1, "role", "button");
 				attr_dev(span1, "tabindex", "0");
-				add_location(span1, file, 174, 6, 3950);
-				attr_dev(h3, "id", "recordStatus");
-				attr_dev(h3, "class", "svelte-1505vi9");
-				add_location(h3, file, 176, 8, 4148);
-				attr_dev(div0, "id", "recordedTestCases");
-				attr_dev(div0, "class", "svelte-1505vi9");
-				add_location(div0, file, 177, 8, 4185);
-				add_location(div1, file, 175, 6, 4134);
-				attr_dev(h1, "class", "svelte-1505vi9");
-				add_location(h1, file, 172, 4, 3665);
-				attr_dev(div2, "class", "header svelte-1505vi9");
-				add_location(div2, file, 171, 2, 3640);
-				attr_dev(div3, "class", "card-icon svelte-1505vi9");
-				add_location(div3, file, 185, 6, 4485);
-				attr_dev(div4, "class", "card-text svelte-1505vi9");
-				add_location(div4, file, 186, 6, 4523);
-				attr_dev(div5, "class", "card-arrow svelte-1505vi9");
-				add_location(div5, file, 187, 6, 4576);
-				attr_dev(div6, "class", "card svelte-1505vi9");
-				attr_dev(div6, "tabindex", "0");
-				attr_dev(div6, "role", "button");
-				attr_dev(div6, "id", "startRecordingButton");
-				add_location(div6, file, 184, 4, 4290);
-				attr_dev(div7, "class", "card-icon svelte-1505vi9");
-				add_location(div7, file, 190, 6, 4810);
-				attr_dev(div8, "class", "card-text svelte-1505vi9");
-				add_location(div8, file, 191, 6, 4848);
-				attr_dev(div9, "class", "card-arrow svelte-1505vi9");
-				add_location(div9, file, 192, 6, 4901);
-				attr_dev(div10, "class", "card svelte-1505vi9");
-				attr_dev(div10, "tabindex", "0");
-				attr_dev(div10, "role", "button");
-				attr_dev(div10, "id", "startTestingButton");
-				add_location(div10, file, 189, 4, 4623);
-				attr_dev(div11, "class", "section svelte-1505vi9");
-				add_location(div11, file, 183, 2, 4264);
-				attr_dev(div12, "class", "loader svelte-1505vi9");
-				attr_dev(div12, "id", "loader");
-				add_location(div12, file, 209, 2, 5314);
-				attr_dev(div13, "class", "container svelte-1505vi9");
-				add_location(div13, file, 170, 0, 3614);
+				add_location(span1, file, 198, 6, 4498);
+				attr_dev(div0, "class", "heading svelte-12ayrbz");
+				add_location(div0, file, 195, 4, 4180);
+				attr_dev(h30, "id", "recordStatus");
+				attr_dev(h30, "class", "svelte-12ayrbz");
+				add_location(h30, file, 201, 8, 4725);
+				attr_dev(div1, "id", "recordedTestCases");
+				attr_dev(div1, "class", "svelte-12ayrbz");
+				add_location(div1, file, 202, 8, 4762);
+				attr_dev(h31, "id", "testStatus");
+				attr_dev(h31, "class", "svelte-12ayrbz");
+				add_location(h31, file, 203, 8, 4805);
+				attr_dev(div2, "id", "testResults");
+				attr_dev(div2, "class", "svelte-12ayrbz");
+				add_location(div2, file, 204, 8, 4840);
+				attr_dev(button, "id", "viewCompleteSummaryButton");
+				attr_dev(button, "class", "svelte-12ayrbz");
+				add_location(button, file, 205, 8, 4877);
+				attr_dev(div3, "class", "statusdiv svelte-12ayrbz");
+				add_location(div3, file, 200, 6, 4693);
+				attr_dev(div4, "class", "header svelte-12ayrbz");
+				add_location(div4, file, 194, 2, 4155);
+				attr_dev(div5, "class", "card-icon svelte-12ayrbz");
+				add_location(div5, file, 211, 6, 5200);
+				attr_dev(div6, "class", "card-text svelte-12ayrbz");
+				add_location(div6, file, 212, 6, 5238);
+				attr_dev(div7, "class", "card-arrow svelte-12ayrbz");
+				add_location(div7, file, 213, 6, 5291);
+				attr_dev(div8, "class", "card svelte-12ayrbz");
+				attr_dev(div8, "tabindex", "0");
+				attr_dev(div8, "role", "button");
+				attr_dev(div8, "id", "startRecordingButton");
+				add_location(div8, file, 210, 4, 5005);
+				attr_dev(div9, "class", "card-icon svelte-12ayrbz");
+				add_location(div9, file, 216, 6, 5525);
+				attr_dev(div10, "class", "card-text svelte-12ayrbz");
+				add_location(div10, file, 217, 6, 5563);
+				attr_dev(div11, "class", "card-arrow svelte-12ayrbz");
+				add_location(div11, file, 218, 6, 5616);
+				attr_dev(div12, "class", "card svelte-12ayrbz");
+				attr_dev(div12, "tabindex", "0");
+				attr_dev(div12, "role", "button");
+				attr_dev(div12, "id", "startTestingButton");
+				add_location(div12, file, 215, 4, 5338);
+				attr_dev(div13, "class", "section svelte-12ayrbz");
+				add_location(div13, file, 209, 2, 4979);
+				attr_dev(div14, "class", "loader svelte-12ayrbz");
+				attr_dev(div14, "id", "loader");
+				add_location(div14, file, 235, 2, 6029);
+				attr_dev(div15, "class", "container svelte-12ayrbz");
+				add_location(div15, file, 193, 0, 4129);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
 			},
 			m: function mount(target, anchor) {
-				insert_dev(target, div13, anchor);
-				append_dev(div13, div2);
-				append_dev(div2, h1);
+				insert_dev(target, div15, anchor);
+				append_dev(div15, div4);
+				append_dev(div4, div0);
+				append_dev(div0, h1);
 				append_dev(h1, t0);
-				append_dev(h1, t1);
-				append_dev(h1, span0);
+				append_dev(div0, t1);
+				append_dev(div0, span0);
 				/*span0_binding*/ ctx[13](span0);
-				append_dev(h1, t3);
-				append_dev(h1, span1);
+				append_dev(div0, t3);
+				append_dev(div0, span1);
 				/*span1_binding*/ ctx[15](span1);
-				append_dev(h1, t5);
-				append_dev(h1, div1);
-				append_dev(div1, h3);
-				append_dev(div1, t6);
-				append_dev(div1, div0);
-				append_dev(div13, t7);
-				append_dev(div13, div11);
-				append_dev(div11, div6);
-				append_dev(div6, div3);
-				append_dev(div6, t9);
-				append_dev(div6, div4);
-				append_dev(div6, t11);
-				append_dev(div6, div5);
-				/*div6_binding*/ ctx[17](div6);
-				append_dev(div11, t13);
-				append_dev(div11, div10);
-				append_dev(div10, div7);
-				append_dev(div10, t15);
-				append_dev(div10, div8);
-				append_dev(div10, t17);
-				append_dev(div10, div9);
-				/*div10_binding*/ ctx[19](div10);
-				append_dev(div13, t19);
-				if (if_block) if_block.m(div13, null);
-				append_dev(div13, t20);
+				append_dev(div4, t5);
+				append_dev(div4, div3);
+				append_dev(div3, h30);
+				append_dev(div3, t6);
+				append_dev(div3, div1);
+				append_dev(div3, t7);
+				append_dev(div3, h31);
+				append_dev(div3, t8);
+				append_dev(div3, div2);
+				append_dev(div3, t9);
+				append_dev(div3, button);
+				append_dev(div15, t11);
+				append_dev(div15, div13);
+				append_dev(div13, div8);
+				append_dev(div8, div5);
+				append_dev(div8, t13);
+				append_dev(div8, div6);
+				append_dev(div8, t15);
+				append_dev(div8, div7);
+				/*div8_binding*/ ctx[17](div8);
+				append_dev(div13, t17);
 				append_dev(div13, div12);
+				append_dev(div12, div9);
+				append_dev(div12, t19);
+				append_dev(div12, div10);
+				append_dev(div12, t21);
+				append_dev(div12, div11);
+				/*div12_binding*/ ctx[19](div12);
+				append_dev(div15, t23);
+				if (if_block) if_block.m(div15, null);
+				append_dev(div15, t24);
+				append_dev(div15, div14);
 
 				if (!mounted) {
 					dispose = [
@@ -1724,10 +1758,10 @@ var app = (function () {
 						listen_dev(span0, "keydown", /*keydown_handler*/ ctx[12], false),
 						listen_dev(span1, "click", /*stop*/ ctx[9], false),
 						listen_dev(span1, "keydown", /*keydown_handler_1*/ ctx[14], false),
-						listen_dev(div6, "click", /*toggleRecording*/ ctx[7], false),
-						listen_dev(div6, "keydown", /*keydown_handler_2*/ ctx[16], false),
-						listen_dev(div10, "click", /*toggleTesting*/ ctx[8], false),
-						listen_dev(div10, "keydown", /*keydown_handler_3*/ ctx[18], false)
+						listen_dev(div8, "click", /*toggleRecording*/ ctx[7], false),
+						listen_dev(div8, "keydown", /*keydown_handler_2*/ ctx[16], false),
+						listen_dev(div12, "click", /*toggleTesting*/ ctx[8], false),
+						listen_dev(div12, "keydown", /*keydown_handler_3*/ ctx[18], false)
 					];
 
 					mounted = true;
@@ -1751,7 +1785,7 @@ var app = (function () {
 						if_block = create_if_block(ctx);
 						if_block.c();
 						transition_in(if_block, 1);
-						if_block.m(div13, t20);
+						if_block.m(div15, t24);
 					}
 				} else if (if_block) {
 					group_outros();
@@ -1771,13 +1805,13 @@ var app = (function () {
 			},
 			d: function destroy(detaching) {
 				if (detaching) {
-					detach_dev(div13);
+					detach_dev(div15);
 				}
 
 				/*span0_binding*/ ctx[13](null);
 				/*span1_binding*/ ctx[15](null);
-				/*div6_binding*/ ctx[17](null);
-				/*div10_binding*/ ctx[19](null);
+				/*div8_binding*/ ctx[17](null);
+				/*div12_binding*/ ctx[19](null);
 				if (if_block) if_block.d();
 				mounted = false;
 				run_all(dispose);
@@ -1864,7 +1898,7 @@ var app = (function () {
 
 		const keydown_handler_2 = e => e.key === 'Enter' && toggleRecording();
 
-		function div6_binding($$value) {
+		function div8_binding($$value) {
 			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 				startRecordingButton = $$value;
 				((($$invalidate(0, startRecordingButton), $$invalidate(4, isRecording)), $$invalidate(5, isTesting)), $$invalidate(1, startTestingButton));
@@ -1873,7 +1907,7 @@ var app = (function () {
 
 		const keydown_handler_3 = e => e.key === 'Enter' && toggleTesting();
 
-		function div10_binding($$value) {
+		function div12_binding($$value) {
 			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 				startTestingButton = $$value;
 				((($$invalidate(1, startTestingButton), $$invalidate(0, startRecordingButton)), $$invalidate(4, isRecording)), $$invalidate(5, isTesting));
@@ -1966,9 +2000,9 @@ var app = (function () {
 			keydown_handler_1,
 			span1_binding,
 			keydown_handler_2,
-			div6_binding,
+			div8_binding,
 			keydown_handler_3,
-			div10_binding
+			div12_binding
 		];
 	}
 
