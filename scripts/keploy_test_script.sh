@@ -1,10 +1,7 @@
 #!/bin/bash -i
 
-folderpath="$2"
+# folderpath="$2"
 log_file_path="$1"
-
-# Command is all of the CLI args after the 2nd arg
-command="${@:3}"
 
 # Create log file if it doesn't exist
 touch "$log_file_path"
@@ -13,6 +10,9 @@ touch "$log_file_path"
 # Set permissions of the log file
 chmod 666 "$log_file_path"
 
+# Extract the command from keploy.yml
+command=$(awk -F: '/command:/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}' keploy.yml)
+# echo "Command in yml file: $command"
 if [[ "$command" =~ .*"go".* ]]; then
   # echo "Go is present."
   go mod download
@@ -58,7 +58,7 @@ fi
 
 # echo "Keploy command: $keploycmd"
 
-cd "$folderpath"
+# cd "$folderpath"
 
 # Execute the keploy command and append the output to the log file
 sudo $keploycmd test -c "$command" | tee -a "$log_file_path"

@@ -1,11 +1,23 @@
 #!/bin/bash -i
 
-folderpath="$2"
+# folderpath="$2"
 log_file_path="$1"
 
-# Command is all of the CLI args after the 2nd arg
-command="${@:3}"
+# Extract command from keploy.yml
+keploy_config="keploy.yml"
+if [[ ! -f "$keploy_config" ]]; then
+    echo "keploy.yml file not found in the current directory."
+    exit 1
+fi
 
+command=$(awk '/command:/ { print $2 }' "$keploy_config")
+# echo "Command in yml file: $command"
+
+# Check if command is empty
+if [[ -z "$command" ]]; then
+    echo "Command is not specified in keploy.yml."
+    exit 1
+fi
 
 # Create log file if it doesn't exist
 touch "$log_file_path"
@@ -15,50 +27,33 @@ touch "$log_file_path"
 chmod 666 "$log_file_path"
 
 if [[ "$command" =~ .*"go".* ]]; then
-  # echo "Go is present."
   go mod download
   go build -o application
 
 elif [[ "$command" =~ .*"python3".* ]]; then
-  # echo "Python 3 is present, Activating Virtual Environment 🐍"
   python3 -m venv venv
   source venv/bin/activate
-  # echo 'Installing requirements 📦'
   pip install -r requirements.txt
-  # echo 'Test Mode Starting 🎉'
 
 elif [[ "$command" =~ .*"python".* ]] ; then
-  # echo "Python is present, Activating Virtual Environment 🐍"
   python -m venv venv
   source venv/bin/activate
-  # echo 'Installing requirements 📦'
   pip install -r requirements.txt
-  # echo 'Test Mode Starting 🎉'
 
 elif [[ "$command" =~ .*"node".* ]]; then
-  # echo "Node is present."
   npm install
 
 elif [[ "$command" =~ .*"java".* ]]  || [[ "$command" =~ .*"mvn".* ]]; then
-  # echo "Java is present."
   mvn clean install
 fi 
 
 # Check if running on WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
-  # echo "Running on WSL"
-  # Temporarily modify PATH
   export PATH=$(echo "$PATH" | tr ' ' '\n' | grep -v " " | tr '\n' ':')
   keploycmd="sudo -E keploybin"
 else
-  # echo "Not running on WSL"
-  # Original PATH handling
   keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
 fi
-
-# echo "Keploy command: $keploycmd"
-
-# cd "$folderpath"
 
 # Create a named pipe
 fifo=$(mktemp -u)

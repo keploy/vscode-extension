@@ -229,7 +229,7 @@ function displayPreviousTestResults(webview) {
     });
 }
 exports.displayPreviousTestResults = displayPreviousTestResults;
-function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashScriptPath, zshScriptPath, logfilePath, webview) {
+function startTesting(wslscriptPath, wsllogfilePath, bashScriptPath, zshScriptPath, logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             return new Promise((resolve, reject) => {
@@ -258,7 +258,7 @@ function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashSc
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const testCmd = `${wslscriptPath}  "${wsllogfilePath}" "${folderPath}" "${command}" ;exit 0  `;
+                        const testCmd = `${wslscriptPath}  "${wsllogfilePath}" ;exit 0  `;
                         terminal.sendText(testCmd);
                     }
                     else {
@@ -267,11 +267,11 @@ function startTesting(command, folderPath, wslscriptPath, wsllogfilePath, bashSc
                             // Use a Zsh-specific script if needed
                             console.log('Using Zsh script');
                             //replace bashScriptPath with zshScriptPath for zsh
-                            testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"; exit 0`;
+                            testCmd = `"${bashScriptPath}" "${logfilePath}"; exit 0`;
                         }
                         else {
                             // Default to Bash script
-                            testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0`;
+                            testCmd = `"${bashScriptPath}" "${logfilePath}" ; exit 0`;
                         }
                         // const exitCmd = 'exit';
                         terminal.sendText(testCmd);

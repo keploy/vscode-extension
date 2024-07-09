@@ -121,7 +121,7 @@ function stopRecording() {
     });
 }
 exports.stopRecording = stopRecording;
-function startRecording(command, folderPath, wslscriptPath, wsllogfilePath, bashScriptPath, zshScriptPath, logfilePath, webview) {
+function startRecording(wslscriptPath, wsllogfilePath, bashScriptPath, zshScriptPath, logfilePath, webview) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             return new Promise((resolve, reject) => {
@@ -150,7 +150,7 @@ function startRecording(command, folderPath, wslscriptPath, wsllogfilePath, bash
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
-                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" "${folderPath}" "${command}";exit 0`;
+                        const recordCmd = `${wslscriptPath} "${wsllogfilePath}" ;exit 0`;
                         terminal.sendText(recordCmd);
                     }
                     else {
@@ -158,11 +158,11 @@ function startRecording(command, folderPath, wslscriptPath, wsllogfilePath, bash
                         if (currentShell.includes('zsh')) {
                             // Use a Zsh-specific script if needed
                             //replace bashScriptPaht with zshScriptPath for zsh
-                            recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"`;
+                            recordCmd = `"${bashScriptPath}" "${logfilePath}" `;
                         }
                         else {
                             // Default to Bash script
-                            recordCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}";exit 0`;
+                            recordCmd = `"${bashScriptPath}" "${logfilePath}" ;exit 0`;
                         }
                         console.log(recordCmd);
                         terminal.sendText(recordCmd);

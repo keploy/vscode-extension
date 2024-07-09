@@ -207,8 +207,8 @@ if (startRecordingButton) {
     vscode.postMessage({
       type: "startRecordingCommand",
       value: `Recording Command...`,
-      command: "./test-app-url-shortener",
-      filePath: "./",
+      // command: "./test-app-url-shortener",
+      // filePath: "./",
       // generatedRecordCommand: "" 
     });
   });

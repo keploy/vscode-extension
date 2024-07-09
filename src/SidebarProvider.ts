@@ -132,7 +132,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log(wsllogPath);
 
             
-            await startRecording(data.command , data.filePath ,  wslscriptPath , wsllogPath , bashScript.fsPath , zshScript.fsPath ,logfilePath.fsPath , this._view?.webview );
+            await startRecording( wslscriptPath , wsllogPath , bashScript.fsPath , zshScript.fsPath ,logfilePath.fsPath , this._view?.webview );
             this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
             this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
           } catch (error) {
@@ -195,7 +195,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               wslscriptPath = wslscriptPath.replace(/:/g, '');
               wsllogPath = wsllogPath.replace(/:/g, '');
             }
-            await startTesting(data.command , data.filePath , wslscriptPath , wsllogPath , bashScript.fsPath ,zshScript.fsPath, logfilePath.fsPath ,this._view?.webview );
+            await startTesting( wslscriptPath , wsllogPath , bashScript.fsPath ,zshScript.fsPath, logfilePath.fsPath ,this._view?.webview );
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
           }

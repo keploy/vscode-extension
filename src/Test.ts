@@ -294,7 +294,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
 
 
 
-export async function startTesting(command: string, folderPath: string, wslscriptPath: string, wsllogfilePath: string, bashScriptPath: string, zshScriptPath:string, logfilePath: string, webview: any): Promise<void> {
+export async function startTesting(wslscriptPath: string, wsllogfilePath: string, bashScriptPath: string, zshScriptPath:string, logfilePath: string, webview: any): Promise<void> {
     try {
         return new Promise<void>((resolve, reject) => {
             try {
@@ -325,7 +325,7 @@ export async function startTesting(command: string, folderPath: string, wslscrip
 
                 terminal.show();
                 if (process.platform === 'win32') {
-                    const testCmd = `${wslscriptPath}  "${wsllogfilePath}" "${folderPath}" "${command}" ;exit 0  `;
+                    const testCmd = `${wslscriptPath}  "${wsllogfilePath}" ;exit 0  `;
                     terminal.sendText(testCmd);
                 }
                 else {
@@ -334,10 +334,10 @@ export async function startTesting(command: string, folderPath: string, wslscrip
                         // Use a Zsh-specific script if needed
                         console.log('Using Zsh script');
                         //replace bashScriptPath with zshScriptPath for zsh
-                        testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}"; exit 0`;
+                        testCmd = `"${bashScriptPath}" "${logfilePath}"; exit 0`;
                     } else {
                         // Default to Bash script
-                         testCmd = `"${bashScriptPath}" "${logfilePath}" "${folderPath}" "${command}" ; exit 0`;
+                         testCmd = `"${bashScriptPath}" "${logfilePath}" ; exit 0`;
                     }
                     // const exitCmd = 'exit';
                     terminal.sendText(testCmd);

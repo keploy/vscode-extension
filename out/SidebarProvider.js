@@ -146,7 +146,7 @@ class SidebarProvider {
                         }
                         console.log("bashScript path" + wslscriptPath);
                         console.log(wsllogPath);
-                        yield (0, Record_1.startRecording)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_c = this._view) === null || _c === void 0 ? void 0 : _c.webview);
+                        yield (0, Record_1.startRecording)(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_c = this._view) === null || _c === void 0 ? void 0 : _c.webview);
                         (_d = this._view) === null || _d === void 0 ? void 0 : _d.webview.postMessage({ type: 'success', value: 'Recording Started' });
                         (_e = this._view) === null || _e === void 0 ? void 0 : _e.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
                     }
@@ -209,7 +209,7 @@ class SidebarProvider {
                             wslscriptPath = wslscriptPath.replace(/:/g, '');
                             wsllogPath = wsllogPath.replace(/:/g, '');
                         }
-                        yield (0, Test_1.startTesting)(data.command, data.filePath, wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_j = this._view) === null || _j === void 0 ? void 0 : _j.webview);
+                        yield (0, Test_1.startTesting)(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, (_j = this._view) === null || _j === void 0 ? void 0 : _j.webview);
                     }
                     catch (error) {
                         (_k = this._view) === null || _k === void 0 ? void 0 : _k.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
