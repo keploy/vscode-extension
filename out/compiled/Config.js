@@ -45,6 +45,10 @@ var app = (function () {
 		return Object.keys(obj).length === 0;
 	}
 
+	function null_to_empty(value) {
+		return value == null ? '' : value;
+	}
+
 	/**
 	 * @param {Node} target
 	 * @param {Node} node
@@ -98,6 +102,18 @@ var app = (function () {
 	}
 
 	/**
+	 * @param {EventTarget} node
+	 * @param {string} event
+	 * @param {EventListenerOrEventListenerObject} handler
+	 * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options]
+	 * @returns {() => void}
+	 */
+	function listen(node, event, handler, options) {
+		node.addEventListener(event, handler, options);
+		return () => node.removeEventListener(event, handler, options);
+	}
+
+	/**
 	 * @param {Element} node
 	 * @param {string} attribute
 	 * @param {string} [value]
@@ -114,6 +130,12 @@ var app = (function () {
 	 */
 	function children(element) {
 		return Array.from(element.childNodes);
+	}
+
+	/**
+	 * @returns {void} */
+	function set_input_value(input, value) {
+		input.value = value == null ? '' : value;
 	}
 
 	/**
@@ -567,6 +589,38 @@ var app = (function () {
 	}
 
 	/**
+	 * @param {Node} node
+	 * @param {string} event
+	 * @param {EventListenerOrEventListenerObject} handler
+	 * @param {boolean | AddEventListenerOptions | EventListenerOptions} [options]
+	 * @param {boolean} [has_prevent_default]
+	 * @param {boolean} [has_stop_propagation]
+	 * @param {boolean} [has_stop_immediate_propagation]
+	 * @returns {() => void}
+	 */
+	function listen_dev(
+		node,
+		event,
+		handler,
+		options,
+		has_prevent_default,
+		has_stop_propagation,
+		has_stop_immediate_propagation
+	) {
+		const modifiers =
+			options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+		if (has_prevent_default) modifiers.push('preventDefault');
+		if (has_stop_propagation) modifiers.push('stopPropagation');
+		if (has_stop_immediate_propagation) modifiers.push('stopImmediatePropagation');
+		dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+		const dispose = listen(node, event, handler, options);
+		return () => {
+			dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+			dispose();
+		};
+	}
+
+	/**
 	 * @param {Element} node
 	 * @param {string} attribute
 	 * @param {string} [value]
@@ -673,62 +727,180 @@ var app = (function () {
 	const file = "webviews/components/Config.svelte";
 
 	function create_fragment(ctx) {
-		let main;
-		let div;
-		let h3;
-		let t1;
-		let input0;
+		let div3;
+		let div0;
+		let t0;
+		let div1;
 		let t2;
+		let div2;
+		let t4;
+		let button0;
+		let div3_class_value;
+		let t6;
+		let div8;
+		let h1;
+		let t8;
+		let div5;
+		let div4;
+		let t9;
+		let input0;
+		let t10;
+		let div7;
+		let div6;
+		let t11;
 		let input1;
+		let t12;
+		let button1;
+		let div8_class_value;
+		let mounted;
+		let dispose;
 
 		const block = {
 			c: function create() {
-				main = element("main");
-				div = element("div");
-				h3 = element("h3");
-				h3.textContent = "Initialise The Keploy Config File";
-				t1 = space();
-				input0 = element("input");
+				div3 = element("div");
+				div0 = element("div");
+				div0.innerHTML = ``;
+				t0 = space();
+				div1 = element("div");
+				div1.textContent = "Get Started";
 				t2 = space();
+				div2 = element("div");
+				div2.textContent = "Integrate Keploy by installing the open-source agent locally. No code-changes required.";
+				t4 = space();
+				button0 = element("button");
+				button0.textContent = "Setup Keploy Config";
+				t6 = space();
+				div8 = element("div");
+				h1 = element("h1");
+				h1.textContent = "Initialise Keploy Config File";
+				t8 = space();
+				div5 = element("div");
+				div4 = element("div");
+				div4.innerHTML = ``;
+				t9 = space();
+				input0 = element("input");
+				t10 = space();
+				div7 = element("div");
+				div6 = element("div");
+				div6.innerHTML = ``;
+				t11 = space();
 				input1 = element("input");
-				attr_dev(h3, "class", "info");
-				add_location(h3, file, 17, 4, 312);
-				attr_dev(input0, "class", "configInput svelte-1srwvj6");
+				t12 = space();
+				button1 = element("button");
+				button1.textContent = "Save Configuration";
+				attr_dev(div0, "class", "image-container");
+				add_location(div0, file, 83, 2, 1459);
+				attr_dev(div1, "class", "get-started svelte-lz90nw");
+				add_location(div1, file, 85, 2, 1500);
+				attr_dev(div2, "class", "description svelte-lz90nw");
+				add_location(div2, file, 86, 2, 1545);
+				attr_dev(button0, "class", "button svelte-lz90nw");
+				attr_dev(button0, "id", "setupConfig");
+				add_location(button0, file, 89, 2, 1674);
+				attr_dev(div3, "class", div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-lz90nw"));
+				add_location(div3, file, 82, 0, 1395);
+				attr_dev(h1, "class", "heading svelte-lz90nw");
+				add_location(h1, file, 93, 2, 1853);
+				attr_dev(div4, "class", "code-icon ");
+				attr_dev(div4, "alt", "Icon");
+				add_location(div4, file, 95, 4, 1942);
 				attr_dev(input0, "type", "text");
+				attr_dev(input0, "placeholder", "Enter App Command");
 				attr_dev(input0, "id", "configCommand");
-				attr_dev(input0, "name", "command");
-				attr_dev(input0, "placeholder", "Command");
-				add_location(input0, file, 19, 4, 433);
-				attr_dev(input1, "class", "configInput svelte-1srwvj6");
+				attr_dev(input0, "class", "svelte-lz90nw");
+				add_location(input0, file, 96, 4, 1989);
+				attr_dev(div5, "class", "settings-item svelte-lz90nw");
+				add_location(div5, file, 94, 2, 1910);
+				attr_dev(div6, "class", "code-icon ");
+				attr_dev(div6, "alt", "Icon");
+				add_location(div6, file, 99, 4, 2127);
 				attr_dev(input1, "type", "text");
+				attr_dev(input1, "placeholder", "Enter Path (Default : './'");
 				attr_dev(input1, "id", "configPath");
-				attr_dev(input1, "name", "path");
-				attr_dev(input1, "placeholder", "Path (Default value : ./)");
-				add_location(input1, file, 20, 4, 535);
-				attr_dev(div, "id", "initialiseConfig");
-				attr_dev(div, "class", "svelte-1srwvj6");
-				add_location(div, file, 16, 0, 280);
-				add_location(main, file, 15, 0, 273);
+				attr_dev(input1, "class", "svelte-lz90nw");
+				add_location(input1, file, 100, 4, 2174);
+				attr_dev(div7, "class", "settings-item svelte-lz90nw");
+				add_location(div7, file, 98, 2, 2095);
+				attr_dev(button1, "class", "button svelte-lz90nw");
+				attr_dev(button1, "id", "initialiseConfigButton");
+				add_location(button1, file, 102, 2, 2281);
+
+				attr_dev(div8, "class", div8_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
+				? 'settings-container'
+				: 'container-hide') + " svelte-lz90nw"));
+
+				add_location(div8, file, 92, 0, 1780);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
 			},
 			m: function mount(target, anchor) {
-				insert_dev(target, main, anchor);
-				append_dev(main, div);
-				append_dev(div, h3);
-				append_dev(div, t1);
-				append_dev(div, input0);
-				append_dev(div, t2);
-				append_dev(div, input1);
+				insert_dev(target, div3, anchor);
+				append_dev(div3, div0);
+				append_dev(div3, t0);
+				append_dev(div3, div1);
+				append_dev(div3, t2);
+				append_dev(div3, div2);
+				append_dev(div3, t4);
+				append_dev(div3, button0);
+				insert_dev(target, t6, anchor);
+				insert_dev(target, div8, anchor);
+				append_dev(div8, h1);
+				append_dev(div8, t8);
+				append_dev(div8, div5);
+				append_dev(div5, div4);
+				append_dev(div5, t9);
+				append_dev(div5, input0);
+				set_input_value(input0, /*appCommand*/ ctx[1]);
+				append_dev(div8, t10);
+				append_dev(div8, div7);
+				append_dev(div7, div6);
+				append_dev(div7, t11);
+				append_dev(div7, input1);
+				set_input_value(input1, /*noise*/ ctx[2]);
+				append_dev(div8, t12);
+				append_dev(div8, button1);
+
+				if (!mounted) {
+					dispose = [
+						listen_dev(button0, "click", /*handleSetupConfig*/ ctx[3], false, false, false, false),
+						listen_dev(input0, "input", /*input0_input_handler*/ ctx[4]),
+						listen_dev(input1, "input", /*input1_input_handler*/ ctx[5])
+					];
+
+					mounted = true;
+				}
 			},
-			p: noop,
+			p: function update(ctx, [dirty]) {
+				if (dirty & /*showSettings*/ 1 && div3_class_value !== (div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-lz90nw"))) {
+					attr_dev(div3, "class", div3_class_value);
+				}
+
+				if (dirty & /*appCommand*/ 2 && input0.value !== /*appCommand*/ ctx[1]) {
+					set_input_value(input0, /*appCommand*/ ctx[1]);
+				}
+
+				if (dirty & /*noise*/ 4 && input1.value !== /*noise*/ ctx[2]) {
+					set_input_value(input1, /*noise*/ ctx[2]);
+				}
+
+				if (dirty & /*showSettings*/ 1 && div8_class_value !== (div8_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
+				? 'settings-container'
+				: 'container-hide') + " svelte-lz90nw"))) {
+					attr_dev(div8, "class", div8_class_value);
+				}
+			},
 			i: noop,
 			o: noop,
 			d: function destroy(detaching) {
 				if (detaching) {
-					detach_dev(main);
+					detach_dev(div3);
+					detach_dev(t6);
+					detach_dev(div8);
 				}
+
+				mounted = false;
+				run_all(dispose);
 			}
 		};
 
@@ -743,16 +915,61 @@ var app = (function () {
 		return block;
 	}
 
-	function instance($$self, $$props) {
+	function instance($$self, $$props, $$invalidate) {
 		let { $$slots: slots = {}, $$scope } = $$props;
 		validate_slots('Config', slots, []);
+		let showSettings = false;
+		let appCommand = '';
+		let noise = '';
+		let passThroughPorts = '';
+
+		function handleSetupConfig() {
+			$$invalidate(0, showSettings = true);
+		}
+
 		const writable_props = [];
 
 		Object.keys($$props).forEach(key => {
 			if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Config> was created with unknown prop '${key}'`);
 		});
 
-		return [];
+		function input0_input_handler() {
+			appCommand = this.value;
+			$$invalidate(1, appCommand);
+		}
+
+		function input1_input_handler() {
+			noise = this.value;
+			$$invalidate(2, noise);
+		}
+
+		$$self.$capture_state = () => ({
+			showSettings,
+			appCommand,
+			noise,
+			passThroughPorts,
+			handleSetupConfig
+		});
+
+		$$self.$inject_state = $$props => {
+			if ('showSettings' in $$props) $$invalidate(0, showSettings = $$props.showSettings);
+			if ('appCommand' in $$props) $$invalidate(1, appCommand = $$props.appCommand);
+			if ('noise' in $$props) $$invalidate(2, noise = $$props.noise);
+			if ('passThroughPorts' in $$props) passThroughPorts = $$props.passThroughPorts;
+		};
+
+		if ($$props && "$$inject" in $$props) {
+			$$self.$inject_state($$props.$$inject);
+		}
+
+		return [
+			showSettings,
+			appCommand,
+			noise,
+			handleSetupConfig,
+			input0_input_handler,
+			input1_input_handler
+		];
 	}
 
 	class Config extends SvelteComponentDev {

@@ -17,17 +17,6 @@ button:disabled{
     background-color: rgb(80, 79, 79);
     cursor: not-allowed;
 }
-/* .recordedTestCase{
-    background-color: rgb(184, 89, 0);
-    margin: 10px;
-    border: black 1px solid;
-    font-size: 16px;
-    padding: 2px;
-    cursor: pointer;
-    }
-.recordedTestCase:hover{
-    animation: changeColor 0.5s;
-} */
 
 @keyframes changeColor {
     0% { background-color: rgb(85, 85, 85); }
@@ -97,22 +86,6 @@ button:disabled{
 .dropdown-content.show {
     display: grid;
 }
-
-/* #updateKeployButton{
-    background-color: #00d936;
-    color: black;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-} */
 
 #Progress{
     color: white;
@@ -217,82 +190,7 @@ button:disabled{
     text-emphasis-color: #FF914D;
 }
 
-#osButtons{
-    display: none;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-content: center;
-    grid-gap: 10px;
-    margin-top: 20px;
-}
-#updateKeployLinuxButton{
-    background-color: white;
-    color: white;
-    height: 100px;
-    padding: 10px 15px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 15px;
-    font-weight: bold;
-    border-radius: 10px;
-    /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); */
-    transition: 0.3s;
-}
 
-#updateKeployLinuxButton:hover{
-    background-color: gray;
-}
-
-#updateKeployMacButton{
-    background-color: white;
-    color: white;
-    height: 100px;
-    padding: 10px 15px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 15px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
-
-#updateKeployMacButton:hover{
-    background-color: rgb(50, 50, 50);
-}
-
-#updateKeployWindowsButton{
-    background-color: white;
-    color: black;
-    height: 100px;
-    padding: 10px 15px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 15px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
-
-#updateKeployWindowsButton:hover{
-    background-color: rgb(50, 50, 50);
-}
-
-#utilityButtons{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 5px;
-    margin-top: 20px;
-}
 #recordCommandInput{
     display: none;
 }

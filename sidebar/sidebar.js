@@ -105,7 +105,7 @@ if(rerunTestSuiteButton){
     console.log("rerunTestSuiteButton clicked");
     vscode.postMessage({
       type: "navigate",
-      value: "Operations"
+      value: "KeployHome"
     });
   });
 
@@ -315,7 +315,7 @@ window.addEventListener('message', event => {
   if (message.type === 'navigateToHome') {
     vscode.postMessage({
       type: "navigate",
-      value: "Operations"
+      value: "KeployHome"
     });
   }
   if (message.type === 'updateStatus') {

@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
     console.log(context.globalState);
     if(signedIn){
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-        sidebarProvider.postMessage('navigateToHome','Operations');
+        sidebarProvider.postMessage('navigateToHome','KeployHome');
     }
     	let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
            

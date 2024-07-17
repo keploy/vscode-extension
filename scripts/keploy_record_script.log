@@ -1,1 +1,28 @@
-sudo: 1 incorrect password attempt
+
+       ▓██▓▄
+    ▓▓▓▓██▓█▓▄
+     ████████▓▒
+          ▀▓▓███▄      ▄▄   ▄               ▌
+         ▄▌▌▓▓████▄    ██ ▓█▀  ▄▌▀▄  ▓▓▌▄   ▓█  ▄▌▓▓▌▄ ▌▌   ▓
+       ▓█████████▌▓▓   ██▓█▄  ▓█▄▓▓ ▐█▌  ██ ▓█  █▌  ██  █▌ █▓
+      ▓▓▓▓▀▀▀▀▓▓▓▓▓▓▌  ██  █▓  ▓▌▄▄ ▐█▓▄▓█▀ █▓█ ▀█▄▄█▀   █▓█
+       ▓▌                           ▐█▌                   █▌
+        ▓
+  
+version: 2.2.0-alpha20
+
+🐰 Keploy: 2024-07-17T14:43:03+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-07-17T14:43:03+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+sh: 1: Syntax error: Unterminated quoted string
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[31mERROR[0m	error while running the app	{"error": "exit status 2"}
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[31mERROR[0m	user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	stopping Keploy	{"reason": "user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected"}
+🐰 Keploy: 2024-07-17T14:43:04+05:30 	[34mINFO[0m	proxy stopped...
+🐰 Keploy: 2024-07-17T14:43:06+05:30 	[34mINFO[0m	eBPF resources released successfully...
+🐰 Keploy: 2024-07-17T14:43:06+05:30 	[31mERROR[0m	failed to record	{"error": "user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected"}

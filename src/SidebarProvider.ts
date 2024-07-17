@@ -53,10 +53,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     
 
     let scriptUri = webviewView.webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.js")
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.js")
     );
     let compiledCSSUri = webviewView.webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Home.css")
+      vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.css")
     );
     
     //if config file is already present then navigate to keploy page
@@ -64,10 +64,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const configFilePath = folderPath + '/keploy.yml';
     if (existsSync(configFilePath)) {
       scriptUri = webviewView.webview.asWebviewUri(
-        vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Operations.js")
+        vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.js")
       );
       compiledCSSUri = webviewView.webview.asWebviewUri(
-        vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Operations.css")
+        vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.css")
       );
     }
 

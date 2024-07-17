@@ -31,15 +31,23 @@ if [[ "$command" =~ .*"go".* ]]; then
   go build -o application
 
 elif [[ "$command" =~ .*"python3".* ]]; then
+  echo "Python3 command found"
   python3 -m venv venv
+  echo "venv created"
   source venv/bin/activate
+  echo "venv activated"
   pip install -r requirements.txt
+  echo "requirements installed"
 
 elif [[ "$command" =~ .*"python".* ]] ; then
+echo "Python command found"
   python -m venv venv
+  echo "venv created"
   source venv/bin/activate
+  echo "venv activated"
   pip install -r requirements.txt
-
+  echo "requirements installed"
+  
 elif [[ "$command" =~ .*"node".* ]]; then
   npm install
 
