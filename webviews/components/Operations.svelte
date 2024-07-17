@@ -1,5 +1,45 @@
 <script>
   import { fly } from 'svelte/transition';
+  import { onMount } from 'svelte';
+  import lottie from 'lottie-web';
+
+  const intro = 60; // final frame of the intro sequence
+  const stopFrame = 180; // final frame of the stop icon appearing
+  const recFrame = 240; // final frame of the record frame appearing (last frame which matches the intro frame to ensure it loops)
+
+  let animationWindow;
+  let anim;
+
+  onMount(() => {
+    anim = lottie.loadAnimation({
+      container: animationWindow,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      // we play the intro immediately
+      initialSegment: [0, intro],
+      path: 'https://assets.codepen.io/35984/record_button.json'
+    });
+
+    anim.setSpeed(1.61);
+
+    const onClick = (e) => {
+      if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
+        console.log('playing from stop to record');
+        anim.playSegments([stopFrame, recFrame], true);
+      } else {
+        console.log('playing to stop icon');
+        anim.playSegments([intro, stopFrame], true);
+      }
+    };
+
+    // animationWindow.addEventListener('click', onClick);
+
+    return () => {
+      animationWindow.removeEventListener('click', onClick);
+      anim.destroy();
+    };
+  });
 
   let startRecordingButton;
   let startTestingButton;
@@ -9,6 +49,7 @@
   let isTesting = false;
   let showSteps = false;
   let selectedIconButton = 1;
+  let settingsIcon = document.querySelector('.settings-icon');
 
   const selectButton = (buttonNumber) => {
         console.log('buttonNumber', buttonNumber);
@@ -24,6 +65,10 @@
         if(buttonNumber===1){
             startRecordingButton.style.display = 'flex';
             startTestingButton.style.display = 'flex';
+          }
+          if(buttonNumber===3){
+            settingsIcon.classList.toggle('open'); // Update icon based on dropdown state
+
           }
           
     };
@@ -43,22 +88,35 @@
 
 
     };
+    const triggerAnimation = () => {
+    if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
+      console.log('playing from stop to record');
+      anim.playSegments([stopFrame, recFrame], true);
+    } else {
+      console.log('playing to stop icon');
+      anim.playSegments([intro, stopFrame], true);
+    }
+  };
+
   const toggleRecording = () => {
     isRecording = !isRecording;
     isTesting = false;
     showSteps = !showSteps;
+    triggerAnimation();
   };
 
   const toggleTesting = () => {
     isTesting = !isTesting;
     isRecording = false;
     showSteps = !showSteps;
+    triggerAnimation();
   };
 
   const stop = () => {
     isRecording = false;
     isTesting = false;
     showSteps = false;
+    triggerAnimation();
   };
 
 
@@ -119,6 +177,7 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 16px;
+    margin-top: 16px;
     flex-direction: column;
   }
   .icon-buttons {
@@ -126,22 +185,27 @@
         justify-content: space-around;
     }
     .icon-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: transparent;
-        border: 2px solid transparent;
-        color: #ff6600;
-        font-size: 24px;
-        height: 50px;
-        width: 80px;
-        cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #606060;
+      border-radius: 5px;
+      /* border: 2px solid transparent; */
+      color: #FF914D;
+      font-size: 24px;
+      height: 40px;
+      width: 80px;
+      cursor: pointer;
     }
     .icon-button.selected {
-        border-color: #ff9933;
+      /* border-color: #ff9933; */
+      /* background-color: var(--vscode-button-background); */
+      background-color: var(--vscode-button-secondaryBackground)
     }
     .icon-button:hover {
-        color: #ff9933;
+      color: #ff9933;
+      background-color: var(--vscode-button-background)
+      /* background-color: #f9f9f9; */
     }
   .heading {
     display: flex;
@@ -198,21 +262,22 @@
     justify-content: space-between;
     padding: 16px;
     margin-bottom: 16px;
-    background-color: #f9f9f9;
+    background-color: var(--vscode-button-background);
+    color: #ff9933;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s;
     cursor: pointer;
   }
 
-  .card:hover {
-    background-color: #f1f1f1;
-  }
 
   .card-icon {
     display: flex;
     align-items: center;
     font-size: 24px;
+    height: 35px;
+    width: 35px;
+
     margin-right: 16px;
     color: #ff6f61;
   }
@@ -220,12 +285,12 @@
   .card-text {
     flex-grow: 1;
     font-size: 16px;
-    color: black;
+    color: white;
   }
 
   .card-arrow {
     font-size: 18px;
-    color: #b0b0b0;
+    color: white;
   }
 
   .steps {
@@ -251,26 +316,33 @@
   .loader {
         display: none;
     }
+    #animationWindow {
+    width: 400px;
+    height: 400px;
+  }
+
+  .icon-button {
+    cursor: pointer;
+  }
 </style>
 
 <div class="container">
   <div class="icon-buttons">
     <button id="keploycommands" class="icon-button {selectedIconButton === 1 ? 'selected' : ''}" on:click={() => selectButton(1)}>
-        {#if isRecording}
+        <!-- {#if isRecording}
             <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#ff0000" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
         {:else}
             <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#ff0000" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#ff0000" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
-        {/if}
+        {/if} -->
+        <div bind:this={animationWindow} id="animationWindow"></div>
     </button>
     <button id="displayPreviousTestResults" class="icon-button {selectedIconButton === 2 ? 'selected' : ''}" on:click={() => selectButton(2)}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#00ff11" d="M12 5V2.21c0-.45-.54-.67-.85-.35l-3.8 3.79c-.2.2-.2.51 0 .71l3.79 3.79c.32.31.86.09.86-.36V7c3.73 0 6.68 3.42 5.86 7.29c-.47 2.27-2.31 4.1-4.57 4.57c-3.57.75-6.75-1.7-7.23-5.01a1 1 0 0 0-.98-.85c-.6 0-1.08.53-1 1.13c.62 4.39 4.8 7.64 9.53 6.72c3.12-.61 5.63-3.12 6.24-6.24C20.84 9.48 16.94 5 12 5"/></svg>
+      <span class="history-icon"></span> 
     </button>
     <button id="openConfig" class="icon-button {selectedIconButton === 3 ? 'selected' : ''}" on:click={() => selectButton(3)}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#f56e00" d="M19.14 12.94c.04-.3.06-.61.06-.94c0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6s3.6 1.62 3.6 3.6s-1.62 3.6-3.6 3.6"/></svg>
+      <span class="settings-icon"></span> 
     </button>
 </div>
-<hr/>
-
   <div class="header">
     <div class="heading">
       {#if selectedIconButton === 3}
@@ -280,8 +352,14 @@
       {:else}
         <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}</h1>
       {/if}
-      <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopRecordingButton" bind:this={stopRecordingButton} role="button" tabindex="0">⏹️</span>
-      <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopTestingButton" bind:this={stopTestingButton} role="button" tabindex="0">⏹️</span>
+      <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopRecordingButton" bind:this={stopRecordingButton} role="button" tabindex="0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
+
+      </span>
+      <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopTestingButton" bind:this={stopTestingButton} role="button" tabindex="0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
+
+      </span>
     </div>    
       <div class="statusdiv" id="statusdiv">
         <h3 id="recordStatus"> </h3>
@@ -294,23 +372,19 @@
   {#if selectedIconButton === 2}
         <div id="lastTestResults">
             <h3 id="testSuiteName"> </h3>
-            <!-- Dropdown structure
-            <div class="dropdown-container">
-                <div class="dropdown-header" on:click="{() => toggleDropdown('dropdown1')}"></div>
-                <div id="dropdown1" class="dropdown-content">
-                </div>
-            </div> -->
         </div>
         {/if}
 
   <div class="section">
     <div class="card" on:click={toggleRecording} on:keydown={e => e.key === 'Enter' && toggleRecording()} tabindex="0" role="button" id="startRecordingButton" bind:this={startRecordingButton}>
-      <div class="card-icon">🎥</div>
+      <div class="card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
+      </div>
       <div class="card-text">Record Test Cases</div>
       <div class="card-arrow">➔</div>
     </div>
     <div class="card" on:click={toggleTesting} on:keydown={e => e.key === 'Enter' && toggleTesting()} tabindex="0" role="button" id="startTestingButton" bind:this={startTestingButton}>
-      <div class="card-icon">🔄</div>
+      <div class="card-icon replay-icon"></div>
       <div class="card-text">Replay Test Cases</div>
       <div class="card-arrow">➔</div>
     </div>

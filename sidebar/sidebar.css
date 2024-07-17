@@ -31,7 +31,7 @@ button:disabled{
 
 @keyframes changeColor {
     0% { background-color: rgb(85, 85, 85); }
-    100% { background-color: rgb(164, 126, 0); }
+    100% { background-color: #FF914D; }
 }
 
 
@@ -73,6 +73,8 @@ button:disabled{
     margin: 10px 0;
 }
 
+
+
 .dropdown-header {
     padding: 10px;
     display: flex;
@@ -82,7 +84,7 @@ button:disabled{
 }
 
 .dropdown-header:hover {
-    background-color: #eb6410;
+    background-color: #FF914D;
 }
 
 .dropdown-content {
@@ -163,7 +165,7 @@ button:disabled{
 
 .loader {
     border: 4px solid rgba(0, 0, 0, 0);
-    border-left-color: #1a73e8; /* Change color as needed */
+    border-left-color: #FF914D; 
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -209,61 +211,10 @@ button:disabled{
   .homebutton:hover{
     background-color: rgb(13, 13, 13);
   }
-#updateKeployDockerButton{
-    /* display: none; */
-    background-color: #00b1d9;
-    color: black;
-    height: 100px;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-}
 
-#updateKeployDockerButton:hover{
-    background-color: #00d9b1;
-}
-
-#updateKeployBinaryButton{
-    /* display: none; */
-    background-color: #ebcc00;
-    color: black;
-    height: 100px;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
-    
-}
-
-
-#updateKeployBinaryButton:hover{
-    background-color: #6e6101;
-}
-
-#updateButtons{
-    display: none;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-    margin-top: 20px;
-}
 .logo{
-    color:#d1a30a;
-    text-emphasis-color: #d1a30a;
+    color:#FF914D;
+    text-emphasis-color: #FF914D;
 }
 
 #osButtons{
@@ -404,8 +355,59 @@ button:disabled{
     height: 20px;
     margin-left: 10px;
     transition: transform 0.3s;
-    background: url('dropdown2.png') no-repeat center center; /* Replace with your icon path */
+    background: url('dropdown.png') no-repeat center center; 
     background-size: contain;
+}
+
+.settings-icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+    background: url('settings.png') no-repeat center center; 
+    background-size: contain;
+}
+.history-icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+    background: url('history.png') no-repeat center center; 
+    background-size: contain;
+
+}
+
+.image-container{
+    background: url('KeployIcon.png') no-repeat center center; 
+    background-size: contain;
+    position: relative;
+    width: 90%;
+    height: 90%;
+    }
+
+.settings-icon.open {
+    transform: rotate(180deg);
+}
+.replay-icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+    background: url('replay.png') no-repeat center center; 
+    background-size: contain;
+    color: tomato;
+}
+
+.code-icon{
+    background: url("code-icon.png") no-repeat center center;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+}
+
+.replay-icon.open {
+    transform: rotate(180deg);
 }
 
 .dropdown-icon.open {
@@ -429,6 +431,6 @@ button:disabled{
 }
 
 .recordedTestCase:hover {
-    background-color: #eb6410;
+    background-color: #FF914D;
 }
 

@@ -20,30 +20,8 @@
     padding: 20px;
   }
 
-  .image-container {
-    position: relative;
-    width: 250px;
-    height: 150px;
-    background: url('/mnt/data/image.png') no-repeat center center;
-    background-size: contain;
-  }
-
-  .tag {
-    position: absolute;
-    background-color: white;
-    border-radius: 10px;
-    padding: 2px 10px;
-    font-size: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .tag-html { top: 100px; left: 10px; }
-  .tag-api { top: 10px; left: 50px; }
-  .tag-test { top: 10px; right: 50px; }
-  .tag-mock { top: 70px; right: 10px; }
-
   .get-started {
-    margin-top: 150px;
+    margin-top: 50px;
     text-align: center;
     font-size: 18px;
   }
@@ -58,7 +36,7 @@
   .button {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #ff7e47;
+    background-color: #FF914D;
     color: white;
     border: none;
     border-radius: 20px;
@@ -67,7 +45,7 @@
   }
 
   .button:hover {
-    background-color: #ff5722;
+    background-color: #FF914D;
   }
 
   /* New UI Styles */
@@ -104,10 +82,6 @@
 
 <div class="{showSettings ? 'container-hide' : 'container'}">
   <div class="image-container">
-    <div class="tag tag-html">HTML</div>
-    <div class="tag tag-api">API Calls</div>
-    <div class="tag tag-test">Test Cases</div>
-    <div class="tag tag-mock">Data Mocks</div>
   </div>
   <div class="get-started">Get Started</div>
   <div class="description">
@@ -119,11 +93,11 @@
 <div class="{showSettings ? 'settings-container' : 'container-hide'}">
   <h1 class="heading">Initialise Keploy Config File</h1>
   <div class="settings-item">
-    <img src="/path/to/your/icon.png" alt="Icon">
+    <div class="code-icon "alt="Icon" > </div>
     <input type="text" placeholder="Enter App Command" bind:value={appCommand} id="configCommand">
   </div>
   <div class="settings-item">
-    <img src="/path/to/your/icon.png" alt="Icon">
+    <div class="code-icon "alt="Icon" > </div>
     <input type="text" placeholder="Enter Path (Default : './'" bind:value={noise} id="configPath">
   </div>
   <button class="button" id="initialiseConfigButton">Save Configuration</button>

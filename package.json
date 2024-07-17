@@ -128,6 +128,7 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
+    "lottie-web": "^5.12.2",
     "sinon": "^17.0.1",
     "svelte": "^4.2.12",
     "uuid": "^10.0.0",

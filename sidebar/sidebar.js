@@ -11,7 +11,6 @@ const stopTestButton = document.getElementById('stopTestingButton');
 const openRecordPageButton = document.getElementById('openRecordPageButton');
 const configNotFound = document.getElementById('keployConfigInfo');
 const openTestPageButton = document.getElementById('openTestPageButton');
-const navigateHomeButton = document.getElementById('navigateHomeButton');
 const recordStatus = document.getElementById('recordStatus');
 const testStatus = document.getElementById('testStatus');
 const upperOutputDiv = document.getElementById('upperOutputDiv');
@@ -90,15 +89,7 @@ if (openRecordPageButton) {
   });
 }
 
-if (navigateHomeButton) {
-  navigateHomeButton.addEventListener('click', async () => {
-    console.log("navigateHomeButton clicked");
-    vscode.postMessage({
-      type: "navigate",
-      value: "Main"
-    });
-  });
-}
+
 if (openTestPageButton) {
   openTestPageButton.addEventListener('click', async () => {
     console.log("openTestPageButton clicked");
@@ -320,6 +311,13 @@ if(setupConfigButton){
 window.addEventListener('message', event => {
   const message = event.data;
   console.log("message", message);
+
+  if (message.type === 'navigateToHome') {
+    vscode.postMessage({
+      type: "navigate",
+      value: "Operations"
+    });
+  }
   if (message.type === 'updateStatus') {
     console.log("message.value", message.value);
 

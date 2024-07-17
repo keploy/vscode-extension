@@ -771,11 +771,11 @@ var app = (function () {
 				svg = svg_element("svg");
 				path0 = svg_element("path");
 				path1 = svg_element("path");
-				attr_dev(path0, "fill", "#ff0000");
+				attr_dev(path0, "fill", "#FF914D");
 				attr_dev(path0, "d", "M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6");
 				attr_dev(path0, "opacity", "0.3");
 				add_location(path0, file, 321, 107, 10657);
-				attr_dev(path1, "fill", "#ff0000");
+				attr_dev(path1, "fill", "#FF914D");
 				attr_dev(path1, "d", "M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6");
 				add_location(path1, file, 321, 207, 10757);
 				attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
@@ -816,7 +816,7 @@ var app = (function () {
 			c: function create() {
 				svg = svg_element("svg");
 				path = svg_element("path");
-				attr_dev(path, "fill", "#ff0000");
+				attr_dev(path, "fill", "#FF914D");
 				attr_dev(path, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
 				add_location(path, file, 319, 107, 10358);
 				attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
@@ -903,35 +903,35 @@ var app = (function () {
 				button4 = element("button");
 				t12 = text("Start Testing");
 				attr_dev(h30, "id", "recordStatus");
-				attr_dev(h30, "class", "svelte-u5lila");
+				attr_dev(h30, "class", "svelte-1qs5a31");
 				add_location(h30, file, 335, 8, 12627);
 				attr_dev(div0, "id", "recordedTestCases");
-				attr_dev(div0, "class", "svelte-u5lila");
+				attr_dev(div0, "class", "svelte-1qs5a31");
 				add_location(div0, file, 336, 8, 12664);
 				attr_dev(button0, "id", "prevPageButton");
-				attr_dev(button0, "class", "svelte-u5lila");
+				attr_dev(button0, "class", "svelte-1qs5a31");
 				add_location(button0, file, 339, 12, 12785);
 				attr_dev(button1, "id", "nextPageButton");
-				attr_dev(button1, "class", "svelte-u5lila");
+				attr_dev(button1, "class", "svelte-1qs5a31");
 				add_location(button1, file, 341, 12, 12918);
-				attr_dev(div1, "class", "pagination-buttons svelte-u5lila");
+				attr_dev(div1, "class", "pagination-buttons svelte-1qs5a31");
 				attr_dev(div1, "id", "pagination-buttons");
 				add_location(div1, file, 338, 8, 12716);
 				attr_dev(h31, "id", "testStatus");
-				attr_dev(h31, "class", "svelte-u5lila");
+				attr_dev(h31, "class", "svelte-1qs5a31");
 				add_location(h31, file, 343, 8, 13003);
 				attr_dev(div2, "id", "testResults");
-				attr_dev(div2, "class", "svelte-u5lila");
+				attr_dev(div2, "class", "svelte-1qs5a31");
 				add_location(div2, file, 344, 8, 13038);
 				attr_dev(button2, "id", "viewCompleteSummaryButton");
-				attr_dev(button2, "class", "svelte-u5lila");
+				attr_dev(button2, "class", "svelte-1qs5a31");
 				add_location(button2, file, 345, 8, 13075);
 				attr_dev(button3, "id", "startRecordingButton");
-				attr_dev(button3, "class", "button svelte-u5lila");
+				attr_dev(button3, "class", "button svelte-1qs5a31");
 				button3.disabled = button3_disabled_value = /*isRecording*/ ctx[4] && /*isTesting*/ ctx[5];
 				add_location(button3, file, 346, 12, 13162);
 				attr_dev(button4, "id", "startTestingButton");
-				attr_dev(button4, "class", "button svelte-u5lila");
+				attr_dev(button4, "class", "button svelte-1qs5a31");
 				button4.disabled = button4_disabled_value = /*isRecording*/ ctx[4] && /*isTesting*/ ctx[5];
 				add_location(button4, file, 349, 12, 13374);
 			},
@@ -1027,7 +1027,7 @@ var app = (function () {
 				h3 = element("h3");
 				h3.innerHTML = ``;
 				attr_dev(h3, "id", "testSuiteName");
-				attr_dev(h3, "class", "svelte-u5lila");
+				attr_dev(h3, "class", "svelte-1qs5a31");
 				add_location(h3, file, 358, 12, 13890);
 				attr_dev(div, "id", "lastTestResults");
 				add_location(div, file, 357, 8, 13851);
@@ -1155,27 +1155,27 @@ var app = (function () {
 				attr_dev(input0, "id", "appCommand");
 				attr_dev(input0, "name", "appCommand");
 				attr_dev(input0, "placeholder", "Enter App Command");
-				attr_dev(input0, "class", "svelte-u5lila");
+				attr_dev(input0, "class", "svelte-1qs5a31");
 				add_location(input0, file, 298, 12, 9445);
 				attr_dev(div0, "id", "appCommandDiv");
-				attr_dev(div0, "class", "svelte-u5lila");
+				attr_dev(div0, "class", "svelte-1qs5a31");
 				add_location(div0, file, 297, 8, 9408);
 				attr_dev(button0, "id", "selectRecordFolderButton");
-				attr_dev(button0, "class", "button svelte-u5lila");
+				attr_dev(button0, "class", "button svelte-1qs5a31");
 				add_location(button0, file, 307, 12, 9711);
 				attr_dev(input1, "type", "text");
 				attr_dev(input1, "id", "projectFolder");
 				attr_dev(input1, "name", "projectFolder");
-				attr_dev(input1, "class", "svelte-u5lila");
+				attr_dev(input1, "class", "svelte-1qs5a31");
 				toggle_class(input1, "isVisible", /*isProjectFolderVisible*/ ctx[7]);
 				add_location(input1, file, 308, 12, 9807);
 				attr_dev(div1, "id", "selectFolderDiv");
-				attr_dev(div1, "class", "svelte-u5lila");
+				attr_dev(div1, "class", "svelte-1qs5a31");
 				add_location(div1, file, 306, 8, 9672);
 				attr_dev(button1, "id", "keploycommands");
-				attr_dev(button1, "class", button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-u5lila");
+				attr_dev(button1, "class", button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-1qs5a31");
 				add_location(button1, file, 317, 12, 10090);
-				attr_dev(path0, "fill", "#00ff11");
+				attr_dev(path0, "fill", "#FF914D");
 				attr_dev(path0, "d", "M12 5V2.21c0-.45-.54-.67-.85-.35l-3.8 3.79c-.2.2-.2.51 0 .71l3.79 3.79c.32.31.86.09.86-.36V7c3.73 0 6.68 3.42 5.86 7.29c-.47 2.27-2.31 4.1-4.57 4.57c-3.57.75-6.75-1.7-7.23-5.01a1 1 0 0 0-.98-.85c-.6 0-1.08.53-1 1.13c.62 4.39 4.8 7.64 9.53 6.72c3.12-.61 5.63-3.12 6.24-6.24C20.84 9.48 16.94 5 12 5");
 				add_location(path0, file, 325, 103, 11206);
 				attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
@@ -1184,9 +1184,9 @@ var app = (function () {
 				attr_dev(svg0, "viewBox", "0 0 24 24");
 				add_location(svg0, file, 325, 16, 11119);
 				attr_dev(button2, "id", "displayPreviousTestResults");
-				attr_dev(button2, "class", button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-u5lila");
+				attr_dev(button2, "class", button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-1qs5a31");
 				add_location(button2, file, 324, 12, 10964);
-				attr_dev(path1, "fill", "#f56e00");
+				attr_dev(path1, "fill", "#FF914D");
 				attr_dev(path1, "d", "M19.14 12.94c.04-.3.06-.61.06-.94c0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6s3.6 1.62 3.6 3.6s-1.62 3.6-3.6 3.6");
 				add_location(path1, file, 328, 103, 11796);
 				attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
@@ -1195,32 +1195,32 @@ var app = (function () {
 				attr_dev(svg1, "viewBox", "0 0 24 24");
 				add_location(svg1, file, 328, 16, 11709);
 				attr_dev(button3, "id", "openConfig");
-				attr_dev(button3, "class", button3_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-u5lila");
+				attr_dev(button3, "class", button3_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-1qs5a31");
 				add_location(button3, file, 327, 12, 11570);
-				attr_dev(div2, "class", "icon-buttons svelte-u5lila");
+				attr_dev(div2, "class", "icon-buttons svelte-1qs5a31");
 				add_location(div2, file, 316, 8, 10051);
 				add_location(hr, file, 331, 8, 12556);
 				attr_dev(h3, "class", "info");
 				attr_dev(h3, "id", "keployConfigInfo");
 				add_location(h3, file, 352, 12, 13601);
 				attr_dev(div3, "id", "keployConfigInfoDiv");
-				attr_dev(div3, "class", "svelte-u5lila");
+				attr_dev(div3, "class", "svelte-1qs5a31");
 				add_location(div3, file, 351, 8, 13558);
 				attr_dev(button4, "id", "initialiseConfigButton");
-				attr_dev(button4, "class", "button svelte-u5lila");
+				attr_dev(button4, "class", "button svelte-1qs5a31");
 				add_location(button4, file, 355, 8, 13726);
-				attr_dev(div4, "class", "loader svelte-u5lila");
+				attr_dev(div4, "class", "loader svelte-1qs5a31");
 				attr_dev(div4, "id", "loader");
 				add_location(div4, file, 367, 8, 14245);
 				attr_dev(button5, "id", "stopRecordingButton");
-				attr_dev(button5, "class", "svelte-u5lila");
+				attr_dev(button5, "class", "svelte-1qs5a31");
 				add_location(button5, file, 368, 8, 14292);
 				attr_dev(button6, "id", "stopTestingButton");
-				attr_dev(button6, "class", "svelte-u5lila");
+				attr_dev(button6, "class", "svelte-1qs5a31");
 				add_location(button6, file, 369, 8, 14384);
 				attr_dev(div5, "class", "menu");
 				add_location(div5, file, 296, 4, 9381);
-				attr_dev(main, "class", "svelte-u5lila");
+				attr_dev(main, "class", "svelte-1qs5a31");
 				add_location(main, file, 295, 0, 9370);
 			},
 			l: function claim(nodes) {
@@ -1300,15 +1300,15 @@ var app = (function () {
 					}
 				}
 
-				if (dirty & /*selectedIconButton*/ 64 && button1_class_value !== (button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-u5lila")) {
+				if (dirty & /*selectedIconButton*/ 64 && button1_class_value !== (button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-1qs5a31")) {
 					attr_dev(button1, "class", button1_class_value);
 				}
 
-				if (dirty & /*selectedIconButton*/ 64 && button2_class_value !== (button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-u5lila")) {
+				if (dirty & /*selectedIconButton*/ 64 && button2_class_value !== (button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-1qs5a31")) {
 					attr_dev(button2, "class", button2_class_value);
 				}
 
-				if (dirty & /*selectedIconButton*/ 64 && button3_class_value !== (button3_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-u5lila")) {
+				if (dirty & /*selectedIconButton*/ 64 && button3_class_value !== (button3_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-1qs5a31")) {
 					attr_dev(button3, "class", button3_class_value);
 				}
 

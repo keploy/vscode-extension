@@ -48,7 +48,7 @@ function activate(context) {
     console.log(context.globalState);
     if (signedIn) {
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-        sidebarProvider.postMessage('navigate', 'Keploy');
+        sidebarProvider.postMessage('navigateToHome', 'Operations');
     }
     let signInCommand = vscode.commands.registerCommand('keploy.SignIn', () => __awaiter(this, void 0, void 0, function* () {
         const response = yield (0, SignIn_1.default)();
