@@ -789,47 +789,47 @@ var app = (function () {
 				button1 = element("button");
 				button1.textContent = "Save Configuration";
 				attr_dev(div0, "class", "image-container");
-				add_location(div0, file, 83, 2, 1459);
-				attr_dev(div1, "class", "get-started svelte-lz90nw");
-				add_location(div1, file, 85, 2, 1500);
-				attr_dev(div2, "class", "description svelte-lz90nw");
-				add_location(div2, file, 86, 2, 1545);
-				attr_dev(button0, "class", "button svelte-lz90nw");
+				add_location(div0, file, 79, 2, 1399);
+				attr_dev(div1, "class", "get-started svelte-1s7k7n1");
+				add_location(div1, file, 81, 2, 1440);
+				attr_dev(div2, "class", "description svelte-1s7k7n1");
+				add_location(div2, file, 82, 2, 1485);
+				attr_dev(button0, "class", "button svelte-1s7k7n1");
 				attr_dev(button0, "id", "setupConfig");
-				add_location(button0, file, 89, 2, 1674);
-				attr_dev(div3, "class", div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-lz90nw"));
-				add_location(div3, file, 82, 0, 1395);
-				attr_dev(h1, "class", "heading svelte-lz90nw");
-				add_location(h1, file, 93, 2, 1853);
+				add_location(button0, file, 85, 2, 1614);
+				attr_dev(div3, "class", div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"));
+				add_location(div3, file, 78, 0, 1335);
+				attr_dev(h1, "class", "heading svelte-1s7k7n1");
+				add_location(h1, file, 89, 2, 1793);
 				attr_dev(div4, "class", "code-icon ");
 				attr_dev(div4, "alt", "Icon");
-				add_location(div4, file, 95, 4, 1942);
+				add_location(div4, file, 91, 4, 1882);
 				attr_dev(input0, "type", "text");
 				attr_dev(input0, "placeholder", "Enter App Command");
 				attr_dev(input0, "id", "configCommand");
-				attr_dev(input0, "class", "svelte-lz90nw");
-				add_location(input0, file, 96, 4, 1989);
-				attr_dev(div5, "class", "settings-item svelte-lz90nw");
-				add_location(div5, file, 94, 2, 1910);
+				attr_dev(input0, "class", "svelte-1s7k7n1");
+				add_location(input0, file, 92, 4, 1929);
+				attr_dev(div5, "class", "settings-item svelte-1s7k7n1");
+				add_location(div5, file, 90, 2, 1850);
 				attr_dev(div6, "class", "code-icon ");
 				attr_dev(div6, "alt", "Icon");
-				add_location(div6, file, 99, 4, 2127);
+				add_location(div6, file, 95, 4, 2067);
 				attr_dev(input1, "type", "text");
 				attr_dev(input1, "placeholder", "Enter Path (Default : './'");
 				attr_dev(input1, "id", "configPath");
-				attr_dev(input1, "class", "svelte-lz90nw");
-				add_location(input1, file, 100, 4, 2174);
-				attr_dev(div7, "class", "settings-item svelte-lz90nw");
-				add_location(div7, file, 98, 2, 2095);
-				attr_dev(button1, "class", "button svelte-lz90nw");
+				attr_dev(input1, "class", "svelte-1s7k7n1");
+				add_location(input1, file, 96, 4, 2114);
+				attr_dev(div7, "class", "settings-item svelte-1s7k7n1");
+				add_location(div7, file, 94, 2, 2035);
+				attr_dev(button1, "class", "button svelte-1s7k7n1");
 				attr_dev(button1, "id", "initialiseConfigButton");
-				add_location(button1, file, 102, 2, 2281);
+				add_location(button1, file, 98, 2, 2221);
 
 				attr_dev(div8, "class", div8_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
 				? 'settings-container'
-				: 'container-hide') + " svelte-lz90nw"));
+				: 'container-hide') + " svelte-1s7k7n1"));
 
-				add_location(div8, file, 92, 0, 1780);
+				add_location(div8, file, 88, 0, 1720);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -872,7 +872,7 @@ var app = (function () {
 				}
 			},
 			p: function update(ctx, [dirty]) {
-				if (dirty & /*showSettings*/ 1 && div3_class_value !== (div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-lz90nw"))) {
+				if (dirty & /*showSettings*/ 1 && div3_class_value !== (div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"))) {
 					attr_dev(div3, "class", div3_class_value);
 				}
 
@@ -886,7 +886,7 @@ var app = (function () {
 
 				if (dirty & /*showSettings*/ 1 && div8_class_value !== (div8_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
 				? 'settings-container'
-				: 'container-hide') + " svelte-lz90nw"))) {
+				: 'container-hide') + " svelte-1s7k7n1"))) {
 					attr_dev(div8, "class", div8_class_value);
 				}
 			},

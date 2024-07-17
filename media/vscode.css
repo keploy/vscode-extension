@@ -12,7 +12,9 @@
     font-size: var(--vscode-font-size);
     font-weight: var(--vscode-font-weight);
     font-family: var(--vscode-font-family);
-    background-color: #090B10;
+    /* background-color: #090B10; */
+    /* background-color: #141416; */
+    background-color: var(--vscode-editor-background);
   }
   button , select {
     background-color: var(--vscode-editor-background);

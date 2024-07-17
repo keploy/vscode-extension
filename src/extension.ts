@@ -60,7 +60,15 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 	);
 	context.subscriptions.push(getLatestVersion);
-	
+    
+	let updateKeploy = vscode.commands.registerCommand('keploy.updateKeploy', () => {
+		// Logic to get the latest version
+		vscode.window.showInformationMessage('Feature coming soon!');
+	}
+	);
+	context.subscriptions.push(updateKeploy);
+    
+    
 }
 
 export function deactivate() {}

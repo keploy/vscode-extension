@@ -77,13 +77,11 @@
         const totalTestCases = document.getElementById('totalTestCases');
         const testCasesPassed = document.getElementById('testCasesPassed');
         const testCasesFailed = document.getElementById('testCasesFailed');
-        const lastTestResultsDiv = document.getElementById('lastTestResults');
         const errorElement = document.getElementById('errorElement');
         if (testSuiteName) testSuiteName.textContent = '';
         if (totalTestCases) totalTestCases.textContent = '';
         if (testCasesPassed) testCasesPassed.textContent = '';
         if (testCasesFailed) testCasesFailed.textContent = '';
-        // if (lastTestResultsDiv) lastTestResultsDiv.innerHTML = '';
         if (errorElement) errorElement.style.display = 'none';
 
 
@@ -188,7 +186,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #606060;
+      background-color: var(--vscode-button-background);
       border-radius: 5px;
       /* border: 2px solid transparent; */
       color: #FF914D;
@@ -204,7 +202,8 @@
     }
     .icon-button:hover {
       color: #ff9933;
-      background-color: var(--vscode-button-background)
+      background-color: #606060;
+
       /* background-color: #f9f9f9; */
     }
   .heading {

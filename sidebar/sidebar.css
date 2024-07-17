@@ -74,6 +74,7 @@ button:disabled{
 
 .dropdown-header:hover {
     background-color: #FF914D;
+    color: #212121;
 }
 
 .dropdown-content {
@@ -115,7 +116,6 @@ button:disabled{
     color: rgb(10, 223, 10);
     text-align: left;
     margin-top: 5px;
-    font-weight: bold;
     cursor: pointer;
 }
 
@@ -123,7 +123,6 @@ button:disabled{
     color: #9c1a0c;
     text-align: left;
     margin-top: 5px;
-    font-weight: bold;
     cursor: pointer;
 }
 
@@ -131,7 +130,6 @@ button:disabled{
     color: #d1a30a;
     text-align: left;
     margin-top: 5px;
-    font-weight: bold;
     cursor: pointer;
 }
 
@@ -257,6 +255,8 @@ button:disabled{
     background-size: contain;
 }
 
+
+
 .settings-icon{
     display: inline-block;
     width: 20px;
@@ -328,7 +328,4 @@ button:disabled{
     cursor: pointer;
 }
 
-.recordedTestCase:hover {
-    background-color: #FF914D;
-}
 
