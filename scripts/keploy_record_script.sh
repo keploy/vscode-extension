@@ -58,9 +58,9 @@ fi
 # Check if running on WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
   export PATH=$(echo "$PATH" | tr ' ' '\n' | grep -v " " | tr '\n' ':')
-  keploycmd="sudo -E keploybin"
+  keploycmd="sudo -E keploy"
 else
-  keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
+  keploycmd="sudo -E env PATH=\"$PATH\" keploy"
 fi
 
 # Create a named pipe
