@@ -200,7 +200,7 @@ function displayPreviousTestResults(webview) {
                             testResults.push({
                                 date: new Date(test.resp.header.Date).toLocaleDateString('en-GB'),
                                 method: test.req.method,
-                                name: test.name,
+                                name: test.test_case_id,
                                 status: test.status,
                                 testCasePath: testFilePath
                             });
