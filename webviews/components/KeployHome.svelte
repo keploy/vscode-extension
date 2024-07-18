@@ -196,7 +196,7 @@
       color: #FF914D;
       font-size: 24px;
       height: 40px;
-      width: 80px;
+      width: 80svw;
       cursor: pointer;
     }
     .icon-button.selected {
