@@ -1,0 +1,43 @@
+
+       ▓██▓▄
+    ▓▓▓▓██▓█▓▄
+     ████████▓▒
+          ▀▓▓███▄      ▄▄   ▄               ▌
+         ▄▌▌▓▓████▄    ██ ▓█▀  ▄▌▀▄  ▓▓▌▄   ▓█  ▄▌▓▓▌▄ ▌▌   ▓
+       ▓█████████▌▓▓   ██▓█▄  ▓█▄▓▓ ▐█▌  ██ ▓█  █▌  ██  █▌ █▓
+      ▓▓▓▓▀▀▀▀▓▓▓▓▓▓▌  ██  █▓  ▓▌▄▄ ▐█▓▄▓█▀ █▓█ ▀█▄▄█▀   █▓█
+       ▓▌                           ▐█▌                   █▌
+        ▓
+  
+version: 2.2.0-alpha23
+
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[33mWARN[0m	Delay is set to 5 seconds, incase your app takes more time to start use --delay to set custom delay
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[34mINFO[0m	Example usage: keploy test -c "/path/to/user/app" --delay 6
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[33mWARN[0m	go language detected. please use --language to manually set the language if needed
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[33mWARN[0m	cover flag not found in command, skipping coverage calculation
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-07-18T17:50:39+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[31mERROR[0m	failed to start proxy on port:16789	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[31mERROR[0m	error while running the proxy server	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	config file not found, continuing execution...	{"test-set": "test-set-21"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	running	{"test-set": "[test-set-21]"}
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[31mERROR[0m	error while running the app	{"error": "exit status 1"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[31mERROR[0m	application failed to run	{"error": "an unexpected error occurred: exit status 1"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[34mINFO[0m	stopping Keploy	{"reason": "failed to run test set: context canceled"}
+🐰 Keploy: 2024-07-18T17:50:40+05:30 	[31mERROR[0m	failed to stop the proxy	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:50:42+05:30 	[34mINFO[0m	eBPF resources released successfully...
+🐰 Keploy: 2024-07-18T17:50:42+05:30 	[31mERROR[0m	failed to replay	{"error": "failed to run test set: context canceled"}

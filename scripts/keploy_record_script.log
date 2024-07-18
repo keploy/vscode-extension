@@ -1,4 +1,3 @@
-🐰 Keploy: 2024-07-18T17:35:41+05:30 	[34mINFO[0m	eBPF resources released successfully...
 
        ▓██▓▄
     ▓▓▓▓██▓█▓▄
@@ -12,15 +11,17 @@
   
 version: 2.2.0-alpha23
 
-🐰 Keploy: 2024-07-18T17:35:44+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
-🐰 Keploy: 2024-07-18T17:35:44+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
-🐰 Keploy: 2024-07-18T17:35:44+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[34mINFO[0m	Proxy started at port:16789
-PID: 69880
+🐰 Keploy: 2024-07-18T17:43:46+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-07-18T17:43:47+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-07-18T17:43:47+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-18T17:43:47+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to start proxy on port:16789	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	error while running the proxy server	{"error": "listen tcp :16789: bind: address already in use"}
+PID: 97785
 [GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
 
 [GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
@@ -29,39 +30,15 @@ PID: 69880
 
 [GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
 [GIN-debug] POST   /url                      --> main.putURL (3 handlers)
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:33452", "Client ConnectionID": "2", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "3", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:33462", "Client ConnectionID": "0", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "1", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:45+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:55+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:54730", "Client ConnectionID": "4", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "5", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:55+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:55+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:54734", "Client ConnectionID": "6", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "7", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:35:55+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:05+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:33270", "Client ConnectionID": "10", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "11", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:05+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:05+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:33264", "Client ConnectionID": "8", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "9", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:05+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:15+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:41688", "Client ConnectionID": "14", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "15", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:15+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:15+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:41682", "Client ConnectionID": "12", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "13", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:15+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:25+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:34438", "Client ConnectionID": "16", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "17", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:25+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:25+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:34442", "Client ConnectionID": "18", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "19", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:25+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:35+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:49620", "Client ConnectionID": "20", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "21", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:35+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:49618", "Client ConnectionID": "22", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "23", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:35+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:35+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:45+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:34934", "Client ConnectionID": "26", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "27", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:45+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:45+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:34920", "Client ConnectionID": "24", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "25", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:45+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:55+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:60842", "Client ConnectionID": "28", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "29", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:55+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:60852", "Client ConnectionID": "30", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "31", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:55+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:36:55+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:37:05+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:43406", "Client ConnectionID": "34", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "35", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:37:05+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:37:05+05:30 	[31mERROR[0m	failed to dial the conn to destination server	{"Client IP Address": "127.0.0.1:43404", "Client ConnectionID": "32", "Destination IP Address": "127.0.0.1:27017", "Destination ConnectionID": "33", "proxy port": 16789, "server address": "127.0.0.1:27017", "error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
-🐰 Keploy: 2024-07-18T17:37:05+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "dial tcp 127.0.0.1:27017: connect: connection refused"}
+{"level":"fatal","ts":1721304828.5617056,"caller":"gin-mongo/main.go:69","msg":"listen: %s\n","error":"listen tcp :8080: bind: address already in use","stacktrace":"main.main\n\t/home/akash/Desktop/Keploy/samples-go/gin-mongo/main.go:69\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:271"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to fetch the destination info	{"Source port": 45300, "error": "lookup: key does not exist"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "lookup: key does not exist"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to fetch the destination info	{"Source port": 45302, "error": "lookup: key does not exist"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "lookup: key does not exist"}
+exit status 1
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	error while running the app	{"error": "exit status 1"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	stopping Keploy	{"reason": "user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to stop the proxy	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:43:50+05:30 	[34mINFO[0m	eBPF resources released successfully...
+Signal received, canceling context...

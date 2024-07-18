@@ -258,7 +258,10 @@
         grid-template-columns: 1fr;
         place-items: center;
     }
-    
+    #testResults{
+      text-align: left;
+    }
+
   .card {
     display: flex;
     align-items: center;
@@ -344,6 +347,9 @@
   .icon-button:hover .tooltip{
     display: block;
   }
+  #completeSummaryHr{
+    display: none;
+  }
 </style>
 
 <div class="container">
@@ -388,7 +394,10 @@
         <div id="recordedTestCases"></div>
         <h3 id="testStatus"> </h3>
         <div id="testResults"></div>
-        <button id="viewCompleteSummaryButton">View Complete Test Summary</button>  
+        <button id="viewCompleteSummaryButton">View Complete Test Summary
+          
+        </button>  
+        <hr id="completeSummaryHr" />
       </div>
   </div>
   {#if selectedIconButton === 2}

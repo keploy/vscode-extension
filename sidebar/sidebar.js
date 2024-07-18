@@ -17,6 +17,7 @@ const upperOutputDiv = document.getElementById('upperOutputDiv');
 const generatedRecordCommandDiv = document.getElementById('recordCommandDiv');
 const generatedTestCommandDiv = document.getElementById('testCommandDiv');
 const viewCompleteSummaryButton = document.getElementById('viewCompleteSummaryButton');
+const completeSummaryHr = document.getElementById('completeSummaryHr');
 const displayPreviousTestResults = document.getElementById('displayPreviousTestResults');
 const openConfigButton = document.getElementById('openConfig');
 const setupConfigButton = document.getElementById('setupConfig');
@@ -467,6 +468,7 @@ window.addEventListener('message', event => {
     }
     else{
     viewCompleteSummaryButton.style.display = "block";
+    completeSummaryHr.style.display = "block";
     }
     if (message.error === true) {
       if (testStatus) {
