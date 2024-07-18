@@ -49,11 +49,11 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
   # echo "Running on WSL"
   # Temporarily modify PATH
   export PATH=$(echo "$PATH" | tr ' ' '\n' | grep -v " " | tr '\n' ':')
-  keploycmd="sudo -E keploybin"
+  keploycmd="sudo -E keploy"
 else
   # echo "Not running on WSL"
   # Original PATH handling
-  keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
+  keploycmd="sudo -E env PATH=\"$PATH\" keploy"
 fi
 
 # echo "Keploy command: $keploycmd"

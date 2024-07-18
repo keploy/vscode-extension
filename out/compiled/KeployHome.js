@@ -21373,17 +21373,104 @@ var app = (function () {
 
 	function get_each_context_1(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[31] = list[i];
+		child_ctx[28] = list[i];
 		return child_ctx;
 	}
 
 	function get_each_context(ctx, list, i) {
 		const child_ctx = ctx.slice();
-		child_ctx[31] = list[i];
+		child_ctx[28] = list[i];
 		return child_ctx;
 	}
 
-	// (351:6) {:else}
+	// (355:8) {:else}
+	function create_else_block_1(ctx) {
+		let svg;
+		let path0;
+		let path1;
+
+		const block = {
+			c: function create() {
+				svg = svg_element("svg");
+				path0 = svg_element("path");
+				path1 = svg_element("path");
+				attr_dev(path0, "fill", "#FF914D");
+				attr_dev(path0, "d", "M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6");
+				attr_dev(path0, "opacity", "0.3");
+				add_location(path0, file, 355, 99, 9692);
+				attr_dev(path1, "fill", "#FF914D");
+				attr_dev(path1, "d", "M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6");
+				add_location(path1, file, 355, 199, 9792);
+				attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
+				attr_dev(svg, "width", "35px");
+				attr_dev(svg, "height", "35px");
+				attr_dev(svg, "viewBox", "0 0 24 24");
+				add_location(svg, file, 355, 12, 9605);
+			},
+			m: function mount(target, anchor) {
+				insert_dev(target, svg, anchor);
+				append_dev(svg, path0);
+				append_dev(svg, path1);
+			},
+			d: function destroy(detaching) {
+				if (detaching) {
+					detach_dev(svg);
+				}
+			}
+		};
+
+		dispatch_dev("SvelteRegisterBlock", {
+			block,
+			id: create_else_block_1.name,
+			type: "else",
+			source: "(355:8) {:else}",
+			ctx
+		});
+
+		return block;
+	}
+
+	// (353:8) {#if isRecording}
+	function create_if_block_6(ctx) {
+		let svg;
+		let path;
+
+		const block = {
+			c: function create() {
+				svg = svg_element("svg");
+				path = svg_element("path");
+				attr_dev(path, "fill", "#FF914D");
+				attr_dev(path, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
+				add_location(path, file, 353, 99, 9409);
+				attr_dev(svg, "xmlns", "http://www.w3.org/2000/svg");
+				attr_dev(svg, "width", "35px");
+				attr_dev(svg, "height", "35px");
+				attr_dev(svg, "viewBox", "0 0 24 24");
+				add_location(svg, file, 353, 12, 9322);
+			},
+			m: function mount(target, anchor) {
+				insert_dev(target, svg, anchor);
+				append_dev(svg, path);
+			},
+			d: function destroy(detaching) {
+				if (detaching) {
+					detach_dev(svg);
+				}
+			}
+		};
+
+		dispatch_dev("SvelteRegisterBlock", {
+			block,
+			id: create_if_block_6.name,
+			type: "if",
+			source: "(353:8) {#if isRecording}",
+			ctx
+		});
+
+		return block;
+	}
+
+	// (375:6) {:else}
 	function create_else_block(ctx) {
 		let h1;
 
@@ -21399,8 +21486,8 @@ var app = (function () {
 			c: function create() {
 				h1 = element("h1");
 				t = text(t_value);
-				attr_dev(h1, "class", "svelte-4l8btx");
-				add_location(h1, file, 351, 8, 10070);
+				attr_dev(h1, "class", "svelte-1ci6gam");
+				add_location(h1, file, 375, 8, 10766);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -21424,14 +21511,14 @@ var app = (function () {
 			block,
 			id: create_else_block.name,
 			type: "else",
-			source: "(351:6) {:else}",
+			source: "(375:6) {:else}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (349:41) 
+	// (373:41) 
 	function create_if_block_5(ctx) {
 		let h1;
 
@@ -21439,8 +21526,8 @@ var app = (function () {
 			c: function create() {
 				h1 = element("h1");
 				h1.textContent = "View Previous Test Results";
-				attr_dev(h1, "class", "svelte-4l8btx");
-				add_location(h1, file, 349, 8, 10012);
+				attr_dev(h1, "class", "svelte-1ci6gam");
+				add_location(h1, file, 373, 8, 10708);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -21457,14 +21544,14 @@ var app = (function () {
 			block,
 			id: create_if_block_5.name,
 			type: "if",
-			source: "(349:41) ",
+			source: "(373:41) ",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (347:6) {#if selectedIconButton === 3}
+	// (371:6) {#if selectedIconButton === 3}
 	function create_if_block_4(ctx) {
 		let h1;
 
@@ -21472,8 +21559,8 @@ var app = (function () {
 			c: function create() {
 				h1 = element("h1");
 				h1.textContent = "Make changes to keploy config";
-				attr_dev(h1, "class", "svelte-4l8btx");
-				add_location(h1, file, 347, 8, 9923);
+				attr_dev(h1, "class", "svelte-1ci6gam");
+				add_location(h1, file, 371, 8, 10619);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -21490,14 +21577,14 @@ var app = (function () {
 			block,
 			id: create_if_block_4.name,
 			type: "if",
-			source: "(347:6) {#if selectedIconButton === 3}",
+			source: "(371:6) {#if selectedIconButton === 3}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (371:2) {#if selectedIconButton === 2}
+	// (394:2) {#if selectedIconButton === 2}
 	function create_if_block_3(ctx) {
 		let div;
 		let h3;
@@ -21508,9 +21595,9 @@ var app = (function () {
 				h3 = element("h3");
 				h3.innerHTML = ``;
 				attr_dev(h3, "id", "testSuiteName");
-				add_location(h3, file, 372, 12, 11487);
+				add_location(h3, file, 395, 12, 12182);
 				attr_dev(div, "id", "lastTestResults");
-				add_location(div, file, 371, 8, 11448);
+				add_location(div, file, 394, 8, 12143);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21527,33 +21614,33 @@ var app = (function () {
 			block,
 			id: create_if_block_3.name,
 			type: "if",
-			source: "(371:2) {#if selectedIconButton === 2}",
+			source: "(394:2) {#if selectedIconButton === 2}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (392:2) {#if showSteps}
+	// (415:2) {#if showSteps}
 	function create_if_block(ctx) {
 		let div;
 		let div_transition;
 		let current;
 
-		function select_block_type_1(ctx, dirty) {
+		function select_block_type_2(ctx, dirty) {
 			if (/*isRecording*/ ctx[4]) return create_if_block_1;
 			if (/*isTesting*/ ctx[5]) return create_if_block_2;
 		}
 
-		let current_block_type = select_block_type_1(ctx);
+		let current_block_type = select_block_type_2(ctx);
 		let if_block = current_block_type && current_block_type(ctx);
 
 		const block = {
 			c: function create() {
 				div = element("div");
 				if (if_block) if_block.c();
-				attr_dev(div, "class", "steps svelte-4l8btx");
-				add_location(div, file, 392, 4, 12622);
+				attr_dev(div, "class", "steps svelte-1ci6gam");
+				add_location(div, file, 415, 4, 13317);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21561,7 +21648,7 @@ var app = (function () {
 				current = true;
 			},
 			p: function update(ctx, dirty) {
-				if (current_block_type === (current_block_type = select_block_type_1(ctx)) && if_block) {
+				if (current_block_type === (current_block_type = select_block_type_2(ctx)) && if_block) {
 					if_block.p(ctx, dirty);
 				} else {
 					if (if_block) if_block.d(1);
@@ -21611,17 +21698,17 @@ var app = (function () {
 			block,
 			id: create_if_block.name,
 			type: "if",
-			source: "(392:2) {#if showSteps}",
+			source: "(415:2) {#if showSteps}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (398:26) 
+	// (421:26) 
 	function create_if_block_2(ctx) {
 		let each_1_anchor;
-		let each_value_1 = ensure_array_like_dev(/*replayingSteps*/ ctx[14]);
+		let each_value_1 = ensure_array_like_dev(/*replayingSteps*/ ctx[13]);
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value_1.length; i += 1) {
@@ -21646,8 +21733,8 @@ var app = (function () {
 				insert_dev(target, each_1_anchor, anchor);
 			},
 			p: function update(ctx, dirty) {
-				if (dirty[0] & /*replayingSteps*/ 16384) {
-					each_value_1 = ensure_array_like_dev(/*replayingSteps*/ ctx[14]);
+				if (dirty[0] & /*replayingSteps*/ 8192) {
+					each_value_1 = ensure_array_like_dev(/*replayingSteps*/ ctx[13]);
 					let i;
 
 					for (i = 0; i < each_value_1.length; i += 1) {
@@ -21682,17 +21769,17 @@ var app = (function () {
 			block,
 			id: create_if_block_2.name,
 			type: "if",
-			source: "(398:26) ",
+			source: "(421:26) ",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (394:6) {#if isRecording}
+	// (417:6) {#if isRecording}
 	function create_if_block_1(ctx) {
 		let each_1_anchor;
-		let each_value = ensure_array_like_dev(/*recordingSteps*/ ctx[13]);
+		let each_value = ensure_array_like_dev(/*recordingSteps*/ ctx[12]);
 		let each_blocks = [];
 
 		for (let i = 0; i < each_value.length; i += 1) {
@@ -21717,8 +21804,8 @@ var app = (function () {
 				insert_dev(target, each_1_anchor, anchor);
 			},
 			p: function update(ctx, dirty) {
-				if (dirty[0] & /*recordingSteps*/ 8192) {
-					each_value = ensure_array_like_dev(/*recordingSteps*/ ctx[13]);
+				if (dirty[0] & /*recordingSteps*/ 4096) {
+					each_value = ensure_array_like_dev(/*recordingSteps*/ ctx[12]);
 					let i;
 
 					for (i = 0; i < each_value.length; i += 1) {
@@ -21753,23 +21840,23 @@ var app = (function () {
 			block,
 			id: create_if_block_1.name,
 			type: "if",
-			source: "(394:6) {#if isRecording}",
+			source: "(417:6) {#if isRecording}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (399:8) {#each replayingSteps as step}
+	// (422:8) {#each replayingSteps as step}
 	function create_each_block_1(ctx) {
 		let div;
 
 		const block = {
 			c: function create() {
 				div = element("div");
-				div.textContent = `${/*step*/ ctx[31]}`;
-				attr_dev(div, "class", "step svelte-4l8btx");
-				add_location(div, file, 399, 10, 12880);
+				div.textContent = `${/*step*/ ctx[28]}`;
+				attr_dev(div, "class", "step svelte-1ci6gam");
+				add_location(div, file, 422, 10, 13575);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21786,23 +21873,23 @@ var app = (function () {
 			block,
 			id: create_each_block_1.name,
 			type: "each",
-			source: "(399:8) {#each replayingSteps as step}",
+			source: "(422:8) {#each replayingSteps as step}",
 			ctx
 		});
 
 		return block;
 	}
 
-	// (395:8) {#each recordingSteps as step}
+	// (418:8) {#each recordingSteps as step}
 	function create_each_block(ctx) {
 		let div;
 
 		const block = {
 			c: function create() {
 				div = element("div");
-				div.textContent = `${/*step*/ ctx[31]}`;
-				attr_dev(div, "class", "step svelte-4l8btx");
-				add_location(div, file, 395, 10, 12757);
+				div.textContent = `${/*step*/ ctx[28]}`;
+				attr_dev(div, "class", "step svelte-1ci6gam");
+				add_location(div, file, 418, 10, 13452);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21819,7 +21906,7 @@ var app = (function () {
 			block,
 			id: create_each_block.name,
 			type: "each",
-			source: "(395:8) {#each recordingSteps as step}",
+			source: "(418:8) {#each recordingSteps as step}",
 			ctx
 		});
 
@@ -21827,414 +21914,454 @@ var app = (function () {
 	}
 
 	function create_fragment(ctx) {
-		let div17;
-		let div1;
-		let button0;
+		let div16;
 		let div0;
-		let button0_class_value;
-		let t0;
-		let button1;
+		let button0;
 		let span0;
-		let button1_class_value;
 		let t1;
-		let button2;
-		let span1;
-		let button2_class_value;
+		let button0_class_value;
 		let t2;
-		let div6;
-		let div2;
+		let button1;
+		let span1;
 		let t3;
 		let span2;
+		let button1_class_value;
+		let t5;
+		let button2;
+		let span3;
+		let t6;
+		let span4;
+		let button2_class_value;
+		let t8;
+		let div5;
+		let div1;
+		let t9;
+		let span5;
 		let svg0;
 		let path0;
-		let t4;
-		let span3;
+		let t10;
+		let span6;
 		let svg1;
 		let path1;
-		let t5;
-		let div5;
-		let h30;
-		let t6;
-		let div3;
-		let t7;
-		let h31;
-		let t8;
-		let div4;
-		let t9;
-		let button3;
 		let t11;
+		let div4;
+		let h30;
 		let t12;
-		let div15;
-		let div10;
-		let div7;
+		let div2;
+		let t13;
+		let h31;
+		let t14;
+		let div3;
+		let t15;
+		let button3;
+		let t17;
+		let t18;
+		let div14;
+		let div9;
+		let div6;
 		let svg2;
 		let path2;
 		let path3;
-		let t13;
+		let t19;
+		let div7;
+		let t21;
 		let div8;
-		let t15;
-		let div9;
-		let t17;
-		let div14;
-		let div11;
-		let t18;
-		let div12;
-		let t20;
-		let div13;
-		let t22;
 		let t23;
-		let div16;
+		let div13;
+		let div10;
+		let t24;
+		let div11;
+		let t26;
+		let div12;
+		let t28;
+		let t29;
+		let div15;
 		let mounted;
 		let dispose;
 
 		function select_block_type(ctx, dirty) {
+			if (/*isRecording*/ ctx[4]) return create_if_block_6;
+			return create_else_block_1;
+		}
+
+		let current_block_type = select_block_type(ctx);
+		let if_block0 = current_block_type(ctx);
+
+		function select_block_type_1(ctx, dirty) {
 			if (/*selectedIconButton*/ ctx[6] === 3) return create_if_block_4;
 			if (/*selectedIconButton*/ ctx[6] === 2) return create_if_block_5;
 			return create_else_block;
 		}
 
-		let current_block_type = select_block_type(ctx);
-		let if_block0 = current_block_type(ctx);
-		let if_block1 = /*selectedIconButton*/ ctx[6] === 2 && create_if_block_3(ctx);
-		let if_block2 = /*showSteps*/ ctx[8] && create_if_block(ctx);
+		let current_block_type_1 = select_block_type_1(ctx);
+		let if_block1 = current_block_type_1(ctx);
+		let if_block2 = /*selectedIconButton*/ ctx[6] === 2 && create_if_block_3(ctx);
+		let if_block3 = /*showSteps*/ ctx[7] && create_if_block(ctx);
 
 		const block = {
 			c: function create() {
-				div17 = element("div");
-				div1 = element("div");
-				button0 = element("button");
+				div16 = element("div");
 				div0 = element("div");
-				t0 = space();
-				button1 = element("button");
+				button0 = element("button");
 				span0 = element("span");
+				span0.textContent = "Record/Replay";
 				t1 = space();
-				button2 = element("button");
-				span1 = element("span");
-				t2 = space();
-				div6 = element("div");
-				div2 = element("div");
 				if_block0.c();
+				t2 = space();
+				button1 = element("button");
+				span1 = element("span");
 				t3 = space();
 				span2 = element("span");
+				span2.textContent = "History";
+				t5 = space();
+				button2 = element("button");
+				span3 = element("span");
+				t6 = space();
+				span4 = element("span");
+				span4.textContent = "Settings";
+				t8 = space();
+				div5 = element("div");
+				div1 = element("div");
+				if_block1.c();
+				t9 = space();
+				span5 = element("span");
 				svg0 = svg_element("svg");
 				path0 = svg_element("path");
-				t4 = space();
-				span3 = element("span");
+				t10 = space();
+				span6 = element("span");
 				svg1 = svg_element("svg");
 				path1 = svg_element("path");
-				t5 = space();
-				div5 = element("div");
+				t11 = space();
+				div4 = element("div");
 				h30 = element("h3");
 				h30.innerHTML = ``;
-				t6 = space();
-				div3 = element("div");
-				t7 = space();
+				t12 = space();
+				div2 = element("div");
+				t13 = space();
 				h31 = element("h3");
 				h31.innerHTML = ``;
-				t8 = space();
-				div4 = element("div");
-				t9 = space();
+				t14 = space();
+				div3 = element("div");
+				t15 = space();
 				button3 = element("button");
 				button3.textContent = "View Complete Test Summary";
-				t11 = space();
-				if (if_block1) if_block1.c();
-				t12 = space();
-				div15 = element("div");
-				div10 = element("div");
-				div7 = element("div");
+				t17 = space();
+				if (if_block2) if_block2.c();
+				t18 = space();
+				div14 = element("div");
+				div9 = element("div");
+				div6 = element("div");
 				svg2 = svg_element("svg");
 				path2 = svg_element("path");
 				path3 = svg_element("path");
-				t13 = space();
+				t19 = space();
+				div7 = element("div");
+				div7.textContent = "Record Test Cases";
+				t21 = space();
 				div8 = element("div");
-				div8.textContent = "Record Test Cases";
-				t15 = space();
-				div9 = element("div");
-				div9.textContent = "➔";
-				t17 = space();
-				div14 = element("div");
-				div11 = element("div");
-				t18 = space();
-				div12 = element("div");
-				div12.textContent = "Replay Test Cases";
-				t20 = space();
-				div13 = element("div");
-				div13.textContent = "➔";
-				t22 = space();
-				if (if_block2) if_block2.c();
+				div8.textContent = "➔";
 				t23 = space();
-				div16 = element("div");
-				attr_dev(div0, "id", "animationWindow");
-				attr_dev(div0, "class", "svelte-4l8btx");
-				add_location(div0, file, 335, 8, 9364);
+				div13 = element("div");
+				div10 = element("div");
+				t24 = space();
+				div11 = element("div");
+				div11.textContent = "Replay Test Cases";
+				t26 = space();
+				div12 = element("div");
+				div12.textContent = "➔";
+				t28 = space();
+				if (if_block3) if_block3.c();
+				t29 = space();
+				div15 = element("div");
+				attr_dev(span0, "class", "tooltip svelte-1ci6gam");
+				add_location(span0, file, 351, 6, 9241);
 				attr_dev(button0, "id", "keploycommands");
-				attr_dev(button0, "class", button0_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-4l8btx");
-				add_location(button0, file, 329, 4, 8547);
-				attr_dev(span0, "class", "history-icon");
-				add_location(span0, file, 338, 6, 9588);
+				attr_dev(button0, "class", button0_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-1ci6gam");
+				add_location(button0, file, 350, 4, 9108);
+				attr_dev(span1, "class", "history-icon");
+				add_location(span1, file, 360, 6, 10198);
+				attr_dev(span2, "class", "tooltip svelte-1ci6gam");
+				add_location(span2, file, 361, 6, 10239);
 				attr_dev(button1, "id", "displayPreviousTestResults");
-				attr_dev(button1, "class", button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-4l8btx");
-				add_location(button1, file, 337, 4, 9443);
-				attr_dev(span1, "class", "settings-icon");
-				add_location(span1, file, 341, 6, 9771);
+				attr_dev(button1, "class", button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-1ci6gam");
+				add_location(button1, file, 359, 4, 10053);
+				attr_dev(span3, "class", "settings-icon");
+				add_location(span3, file, 364, 6, 10423);
+				attr_dev(span4, "class", "tooltip svelte-1ci6gam");
+				add_location(span4, file, 365, 6, 10466);
 				attr_dev(button2, "id", "openConfig");
-				attr_dev(button2, "class", button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-4l8btx");
-				add_location(button2, file, 340, 4, 9642);
-				attr_dev(div1, "class", "icon-buttons svelte-4l8btx");
-				add_location(div1, file, 328, 2, 8516);
+				attr_dev(button2, "class", button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-1ci6gam");
+				add_location(button2, file, 363, 4, 10294);
+				attr_dev(div0, "class", "icon-buttons svelte-1ci6gam");
+				add_location(div0, file, 349, 2, 9077);
 				attr_dev(path0, "fill", "#FF914D");
 				attr_dev(path0, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
-				add_location(path0, file, 354, 95, 10452);
+				add_location(path0, file, 378, 95, 11148);
 				attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg0, "width", "35px");
 				attr_dev(svg0, "height", "35px");
 				attr_dev(svg0, "viewBox", "0 0 24 24");
-				add_location(svg0, file, 354, 8, 10365);
-				attr_dev(span2, "class", "stop-button svelte-4l8btx");
-				attr_dev(span2, "id", "stopRecordingButton");
-				attr_dev(span2, "role", "button");
-				attr_dev(span2, "tabindex", "0");
-				add_location(span2, file, 353, 6, 10184);
+				add_location(svg0, file, 378, 8, 11061);
+				attr_dev(span5, "class", "stop-button svelte-1ci6gam");
+				attr_dev(span5, "id", "stopRecordingButton");
+				attr_dev(span5, "role", "button");
+				attr_dev(span5, "tabindex", "0");
+				add_location(span5, file, 377, 6, 10880);
 				attr_dev(path1, "fill", "#FF914D");
 				attr_dev(path1, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
-				add_location(path1, file, 358, 95, 10905);
+				add_location(path1, file, 382, 95, 11601);
 				attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg1, "width", "35px");
 				attr_dev(svg1, "height", "35px");
 				attr_dev(svg1, "viewBox", "0 0 24 24");
-				add_location(svg1, file, 358, 8, 10818);
-				attr_dev(span3, "class", "stop-button svelte-4l8btx");
-				attr_dev(span3, "id", "stopTestingButton");
-				attr_dev(span3, "role", "button");
-				attr_dev(span3, "tabindex", "0");
-				add_location(span3, file, 357, 6, 10641);
-				attr_dev(div2, "class", "heading svelte-4l8btx");
-				add_location(div2, file, 345, 4, 9856);
+				add_location(svg1, file, 382, 8, 11514);
+				attr_dev(span6, "class", "stop-button svelte-1ci6gam");
+				attr_dev(span6, "id", "stopTestingButton");
+				attr_dev(span6, "role", "button");
+				attr_dev(span6, "tabindex", "0");
+				add_location(span6, file, 381, 6, 11337);
+				attr_dev(div1, "class", "heading svelte-1ci6gam");
+				add_location(div1, file, 369, 4, 10552);
 				attr_dev(h30, "id", "recordStatus");
-				attr_dev(h30, "class", "svelte-4l8btx");
-				add_location(h30, file, 363, 8, 11156);
-				attr_dev(div3, "id", "recordedTestCases");
-				attr_dev(div3, "class", "svelte-4l8btx");
-				add_location(div3, file, 364, 8, 11193);
+				attr_dev(h30, "class", "svelte-1ci6gam");
+				add_location(h30, file, 386, 8, 11851);
+				attr_dev(div2, "id", "recordedTestCases");
+				attr_dev(div2, "class", "svelte-1ci6gam");
+				add_location(div2, file, 387, 8, 11888);
 				attr_dev(h31, "id", "testStatus");
-				attr_dev(h31, "class", "svelte-4l8btx");
-				add_location(h31, file, 365, 8, 11236);
-				attr_dev(div4, "id", "testResults");
-				attr_dev(div4, "class", "svelte-4l8btx");
-				add_location(div4, file, 366, 8, 11271);
+				attr_dev(h31, "class", "svelte-1ci6gam");
+				add_location(h31, file, 388, 8, 11931);
+				attr_dev(div3, "id", "testResults");
+				attr_dev(div3, "class", "svelte-1ci6gam");
+				add_location(div3, file, 389, 8, 11966);
 				attr_dev(button3, "id", "viewCompleteSummaryButton");
-				attr_dev(button3, "class", "svelte-4l8btx");
-				add_location(button3, file, 367, 8, 11308);
-				attr_dev(div5, "class", "statusdiv svelte-4l8btx");
-				attr_dev(div5, "id", "statusdiv");
-				add_location(div5, file, 362, 6, 11109);
-				attr_dev(div6, "class", "header svelte-4l8btx");
-				add_location(div6, file, 344, 2, 9831);
+				attr_dev(button3, "class", "svelte-1ci6gam");
+				add_location(button3, file, 390, 8, 12003);
+				attr_dev(div4, "class", "statusdiv svelte-1ci6gam");
+				attr_dev(div4, "id", "statusdiv");
+				add_location(div4, file, 385, 6, 11804);
+				attr_dev(div5, "class", "header svelte-1ci6gam");
+				add_location(div5, file, 368, 2, 10527);
 				attr_dev(path2, "fill", "#FF914D");
 				attr_dev(path2, "d", "M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6");
 				attr_dev(path2, "opacity", "0.3");
-				add_location(path2, file, 379, 95, 11889);
+				add_location(path2, file, 402, 95, 12584);
 				attr_dev(path3, "fill", "#FF914D");
 				attr_dev(path3, "d", "M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6");
-				add_location(path3, file, 379, 195, 11989);
+				add_location(path3, file, 402, 195, 12684);
 				attr_dev(svg2, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg2, "width", "35px");
 				attr_dev(svg2, "height", "35px");
 				attr_dev(svg2, "viewBox", "0 0 24 24");
-				add_location(svg2, file, 379, 8, 11802);
-				attr_dev(div7, "class", "card-icon svelte-4l8btx");
-				add_location(div7, file, 378, 6, 11770);
-				attr_dev(div8, "class", "card-text svelte-4l8btx");
-				add_location(div8, file, 381, 6, 12159);
-				attr_dev(div9, "class", "card-arrow svelte-4l8btx");
-				add_location(div9, file, 382, 6, 12212);
-				attr_dev(div10, "class", "card svelte-4l8btx");
-				attr_dev(div10, "tabindex", "0");
-				attr_dev(div10, "role", "button");
-				attr_dev(div10, "id", "startRecordingButton");
-				add_location(div10, file, 377, 4, 11575);
-				attr_dev(div11, "class", "card-icon replay-icon svelte-4l8btx");
-				add_location(div11, file, 385, 6, 12446);
-				attr_dev(div12, "class", "card-text svelte-4l8btx");
-				add_location(div12, file, 386, 6, 12494);
-				attr_dev(div13, "class", "card-arrow svelte-4l8btx");
-				add_location(div13, file, 387, 6, 12547);
-				attr_dev(div14, "class", "card svelte-4l8btx");
-				attr_dev(div14, "tabindex", "0");
-				attr_dev(div14, "role", "button");
-				attr_dev(div14, "id", "startTestingButton");
-				add_location(div14, file, 384, 4, 12259);
-				attr_dev(div15, "class", "section svelte-4l8btx");
-				add_location(div15, file, 376, 2, 11549);
-				attr_dev(div16, "class", "loader svelte-4l8btx");
-				attr_dev(div16, "id", "loader");
-				add_location(div16, file, 404, 2, 12960);
-				attr_dev(div17, "class", "container svelte-4l8btx");
-				add_location(div17, file, 327, 0, 8490);
+				add_location(svg2, file, 402, 8, 12497);
+				attr_dev(div6, "class", "card-icon svelte-1ci6gam");
+				add_location(div6, file, 401, 6, 12465);
+				attr_dev(div7, "class", "card-text svelte-1ci6gam");
+				add_location(div7, file, 404, 6, 12854);
+				attr_dev(div8, "class", "card-arrow svelte-1ci6gam");
+				add_location(div8, file, 405, 6, 12907);
+				attr_dev(div9, "class", "card svelte-1ci6gam");
+				attr_dev(div9, "tabindex", "0");
+				attr_dev(div9, "role", "button");
+				attr_dev(div9, "id", "startRecordingButton");
+				add_location(div9, file, 400, 4, 12270);
+				attr_dev(div10, "class", "card-icon replay-icon svelte-1ci6gam");
+				add_location(div10, file, 408, 6, 13141);
+				attr_dev(div11, "class", "card-text svelte-1ci6gam");
+				add_location(div11, file, 409, 6, 13189);
+				attr_dev(div12, "class", "card-arrow svelte-1ci6gam");
+				add_location(div12, file, 410, 6, 13242);
+				attr_dev(div13, "class", "card svelte-1ci6gam");
+				attr_dev(div13, "tabindex", "0");
+				attr_dev(div13, "role", "button");
+				attr_dev(div13, "id", "startTestingButton");
+				add_location(div13, file, 407, 4, 12954);
+				attr_dev(div14, "class", "section svelte-1ci6gam");
+				add_location(div14, file, 399, 2, 12244);
+				attr_dev(div15, "class", "loader svelte-1ci6gam");
+				attr_dev(div15, "id", "loader");
+				add_location(div15, file, 427, 2, 13655);
+				attr_dev(div16, "class", "container svelte-1ci6gam");
+				add_location(div16, file, 348, 0, 9051);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
 			},
 			m: function mount(target, anchor) {
-				insert_dev(target, div17, anchor);
-				append_dev(div17, div1);
-				append_dev(div1, button0);
-				append_dev(button0, div0);
-				/*div0_binding*/ ctx[15](div0);
-				append_dev(div1, t0);
-				append_dev(div1, button1);
-				append_dev(button1, span0);
-				append_dev(div1, t1);
-				append_dev(div1, button2);
-				append_dev(button2, span1);
-				append_dev(div17, t2);
-				append_dev(div17, div6);
-				append_dev(div6, div2);
-				if_block0.m(div2, null);
-				append_dev(div2, t3);
-				append_dev(div2, span2);
-				append_dev(span2, svg0);
+				insert_dev(target, div16, anchor);
+				append_dev(div16, div0);
+				append_dev(div0, button0);
+				append_dev(button0, span0);
+				append_dev(button0, t1);
+				if_block0.m(button0, null);
+				append_dev(div0, t2);
+				append_dev(div0, button1);
+				append_dev(button1, span1);
+				append_dev(button1, t3);
+				append_dev(button1, span2);
+				append_dev(div0, t5);
+				append_dev(div0, button2);
+				append_dev(button2, span3);
+				append_dev(button2, t6);
+				append_dev(button2, span4);
+				append_dev(div16, t8);
+				append_dev(div16, div5);
+				append_dev(div5, div1);
+				if_block1.m(div1, null);
+				append_dev(div1, t9);
+				append_dev(div1, span5);
+				append_dev(span5, svg0);
 				append_dev(svg0, path0);
-				/*span2_binding*/ ctx[20](span2);
-				append_dev(div2, t4);
-				append_dev(div2, span3);
-				append_dev(span3, svg1);
+				/*span5_binding*/ ctx[18](span5);
+				append_dev(div1, t10);
+				append_dev(div1, span6);
+				append_dev(span6, svg1);
 				append_dev(svg1, path1);
-				/*span3_binding*/ ctx[22](span3);
-				append_dev(div6, t5);
-				append_dev(div6, div5);
-				append_dev(div5, h30);
-				append_dev(div5, t6);
-				append_dev(div5, div3);
-				append_dev(div5, t7);
-				append_dev(div5, h31);
-				append_dev(div5, t8);
+				/*span6_binding*/ ctx[20](span6);
+				append_dev(div5, t11);
 				append_dev(div5, div4);
-				append_dev(div5, t9);
-				append_dev(div5, button3);
-				append_dev(div17, t11);
-				if (if_block1) if_block1.m(div17, null);
-				append_dev(div17, t12);
-				append_dev(div17, div15);
-				append_dev(div15, div10);
-				append_dev(div10, div7);
-				append_dev(div7, svg2);
+				append_dev(div4, h30);
+				append_dev(div4, t12);
+				append_dev(div4, div2);
+				append_dev(div4, t13);
+				append_dev(div4, h31);
+				append_dev(div4, t14);
+				append_dev(div4, div3);
+				append_dev(div4, t15);
+				append_dev(div4, button3);
+				append_dev(div16, t17);
+				if (if_block2) if_block2.m(div16, null);
+				append_dev(div16, t18);
+				append_dev(div16, div14);
+				append_dev(div14, div9);
+				append_dev(div9, div6);
+				append_dev(div6, svg2);
 				append_dev(svg2, path2);
 				append_dev(svg2, path3);
-				append_dev(div10, t13);
-				append_dev(div10, div8);
-				append_dev(div10, t15);
-				append_dev(div10, div9);
-				/*div10_binding*/ ctx[24](div10);
-				append_dev(div15, t17);
-				append_dev(div15, div14);
-				append_dev(div14, div11);
-				append_dev(div14, t18);
-				append_dev(div14, div12);
-				append_dev(div14, t20);
+				append_dev(div9, t19);
+				append_dev(div9, div7);
+				append_dev(div9, t21);
+				append_dev(div9, div8);
+				/*div9_binding*/ ctx[22](div9);
+				append_dev(div14, t23);
 				append_dev(div14, div13);
-				/*div14_binding*/ ctx[26](div14);
-				append_dev(div17, t22);
-				if (if_block2) if_block2.m(div17, null);
-				append_dev(div17, t23);
-				append_dev(div17, div16);
+				append_dev(div13, div10);
+				append_dev(div13, t24);
+				append_dev(div13, div11);
+				append_dev(div13, t26);
+				append_dev(div13, div12);
+				/*div13_binding*/ ctx[24](div13);
+				append_dev(div16, t28);
+				if (if_block3) if_block3.m(div16, null);
+				append_dev(div16, t29);
+				append_dev(div16, div15);
 
 				if (!mounted) {
 					dispose = [
-						listen_dev(button0, "click", /*click_handler*/ ctx[16], false),
-						listen_dev(button1, "click", /*click_handler_1*/ ctx[17], false),
-						listen_dev(button2, "click", /*click_handler_2*/ ctx[18], false),
-						listen_dev(span2, "click", /*stop*/ ctx[12], false),
-						listen_dev(span2, "keydown", /*keydown_handler*/ ctx[19], false),
-						listen_dev(span3, "click", /*stop*/ ctx[12], false),
-						listen_dev(span3, "keydown", /*keydown_handler_1*/ ctx[21], false),
-						listen_dev(div10, "click", /*toggleRecording*/ ctx[10], false),
-						listen_dev(div10, "keydown", /*keydown_handler_2*/ ctx[23], false),
-						listen_dev(div14, "click", /*toggleTesting*/ ctx[11], false),
-						listen_dev(div14, "keydown", /*keydown_handler_3*/ ctx[25], false)
+						listen_dev(button0, "click", /*click_handler*/ ctx[14], false),
+						listen_dev(button1, "click", /*click_handler_1*/ ctx[15], false),
+						listen_dev(button2, "click", /*click_handler_2*/ ctx[16], false),
+						listen_dev(span5, "click", /*stop*/ ctx[11], false),
+						listen_dev(span5, "keydown", /*keydown_handler*/ ctx[17], false),
+						listen_dev(span6, "click", /*stop*/ ctx[11], false),
+						listen_dev(span6, "keydown", /*keydown_handler_1*/ ctx[19], false),
+						listen_dev(div9, "click", /*toggleRecording*/ ctx[9], false),
+						listen_dev(div9, "keydown", /*keydown_handler_2*/ ctx[21], false),
+						listen_dev(div13, "click", /*toggleTesting*/ ctx[10], false),
+						listen_dev(div13, "keydown", /*keydown_handler_3*/ ctx[23], false)
 					];
 
 					mounted = true;
 				}
 			},
 			p: function update(ctx, dirty) {
-				if (dirty[0] & /*selectedIconButton*/ 64 && button0_class_value !== (button0_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-4l8btx")) {
-					attr_dev(button0, "class", button0_class_value);
-				}
-
-				if (dirty[0] & /*selectedIconButton*/ 64 && button1_class_value !== (button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-4l8btx")) {
-					attr_dev(button1, "class", button1_class_value);
-				}
-
-				if (dirty[0] & /*selectedIconButton*/ 64 && button2_class_value !== (button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-4l8btx")) {
-					attr_dev(button2, "class", button2_class_value);
-				}
-
-				if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block0) {
-					if_block0.p(ctx, dirty);
-				} else {
+				if (current_block_type !== (current_block_type = select_block_type(ctx))) {
 					if_block0.d(1);
 					if_block0 = current_block_type(ctx);
 
 					if (if_block0) {
 						if_block0.c();
-						if_block0.m(div2, t3);
+						if_block0.m(button0, null);
+					}
+				}
+
+				if (dirty[0] & /*selectedIconButton*/ 64 && button0_class_value !== (button0_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 1 ? 'selected' : '') + " svelte-1ci6gam")) {
+					attr_dev(button0, "class", button0_class_value);
+				}
+
+				if (dirty[0] & /*selectedIconButton*/ 64 && button1_class_value !== (button1_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 2 ? 'selected' : '') + " svelte-1ci6gam")) {
+					attr_dev(button1, "class", button1_class_value);
+				}
+
+				if (dirty[0] & /*selectedIconButton*/ 64 && button2_class_value !== (button2_class_value = "icon-button " + (/*selectedIconButton*/ ctx[6] === 3 ? 'selected' : '') + " svelte-1ci6gam")) {
+					attr_dev(button2, "class", button2_class_value);
+				}
+
+				if (current_block_type_1 === (current_block_type_1 = select_block_type_1(ctx)) && if_block1) {
+					if_block1.p(ctx, dirty);
+				} else {
+					if_block1.d(1);
+					if_block1 = current_block_type_1(ctx);
+
+					if (if_block1) {
+						if_block1.c();
+						if_block1.m(div1, t9);
 					}
 				}
 
 				if (/*selectedIconButton*/ ctx[6] === 2) {
-					if (if_block1) ; else {
-						if_block1 = create_if_block_3(ctx);
-						if_block1.c();
-						if_block1.m(div17, t12);
-					}
-				} else if (if_block1) {
-					if_block1.d(1);
-					if_block1 = null;
-				}
-
-				if (/*showSteps*/ ctx[8]) {
-					if (if_block2) {
-						if_block2.p(ctx, dirty);
-
-						if (dirty[0] & /*showSteps*/ 256) {
-							transition_in(if_block2, 1);
-						}
-					} else {
-						if_block2 = create_if_block(ctx);
+					if (if_block2) ; else {
+						if_block2 = create_if_block_3(ctx);
 						if_block2.c();
-						transition_in(if_block2, 1);
-						if_block2.m(div17, t23);
+						if_block2.m(div16, t18);
 					}
 				} else if (if_block2) {
+					if_block2.d(1);
+					if_block2 = null;
+				}
+
+				if (/*showSteps*/ ctx[7]) {
+					if (if_block3) {
+						if_block3.p(ctx, dirty);
+
+						if (dirty[0] & /*showSteps*/ 128) {
+							transition_in(if_block3, 1);
+						}
+					} else {
+						if_block3 = create_if_block(ctx);
+						if_block3.c();
+						transition_in(if_block3, 1);
+						if_block3.m(div16, t29);
+					}
+				} else if (if_block3) {
 					group_outros();
 
-					transition_out(if_block2, 1, 1, () => {
-						if_block2 = null;
+					transition_out(if_block3, 1, 1, () => {
+						if_block3 = null;
 					});
 
 					check_outros();
 				}
 			},
 			i: function intro(local) {
-				transition_in(if_block2);
+				transition_in(if_block3);
 			},
 			o: function outro(local) {
-				transition_out(if_block2);
+				transition_out(if_block3);
 			},
 			d: function destroy(detaching) {
 				if (detaching) {
-					detach_dev(div17);
+					detach_dev(div16);
 				}
 
-				/*div0_binding*/ ctx[15](null);
 				if_block0.d();
-				/*span2_binding*/ ctx[20](null);
-				/*span3_binding*/ ctx[22](null);
-				if (if_block1) if_block1.d();
-				/*div10_binding*/ ctx[24](null);
-				/*div14_binding*/ ctx[26](null);
+				if_block1.d();
+				/*span5_binding*/ ctx[18](null);
+				/*span6_binding*/ ctx[20](null);
 				if (if_block2) if_block2.d();
+				/*div9_binding*/ ctx[22](null);
+				/*div13_binding*/ ctx[24](null);
+				if (if_block3) if_block3.d();
 				mounted = false;
 				run_all(dispose);
 			}
@@ -22258,39 +22385,6 @@ var app = (function () {
 	function instance($$self, $$props, $$invalidate) {
 		let { $$slots: slots = {}, $$scope } = $$props;
 		validate_slots('KeployHome', slots, []);
-		let animationWindow;
-		let anim;
-
-		onMount(() => {
-			anim = lottie.loadAnimation({
-				container: animationWindow,
-				renderer: 'svg',
-				loop: false,
-				autoplay: true,
-				// we play the intro immediately
-				initialSegment: [0, intro],
-				path: 'https://assets.codepen.io/35984/record_button.json'
-			});
-
-			anim.setSpeed(1.61);
-
-			const onClick = e => {
-				if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
-					console.log('playing from stop to record');
-					anim.playSegments([stopFrame, recFrame], true);
-				} else {
-					console.log('playing to stop icon');
-					anim.playSegments([intro, stopFrame], true);
-				}
-			};
-
-			// animationWindow.addEventListener('click', onClick);
-			return () => {
-				animationWindow.removeEventListener('click', onClick);
-				anim.destroy();
-			};
-		});
-
 		let startRecordingButton;
 		let startTestingButton;
 		let stopRecordingButton;
@@ -22351,21 +22445,21 @@ var app = (function () {
 		const toggleRecording = () => {
 			$$invalidate(4, isRecording = !isRecording);
 			$$invalidate(5, isTesting = false);
-			$$invalidate(8, showSteps = !showSteps);
+			$$invalidate(7, showSteps = !showSteps);
 			triggerAnimation();
 		};
 
 		const toggleTesting = () => {
 			$$invalidate(5, isTesting = !isTesting);
 			$$invalidate(4, isRecording = false);
-			$$invalidate(8, showSteps = !showSteps);
+			$$invalidate(7, showSteps = !showSteps);
 			triggerAnimation();
 		};
 
 		const stop = () => {
 			$$invalidate(4, isRecording = false);
 			$$invalidate(5, isTesting = false);
-			$$invalidate(8, showSteps = false);
+			$$invalidate(7, showSteps = false);
 			triggerAnimation();
 		};
 
@@ -22389,19 +22483,12 @@ var app = (function () {
 			if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<KeployHome> was created with unknown prop '${key}'`);
 		});
 
-		function div0_binding($$value) {
-			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
-				animationWindow = $$value;
-				$$invalidate(7, animationWindow);
-			});
-		}
-
 		const click_handler = () => selectButton(1);
 		const click_handler_1 = () => selectButton(2);
 		const click_handler_2 = () => selectButton(3);
 		const keydown_handler = e => e.key === 'Enter' && stop();
 
-		function span2_binding($$value) {
+		function span5_binding($$value) {
 			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 				stopRecordingButton = $$value;
 				((((($$invalidate(2, stopRecordingButton), $$invalidate(0, startRecordingButton)), $$invalidate(4, isRecording)), $$invalidate(5, isTesting)), $$invalidate(6, selectedIconButton)), $$invalidate(1, startTestingButton));
@@ -22410,7 +22497,7 @@ var app = (function () {
 
 		const keydown_handler_1 = e => e.key === 'Enter' && stop();
 
-		function span3_binding($$value) {
+		function span6_binding($$value) {
 			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 				stopTestingButton = $$value;
 				((((($$invalidate(3, stopTestingButton), $$invalidate(0, startRecordingButton)), $$invalidate(4, isRecording)), $$invalidate(5, isTesting)), $$invalidate(6, selectedIconButton)), $$invalidate(1, startTestingButton));
@@ -22419,7 +22506,7 @@ var app = (function () {
 
 		const keydown_handler_2 = e => e.key === 'Enter' && toggleRecording();
 
-		function div10_binding($$value) {
+		function div9_binding($$value) {
 			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 				startRecordingButton = $$value;
 				(((($$invalidate(0, startRecordingButton), $$invalidate(4, isRecording)), $$invalidate(5, isTesting)), $$invalidate(6, selectedIconButton)), $$invalidate(1, startTestingButton));
@@ -22428,7 +22515,7 @@ var app = (function () {
 
 		const keydown_handler_3 = e => e.key === 'Enter' && toggleTesting();
 
-		function div14_binding($$value) {
+		function div13_binding($$value) {
 			binding_callbacks[$$value ? 'unshift' : 'push'](() => {
 				startTestingButton = $$value;
 				(((($$invalidate(1, startTestingButton), $$invalidate(0, startRecordingButton)), $$invalidate(4, isRecording)), $$invalidate(5, isTesting)), $$invalidate(6, selectedIconButton));
@@ -22442,8 +22529,6 @@ var app = (function () {
 			intro,
 			stopFrame,
 			recFrame,
-			animationWindow,
-			anim,
 			startRecordingButton,
 			startTestingButton,
 			stopRecordingButton,
@@ -22464,15 +22549,13 @@ var app = (function () {
 		});
 
 		$$self.$inject_state = $$props => {
-			if ('animationWindow' in $$props) $$invalidate(7, animationWindow = $$props.animationWindow);
-			if ('anim' in $$props) anim = $$props.anim;
 			if ('startRecordingButton' in $$props) $$invalidate(0, startRecordingButton = $$props.startRecordingButton);
 			if ('startTestingButton' in $$props) $$invalidate(1, startTestingButton = $$props.startTestingButton);
 			if ('stopRecordingButton' in $$props) $$invalidate(2, stopRecordingButton = $$props.stopRecordingButton);
 			if ('stopTestingButton' in $$props) $$invalidate(3, stopTestingButton = $$props.stopTestingButton);
 			if ('isRecording' in $$props) $$invalidate(4, isRecording = $$props.isRecording);
 			if ('isTesting' in $$props) $$invalidate(5, isTesting = $$props.isTesting);
-			if ('showSteps' in $$props) $$invalidate(8, showSteps = $$props.showSteps);
+			if ('showSteps' in $$props) $$invalidate(7, showSteps = $$props.showSteps);
 			if ('selectedIconButton' in $$props) $$invalidate(6, selectedIconButton = $$props.selectedIconButton);
 			if ('settingsIcon' in $$props) settingsIcon = $$props.settingsIcon;
 		};
@@ -22545,7 +22628,6 @@ var app = (function () {
 			isRecording,
 			isTesting,
 			selectedIconButton,
-			animationWindow,
 			showSteps,
 			selectButton,
 			toggleRecording,
@@ -22553,18 +22635,17 @@ var app = (function () {
 			stop,
 			recordingSteps,
 			replayingSteps,
-			div0_binding,
 			click_handler,
 			click_handler_1,
 			click_handler_2,
 			keydown_handler,
-			span2_binding,
+			span5_binding,
 			keydown_handler_1,
-			span3_binding,
+			span6_binding,
 			keydown_handler_2,
-			div10_binding,
+			div9_binding,
 			keydown_handler_3,
-			div14_binding
+			div13_binding
 		];
 	}
 

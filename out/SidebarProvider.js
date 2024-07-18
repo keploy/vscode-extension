@@ -36,7 +36,7 @@ exports.SidebarProvider = void 0;
 const vscode = __importStar(require("vscode"));
 // import context from "vscode";
 const Utils_1 = require("./Utils");
-// import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
+// import { downloadAndUpdate , downloadAndInstallkeployary ,downloadAndUpdateDocker  } from './updateKeploy';
 const Record_1 = require("./Record");
 const Test_1 = require("./Test");
 const fs_1 = require("fs");

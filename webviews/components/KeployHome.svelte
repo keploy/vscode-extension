@@ -7,39 +7,39 @@
   const stopFrame = 180; // final frame of the stop icon appearing
   const recFrame = 240; // final frame of the record frame appearing (last frame which matches the intro frame to ensure it loops)
 
-  let animationWindow;
-  let anim;
+  // let animationWindow;
+  // let anim;
 
-  onMount(() => {
-    anim = lottie.loadAnimation({
-      container: animationWindow,
-      renderer: 'svg',
-      loop: false,
-      autoplay: true,
-      // we play the intro immediately
-      initialSegment: [0, intro],
-      path: 'https://assets.codepen.io/35984/record_button.json'
-    });
+  // onMount(() => {
+  //   anim = lottie.loadAnimation({
+  //     container: animationWindow,
+  //     renderer: 'svg',
+  //     loop: false,
+  //     autoplay: true,
+  //     // we play the intro immediately
+  //     initialSegment: [0, intro],
+  //     path: 'https://assets.codepen.io/35984/record_button.json'
+  //   });
 
-    anim.setSpeed(1.61);
+  //   anim.setSpeed(1.61);
 
-    const onClick = (e) => {
-      if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
-        console.log('playing from stop to record');
-        anim.playSegments([stopFrame, recFrame], true);
-      } else {
-        console.log('playing to stop icon');
-        anim.playSegments([intro, stopFrame], true);
-      }
-    };
+  //   const onClick = (e) => {
+  //     if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
+  //       console.log('playing from stop to record');
+  //       anim.playSegments([stopFrame, recFrame], true);
+  //     } else {
+  //       console.log('playing to stop icon');
+  //       anim.playSegments([intro, stopFrame], true);
+  //     }
+  //   };
 
-    // animationWindow.addEventListener('click', onClick);
+  //   // animationWindow.addEventListener('click', onClick);
 
-    return () => {
-      animationWindow.removeEventListener('click', onClick);
-      anim.destroy();
-    };
-  });
+  //   return () => {
+  //     animationWindow.removeEventListener('click', onClick);
+  //     anim.destroy();
+  //   };
+  // });
 
   let startRecordingButton;
   let startTestingButton;
@@ -174,13 +174,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 16px;
-    margin-top: 16px;
+    margin-bottom: 10px;
+    margin-top: 28px;
     flex-direction: column;
   }
   .icon-buttons {
         display: flex;
         justify-content: space-around;
+        border : 2px solid ;
+        border-color: var(--vscode-button-secondaryBackground);
+        border-radius: 5px;
+        padding: 5px;
     }
     .icon-button {
       display: flex;
@@ -315,31 +319,51 @@
   .loader {
         display: none;
     }
-    #animationWindow {
+    /* #animationWindow {
     width: 400px;
     height: 400px;
-  }
+  } */
 
   .icon-button {
     cursor: pointer;
+  }
+  .tooltip{
+    display: none;
+    position: absolute;
+    background-color: var(--vscode-button-background);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    width: 120px;
+    z-index: 1;
+    font-size: x-small;
+    top : 80px;
+
+  }
+  .icon-button:hover .tooltip{
+    display: block;
   }
 </style>
 
 <div class="container">
   <div class="icon-buttons">
     <button id="keploycommands" class="icon-button {selectedIconButton === 1 ? 'selected' : ''}" on:click={() => selectButton(1)}>
-        <!-- {#if isRecording}
-            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#ff0000" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
+      <span class="tooltip">Record/Replay</span>
+        {#if isRecording}
+            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
         {:else}
-            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#ff0000" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#ff0000" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
-        {/if} -->
-        <div bind:this={animationWindow} id="animationWindow"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
+        {/if}
+        <!-- <div bind:this={animationWindow} id="animationWindow"></div> -->
     </button>
     <button id="displayPreviousTestResults" class="icon-button {selectedIconButton === 2 ? 'selected' : ''}" on:click={() => selectButton(2)}>
-      <span class="history-icon"></span> 
+      <span class="history-icon"></span>
+      <span class="tooltip">History</span>
     </button>
     <button id="openConfig" class="icon-button {selectedIconButton === 3 ? 'selected' : ''}" on:click={() => selectButton(3)}>
       <span class="settings-icon"></span> 
+      <span class="tooltip">Settings</span>
     </button>
 </div>
   <div class="header">
@@ -357,7 +381,6 @@
       </span>
       <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopTestingButton" bind:this={stopTestingButton} role="button" tabindex="0">
         <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
-
       </span>
     </div>    
       <div class="statusdiv" id="statusdiv">

@@ -19,7 +19,7 @@ if [ "$command" = *go* ]; then
   go build -o application
 fi 
 
-keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
+keploycmd="sudo -E env PATH=\"$PATH\" keploy"
 
 cd "$folderpath"
 

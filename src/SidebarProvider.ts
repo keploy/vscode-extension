@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 // import context from "vscode";
 import { getNonce } from "./Utils";
-// import { downloadAndUpdate , downloadAndInstallKeployBinary ,downloadAndUpdateDocker  } from './updateKeploy';
+// import { downloadAndUpdate , downloadAndInstallkeployary ,downloadAndUpdateDocker  } from './updateKeploy';
 import { startRecording , stopRecording } from "./Record";
 import { startTesting , stopTesting ,  displayTestCases , displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";

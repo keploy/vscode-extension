@@ -24,7 +24,7 @@ if [[ "$command" =~ .*"go".* ]]; then
 fi 
 
 # Adding sudo here worked
-keploycmd="sudo -E env PATH=\"$PATH\" keploybin"
+keploycmd="sudo -E env PATH=\"$PATH\" keploy"
 
 cd "$folderpath"
 

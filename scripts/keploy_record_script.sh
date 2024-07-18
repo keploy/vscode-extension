@@ -10,8 +10,8 @@ if [[ ! -f "$keploy_config" ]]; then
     exit 1
 fi
 
-command=$(awk '/command:/ { print $2 }' "$keploy_config")
-# echo "Command in yml file: $command"
+command=$(awk '/command:/ { $1=""; sub(/^ /, ""); print }' "$keploy_config")
+echo "Command in yml file: $command"
 
 # Check if command is empty
 if [[ -z "$command" ]]; then
@@ -76,7 +76,7 @@ cat_pid=$!
 dummy_pid=$!
 
 # Execute the keploy command, redirecting output to the named pipe
-sudo -E $keploycmd record -c "$command" > "$fifo" 2>&1
+sudo -E $keploycmd record  > "$fifo" 2>&1
 
 # Clean up: Wait for keploy command to finish
 wait $!
