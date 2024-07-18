@@ -228,7 +228,7 @@
 
   #testResults{
         margin: 20px auto;
-        text-align: center;
+        text-align: left;
         display: grid;
         place-items: center;
         grid-template-columns: 1fr;
