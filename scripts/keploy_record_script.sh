@@ -11,7 +11,7 @@ if [[ ! -f "$keploy_config" ]]; then
 fi
 
 command=$(awk '/command:/ { $1=""; sub(/^ /, ""); print }' "$keploy_config")
-echo "Command in yml file: $command"
+# echo "Command in yml file: $command"
 
 # Check if command is empty
 if [[ -z "$command" ]]; then
@@ -31,22 +31,22 @@ if [[ "$command" =~ .*"go".* ]]; then
   go build -o application
 
 elif [[ "$command" =~ .*"python3".* ]]; then
-  echo "Python3 command found"
+  # echo "Python3 command found"
   python3 -m venv venv
-  echo "venv created"
+  # echo "venv created"
   source venv/bin/activate
-  echo "venv activated"
+  # echo "venv activated"
   pip install -r requirements.txt
-  echo "requirements installed"
+  # echo "requirements installed"
 
 elif [[ "$command" =~ .*"python".* ]] ; then
-echo "Python command found"
+# echo "Python command found"
   python -m venv venv
-  echo "venv created"
+  # echo "venv created"
   source venv/bin/activate
-  echo "venv activated"
+  # echo "venv activated"
   pip install -r requirements.txt
-  echo "requirements installed"
+  # echo "requirements installed"
   
 elif [[ "$command" =~ .*"node".* ]]; then
   npm install

@@ -13,6 +13,8 @@ chmod 666 "$log_file_path"
 # Extract the command from keploy.yml
 command=$(awk -F: '/command:/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}' keploy.yml)
 # echo "Command in yml file: $command"
+
+# echo "Command in yml file: $command"
 if [[ "$command" =~ .*"go".* ]]; then
   # echo "Go is present."
   go mod download
