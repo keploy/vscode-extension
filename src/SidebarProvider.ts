@@ -105,6 +105,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+
+        case 'viewLogs' : {
+          if (!data.value) {
+            return;
+          }
+          try {
+            console.log('Opening Logs...');
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", data.value);
+            //open in  editor
+            vscode.workspace.openTextDocument(logfilePath).then(doc => {
+              vscode.window.showTextDocument(doc, { preview: false });
+            });
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open logs ${error}` });
+          }
+          break;
+        }
         case 'startRecordingCommand' : {
           if (!data.value) {
             return;
@@ -114,7 +131,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
             const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.log");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "record_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
@@ -181,7 +198,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log('Start Testing button clicked');
             const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
@@ -255,7 +272,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Opening Complete Summary...');
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
             displayTestCases(logfilePath.fsPath, this._view?.webview , false , true);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to open complete summary ${error}` });
@@ -365,7 +382,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     
 
     // webview.postMessage({ type: 'displayPreviousTestResults', value: 'Displaying Previous Test Results' });
-    // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+    // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
     //call the function below after 3 seconds
     // setTimeout(() => {
     //   displayTestCases(logfilePath.fsPath, webview ,  true , false);

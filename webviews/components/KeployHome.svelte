@@ -86,35 +86,35 @@
 
 
     };
-    const triggerAnimation = () => {
-    if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
-      console.log('playing from stop to record');
-      anim.playSegments([stopFrame, recFrame], true);
-    } else {
-      console.log('playing to stop icon');
-      anim.playSegments([intro, stopFrame], true);
-    }
-  };
+  //   const triggerAnimation = () => {
+  //   if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
+  //     console.log('playing from stop to record');
+  //     anim.playSegments([stopFrame, recFrame], true);
+  //   } else {
+  //     console.log('playing to stop icon');
+  //     anim.playSegments([intro, stopFrame], true);
+  //   }
+  // };
 
   const toggleRecording = () => {
     isRecording = !isRecording;
     isTesting = false;
     showSteps = !showSteps;
-    triggerAnimation();
+    // triggerAnimation();
   };
 
   const toggleTesting = () => {
     isTesting = !isTesting;
     isRecording = false;
     showSteps = !showSteps;
-    triggerAnimation();
+    // triggerAnimation();
   };
 
   const stop = () => {
     isRecording = false;
     isTesting = false;
     showSteps = false;
-    triggerAnimation();
+    // triggerAnimation();
   };
 
 
@@ -237,7 +237,7 @@
         text-align: center;
         display: none;
     }
-    #viewCompleteSummaryButton{
+    #viewCompleteSummaryButton , #viewTestLogsButton , #viewRecordLogsButton{
         display: none;
         width: 75%;
         margin: 10px auto;
@@ -249,7 +249,7 @@
         font-weight: bold;
     }
     #recordedTestCases {
-        display: grid;
+        display: none;
         grid-template-columns: 1fr;
         place-items: center;
     }
@@ -394,9 +394,9 @@
         <div id="recordedTestCases"></div>
         <h3 id="testStatus"> </h3>
         <div id="testResults"></div>
-        <button id="viewCompleteSummaryButton">View Complete Test Summary
-          
-        </button>  
+        <button id="viewCompleteSummaryButton">View Complete Test Summary</button>
+        <button id="viewTestLogsButton">View Logs</button>  
+        <button id="viewRecordLogsButton">View Logs</button>  
         <hr id="completeSummaryHr" />
       </div>
   </div>
