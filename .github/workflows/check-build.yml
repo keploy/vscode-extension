@@ -1,10 +1,9 @@
-name: Test VsCode Extension
+name: Test and Build VSCode
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-
 
 jobs:
   build:
