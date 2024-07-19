@@ -81,7 +81,7 @@ sudo -E $keploycmd record  > "$fifo" 2>&1
 # Clean up: Wait for keploy command to finish
 wait $!
 touch ./log_file.txt
-cp "$log_file_path" ./log_file.txt
+ 
 
 # Terminate the dummy process and the logging process
 kill $dummy_pid

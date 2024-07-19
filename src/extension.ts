@@ -14,6 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
         );
     oneClickInstall();
     
+    
     let signedIn = context.globalState.get('ourToken');
     console.log(context.globalState);
     if(signedIn){
