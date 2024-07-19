@@ -2,7 +2,7 @@
   "name": "keploy",
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
