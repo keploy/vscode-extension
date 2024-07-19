@@ -6,10 +6,9 @@
     <div id="topGrid">
         <img
             class="keploylogo"
-            src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
             alt="Keploy Logo"
         />
-        <h2 class="info">Test Results Summary</h2>
+        <h2 class="info">Keploy Test Summary</h2>
     </div>
     <hr />
     <!-- 4 Column Grid -->

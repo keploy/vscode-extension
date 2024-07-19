@@ -727,139 +727,151 @@ var app = (function () {
 	const file = "webviews/components/Config.svelte";
 
 	function create_fragment(ctx) {
-		let div3;
+		let body;
 		let div0;
 		let t0;
-		let div1;
-		let t2;
-		let div2;
-		let t4;
-		let button0;
-		let div3_class_value;
-		let t6;
-		let div8;
-		let h1;
-		let t8;
-		let div5;
 		let div4;
+		let div1;
+		let t1;
+		let div2;
+		let t3;
+		let div3;
+		let t5;
+		let button0;
+		let div4_class_value;
+		let t7;
+		let div9;
+		let h1;
 		let t9;
-		let input0;
-		let t10;
-		let div7;
 		let div6;
+		let div5;
+		let t10;
+		let input0;
 		let t11;
-		let input1;
+		let div8;
+		let div7;
 		let t12;
+		let input1;
+		let t13;
 		let button1;
-		let div8_class_value;
+		let div9_class_value;
 		let mounted;
 		let dispose;
 
 		const block = {
 			c: function create() {
-				div3 = element("div");
+				body = element("body");
 				div0 = element("div");
-				div0.innerHTML = ``;
 				t0 = space();
+				div4 = element("div");
 				div1 = element("div");
-				div1.textContent = "Get Started";
-				t2 = space();
+				div1.innerHTML = ``;
+				t1 = space();
 				div2 = element("div");
-				div2.textContent = "Integrate Keploy by installing the open-source agent locally. No code-changes required.";
-				t4 = space();
+				div2.textContent = "Get Started";
+				t3 = space();
+				div3 = element("div");
+				div3.textContent = "Integrate Keploy by installing the open-source agent locally. No code-changes required.";
+				t5 = space();
 				button0 = element("button");
 				button0.textContent = "Setup Keploy Config";
-				t6 = space();
-				div8 = element("div");
+				t7 = space();
+				div9 = element("div");
 				h1 = element("h1");
 				h1.textContent = "Initialise Keploy Config File";
-				t8 = space();
-				div5 = element("div");
-				div4 = element("div");
-				div4.innerHTML = ``;
 				t9 = space();
-				input0 = element("input");
-				t10 = space();
-				div7 = element("div");
 				div6 = element("div");
-				div6.innerHTML = ``;
+				div5 = element("div");
+				div5.innerHTML = ``;
+				t10 = space();
+				input0 = element("input");
 				t11 = space();
-				input1 = element("input");
+				div8 = element("div");
+				div7 = element("div");
+				div7.innerHTML = ``;
 				t12 = space();
+				input1 = element("input");
+				t13 = space();
 				button1 = element("button");
 				button1.textContent = "Save Configuration";
-				attr_dev(div0, "class", "image-container");
-				add_location(div0, file, 79, 2, 1399);
-				attr_dev(div1, "class", "get-started svelte-1s7k7n1");
+				attr_dev(div0, "class", "keploylogo");
+				add_location(div0, file, 78, 0, 1342);
+				attr_dev(div1, "class", "image-container");
 				add_location(div1, file, 81, 2, 1440);
-				attr_dev(div2, "class", "description svelte-1s7k7n1");
-				add_location(div2, file, 82, 2, 1485);
+				attr_dev(div2, "class", "get-started svelte-1s7k7n1");
+				add_location(div2, file, 83, 2, 1481);
+				attr_dev(div3, "class", "description svelte-1s7k7n1");
+				add_location(div3, file, 84, 2, 1526);
 				attr_dev(button0, "class", "button svelte-1s7k7n1");
 				attr_dev(button0, "id", "setupConfig");
-				add_location(button0, file, 85, 2, 1614);
-				attr_dev(div3, "class", div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"));
-				add_location(div3, file, 78, 0, 1335);
+				add_location(button0, file, 87, 2, 1655);
+				attr_dev(div4, "class", div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"));
+				add_location(div4, file, 79, 0, 1373);
 				attr_dev(h1, "class", "heading svelte-1s7k7n1");
-				add_location(h1, file, 89, 2, 1793);
-				attr_dev(div4, "class", "code-icon ");
-				attr_dev(div4, "alt", "Icon");
-				add_location(div4, file, 91, 4, 1882);
+				add_location(h1, file, 91, 2, 1834);
+				attr_dev(div5, "class", "code-icon ");
+				attr_dev(div5, "alt", "Icon");
+				add_location(div5, file, 93, 4, 1923);
 				attr_dev(input0, "type", "text");
-				attr_dev(input0, "placeholder", "Enter App Command");
+				attr_dev(input0, "placeholder", "Enter Command to Run the Application");
 				attr_dev(input0, "id", "configCommand");
 				attr_dev(input0, "class", "svelte-1s7k7n1");
-				add_location(input0, file, 92, 4, 1929);
-				attr_dev(div5, "class", "settings-item svelte-1s7k7n1");
-				add_location(div5, file, 90, 2, 1850);
-				attr_dev(div6, "class", "code-icon ");
-				attr_dev(div6, "alt", "Icon");
-				add_location(div6, file, 95, 4, 2067);
+				add_location(input0, file, 94, 4, 1970);
+				attr_dev(div6, "class", "settings-item svelte-1s7k7n1");
+				add_location(div6, file, 92, 2, 1891);
+				attr_dev(div7, "class", "code-icon ");
+				attr_dev(div7, "alt", "Icon");
+				add_location(div7, file, 97, 4, 2127);
 				attr_dev(input1, "type", "text");
-				attr_dev(input1, "placeholder", "Enter Path (Default : './'");
+				attr_dev(input1, "placeholder", "Enter Application Path (default : './')");
 				attr_dev(input1, "id", "configPath");
 				attr_dev(input1, "class", "svelte-1s7k7n1");
-				add_location(input1, file, 96, 4, 2114);
-				attr_dev(div7, "class", "settings-item svelte-1s7k7n1");
-				add_location(div7, file, 94, 2, 2035);
+				add_location(input1, file, 98, 4, 2174);
+				attr_dev(div8, "class", "settings-item svelte-1s7k7n1");
+				add_location(div8, file, 96, 2, 2095);
 				attr_dev(button1, "class", "button svelte-1s7k7n1");
 				attr_dev(button1, "id", "initialiseConfigButton");
-				add_location(button1, file, 98, 2, 2221);
+				add_location(button1, file, 100, 2, 2294);
 
-				attr_dev(div8, "class", div8_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
+				attr_dev(div9, "class", div9_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
 				? 'settings-container'
 				: 'container-hide') + " svelte-1s7k7n1"));
 
-				add_location(div8, file, 88, 0, 1720);
+				add_location(div9, file, 90, 0, 1761);
+				add_location(body, file, 77, 0, 1335);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
 			},
 			m: function mount(target, anchor) {
-				insert_dev(target, div3, anchor);
-				append_dev(div3, div0);
-				append_dev(div3, t0);
-				append_dev(div3, div1);
-				append_dev(div3, t2);
-				append_dev(div3, div2);
-				append_dev(div3, t4);
-				append_dev(div3, button0);
-				insert_dev(target, t6, anchor);
-				insert_dev(target, div8, anchor);
-				append_dev(div8, h1);
-				append_dev(div8, t8);
-				append_dev(div8, div5);
-				append_dev(div5, div4);
-				append_dev(div5, t9);
-				append_dev(div5, input0);
+				insert_dev(target, body, anchor);
+				append_dev(body, div0);
+				append_dev(body, t0);
+				append_dev(body, div4);
+				append_dev(div4, div1);
+				append_dev(div4, t1);
+				append_dev(div4, div2);
+				append_dev(div4, t3);
+				append_dev(div4, div3);
+				append_dev(div4, t5);
+				append_dev(div4, button0);
+				append_dev(body, t7);
+				append_dev(body, div9);
+				append_dev(div9, h1);
+				append_dev(div9, t9);
+				append_dev(div9, div6);
+				append_dev(div6, div5);
+				append_dev(div6, t10);
+				append_dev(div6, input0);
 				set_input_value(input0, /*appCommand*/ ctx[1]);
-				append_dev(div8, t10);
+				append_dev(div9, t11);
+				append_dev(div9, div8);
 				append_dev(div8, div7);
-				append_dev(div7, div6);
-				append_dev(div7, t11);
-				append_dev(div7, input1);
-				set_input_value(input1, /*noise*/ ctx[2]);
 				append_dev(div8, t12);
-				append_dev(div8, button1);
+				append_dev(div8, input1);
+				set_input_value(input1, /*path*/ ctx[2]);
+				append_dev(div9, t13);
+				append_dev(div9, button1);
 
 				if (!mounted) {
 					dispose = [
@@ -872,31 +884,29 @@ var app = (function () {
 				}
 			},
 			p: function update(ctx, [dirty]) {
-				if (dirty & /*showSettings*/ 1 && div3_class_value !== (div3_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"))) {
-					attr_dev(div3, "class", div3_class_value);
+				if (dirty & /*showSettings*/ 1 && div4_class_value !== (div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"))) {
+					attr_dev(div4, "class", div4_class_value);
 				}
 
 				if (dirty & /*appCommand*/ 2 && input0.value !== /*appCommand*/ ctx[1]) {
 					set_input_value(input0, /*appCommand*/ ctx[1]);
 				}
 
-				if (dirty & /*noise*/ 4 && input1.value !== /*noise*/ ctx[2]) {
-					set_input_value(input1, /*noise*/ ctx[2]);
+				if (dirty & /*path*/ 4 && input1.value !== /*path*/ ctx[2]) {
+					set_input_value(input1, /*path*/ ctx[2]);
 				}
 
-				if (dirty & /*showSettings*/ 1 && div8_class_value !== (div8_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
+				if (dirty & /*showSettings*/ 1 && div9_class_value !== (div9_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
 				? 'settings-container'
 				: 'container-hide') + " svelte-1s7k7n1"))) {
-					attr_dev(div8, "class", div8_class_value);
+					attr_dev(div9, "class", div9_class_value);
 				}
 			},
 			i: noop,
 			o: noop,
 			d: function destroy(detaching) {
 				if (detaching) {
-					detach_dev(div3);
-					detach_dev(t6);
-					detach_dev(div8);
+					detach_dev(body);
 				}
 
 				mounted = false;
@@ -920,7 +930,7 @@ var app = (function () {
 		validate_slots('Config', slots, []);
 		let showSettings = false;
 		let appCommand = '';
-		let noise = '';
+		let path = './';
 		let passThroughPorts = '';
 
 		function handleSetupConfig() {
@@ -939,14 +949,14 @@ var app = (function () {
 		}
 
 		function input1_input_handler() {
-			noise = this.value;
-			$$invalidate(2, noise);
+			path = this.value;
+			$$invalidate(2, path);
 		}
 
 		$$self.$capture_state = () => ({
 			showSettings,
 			appCommand,
-			noise,
+			path,
 			passThroughPorts,
 			handleSetupConfig
 		});
@@ -954,7 +964,7 @@ var app = (function () {
 		$$self.$inject_state = $$props => {
 			if ('showSettings' in $$props) $$invalidate(0, showSettings = $$props.showSettings);
 			if ('appCommand' in $$props) $$invalidate(1, appCommand = $$props.appCommand);
-			if ('noise' in $$props) $$invalidate(2, noise = $$props.noise);
+			if ('path' in $$props) $$invalidate(2, path = $$props.path);
 			if ('passThroughPorts' in $$props) passThroughPorts = $$props.passThroughPorts;
 		};
 
@@ -965,7 +975,7 @@ var app = (function () {
 		return [
 			showSettings,
 			appCommand,
-			noise,
+			path,
 			handleSetupConfig,
 			input0_input_handler,
 			input1_input_handler

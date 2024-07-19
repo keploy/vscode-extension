@@ -40,23 +40,6 @@ var app = (function () {
 		return a != a ? b == b : a !== b || (a && typeof a === 'object') || typeof a === 'function';
 	}
 
-	let src_url_equal_anchor;
-
-	/**
-	 * @param {string} element_src
-	 * @param {string} url
-	 * @returns {boolean}
-	 */
-	function src_url_equal(element_src, url) {
-		if (element_src === url) return true;
-		if (!src_url_equal_anchor) {
-			src_url_equal_anchor = document.createElement('a');
-		}
-		// This is actually faster than doing URL(..).href
-		src_url_equal_anchor.href = url;
-		return element_src === src_url_equal_anchor.href;
-	}
-
 	/** @returns {boolean} */
 	function is_empty(obj) {
 		return Object.keys(obj).length === 0;
@@ -695,7 +678,6 @@ var app = (function () {
 		let t0;
 		let div1;
 		let img;
-		let img_src_value;
 		let t1;
 		let h2;
 		let t3;
@@ -725,7 +707,7 @@ var app = (function () {
 				img = element("img");
 				t1 = space();
 				h2 = element("h2");
-				h2.textContent = "Test Results Summary";
+				h2.textContent = "Keploy Test Summary";
 				t3 = space();
 				hr = element("hr");
 				t4 = space();
@@ -752,37 +734,36 @@ var app = (function () {
 				attr_dev(div0, "id", "loader");
 				add_location(div0, file, 4, 4, 31);
 				attr_dev(img, "class", "keploylogo svelte-18zu2rg");
-				if (!src_url_equal(img.src, img_src_value = "https://avatars.githubusercontent.com/u/92252339?s=200&v=4")) attr_dev(img, "src", img_src_value);
 				attr_dev(img, "alt", "Keploy Logo");
 				add_location(img, file, 6, 8, 101);
 				attr_dev(h2, "class", "info");
-				add_location(h2, file, 11, 8, 263);
+				add_location(h2, file, 10, 8, 186);
 				attr_dev(div1, "id", "topGrid");
 				attr_dev(div1, "class", "svelte-18zu2rg");
 				add_location(div1, file, 5, 4, 74);
-				add_location(hr, file, 13, 4, 321);
-				add_location(p0, file, 17, 12, 452);
+				add_location(hr, file, 12, 4, 243);
+				add_location(p0, file, 16, 12, 374);
 				attr_dev(div2, "id", "testSuiteName");
 				attr_dev(div2, "class", "info svelte-18zu2rg");
-				add_location(div2, file, 16, 8, 402);
-				add_location(p1, file, 20, 12, 538);
+				add_location(div2, file, 15, 8, 324);
+				add_location(p1, file, 19, 12, 460);
 				attr_dev(div3, "id", "totalTestCases");
 				attr_dev(div3, "class", "info svelte-18zu2rg");
-				add_location(div3, file, 19, 8, 487);
-				add_location(p2, file, 23, 12, 629);
+				add_location(div3, file, 18, 8, 409);
+				add_location(p2, file, 22, 12, 551);
 				attr_dev(div4, "id", "testCasesPassed");
 				attr_dev(div4, "class", "success svelte-18zu2rg");
-				add_location(div4, file, 22, 8, 574);
-				add_location(p3, file, 26, 12, 719);
+				add_location(div4, file, 21, 8, 496);
+				add_location(p3, file, 25, 12, 641);
 				attr_dev(div5, "id", "testCasesFailed");
 				attr_dev(div5, "class", "error svelte-18zu2rg");
-				add_location(div5, file, 25, 8, 666);
+				add_location(div5, file, 24, 8, 588);
 				attr_dev(div6, "id", "completeTestSummaryGrid");
 				attr_dev(div6, "class", "svelte-18zu2rg");
-				add_location(div6, file, 15, 4, 359);
+				add_location(div6, file, 14, 4, 281);
 				attr_dev(button, "id", "rerunTestSuiteButton");
 				attr_dev(button, "class", "svelte-18zu2rg");
-				add_location(button, file, 30, 4, 772);
+				add_location(button, file, 29, 4, 694);
 				add_location(body, file, 3, 0, 20);
 			},
 			l: function claim(nodes) {

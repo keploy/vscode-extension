@@ -1,7 +1,7 @@
 <script>
   let showSettings = false;
   let appCommand = '';
-  let noise = '';
+  let path = './';
   let passThroughPorts = '';
 
   function handleSetupConfig() {
@@ -75,8 +75,10 @@
     display: none; /* Hide container when showSettings is true */
   }
 </style>
-
+<body>
+<div class="keploylogo"></div>
 <div class="{showSettings ? 'container-hide' : 'container'}">
+  
   <div class="image-container">
   </div>
   <div class="get-started">Get Started</div>
@@ -90,11 +92,12 @@
   <h1 class="heading">Initialise Keploy Config File</h1>
   <div class="settings-item">
     <div class="code-icon "alt="Icon" > </div>
-    <input type="text" placeholder="Enter App Command" bind:value={appCommand} id="configCommand">
+    <input type="text" placeholder="Enter Command to Run the Application" bind:value={appCommand} id="configCommand">
   </div>
   <div class="settings-item">
     <div class="code-icon "alt="Icon" > </div>
-    <input type="text" placeholder="Enter Path (Default : './'" bind:value={noise} id="configPath">
+    <input type="text" placeholder="Enter Application Path (default : './')" bind:value={path} id="configPath" >
   </div>
   <button class="button" id="initialiseConfigButton">Save Configuration</button>
 </div>
+</body>
