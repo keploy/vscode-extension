@@ -25,19 +25,19 @@ button:disabled{
 
 
 
-#versionDisplay{
+/* #versionDisplay{
     font-size: 20px;
     font-weight: bold;
     text-align: center;
     margin-top: 20px;
-}
-#versionDisplay p{
+} */
+/* #versionDisplay p{
     font-size: 20px;
     font-weight: bold;
     color: #d1a30a;
     text-align: center;
     margin-top: 20px;
-}
+} */
 
 .terminal {
     cursor:copy;
@@ -53,7 +53,7 @@ button:disabled{
   pre{
     color: #ff914d;
     margin-bottom: 10px;
-    font-size: 10px;
+    font-size: 16px;
   }
 /* Add this CSS to your stylesheet */
 
@@ -94,7 +94,7 @@ button:disabled{
     display: none;
     grid-template-columns: 1fr 1fr;
     padding: 10px;
-    font-size: medium;
+    font-size: 18px;
 }
 
 .dropdown-content.show {
@@ -176,14 +176,14 @@ button:disabled{
     margin-top: 5px;
     margin-bottom: 5px;
     text-align: center;
-    font-size: medium;
+    font-size: 18px;
 }
 #testSuiteName {
-    font-size: small;
+    font-size: 16px;
 }
 .homebutton{
     width: 30%;
-    font-size: small;
+    font-size: 16px;
     text-align: center;
     margin: 5px ;
     background-color: rgb(70, 70, 70);

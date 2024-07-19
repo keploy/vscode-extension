@@ -798,16 +798,16 @@ var app = (function () {
 				add_location(div0, file, 78, 0, 1365);
 				attr_dev(div1, "class", "image-container");
 				add_location(div1, file, 81, 2, 1463);
-				attr_dev(div2, "class", "get-started svelte-1s7k7n1");
+				attr_dev(div2, "class", "get-started svelte-rrj90q");
 				add_location(div2, file, 83, 2, 1504);
-				attr_dev(div3, "class", "description svelte-1s7k7n1");
+				attr_dev(div3, "class", "description svelte-rrj90q");
 				add_location(div3, file, 84, 2, 1549);
-				attr_dev(button0, "class", "button svelte-1s7k7n1");
+				attr_dev(button0, "class", "button svelte-rrj90q");
 				attr_dev(button0, "id", "setupConfig");
 				add_location(button0, file, 87, 2, 1678);
-				attr_dev(div4, "class", div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"));
+				attr_dev(div4, "class", div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-rrj90q"));
 				add_location(div4, file, 79, 0, 1396);
-				attr_dev(h1, "class", "heading svelte-1s7k7n1");
+				attr_dev(h1, "class", "heading svelte-rrj90q");
 				add_location(h1, file, 91, 2, 1857);
 				attr_dev(div5, "class", "code-icon ");
 				attr_dev(div5, "alt", "Icon");
@@ -815,9 +815,9 @@ var app = (function () {
 				attr_dev(input0, "type", "text");
 				attr_dev(input0, "placeholder", "Enter Command to Run the Application");
 				attr_dev(input0, "id", "configCommand");
-				attr_dev(input0, "class", "svelte-1s7k7n1");
+				attr_dev(input0, "class", "svelte-rrj90q");
 				add_location(input0, file, 94, 4, 1993);
-				attr_dev(div6, "class", "settings-item svelte-1s7k7n1");
+				attr_dev(div6, "class", "settings-item svelte-rrj90q");
 				add_location(div6, file, 92, 2, 1914);
 				attr_dev(div7, "class", "code-icon ");
 				attr_dev(div7, "alt", "Icon");
@@ -825,17 +825,17 @@ var app = (function () {
 				attr_dev(input1, "type", "text");
 				attr_dev(input1, "placeholder", "Enter Application Path (default : './')");
 				attr_dev(input1, "id", "configPath");
-				attr_dev(input1, "class", "svelte-1s7k7n1");
+				attr_dev(input1, "class", "svelte-rrj90q");
 				add_location(input1, file, 98, 4, 2197);
-				attr_dev(div8, "class", "settings-item svelte-1s7k7n1");
+				attr_dev(div8, "class", "settings-item svelte-rrj90q");
 				add_location(div8, file, 96, 2, 2118);
-				attr_dev(button1, "class", "button svelte-1s7k7n1");
+				attr_dev(button1, "class", "button svelte-rrj90q");
 				attr_dev(button1, "id", "initialiseConfigButton");
 				add_location(button1, file, 100, 2, 2317);
 
 				attr_dev(div9, "class", div9_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
 				? 'settings-container'
-				: 'container-hide') + " svelte-1s7k7n1"));
+				: 'container-hide') + " svelte-rrj90q"));
 
 				add_location(div9, file, 90, 0, 1784);
 				attr_dev(body, "class", "baloo-2-custom");
@@ -885,7 +885,7 @@ var app = (function () {
 				}
 			},
 			p: function update(ctx, [dirty]) {
-				if (dirty & /*showSettings*/ 1 && div4_class_value !== (div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-1s7k7n1"))) {
+				if (dirty & /*showSettings*/ 1 && div4_class_value !== (div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-rrj90q"))) {
 					attr_dev(div4, "class", div4_class_value);
 				}
 
@@ -899,7 +899,7 @@ var app = (function () {
 
 				if (dirty & /*showSettings*/ 1 && div9_class_value !== (div9_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0]
 				? 'settings-container'
-				: 'container-hide') + " svelte-1s7k7n1"))) {
+				: 'container-hide') + " svelte-rrj90q"))) {
 					attr_dev(div9, "class", div9_class_value);
 				}
 			},

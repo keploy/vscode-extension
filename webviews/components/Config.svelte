@@ -29,7 +29,7 @@
   .description {
     margin-top: 10px;
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
     max-width: 300px;
   }
 
@@ -40,7 +40,7 @@
     color: white;
     border: none;
     border-radius: 20px;
-    font-size: 16px;
+    font-size: 20px;
     cursor: pointer;
   }
 

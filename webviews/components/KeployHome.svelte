@@ -173,6 +173,7 @@
 <style>
   .container {
     padding: 16px;
+    
     /* font-family: 'Arial', sans-serif; */
   }
 
@@ -299,12 +300,12 @@
 
   .card-text {
     flex-grow: 1;
-    font-size: 16px;
+    font-size: 20px;
     color: white;
   }
 
   .card-arrow {
-    font-size: 18px;
+    font-size: 20px;
     color: white;
   }
 
@@ -313,6 +314,7 @@
     padding: 16px;
     /* background-color: #e9e9e9; */
     /* color: #b0b0b0; */
+    font-size: 16px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
