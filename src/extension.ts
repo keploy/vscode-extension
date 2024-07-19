@@ -2,7 +2,8 @@ import * as vscode from 'vscode';
 import { SidebarProvider } from './SidebarProvider';
 import SignIn  from './SignIn';
 import oneClickInstall from './OneClickInstall';
-
+import { getKeployVersion , getCurrentKeployVersion } from './version';
+import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
         context.subscriptions.push(
@@ -12,6 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
             )
         );
     oneClickInstall();
+    
     
     let signedIn = context.globalState.get('ourToken');
     console.log(context.globalState);
@@ -32,42 +34,69 @@ export function activate(context: vscode.ExtensionContext) {
         
 
 
-	let getLatestKeployDisposable = vscode.commands.registerCommand('keploy.KeployVersion', () => {
-        // Logic to get the latest Keploy
-        vscode.window.showInformationMessage('Feature coming soon!');
+	let viewKeployVersionDisposable = vscode.commands.registerCommand('keploy.KeployVersion', async () => {
+        const currentVersion = await getCurrentKeployVersion();
+        vscode.window.showInformationMessage(`The current version of Keploy is ${currentVersion}`);
     }
     );
-    context.subscriptions.push(getLatestKeployDisposable);
+    context.subscriptions.push(viewKeployVersionDisposable);
     
     let viewChangeLogDisposable = vscode.commands.registerCommand('keploy.viewChangeLog', () => {
-        // Logic to view the change log
-        vscode.window.showInformationMessage('Feature coming soon!');
+        const changeLogUrl = 'https://marketplace.visualstudio.com/items?itemName=Keploy.keployio';
+        vscode.env.openExternal(vscode.Uri.parse(changeLogUrl));
+        
     }
     );
     context.subscriptions.push(viewChangeLogDisposable);
 
     let viewDocumentationDisposable = vscode.commands.registerCommand('keploy.viewDocumentation', () => {
-        // Logic to view the documentation
-        vscode.window.showInformationMessage('Feature coming soon!');
+        const docsUrl = 'https://keploy.io/docs/';
+        vscode.env.openExternal(vscode.Uri.parse(docsUrl));
     }
     );
     context.subscriptions.push(viewDocumentationDisposable);
     
 
-	let getLatestVersion = vscode.commands.registerCommand('keploy.getLatestVersion', () => {
-		// Logic to get the latest version
-		vscode.window.showInformationMessage('Feature coming soon!');
+	let getLatestVersion = vscode.commands.registerCommand('keploy.getLatestVersion', async () => {
+		const latestVersion = await getKeployVersion();
+        vscode.window.showInformationMessage(`The latest version of Keploy is ${latestVersion}`);
 	}
 	);
 	context.subscriptions.push(getLatestVersion);
     
-	let updateKeploy = vscode.commands.registerCommand('keploy.updateKeploy', () => {
-		// Logic to get the latest version
-		vscode.window.showInformationMessage('Feature coming soon!');
-	}
-	);
-	context.subscriptions.push(updateKeploy);
+	let updateKeployDisposable = vscode.commands.registerCommand('keploy.updateKeploy', () => {
+        //open popup to ask user to choose beteween keploy docker or keploy binary
+        const options = [
+            { label: "Keploy Docker", description: "Update using Keploy Docker" },
+            { label: "Keploy Binary", description: "Update using Keploy Binary" }
+        ];
     
+        vscode.window.showQuickPick(options, {
+            placeHolder: "Choose how to update Keploy"
+        }).then(async selection => {
+            if (selection) {
+                // Handle the user's choice here
+                if (selection.label === "Keploy Docker") {
+                    try{
+                    await downloadAndUpdateDocker();
+                        vscode.window.showInformationMessage('Keploy Docker updated!');
+                }catch(error){
+                        vscode.window.showErrorMessage(`Failed to update Keploy Docker: ${error}`);
+                    }
+                } else if (selection.label === "Keploy Binary") {
+                    try {
+                        await downloadAndUpdate();
+                        // this._view?.webview.postMessage({ type: 'success', value: 'Keploy binary updated!' });
+                    } catch (error) {
+                        vscode.window.showErrorMessage(`Failed to update Keploy binary: ${error}`);
+                    }
+                }
+            }
+        });
+
+    });
+    context.subscriptions.push(updateKeployDisposable);
+
     
 }
 

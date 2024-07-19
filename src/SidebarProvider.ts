@@ -89,19 +89,36 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
-        case "selectRecordFolder": {
+        // case "selectRecordFolder": {
+        //   if (!data.value) {
+        //     return;
+        //   } try {
+        //     console.log('Opening Record Dialogue Box...');
+        //     vscode.window.showOpenDialog(recordOptions).then(async fileUri => {
+        //       if (fileUri && fileUri[0]) {
+        //         console.log('Selected file: ' + fileUri[0].fsPath);
+        //         this._view?.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
+        //       }
+        //     });
+        //   } catch (error) {
+        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
+        //   }
+        //   break;
+        // }
+
+        case 'viewLogs' : {
           if (!data.value) {
             return;
-          } try {
-            console.log('Opening Record Dialogue Box...');
-            vscode.window.showOpenDialog(recordOptions).then(async fileUri => {
-              if (fileUri && fileUri[0]) {
-                console.log('Selected file: ' + fileUri[0].fsPath);
-                this._view?.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
-              }
+          }
+          try {
+            console.log('Opening Logs...');
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", data.value);
+            //open in  editor
+            vscode.workspace.openTextDocument(logfilePath).then(doc => {
+              vscode.window.showTextDocument(doc, { preview: false });
             });
           } catch (error) {
-            this._view?.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open logs ${error}` });
           }
           break;
         }
@@ -114,7 +131,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
             const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.log");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "record_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
@@ -155,23 +172,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "selectTestFolder":{
-          if (!data.value) {
-            return;
-          }
-          try {
-            console.log('Opening Test Dialogue Box...');
-            vscode.window.showOpenDialog(testOptions).then(async fileUri => {
-              if (fileUri && fileUri[0]) {
-                console.log('Selected file: ' + fileUri[0].fsPath);
-                this._view?.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
-              }
-            });
-          } catch (error) {
-            this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
-          }
-          break;
-        }
+        // case "selectTestFolder":{
+        //   if (!data.value) {
+        //     return;
+        //   }
+        //   try {
+        //     console.log('Opening Test Dialogue Box...');
+        //     vscode.window.showOpenDialog(testOptions).then(async fileUri => {
+        //       if (fileUri && fileUri[0]) {
+        //         console.log('Selected file: ' + fileUri[0].fsPath);
+        //         this._view?.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
+        //       }
+        //     });
+        //   } catch (error) {
+        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
+        //   }
+        //   break;
+        // }
 
         case 'startTestingCommand' : {
           if (!data.value) {
@@ -181,7 +198,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log('Start Testing button clicked');
             const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
@@ -255,7 +272,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Opening Complete Summary...');
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
             displayTestCases(logfilePath.fsPath, this._view?.webview , false , true);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to open complete summary ${error}` });
@@ -365,7 +382,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     
 
     // webview.postMessage({ type: 'displayPreviousTestResults', value: 'Displaying Previous Test Results' });
-    // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+    // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
     //call the function below after 3 seconds
     // setTimeout(() => {
     //   displayTestCases(logfilePath.fsPath, webview ,  true , false);
@@ -382,7 +399,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 					and only allow scripts that have a specific nonce.
         -->
         <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${webview.cspSource
-      }; script-src 'nonce-${nonce}';">    
+      }; script-src 'nonce-${nonce}';">   
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap" rel="stylesheet"> 
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<link href="${styleResetUri}" rel="stylesheet">
 				<link href="${styleVSCodeUri}" rel="stylesheet">
