@@ -75,7 +75,7 @@
     display: none; /* Hide container when showSettings is true */
   }
 </style>
-<body>
+<body class="baloo-2-custom">
 <div class="keploylogo"></div>
 <div class="{showSettings ? 'container-hide' : 'container'}">
   

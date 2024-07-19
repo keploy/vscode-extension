@@ -117,6 +117,14 @@ var app = (function () {
 	}
 
 	/**
+	 * @returns {void} */
+	function set_style(node, key, value, important) {
+		{
+			node.style.setProperty(key, value, '');
+		}
+	}
+
+	/**
 	 * @template T
 	 * @param {string} type
 	 * @param {T} [detail]
@@ -676,24 +684,24 @@ var app = (function () {
 		let body;
 		let div0;
 		let t0;
+		let div2;
 		let div1;
-		let img;
 		let t1;
 		let h2;
 		let t3;
 		let hr;
 		let t4;
-		let div6;
-		let div2;
+		let div7;
+		let div3;
 		let p0;
 		let t6;
-		let div3;
+		let div4;
 		let p1;
 		let t8;
-		let div4;
+		let div5;
 		let p2;
 		let t10;
-		let div5;
+		let div6;
 		let p3;
 		let t12;
 		let button;
@@ -703,28 +711,29 @@ var app = (function () {
 				body = element("body");
 				div0 = element("div");
 				t0 = space();
+				div2 = element("div");
 				div1 = element("div");
-				img = element("img");
+				div1.innerHTML = ``;
 				t1 = space();
 				h2 = element("h2");
-				h2.textContent = "Keploy Test Summary";
+				h2.textContent = "Test Summary";
 				t3 = space();
 				hr = element("hr");
 				t4 = space();
-				div6 = element("div");
-				div2 = element("div");
+				div7 = element("div");
+				div3 = element("div");
 				p0 = element("p");
 				p0.textContent = "Name";
 				t6 = space();
-				div3 = element("div");
+				div4 = element("div");
 				p1 = element("p");
 				p1.textContent = "Total";
 				t8 = space();
-				div4 = element("div");
+				div5 = element("div");
 				p2 = element("p");
 				p2.textContent = "Passed";
 				t10 = space();
-				div5 = element("div");
+				div6 = element("div");
 				p3 = element("p");
 				p3.textContent = "Failed";
 				t12 = space();
@@ -732,38 +741,40 @@ var app = (function () {
 				button.textContent = "Rerun Test Cases";
 				attr_dev(div0, "class", "loader svelte-18zu2rg");
 				attr_dev(div0, "id", "loader");
-				add_location(div0, file, 4, 4, 31);
-				attr_dev(img, "class", "keploylogo svelte-18zu2rg");
-				attr_dev(img, "alt", "Keploy Logo");
-				add_location(img, file, 6, 8, 101);
+				add_location(div0, file, 4, 4, 54);
+				attr_dev(div1, "class", "keploylogo");
+				attr_dev(div1, "alt", "Keploy Logo");
+				set_style(div1, "height", "30px");
+				add_location(div1, file, 6, 8, 124);
 				attr_dev(h2, "class", "info");
-				add_location(h2, file, 10, 8, 186);
-				attr_dev(div1, "id", "topGrid");
-				attr_dev(div1, "class", "svelte-18zu2rg");
-				add_location(div1, file, 5, 4, 74);
-				add_location(hr, file, 12, 4, 243);
-				add_location(p0, file, 16, 12, 374);
-				attr_dev(div2, "id", "testSuiteName");
-				attr_dev(div2, "class", "info svelte-18zu2rg");
-				add_location(div2, file, 15, 8, 324);
-				add_location(p1, file, 19, 12, 460);
-				attr_dev(div3, "id", "totalTestCases");
+				add_location(h2, file, 13, 8, 264);
+				attr_dev(div2, "id", "topGrid");
+				attr_dev(div2, "class", "svelte-18zu2rg");
+				add_location(div2, file, 5, 4, 97);
+				add_location(hr, file, 15, 4, 314);
+				add_location(p0, file, 19, 12, 445);
+				attr_dev(div3, "id", "testSuiteName");
 				attr_dev(div3, "class", "info svelte-18zu2rg");
-				add_location(div3, file, 18, 8, 409);
-				add_location(p2, file, 22, 12, 551);
-				attr_dev(div4, "id", "testCasesPassed");
-				attr_dev(div4, "class", "success svelte-18zu2rg");
-				add_location(div4, file, 21, 8, 496);
-				add_location(p3, file, 25, 12, 641);
-				attr_dev(div5, "id", "testCasesFailed");
-				attr_dev(div5, "class", "error svelte-18zu2rg");
-				add_location(div5, file, 24, 8, 588);
-				attr_dev(div6, "id", "completeTestSummaryGrid");
-				attr_dev(div6, "class", "svelte-18zu2rg");
-				add_location(div6, file, 14, 4, 281);
+				add_location(div3, file, 18, 8, 395);
+				add_location(p1, file, 22, 12, 531);
+				attr_dev(div4, "id", "totalTestCases");
+				attr_dev(div4, "class", "info svelte-18zu2rg");
+				add_location(div4, file, 21, 8, 480);
+				add_location(p2, file, 25, 12, 622);
+				attr_dev(div5, "id", "testCasesPassed");
+				attr_dev(div5, "class", "success svelte-18zu2rg");
+				add_location(div5, file, 24, 8, 567);
+				add_location(p3, file, 28, 12, 712);
+				attr_dev(div6, "id", "testCasesFailed");
+				attr_dev(div6, "class", "error svelte-18zu2rg");
+				add_location(div6, file, 27, 8, 659);
+				attr_dev(div7, "id", "completeTestSummaryGrid");
+				attr_dev(div7, "class", "svelte-18zu2rg");
+				add_location(div7, file, 17, 4, 352);
 				attr_dev(button, "id", "rerunTestSuiteButton");
 				attr_dev(button, "class", "svelte-18zu2rg");
-				add_location(button, file, 29, 4, 694);
+				add_location(button, file, 32, 4, 765);
+				attr_dev(body, "class", "baloo-2-custom");
 				add_location(body, file, 3, 0, 20);
 			},
 			l: function claim(nodes) {
@@ -773,25 +784,25 @@ var app = (function () {
 				insert_dev(target, body, anchor);
 				append_dev(body, div0);
 				append_dev(body, t0);
-				append_dev(body, div1);
-				append_dev(div1, img);
-				append_dev(div1, t1);
-				append_dev(div1, h2);
+				append_dev(body, div2);
+				append_dev(div2, div1);
+				append_dev(div2, t1);
+				append_dev(div2, h2);
 				append_dev(body, t3);
 				append_dev(body, hr);
 				append_dev(body, t4);
-				append_dev(body, div6);
-				append_dev(div6, div2);
-				append_dev(div2, p0);
-				append_dev(div6, t6);
-				append_dev(div6, div3);
-				append_dev(div3, p1);
-				append_dev(div6, t8);
-				append_dev(div6, div4);
-				append_dev(div4, p2);
-				append_dev(div6, t10);
-				append_dev(div6, div5);
-				append_dev(div5, p3);
+				append_dev(body, div7);
+				append_dev(div7, div3);
+				append_dev(div3, p0);
+				append_dev(div7, t6);
+				append_dev(div7, div4);
+				append_dev(div4, p1);
+				append_dev(div7, t8);
+				append_dev(div7, div5);
+				append_dev(div5, p2);
+				append_dev(div7, t10);
+				append_dev(div7, div6);
+				append_dev(div6, p3);
 				append_dev(body, t12);
 				append_dev(body, button);
 			},

@@ -89,22 +89,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           vscode.window.showErrorMessage(data.value);
           break;
         }
-        case "selectRecordFolder": {
-          if (!data.value) {
-            return;
-          } try {
-            console.log('Opening Record Dialogue Box...');
-            vscode.window.showOpenDialog(recordOptions).then(async fileUri => {
-              if (fileUri && fileUri[0]) {
-                console.log('Selected file: ' + fileUri[0].fsPath);
-                this._view?.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
-              }
-            });
-          } catch (error) {
-            this._view?.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
-          }
-          break;
-        }
+        // case "selectRecordFolder": {
+        //   if (!data.value) {
+        //     return;
+        //   } try {
+        //     console.log('Opening Record Dialogue Box...');
+        //     vscode.window.showOpenDialog(recordOptions).then(async fileUri => {
+        //       if (fileUri && fileUri[0]) {
+        //         console.log('Selected file: ' + fileUri[0].fsPath);
+        //         this._view?.webview.postMessage({ type: 'recordfile', value: `${fileUri[0].fsPath}` });
+        //       }
+        //     });
+        //   } catch (error) {
+        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
+        //   }
+        //   break;
+        // }
 
         case 'viewLogs' : {
           if (!data.value) {
@@ -172,23 +172,23 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "selectTestFolder":{
-          if (!data.value) {
-            return;
-          }
-          try {
-            console.log('Opening Test Dialogue Box...');
-            vscode.window.showOpenDialog(testOptions).then(async fileUri => {
-              if (fileUri && fileUri[0]) {
-                console.log('Selected file: ' + fileUri[0].fsPath);
-                this._view?.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
-              }
-            });
-          } catch (error) {
-            this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
-          }
-          break;
-        }
+        // case "selectTestFolder":{
+        //   if (!data.value) {
+        //     return;
+        //   }
+        //   try {
+        //     console.log('Opening Test Dialogue Box...');
+        //     vscode.window.showOpenDialog(testOptions).then(async fileUri => {
+        //       if (fileUri && fileUri[0]) {
+        //         console.log('Selected file: ' + fileUri[0].fsPath);
+        //         this._view?.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
+        //       }
+        //     });
+        //   } catch (error) {
+        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
+        //   }
+        //   break;
+        // }
 
         case 'startTestingCommand' : {
           if (!data.value) {
@@ -399,7 +399,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 					and only allow scripts that have a specific nonce.
         -->
         <meta http-equiv="Content-Security-Policy" content="img-src https: data:; style-src 'unsafe-inline' ${webview.cspSource
-      }; script-src 'nonce-${nonce}';">    
+      }; script-src 'nonce-${nonce}';">   
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap" rel="stylesheet"> 
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<link href="${styleResetUri}" rel="stylesheet">
 				<link href="${styleVSCodeUri}" rel="stylesheet">

@@ -1,14 +1,17 @@
 <script>
 </script>
 
-<body>
+<body class="baloo-2-custom">
     <div class="loader" id="loader"></div>
     <div id="topGrid">
-        <img
+        <div
             class="keploylogo"
             alt="Keploy Logo"
-        />
-        <h2 class="info">Keploy Test Summary</h2>
+            style="
+    height: 30px;"
+        >
+        </div>  
+        <h2 class="info">Test Summary</h2>
     </div>
     <hr />
     <!-- 4 Column Grid -->

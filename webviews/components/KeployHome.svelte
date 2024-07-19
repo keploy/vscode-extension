@@ -1,11 +1,11 @@
 <script>
   import { fly } from 'svelte/transition';
-  import { onMount } from 'svelte';
-  import lottie from 'lottie-web';
+  // import { onMount } from 'svelte';
+  // import lottie from 'lottie-web';
 
-  const intro = 60; // final frame of the intro sequence
-  const stopFrame = 180; // final frame of the stop icon appearing
-  const recFrame = 240; // final frame of the record frame appearing (last frame which matches the intro frame to ensure it loops)
+  // const intro = 60; // final frame of the intro sequence
+  // const stopFrame = 180; // final frame of the stop icon appearing
+  // const recFrame = 240; // final frame of the record frame appearing (last frame which matches the intro frame to ensure it loops)
 
   // let animationWindow;
   // let anim;
@@ -43,6 +43,7 @@
 
   let startRecordingButton;
   let startTestingButton;
+  let buttonsSection = document.getElementById('buttonsSection');
   let stopRecordingButton;
   let stopTestingButton;
   let isRecording = false;
@@ -125,6 +126,9 @@
     if (startTestingButton) {
       startTestingButton.style.display = isRecording || isTesting || selectedIconButton!==1 ? 'none' : 'flex';
     }
+    if (buttonsSection) {
+      buttonsSection.style.display = isRecording || isTesting || selectedIconButton!==1 ? 'none' : 'flex';
+    }
     // if (stopRecordingButton) {
     //   stopRecordingButton.style.display = isRecording ? 'inline' : 'none';
     // }
@@ -147,6 +151,8 @@
         if (statusdiv) {
             statusdiv.style.display = selectedIconButton===1?  'block' : "none";
         }
+        const viewTestLogs = document.getElementById('viewTestLogsButton');
+        const viewRecordLogs = document.getElementById('viewRecordLogsButton');
   }
 
   const recordingSteps = [
@@ -167,7 +173,7 @@
 <style>
   .container {
     padding: 16px;
-    font-family: 'Arial', sans-serif;
+    /* font-family: 'Arial', sans-serif; */
   }
 
   .header {
@@ -190,7 +196,8 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: var(--vscode-button-background);
+      /* background-color: var(--vscode-button-background); */
+      background-color: var(--vscode-button-secondaryBackground);
       border-radius: 5px;
       /* border: 2px solid transparent; */
       color: #FF914D;
@@ -202,7 +209,8 @@
     .icon-button.selected {
       /* border-color: #ff9933; */
       /* background-color: var(--vscode-button-background); */
-      background-color: var(--vscode-button-secondaryBackground)
+      background-color: #00163D;
+
     }
     .icon-button:hover {
       color: #ff9933;
@@ -239,7 +247,7 @@
     }
     #viewCompleteSummaryButton , #viewTestLogsButton , #viewRecordLogsButton{
         display: none;
-        width: 75%;
+        width: 100%;
         margin: 10px auto;
     }
   #recordStatus {
@@ -268,7 +276,8 @@
     justify-content: space-between;
     padding: 16px;
     margin-bottom: 16px;
-    background-color: var(--vscode-button-background);
+    /* background-color: var(--vscode-button-background); */
+    background-color: #00163D;
     color: #ff9933;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -303,7 +312,7 @@
     margin-top: 16px;
     padding: 16px;
     /* background-color: #e9e9e9; */
-    color: #b0b0b0;
+    /* color: #b0b0b0; */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -333,7 +342,8 @@
   .tooltip{
     display: none;
     position: absolute;
-    background-color: var(--vscode-button-background);
+    /* background-color: var(--vscode-button-background); */
+    background-color: #00163D;
     color: white;
     text-align: center;
     border-radius: 6px;
@@ -352,7 +362,7 @@
   }
 </style>
 
-<div class="container">
+<div class="container baloo-2-custom">
   <div class="icon-buttons">
     <button id="keploycommands" class="icon-button {selectedIconButton === 1 ? 'selected' : ''}" on:click={() => selectButton(1)}>
       <span class="tooltip">Record/Replay</span>
@@ -406,7 +416,7 @@
         </div>
         {/if}
 
-  <div class="section">
+  <div class="section" id="buttonsSection">
     <div class="card" on:click={toggleRecording} on:keydown={e => e.key === 'Enter' && toggleRecording()} tabindex="0" role="button" id="startRecordingButton" bind:this={startRecordingButton}>
       <div class="card-icon">
         <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>

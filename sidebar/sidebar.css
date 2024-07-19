@@ -9,7 +9,7 @@ button{
     cursor: pointer;
     opacity: 0.9;
     font-size: 20px;
-    font-weight: bold;
+    /* font-weight: bold; */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
 }
@@ -107,14 +107,14 @@ button:disabled{
     justify-content: center;
 }
 .info{
-    color: #d1a30a;
+    color: #FF914D;
     text-align: center;
     margin-top: 5px;
 }
 
 
 .success{
-    color: rgb(10, 223, 10);
+    color: #16704C;
     text-align: center;
     margin-top: 5px
 }
@@ -126,7 +126,7 @@ button:disabled{
 }
 
 .testSuccess{
-    color: rgb(10, 223, 10);
+    color: #16704C;
     text-align: left;
     margin-top: 5px;
     cursor: pointer;
@@ -140,7 +140,7 @@ button:disabled{
 }
 
 .testName{
-    color: #d1a30a;
+    color: #FF914D;
     text-align: left;
     margin-top: 5px;
     cursor: pointer;

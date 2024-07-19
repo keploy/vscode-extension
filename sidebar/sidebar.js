@@ -33,6 +33,8 @@ const lowerHR = document.getElementById('lowerHR');
 const loader = document.getElementById('loader');
 const viewTestLogsButton = document.getElementById('viewTestLogsButton');
 const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
+// const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
+// const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 let FilePath = "";
 
 //cleanup required
@@ -51,6 +53,13 @@ function resetUI() {
     recordStatus.style.display = "none";
     recordStatus.textContent = "";
   }
+  if (viewRecordLogsButton) {
+    viewRecordLogsButton.style.display = "none";
+  }
+  if (viewTestLogsButton) {
+    viewTestLogsButton.style.display = "none";
+  }
+
   if (testResultsDiv) {
     testResultsDiv.innerHTML = "";
   }
@@ -114,26 +123,24 @@ if(rerunTestSuiteButton){
 }
 
 
-const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
-if (selectRecordFolderButton) {
-  selectRecordFolderButton.addEventListener('click', async () => {
-    console.log("selectRecordFolderButton clicked");
-    vscode.postMessage({
-      type: "selectRecordFolder",
-      value: "Selecting Record Folder..."
-    });
-  });
-}
-const selectTestFolderButton = document.getElementById('selectTestFolderButton');
-if (selectTestFolderButton) {
-  selectTestFolderButton.addEventListener('click', async () => {
-    console.log("selectTestFolderButton clicked");
-    vscode.postMessage({
-      type: "selectTestFolder",
-      value: "Selecting Test Folder..."
-    });
-  });
-}
+// if (selectRecordFolderButton) {
+//   selectRecordFolderButton.addEventListener('click', async () => {
+//     console.log("selectRecordFolderButton clicked");
+//     vscode.postMessage({
+//       type: "selectRecordFolder",
+//       value: "Selecting Record Folder..."
+//     });
+//   });
+// }
+// if (selectTestFolderButton) {
+//   selectTestFolderButton.addEventListener('click', async () => {
+//     console.log("selectTestFolderButton clicked");
+//     vscode.postMessage({
+//       type: "selectTestFolder",
+//       value: "Selecting Test Folder..."
+//     });
+//   });
+// }
  
 if (viewTestLogsButton) {
   viewTestLogsButton.addEventListener('click', async () => {
@@ -425,6 +432,7 @@ window.addEventListener('message', event => {
     }
     if (message.isCompleteSummary === true) {
       console.log("message.isCompleteSummary", message.isCompleteSummary);
+      console.log("message.textSummary", message.textSummary);
       let messageList = message.textSummary.split("\t");
       //remove all "" from the list
       messageList = messageList.filter(function (el) {
