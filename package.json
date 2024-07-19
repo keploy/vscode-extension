@@ -1,13 +1,17 @@
 {
   "name": "keploy",
   "displayName": "Keploy",
-  "description": "E2E testing directly from your IDE",
-  "version": "0.0.1",
-  "publisher": "Akash-Singh04",
+  "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
+  "version": "1.0.0",
+  "publisher": "Keploy",
   "icon": "media/logo.png",
+  "pricing": "Free",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Akash-Singh04/Keploy-VsCode-Extension-Beta"
+    "url": "https://github.com/keploy/vscode-extension"
+  },
+  "sponsor": {
+  "url": "https://github.com/sponsors/keploy"
   },
   "engines": {
     "vscode": "^1.89.0"
