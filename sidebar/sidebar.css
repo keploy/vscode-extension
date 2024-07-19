@@ -1,0 +1,331 @@
+button{
+    /* background-color: black; */
+    color: white;
+    height: fit-content;
+    padding: 14px 20px;
+    margin: 4px 4px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    opacity: 0.9;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+button:disabled{
+    background-color: rgb(80, 79, 79);
+    cursor: not-allowed;
+}
+
+@keyframes changeColor {
+    0% { background-color: rgb(85, 85, 85); }
+    100% { background-color: #FF914D; }
+}
+
+
+
+#versionDisplay{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+#versionDisplay p{
+    font-size: 20px;
+    font-weight: bold;
+    color: #d1a30a;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.terminal {
+    cursor:copy;
+    background-color: #212121; 
+    color: #fff; 
+    font-family: 'Courier New', Courier, monospace; 
+    padding: 10px 5px;
+    border-radius: 5px;
+  }
+  .terminal:hover {
+    background-color: #333;
+  }
+  pre{
+    color: #ff914d;
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
+/* Add this CSS to your stylesheet */
+
+.dropdown-container {
+    width: 100%;
+    margin: 10px 0;
+}
+
+
+
+.dropdown-header {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dropdown-header:hover {
+    background-color: #FF914D;
+    color: #212121;
+}
+
+.dropdown-content {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
+    font-size: medium;
+}
+
+.dropdown-content.show {
+    display: grid;
+}
+
+#Progress{
+    color: white;
+    display: flex;
+    justify-content: center;
+}
+.info{
+    color: #d1a30a;
+    text-align: center;
+    margin-top: 5px;
+}
+
+
+.success{
+    color: rgb(10, 223, 10);
+    text-align: center;
+    margin-top: 5px
+}
+
+.error{
+    color: #9c1a0c;
+    text-align: center;
+    margin-top: 5px;
+}
+
+.testSuccess{
+    color: rgb(10, 223, 10);
+    text-align: left;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.testError{
+    color: #9c1a0c;
+    text-align: left;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.testName{
+    color: #d1a30a;
+    text-align: left;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+
+.loader {
+    border: 4px solid rgba(0, 0, 0, 0);
+    border-left-color: #FF914D; 
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 5px auto;
+    margin-bottom: 10px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  hr {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    margin: 20px auto;
+  }
+  #completeTestSummaryGrid div p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    font-size: medium;
+}
+#testSuiteName {
+    font-size: small;
+}
+.homebutton{
+    width: 30%;
+    font-size: small;
+    text-align: center;
+    margin: 5px ;
+    background-color: rgb(70, 70, 70);
+    padding: 5px auto ;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+  }
+  .homebutton:hover{
+    background-color: rgb(13, 13, 13);
+  }
+
+.logo{
+    color:#FF914D;
+    text-emphasis-color: #FF914D;
+}
+
+
+#recordCommandInput{
+    display: none;
+}
+#testCommandInput{
+    display: none;
+
+}
+#recordingbuttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap : 5px;
+}
+#testbuttons{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap : 5px;
+
+}
+#stopRecordingButton{
+    display: none;
+}
+#stopTestingButton{
+    display: none;
+
+}
+#filePathDiv{
+    padding: 4px;
+    margin: 4px;
+    color: #d1a30a;
+    text-align: center;
+}
+#recordedTestCases{
+    padding: 4px;
+    margin: 4px;
+    color: #d1a30a;
+    text-align: center;
+}
+#testSummary{
+    padding: 4px;
+    margin: 4px;
+    color: #d1a30a;
+    text-align: center;
+}
+#testSummary p{
+    padding: 4px;
+    margin: 4px;
+    color: #d1a30a;
+    text-align: center;
+}
+#recordedTestCases p{
+    /* padding: 4px; */
+    /* margin: 4px; */
+    /* color: #d1a30a; */
+    text-align: center;
+}
+/* Add this CSS to your styles */
+.dropdown-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    background: url('dropdown.png') no-repeat center center; 
+    background-size: contain;
+}
+
+
+
+.settings-icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+    background: url('settings.png') no-repeat center center; 
+    background-size: contain;
+}
+.history-icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+    background: url('history.png') no-repeat center center; 
+    background-size: contain;
+
+}
+
+.image-container{
+    background: url('KeployIcon.png') no-repeat center center; 
+    background-size: contain;
+    position: relative;
+    width: 90%;
+    height: 90%;
+    }
+
+.settings-icon.open {
+    transform: rotate(180deg);
+}
+.replay-icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s;
+    background: url('replay.png') no-repeat center center; 
+    background-size: contain;
+    color: tomato;
+}
+
+.code-icon{
+    background: url("code-icon.png") no-repeat center center;
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+}
+
+.replay-icon.open {
+    transform: rotate(180deg);
+}
+
+.dropdown-icon.open {
+    transform: rotate(180deg);
+}
+
+/* .logodiv{
+    display: flex;
+    justify-content: center;
+} *//* Common dropdown styles */
+
+
+/* Specific styles for recorded test cases */
+.recordedTestCase {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    text-align: left;
+    cursor: pointer;
+}
+
+

@@ -1,0 +1,44 @@
+
+       ▓██▓▄
+    ▓▓▓▓██▓█▓▄
+     ████████▓▒
+          ▀▓▓███▄      ▄▄   ▄               ▌
+         ▄▌▌▓▓████▄    ██ ▓█▀  ▄▌▀▄  ▓▓▌▄   ▓█  ▄▌▓▓▌▄ ▌▌   ▓
+       ▓█████████▌▓▓   ██▓█▄  ▓█▄▓▓ ▐█▌  ██ ▓█  █▌  ██  █▌ █▓
+      ▓▓▓▓▀▀▀▀▓▓▓▓▓▓▌  ██  █▓  ▓▌▄▄ ▐█▓▄▓█▀ █▓█ ▀█▄▄█▀   █▓█
+       ▓▌                           ▐█▌                   █▌
+        ▓
+  
+version: 2.2.0-alpha23
+
+🐰 Keploy: 2024-07-18T17:43:46+05:30 	[34mINFO[0m	GitHub Actions workflow file generated successfully	{"path": "/githubactions/keploy.yml"}
+🐰 Keploy: 2024-07-18T17:43:47+05:30 	[34mINFO[0m	keploy initialized and probes added to the kernel.
+🐰 Keploy: 2024-07-18T17:43:47+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-18T17:43:47+05:30 	[34mINFO[0m	Java detected and CA already exists	{"path": "/usr/lib/jvm/java-11-openjdk-amd64/lib/security/cacerts"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	Keploy has taken control of the DNS resolution mechanism, your application may misbehave if you have provided wrong domain name in your application code.
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	starting TCP DNS server at addr :26789
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	starting UDP DNS server at addr :26789
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	Proxy started at port:16789
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to start proxy on port:16789	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	error while running the proxy server	{"error": "listen tcp :16789: bind: address already in use"}
+PID: 97785
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /:param                   --> main.getURL (3 handlers)
+[GIN-debug] POST   /url                      --> main.putURL (3 handlers)
+{"level":"fatal","ts":1721304828.5617056,"caller":"gin-mongo/main.go:69","msg":"listen: %s\n","error":"listen tcp :8080: bind: address already in use","stacktrace":"main.main\n\t/home/akash/Desktop/Keploy/samples-go/gin-mongo/main.go:69\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:271"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to fetch the destination info	{"Source port": 45300, "error": "lookup: key does not exist"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "lookup: key does not exist"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to fetch the destination info	{"Source port": 45302, "error": "lookup: key does not exist"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to handle the client connection	{"error": "lookup: key does not exist"}
+exit status 1
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	error while running the app	{"error": "exit status 1"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[34mINFO[0m	stopping Keploy	{"reason": "user application terminated unexpectedly hence stopping keploy, please check application logs if this behaviour is not expected"}
+🐰 Keploy: 2024-07-18T17:43:48+05:30 	[31mERROR[0m	failed to stop the proxy	{"error": "listen tcp :16789: bind: address already in use"}
+🐰 Keploy: 2024-07-18T17:43:50+05:30 	[34mINFO[0m	eBPF resources released successfully...
+Signal received, canceling context...
