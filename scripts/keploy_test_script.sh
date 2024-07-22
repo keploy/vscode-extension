@@ -65,4 +65,4 @@ fi
 # Execute the keploy command and append the output to the log file
 sudo $keploycmd test | tee -a "$log_file_path"
 touch ./log_file.txt
-cp "$log_file_path" ./log_file.txt
+ 

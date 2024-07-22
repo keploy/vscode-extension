@@ -83,7 +83,9 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
 
         if (isCompleteSummary) {
             //remove fist 7 lines of summary
-            testSummaryList.splice(0, 7);
+            console.log("testSummaryList before splice", testSummaryList , "isCompleteSummary", isCompleteSummary);
+            testSummaryList.splice(0, 6);
+        console.log("testSummaryList", testSummaryList , "isCompleteSummary", isCompleteSummary);
             testSummaryList.forEach((line, index) => {
                 webview.postMessage({
                     type: 'testResults',

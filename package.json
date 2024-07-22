@@ -2,7 +2,7 @@
   "name": "keployio",
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
@@ -11,7 +11,7 @@
     "url": "https://github.com/keploy/vscode-extension"
   },
   "sponsor": {
-  "url": "https://github.com/sponsors/keploy"
+    "url": "https://github.com/sponsors/keploy"
   },
   "engines": {
     "vscode": "^1.89.0"
@@ -132,7 +132,6 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
-    "lottie-web": "^5.12.2",
     "sinon": "^17.0.1",
     "svelte": "^4.2.12",
     "uuid": "^10.0.0",

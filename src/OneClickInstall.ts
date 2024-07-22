@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 
 export default function executeKeployOneClickCommand(): void {
-    const command = 'curl --silent -O -L https://keploy.io/install.sh';
+    const command = 'curl --silent -O -L https://keploy.io/install.sh && bash install.sh';
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
