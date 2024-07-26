@@ -19,7 +19,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -47,24 +46,29 @@
     "menus": {
       "view/title": [
         {
-          "command": "keploy.updateKeploy"
+          "command": "keploy.updateKeploy",
+          "when": "view == Keploy-Sidebar"
         },
         {
-          "command": "keploy.getLatestVersion"
+          "command": "keploy.getLatestVersion",
+          "when": "view == Keploy-Sidebar"
         },
         {
-          "command": "keploy.KeployVersion"
+          "command": "keploy.KeployVersion",
+          "when": "view == Keploy-Sidebar"
         },
         {
-          "command": "keploy.viewChangeLog"
+          "command": "keploy.viewChangeLog",
+          "when": "view == Keploy-Sidebar"
         },
         {
-          "command": "keploy.viewDocumentation"
+          "command": "keploy.viewDocumentation",
+          "when": "view == Keploy-Sidebar"
         },
         {
           "command": "keploy.SignIn",
           "group": "navigation",
-          "when": "keploy.signedIn != true"
+          "when": "keploy.signedIn != true && view == Keploy-Sidebar"
         }
       ]
     },
@@ -72,27 +76,32 @@
       {
         "command": "keploy.SignIn",
         "title": "Sign In",
-        "when": "keploy.signedIn != true"
+        "when": "keploy.signedIn != true && view == Keploy-Sidebar"
       },
       {
         "command": "keploy.updateKeploy",
-        "title": "Update your Keploy"
+        "title": "Update your Keploy",
+        "when": "view == Keploy-Sidebar"
       },
       {
         "command": "keploy.KeployVersion",
-        "title": "View Your Keploy Version"
+        "title": "View Your Keploy Version",
+        "when": "view == Keploy-Sidebar"
       },
       {
         "command": "keploy.getLatestVersion",
-        "title": "Get Latest Version"
+        "title": "Get Latest Version",
+        "when": "view == Keploy-Sidebar"
       },
       {
         "command": "keploy.viewChangeLog",
-        "title": "View Change Log"
+        "title": "View Change Log",
+        "when": "view == Keploy-Sidebar"
       },
       {
         "command": "keploy.viewDocumentation",
-        "title": "View Docs"
+        "title": "View Docs",
+        "when": "view == Keploy-Sidebar"
       }
     ]
   },
