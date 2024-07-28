@@ -4,8 +4,24 @@
   let noise = '';
   let passThroughPorts = '';
 
+  const vscode = acquireVsCodeApi();
+
   function handleSetupConfig() {
     showSettings = true;
+  }
+
+  function handleOAuthClick(provider) {
+    vscode.postMessage({
+      type: 'navigate',
+      value: provider,
+    });
+  }
+
+  function handleSignIn() {
+    vscode.postMessage({
+      type: 'navigate',
+      value: 'Option',
+    });
   }
 </script>
 
@@ -21,7 +37,7 @@
   }
 
   .get-started {
-    margin-top: 50px;
+    margin-top: 20px;
     text-align: center;
     font-size: 18px;
   }
@@ -42,33 +58,65 @@
     border-radius: 20px;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 
   .button:hover {
-    background-color: #FF914D;
+    background-color: #FF7A33;
   }
 
-  /* New UI Styles */
-  .settings-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 300px;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  .oauth-button {
+    padding: 10px 20px;
+    background-color: #4285F4; /* default color for google */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
   }
 
-  
-  .settings-item input {
-    flex-grow: 1;
+  .oauth-button:hover {
+    background-color: #357AE8; /* slightly darker shade */
+  }
+
+  .oauth-button.microsoft {
+    background-color: #F3F3F3;
+    color: #000;
+  }
+
+  .oauth-button.microsoft:hover {
+    background-color: #E0E0E0;
+  }
+
+  .oauth-button.github {
+    background-color: #333;
+    color: #fff;
+  }
+
+  .oauth-button.github:hover {
+    background-color: #242424;
   }
 
   .heading {
-    font-size: 24px;
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .subheading {
+    font-size: 20px;
     margin-bottom: 20px;
     text-align: center;
+  }
+
+  .oauth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
   }
 
   .container-hide {
@@ -77,24 +125,20 @@
 </style>
 
 <div class="{showSettings ? 'container-hide' : 'container'}">
+  <h1 class="heading">Welcome to Keploy</h1>
+  <h2 class="subheading">Your AI Generator Tool</h2>
   <div class="image-container">
+    <!-- Add your image here -->
+  </div>
+  <div class="oauth-buttons">
+    <button class="oauth-button" on:click={() => handleOAuthClick('google')}>Login with Google</button>
+    <button class="oauth-button microsoft" on:click={() => handleOAuthClick('microsoft')}>Login with Microsoft</button>
+    <button class="oauth-button github" on:click={() => handleOAuthClick('github')}>Login with GitHub</button>
   </div>
   <div class="get-started">Get Started</div>
   <div class="description">
     Integrate Keploy by installing the open-source agent locally. No code-changes required.
   </div>
   <button class="button" id="setupConfig" on:click={handleSetupConfig}>Setup Keploy Config</button>
-</div>
-
-<div class="{showSettings ? 'settings-container' : 'container-hide'}">
-  <h1 class="heading">Initialise Keploy Config File</h1>
-  <div class="settings-item">
-    <div class="code-icon "alt="Icon" > </div>
-    <input type="text" placeholder="Enter App Command" bind:value={appCommand} id="configCommand">
-  </div>
-  <div class="settings-item">
-    <div class="code-icon "alt="Icon" > </div>
-    <input type="text" placeholder="Enter Path (Default : './'" bind:value={noise} id="configPath">
-  </div>
-  <button class="button" id="initialiseConfigButton">Save Configuration</button>
+  <button class="button" on:click={handleSignIn}>Sign In</button>
 </div>

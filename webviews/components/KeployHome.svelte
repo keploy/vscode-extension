@@ -375,11 +375,11 @@
   <div class="header">
     <div class="heading">
       {#if selectedIconButton === 3}
-        <h1>Make changes to keploy config</h1>
+        <h1>Make changes to keploy config !!</h1>
       {:else if selectedIconButton === 2}
         <h1>View Previous Test Results</h1>
       {:else}
-        <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}</h1>
+        <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy !!"}</h1>
       {/if}
       <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopRecordingButton" bind:this={stopRecordingButton} role="button" tabindex="0">
         <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>

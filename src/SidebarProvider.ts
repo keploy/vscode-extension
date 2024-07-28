@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 // import context from "vscode";
 import { getNonce } from "./Utils";
 // import { downloadAndUpdate , downloadAndInstallkeployary ,downloadAndUpdateDocker  } from './updateKeploy';
-import { startRecording , stopRecording } from "./Record";
-import { startTesting , stopTesting ,  displayTestCases , displayPreviousTestResults } from "./Test";
+import { startRecording, stopRecording } from "./Record";
+import { startTesting, stopTesting, displayTestCases, displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";
 import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
 
@@ -27,9 +27,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument;
 
   constructor(private readonly _extensionUri: vscode.Uri) {
-   }
+  }
 
-   public postMessage(type: any, value: any) {
+  public postMessage(type: any, value: any) {
     console.log('postMessage');
     this._view?.webview.postMessage({ type: type, value: value });
   }
@@ -50,7 +50,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
       ],
     };
-    
+
 
     let scriptUri = webviewView.webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.js")
@@ -58,20 +58,20 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     let compiledCSSUri = webviewView.webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.css")
     );
-    
+
     //if config file is already present then navigate to keploy page
     const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
     const configFilePath = folderPath + '/keploy.yml';
-    if (existsSync(configFilePath)) {
-      scriptUri = webviewView.webview.asWebviewUri(
-        vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.js")
-      );
-      compiledCSSUri = webviewView.webview.asWebviewUri(
-        vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.css")
-      );
-    }
+    // if (existsSync(configFilePath)) {
+    //   scriptUri = webviewView.webview.asWebviewUri(
+    //     vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.js")
+    //   );
+    //   compiledCSSUri = webviewView.webview.asWebviewUri(
+    //     vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.css")
+    //   );
+    // }
 
-    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview ,  compiledCSSUri , scriptUri);
+    webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
@@ -105,19 +105,19 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
-        case 'startRecordingCommand' : {
+        case 'startRecordingCommand': {
           if (!data.value) {
             return;
           }
           try {
             console.log('Start Recording button clicked');
 
-            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
+            const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.log");
+            const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
-            if(process.platform === 'win32'){
+            if (process.platform === 'win32') {
               //convert filepaths to windows format
               wslscriptPath = wslscriptPath.replace(/\\/g, '/');
               wsllogPath = wsllogPath.replace(/\\/g, '/');
@@ -131,8 +131,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log("bashScript path" + wslscriptPath);
             console.log(wsllogPath);
 
-            
-            await startRecording( wslscriptPath , wsllogPath , bashScript.fsPath , zshScript.fsPath ,logfilePath.fsPath , this._view?.webview );
+
+            await startRecording(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, this._view?.webview);
             this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
             this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
           } catch (error) {
@@ -140,22 +140,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
-        case 'stopRecordingCommand' : {
+        case 'stopRecordingCommand': {
           if (!data.value) {
             return;
           }
-          try{
+          try {
             console.log("Stopping recording");
             await stopRecording();
 
           }
-          catch(error){
+          catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to Stop record ${error}` });
           }
           break;
         }
 
-        case "selectTestFolder":{
+        case "selectTestFolder": {
           if (!data.value) {
             return;
           }
@@ -173,18 +173,18 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case 'startTestingCommand' : {
+        case 'startTestingCommand': {
           if (!data.value) {
             return;
           }
           try {
             console.log('Start Testing button clicked');
-            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
+            const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
-            if(process.platform === 'win32'){
+            if (process.platform === 'win32') {
               //convert filepaths to windows format
               wslscriptPath = wslscriptPath.replace(/\\/g, '/');
               wsllogPath = wsllogPath.replace(/\\/g, '/');
@@ -195,42 +195,67 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               wslscriptPath = wslscriptPath.replace(/:/g, '');
               wsllogPath = wsllogPath.replace(/:/g, '');
             }
-            await startTesting( wslscriptPath , wsllogPath , bashScript.fsPath ,zshScript.fsPath, logfilePath.fsPath ,this._view?.webview );
+            await startTesting(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, this._view?.webview);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
           }
           break;
-        } 
-        case 'stopTestingCommand' : {
+        }
+        case 'stopTestingCommand': {
           if (!data.value) {
             return;
           }
-          try{
+          try {
             console.log("Stopping Testing");
             await stopTesting();
           }
-          catch(error){
+          catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to Stop Testing ${error}` });
           }
           break;
         }
-        case "navigate" : {
+        case "navigate": {
           if (!data.value) {
             return;
           }
           try {
             console.log('Navigate to ' + data.value);
-            const recordPageJs = webviewView.webview.asWebviewUri(
-              vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${data.value}.js`)
-            );
-            const recordPageCss = webviewView.webview.asWebviewUri(
-              vscode.Uri.joinPath(this._extensionUri, "out", `compiled/${data.value}.css`)
-            );
-            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview ,  recordPageCss , recordPageJs);
-            this._view?.webview.postMessage({ type: 'openRecordPage', value: 'Record Page opened' });
-        
+            let sveltePageJs: vscode.Uri;
+            let sveltePageCss: vscode.Uri;
+
+            if (data.value === 'ChooseLanguage') {
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "ChooseLanguage.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "ChooseLanguage.css")
+              );
+            } else if (data.value === 'Option') {
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Option.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Option.css")
+              );
+            } else if (data.value === 'Forms') {
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Forms.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Forms.css")
+              );
+            } else {
+              throw new Error("Unsupported navigation value");
+            }
+
+            // Save the language state
+            // vscode.getState().then(() => {
+            //   vscode.setState({ language: data.language });
+            // });
+
+            webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, sveltePageCss, sveltePageJs);
           } catch (error) {
-            this._view?.webview.postMessage({ type: 'error', value: `Failed to open record page ${error}` });
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open page ${error}` });
           }
           break;
         }
@@ -249,14 +274,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "viewCompleteSummary" : {
+        case "viewCompleteSummary": {
           if (!data.value) {
             return;
           }
           try {
             console.log('Opening Complete Summary...');
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
-            displayTestCases(logfilePath.fsPath, this._view?.webview , false , true);
+            const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
+            displayTestCases(logfilePath.fsPath, this._view?.webview, false, true);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to open complete summary ${error}` });
           }
@@ -264,13 +289,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         }
 
-        case "viewPreviousTestResults" : {
+        case "viewPreviousTestResults": {
           if (!data.value) {
             return;
           }
           try {
             console.log('Opening Previous Test Results...');
-            displayPreviousTestResults( this._view?.webview);
+            displayPreviousTestResults(this._view?.webview);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to open previous test results ${error}` });
           }
@@ -278,13 +303,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         }
 
-        case "aggregatedTestResults" : {
+        case "aggregatedTestResults": {
           if (!data.value) {
             return;
           }
           try {
             console.log('Opening Aggregated Test Results...');
-            this._view?.webview.postMessage({ type: 'aggregatedTestResults', data: data.data , error: data.error , value : data.value});
+            this._view?.webview.postMessage({ type: 'aggregatedTestResults', data: data.data, error: data.error, value: data.value });
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to open aggregated test results ${error}` });
           }
@@ -292,7 +317,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         }
 
-        case "openConfigFile" : {
+        case "openConfigFile": {
           if (!data.value) {
             return;
           }
@@ -306,13 +331,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
-        case "initialiseConfig" : {
+        case "initialiseConfig": {
           if (!data.value) {
             return;
           }
           try {
             console.log('Initialising Config File...');
-            handleInitializeKeployConfigFile(this._view?.webview , data.path , data.command);
+            handleInitializeKeployConfigFile(this._view?.webview, data.path, data.command);
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to initialise config file ${error}` });
           }
@@ -321,7 +346,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         // case "setupConfigFile" : {
 
         // }
-        case "openTestFile" : {
+        case "openTestFile": {
           if (!data.value) {
             return;
           }
@@ -335,6 +360,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+
       }
 
     });
@@ -343,11 +369,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
-  private _getHtmlForWebview(webview: vscode.Webview , compiledCSSUri: vscode.Uri , scriptUri: vscode.Uri) {
+  private _getHtmlForWebview(webview: vscode.Webview, compiledCSSUri: vscode.Uri, scriptUri: vscode.Uri) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")
     );
-    
+
     const styleMainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "sidebar", "sidebar.css")
     );
@@ -362,7 +388,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     // Use a nonce to only allow a specific script to be run.
     const nonce = getNonce();
     //read the global state to check if the user is signed in
-    
+
 
     // webview.postMessage({ type: 'displayPreviousTestResults', value: 'Displaying Previous Test Results' });
     // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.log");
@@ -371,7 +397,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     //   displayTestCases(logfilePath.fsPath, webview ,  true , false);
     // }, 3000);
     // displayTestCases(logfilePath.fsPath, webview);
-   
+
 
     return `<!DOCTYPE html>
 			<html lang="en">

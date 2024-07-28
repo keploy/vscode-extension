@@ -21478,7 +21478,7 @@ var app = (function () {
 		? "Recording Started"
 		: /*isTesting*/ ctx[5]
 			? "Testing Started"
-			: "Running Keploy") + "";
+			: "Running Keploy !!") + "";
 
 		let t;
 
@@ -21487,7 +21487,7 @@ var app = (function () {
 				h1 = element("h1");
 				t = text(t_value);
 				attr_dev(h1, "class", "svelte-9t8x9t");
-				add_location(h1, file, 381, 8, 10854);
+				add_location(h1, file, 381, 8, 10857);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -21498,7 +21498,7 @@ var app = (function () {
 				? "Recording Started"
 				: /*isTesting*/ ctx[5]
 					? "Testing Started"
-					: "Running Keploy") + "")) set_data_dev(t, t_value);
+					: "Running Keploy !!") + "")) set_data_dev(t, t_value);
 			},
 			d: function destroy(detaching) {
 				if (detaching) {
@@ -21527,7 +21527,7 @@ var app = (function () {
 				h1 = element("h1");
 				h1.textContent = "View Previous Test Results";
 				attr_dev(h1, "class", "svelte-9t8x9t");
-				add_location(h1, file, 379, 8, 10796);
+				add_location(h1, file, 379, 8, 10799);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, h1, anchor);
@@ -21558,7 +21558,7 @@ var app = (function () {
 		const block = {
 			c: function create() {
 				h1 = element("h1");
-				h1.textContent = "Make changes to keploy config";
+				h1.textContent = "Make changes to keploy config !!";
 				attr_dev(h1, "class", "svelte-9t8x9t");
 				add_location(h1, file, 377, 8, 10707);
 			},
@@ -21595,9 +21595,9 @@ var app = (function () {
 				h3 = element("h3");
 				h3.innerHTML = ``;
 				attr_dev(h3, "id", "testSuiteName");
-				add_location(h3, file, 404, 12, 12328);
+				add_location(h3, file, 404, 12, 12334);
 				attr_dev(div, "id", "lastTestResults");
-				add_location(div, file, 403, 8, 12289);
+				add_location(div, file, 403, 8, 12295);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21640,7 +21640,7 @@ var app = (function () {
 				div = element("div");
 				if (if_block) if_block.c();
 				attr_dev(div, "class", "steps svelte-9t8x9t");
-				add_location(div, file, 424, 4, 13463);
+				add_location(div, file, 424, 4, 13469);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21856,7 +21856,7 @@ var app = (function () {
 				div = element("div");
 				div.textContent = `${/*step*/ ctx[28]}`;
 				attr_dev(div, "class", "step svelte-9t8x9t");
-				add_location(div, file, 431, 10, 13721);
+				add_location(div, file, 431, 10, 13727);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -21889,7 +21889,7 @@ var app = (function () {
 				div = element("div");
 				div.textContent = `${/*step*/ ctx[28]}`;
 				attr_dev(div, "class", "step svelte-9t8x9t");
-				add_location(div, file, 427, 10, 13598);
+				add_location(div, file, 427, 10, 13604);
 			},
 			m: function mount(target, anchor) {
 				insert_dev(target, div, anchor);
@@ -22100,94 +22100,94 @@ var app = (function () {
 				add_location(div0, file, 355, 2, 9165);
 				attr_dev(path0, "fill", "#FF914D");
 				attr_dev(path0, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
-				add_location(path0, file, 384, 95, 11236);
+				add_location(path0, file, 384, 95, 11242);
 				attr_dev(svg0, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg0, "width", "35px");
 				attr_dev(svg0, "height", "35px");
 				attr_dev(svg0, "viewBox", "0 0 24 24");
-				add_location(svg0, file, 384, 8, 11149);
+				add_location(svg0, file, 384, 8, 11155);
 				attr_dev(span5, "class", "stop-button svelte-9t8x9t");
 				attr_dev(span5, "id", "stopRecordingButton");
 				attr_dev(span5, "role", "button");
 				attr_dev(span5, "tabindex", "0");
-				add_location(span5, file, 383, 6, 10968);
+				add_location(span5, file, 383, 6, 10974);
 				attr_dev(path1, "fill", "#FF914D");
 				attr_dev(path1, "d", "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z");
-				add_location(path1, file, 388, 95, 11689);
+				add_location(path1, file, 388, 95, 11695);
 				attr_dev(svg1, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg1, "width", "35px");
 				attr_dev(svg1, "height", "35px");
 				attr_dev(svg1, "viewBox", "0 0 24 24");
-				add_location(svg1, file, 388, 8, 11602);
+				add_location(svg1, file, 388, 8, 11608);
 				attr_dev(span6, "class", "stop-button svelte-9t8x9t");
 				attr_dev(span6, "id", "stopTestingButton");
 				attr_dev(span6, "role", "button");
 				attr_dev(span6, "tabindex", "0");
-				add_location(span6, file, 387, 6, 11425);
+				add_location(span6, file, 387, 6, 11431);
 				attr_dev(div1, "class", "heading svelte-9t8x9t");
 				add_location(div1, file, 375, 4, 10640);
 				attr_dev(h30, "id", "recordStatus");
 				attr_dev(h30, "class", "svelte-9t8x9t");
-				add_location(h30, file, 392, 8, 11939);
+				add_location(h30, file, 392, 8, 11945);
 				attr_dev(div2, "id", "recordedTestCases");
 				attr_dev(div2, "class", "svelte-9t8x9t");
-				add_location(div2, file, 393, 8, 11976);
+				add_location(div2, file, 393, 8, 11982);
 				attr_dev(h31, "id", "testStatus");
 				attr_dev(h31, "class", "svelte-9t8x9t");
-				add_location(h31, file, 394, 8, 12019);
+				add_location(h31, file, 394, 8, 12025);
 				attr_dev(div3, "id", "testResults");
 				attr_dev(div3, "class", "svelte-9t8x9t");
-				add_location(div3, file, 395, 8, 12054);
+				add_location(div3, file, 395, 8, 12060);
 				attr_dev(button3, "id", "viewCompleteSummaryButton");
 				attr_dev(button3, "class", "svelte-9t8x9t");
-				add_location(button3, file, 396, 8, 12091);
+				add_location(button3, file, 396, 8, 12097);
 				attr_dev(hr, "id", "completeSummaryHr");
 				attr_dev(hr, "class", "svelte-9t8x9t");
-				add_location(hr, file, 399, 8, 12196);
+				add_location(hr, file, 399, 8, 12202);
 				attr_dev(div4, "class", "statusdiv svelte-9t8x9t");
 				attr_dev(div4, "id", "statusdiv");
-				add_location(div4, file, 391, 6, 11892);
+				add_location(div4, file, 391, 6, 11898);
 				attr_dev(div5, "class", "header svelte-9t8x9t");
 				add_location(div5, file, 374, 2, 10615);
 				attr_dev(path2, "fill", "#FF914D");
 				attr_dev(path2, "d", "M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6");
 				attr_dev(path2, "opacity", "0.3");
-				add_location(path2, file, 411, 95, 12730);
+				add_location(path2, file, 411, 95, 12736);
 				attr_dev(path3, "fill", "#FF914D");
 				attr_dev(path3, "d", "M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6");
-				add_location(path3, file, 411, 195, 12830);
+				add_location(path3, file, 411, 195, 12836);
 				attr_dev(svg2, "xmlns", "http://www.w3.org/2000/svg");
 				attr_dev(svg2, "width", "35px");
 				attr_dev(svg2, "height", "35px");
 				attr_dev(svg2, "viewBox", "0 0 24 24");
-				add_location(svg2, file, 411, 8, 12643);
+				add_location(svg2, file, 411, 8, 12649);
 				attr_dev(div6, "class", "card-icon svelte-9t8x9t");
-				add_location(div6, file, 410, 6, 12611);
+				add_location(div6, file, 410, 6, 12617);
 				attr_dev(div7, "class", "card-text svelte-9t8x9t");
-				add_location(div7, file, 413, 6, 13000);
+				add_location(div7, file, 413, 6, 13006);
 				attr_dev(div8, "class", "card-arrow svelte-9t8x9t");
-				add_location(div8, file, 414, 6, 13053);
+				add_location(div8, file, 414, 6, 13059);
 				attr_dev(div9, "class", "card svelte-9t8x9t");
 				attr_dev(div9, "tabindex", "0");
 				attr_dev(div9, "role", "button");
 				attr_dev(div9, "id", "startRecordingButton");
-				add_location(div9, file, 409, 4, 12416);
+				add_location(div9, file, 409, 4, 12422);
 				attr_dev(div10, "class", "card-icon replay-icon svelte-9t8x9t");
-				add_location(div10, file, 417, 6, 13287);
+				add_location(div10, file, 417, 6, 13293);
 				attr_dev(div11, "class", "card-text svelte-9t8x9t");
-				add_location(div11, file, 418, 6, 13335);
+				add_location(div11, file, 418, 6, 13341);
 				attr_dev(div12, "class", "card-arrow svelte-9t8x9t");
-				add_location(div12, file, 419, 6, 13388);
+				add_location(div12, file, 419, 6, 13394);
 				attr_dev(div13, "class", "card svelte-9t8x9t");
 				attr_dev(div13, "tabindex", "0");
 				attr_dev(div13, "role", "button");
 				attr_dev(div13, "id", "startTestingButton");
-				add_location(div13, file, 416, 4, 13100);
+				add_location(div13, file, 416, 4, 13106);
 				attr_dev(div14, "class", "section svelte-9t8x9t");
-				add_location(div14, file, 408, 2, 12390);
+				add_location(div14, file, 408, 2, 12396);
 				attr_dev(div15, "class", "loader svelte-9t8x9t");
 				attr_dev(div15, "id", "loader");
-				add_location(div15, file, 436, 2, 13801);
+				add_location(div15, file, 436, 2, 13807);
 				attr_dev(div16, "class", "container svelte-9t8x9t");
 				add_location(div16, file, 354, 0, 9139);
 			},

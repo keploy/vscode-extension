@@ -35,7 +35,7 @@ const loader = document.getElementById('loader');
 let FilePath = "";
 
 //cleanup required
-
+// Here have to icons for authentication and welcome
 function formatDate(date) {
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
