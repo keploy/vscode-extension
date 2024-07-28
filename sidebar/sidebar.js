@@ -147,7 +147,7 @@ if (viewTestLogsButton) {
     console.log("viewTestLogsButton clicked");
     vscode.postMessage({
       type: "viewLogs",
-      value: `test_mode.log`
+      value: `logs/test_mode.log`
     });
   });
 }
@@ -157,7 +157,7 @@ if(viewRecordLogsButton){
     console.log("viewRecordLogsButton clicked");
     vscode.postMessage({
       type: "viewLogs",
-      value: `record_mode.log`
+      value: `logs/record_mode.log`
     });
   });
 
