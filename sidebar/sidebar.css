@@ -84,6 +84,12 @@ button:disabled{
     align-items: center;
     cursor: pointer;
 }
+.report-dropdown-content{
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    padding: 10px;
+    font-size: 18px;
+}
 
 .dropdown-header:hover {
     background-color: #FF914D;
@@ -92,12 +98,15 @@ button:disabled{
 
 .dropdown-content {
     display: none;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     padding: 10px;
     font-size: 18px;
 }
 
 .dropdown-content.show {
+    display: grid;
+}
+.report-dropdown-content.show{
     display: grid;
 }
 

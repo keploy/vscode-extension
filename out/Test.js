@@ -203,6 +203,7 @@ function displayPreviousTestResults(webview) {
                                 date: new Date(test.resp.header.Date).toLocaleDateString('en-GB'),
                                 method: test.req.method,
                                 name: test.test_case_id,
+                                report: test.name,
                                 status: test.status,
                                 testCasePath: testFilePath
                             });
