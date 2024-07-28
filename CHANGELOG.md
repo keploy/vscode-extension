@@ -16,3 +16,6 @@ First Release for Vs Code Extension.
 - Added Log file access incase of failed test cases and errors.
 - Added Consistent extension theme.
 - Added support for Menu commands for updating keploy, viewing keploy version, viewing docs, viewing latest version and viewing changelog
+
+## [1.0.2]
+- UI improvements and Bug fixes: Commands and Signin was visible in other extension views
