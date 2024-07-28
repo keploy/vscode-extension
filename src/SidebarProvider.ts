@@ -129,9 +129,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           try {
             console.log('Start Recording button clicked');
 
-            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "record_mode.log");
+            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_record_script.sh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.zsh");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "record_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
@@ -196,9 +196,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Start Testing button clicked');
-            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
-            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
+            const bashScript =  vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_test_script.sh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts","zsh", "keploy_test_script.zsh");
+            const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
             if(process.platform === 'win32'){
