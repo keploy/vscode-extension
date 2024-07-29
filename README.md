@@ -18,7 +18,7 @@ Keploy is a Visual Studio Code extension designed to help developers record and 
 2. Keploy CLI is present : - `curl --silent -O -L https://keploy.io/install.sh && source install.sh`
 
 
-## Contirbution Guide
+## Contribution Guide
 
 ### Start in development mode
 
