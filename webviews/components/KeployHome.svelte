@@ -1,5 +1,6 @@
 <script>
   import { fly } from 'svelte/transition';
+  import '../app.css';
   // import { onMount } from 'svelte';
   // import lottie from 'lottie-web';
 
@@ -171,6 +172,10 @@
 </script>
 
 <style>
+
+
+
+
   .container {
     padding: 16px;
     
@@ -364,87 +369,133 @@
   }
 </style>
 
-<div class="container baloo-2-custom">
-  <div class="icon-buttons">
-    <button id="keploycommands" class="icon-button {selectedIconButton === 1 ? 'selected' : ''}" on:click={() => selectButton(1)}>
-      <span class="tooltip">Record/Replay</span>
-        {#if isRecording}
-            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
-        {:else}
-            <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
-        {/if}
-        <!-- <div bind:this={animationWindow} id="animationWindow"></div> -->
-    </button>
-    <button id="displayPreviousTestResults" class="icon-button {selectedIconButton === 2 ? 'selected' : ''}" on:click={() => selectButton(2)}>
-      <span class="history-icon"></span>
-      <span class="tooltip">History</span>
-    </button>
-    <button id="openConfig" class="icon-button {selectedIconButton === 3 ? 'selected' : ''}" on:click={() => selectButton(3)}>
-      <span class="settings-icon"></span> 
-      <span class="tooltip">Settings</span>
-    </button>
-</div>
-  <div class="header">
-    <div class="heading">
-      {#if selectedIconButton === 3}
-        <h1>Make changes to keploy config</h1>
-      {:else if selectedIconButton === 2}
-        <h1>View Previous Test Results</h1>
-      {:else}
-        <h1>{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}</h1>
-      {/if}
-      <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopRecordingButton" bind:this={stopRecordingButton} role="button" tabindex="0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
 
+
+<div class="p-4 font-sans">
+  <div class="flex justify-center space-x-2 border-2 border-[var(--vscode-button-secondaryBackground)] rounded-md p-1 mb-6">
+    <button 
+      id="keploycommands" 
+      class="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] rounded-md text-[#FF914D] text-2xl h-10 w-[80vw] cursor-pointer hover:text-[#ff9933] hover:bg-[#606060] group {selectedIconButton === 1 ? 'bg-[#00163D]' : ''}"
+      on:click={() => selectButton(1)}
+    >
+      <span class="hidden group-hover:block absolute top-20 bg-[#00163D] text-white text-center rounded-md p-1 w-30 z-10 text-xs">Record/Replay</span>
+      {#if isRecording}
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
+      {:else}
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
+      {/if}
+    </button>
+    <button 
+      id="displayPreviousTestResults" 
+      class="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] rounded-md text-[#FF914D] text-2xl h-10 w-[80vw] cursor-pointer hover:text-[#ff9933] hover:bg-[#606060] group {selectedIconButton === 2 ? 'bg-[#00163D]' : ''}"
+      on:click={() => selectButton(2)}
+    >
+      <span class="history-icon"></span>
+      <span class="hidden group-hover:block absolute top-20 bg-[#00163D] text-white text-center rounded-md p-1 w-30 z-10 text-xs">History</span>
+    </button>
+    <button 
+      id="openConfig" 
+      class="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] rounded-md text-[#FF914D] text-2xl h-10 w-[80vw] cursor-pointer hover:text-[#ff9933] hover:bg-[#606060] group {selectedIconButton === 3 ? 'bg-[#00163D]' : ''}"
+      on:click={() => selectButton(3)}
+    >
+      <span class="settings-icon"></span>
+      <span class="hidden group-hover:block absolute top-20 bg-[#00163D] text-white text-center rounded-md p-1 w-30 z-10 text-xs">Settings</span>
+    </button>
+  </div>
+
+  <div class="flex flex-col items-center justify-center mb-8 mt-7">
+    <div class="flex items-center justify-around text-center">
+      {#if selectedIconButton === 3}
+        <h1 class="text-2xl m-0">Make changes to keploy config</h1>
+      {:else if selectedIconButton === 2}
+        <h1 class="text-2xl m-0">View Previous Test Results</h1>
+      {:else}
+        <h1 class="text-2xl m-0">{isRecording ? "Recording Started" : isTesting ? "Testing Started" : "Running Keploy"}</h1>
+      {/if}
+      <span 
+        class="cursor-pointer text-red-500 text-2xl ml-4" 
+        on:click={stop} 
+        on:keydown={e => e.key === 'Enter' && stop()} 
+        id="stopRecordingButton" 
+        bind:this={stopRecordingButton} 
+        role="button" 
+        tabindex="0"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
       </span>
-      <span class="stop-button" on:click={stop} on:keydown={e => e.key === 'Enter' && stop()} id="stopTestingButton" bind:this={stopTestingButton} role="button" tabindex="0">
-        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
+      <span 
+        class="cursor-pointer text-red-500 text-2xl ml-4" 
+        on:click={stop} 
+        on:keydown={e => e.key === 'Enter' && stop()} 
+        id="stopTestingButton" 
+        bind:this={stopTestingButton} 
+        role="button" 
+        tabindex="0"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"/></svg>
       </span>
     </div>    
-      <div class="statusdiv" id="statusdiv">
-        <h3 id="recordStatus"> </h3>
-        <div id="recordedTestCases"></div>
-        <h3 id="testStatus"> </h3>
-        <div id="testResults"></div>
-        <button id="viewCompleteSummaryButton">View Complete Test Summary</button>
-        <button id="viewTestLogsButton">View Logs</button>  
-        <button id="viewRecordLogsButton">View Logs</button>  
-        <hr id="completeSummaryHr" />
-      </div>
-  </div>
-  {#if selectedIconButton === 2}
-        <div id="lastTestResults">
-            <h3 id="testSuiteName"> </h3>
-        </div>
-        {/if}
-
-  <div class="section" id="buttonsSection">
-    <div class="card" on:click={toggleRecording} on:keydown={e => e.key === 'Enter' && toggleRecording()} tabindex="0" role="button" id="startRecordingButton" bind:this={startRecordingButton}>
-      <div class="card-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
-      </div>
-      <div class="card-text">Record Test Cases</div>
-      <div class="card-arrow">➔</div>
+    <div class="grid place-items-center" id="statusdiv">
+      <h3 id="recordStatus" class="text-center font-bold my-5"></h3>
+      <div id="recordedTestCases" class="grid grid-cols-1 place-items-center"></div>
+      <h3 id="testStatus" class="text-center"></h3>
+      <div id="testResults" class="grid grid-cols-1 place-items-center my-5 text-left"></div>
+      <button id="viewCompleteSummaryButton" class="w-full my-2.5">View Complete Test Summary</button>
+      <button id="viewTestLogsButton" class="w-full my-2.5">View Logs</button>  
+      <button id="viewRecordLogsButton" class="w-full my-2.5">View Logs</button>  
+      <hr id="completeSummaryHr" class="hidden" />
     </div>
-    <div class="card" on:click={toggleTesting} on:keydown={e => e.key === 'Enter' && toggleTesting()} tabindex="0" role="button" id="startTestingButton" bind:this={startTestingButton}>
-      <div class="card-icon replay-icon"></div>
-      <div class="card-text">Replay Test Cases</div>
-      <div class="card-arrow">➔</div>
+  </div>
+
+  {#if selectedIconButton === 2}
+    <div id="lastTestResults">
+      <h3 id="testSuiteName"></h3>
+    </div>
+  {/if}
+
+  <div class="mb-8" id="buttonsSection">
+    <div 
+      class="flex items-center justify-between p-4 mb-4 bg-[#00163D] text-[#ff9933] rounded-lg shadow-md transition-colors duration-300 cursor-pointer"
+      on:click={toggleRecording} 
+      on:keydown={e => e.key === 'Enter' && toggleRecording()} 
+      tabindex="0" 
+      role="button" 
+      id="startRecordingButton" 
+      bind:this={startRecordingButton}
+    >
+      <div class="flex items-center text-2xl h-9 w-9 mr-4 text-[#ff6f61]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-9 h-9" viewBox="0 0 24 24"><path fill="#FF914D" d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6" opacity="0.3"/><path fill="#FF914D" d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"/></svg>
+      </div>
+      <div class="flex-grow text-xl text-white">Record Test Cases</div>
+      <div class="text-xl text-white">➔</div>
+    </div>
+    <div 
+      class="flex items-center justify-between p-4 mb-4 bg-[#00163D] text-[#ff9933] rounded-lg shadow-md transition-colors duration-300 cursor-pointer"
+      on:click={toggleTesting} 
+      on:keydown={e => e.key === 'Enter' && toggleTesting()} 
+      tabindex="0" 
+      role="button" 
+      id="startTestingButton" 
+      bind:this={startTestingButton}
+    >
+      <div class="flex items-center text-2xl h-9 w-9 mr-4 text-[#ff6f61] replay-icon"></div>
+      <div class="flex-grow text-xl text-white">Replay Test Cases</div>
+      <div class="text-xl text-white">➔</div>
     </div>
   </div>
 
   {#if showSteps}
-    <div class="steps" transition:fly={{ y: 20, duration: 300 }}>
+    <div class="mt-4 p-4 rounded-lg shadow-md" transition:fly={{ y: 20, duration: 300 }}>
       {#if isRecording}
         {#each recordingSteps as step}
-          <div class="step">{step}</div>
+          <div class="mb-2">{step}</div>
         {/each}
       {:else if isTesting}
         {#each replayingSteps as step}
-          <div class="step">{step}</div>
+          <div class="mb-2">{step}</div>
         {/each}
       {/if}
     </div>
   {/if}
-  <div class="loader" id="loader"></div>
+  <div class="hidden" id="loader"></div>
 </div>
