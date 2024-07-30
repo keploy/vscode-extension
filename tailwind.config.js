@@ -1,9 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
+  content: ['./webviews/**/*.{html,js,svelte,ts}'],
   theme: {
     extend: {},
   },
   plugins: [],
 }
-
