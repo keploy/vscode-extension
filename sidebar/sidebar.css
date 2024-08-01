@@ -23,22 +23,6 @@ button:disabled{
     100% { background-color: #FF914D; }
 }
 
-
-
-/* #versionDisplay{
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 20px;
-} */
-/* #versionDisplay p{
-    font-size: 20px;
-    font-weight: bold;
-    color: #d1a30a;
-    text-align: center;
-    margin-top: 20px;
-} */
-
 .terminal {
     cursor:copy;
     background-color: #212121; 
@@ -100,7 +84,7 @@ button:disabled{
     display: none;
     grid-template-columns: 1fr;
     padding: 10px;
-    font-size: 18px;
+    /* font-size: 18px; */
 }
 
 .dropdown-content.show {
@@ -334,13 +318,6 @@ button:disabled{
     transform: rotate(180deg);
 }
 
-/* .logodiv{
-    display: flex;
-    justify-content: center;
-} *//* Common dropdown styles */
-
-
-/* Specific styles for recorded test cases */
 .recordedTestCase {
     display: block;
     width: 100%;
