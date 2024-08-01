@@ -242,7 +242,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
         let totalFailure = 0;
         let totalTests = 0;
 
-        const testResults: { date: string; method: string; name: string; status: string , testCasePath : string }[] = [];
+        const testResults: { date: string; method: string; name: string; report: string; status: string , testCasePath : string }[] = [];
 
         for (const testRunDir of testRunDirs) {
             const testRunPath = path.join(reportsFolder, testRunDir);
@@ -265,6 +265,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
                             date: new Date(test.resp.header.Date).toLocaleDateString('en-GB'),
                             method: test.req.method,
                             name: test.test_case_id,
+                            report : test.name,
                             status: test.status,
                             testCasePath: testFilePath
                         });

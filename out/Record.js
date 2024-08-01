@@ -157,7 +157,7 @@ function startRecording(wslscriptPath, wsllogfilePath, bashScriptPath, zshScript
                         let recordCmd;
                         if (currentShell.includes('zsh')) {
                             // Use a Zsh-specific script if needed
-                            //replace bashScriptPaht with zshScriptPath for zsh
+                            //replace bashScriptPath with zshScriptPath for zsh
                             recordCmd = `"${bashScriptPath}" "${logfilePath}" `;
                         }
                         else {
