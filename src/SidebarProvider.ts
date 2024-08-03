@@ -408,12 +408,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <link href="${compiledCSSUri}" rel="stylesheet">
+        <script nonce="${nonce}">
+          const vscode = acquireVsCodeApi();
+        </script>
 			</head>
       <body>
-				
-			</body>
+      <script nonce="${nonce}" src="${scriptMainUri}"></script>
       <script nonce="${nonce}" src="${scriptUri}"></script>
-        <script type="module" nonce="${nonce}" src="${scriptMainUri}"></script>
+			</body>
 			</html>`;
   }
 }
