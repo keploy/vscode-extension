@@ -218,6 +218,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           if (!data.value) {
             return;
           }
+          if (data.value === "google") {
+            console.log('Navigate to Google');
+            vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+          }
           try {
             console.log('Navigate to ' + data.value);
             let sveltePageJs: vscode.Uri;

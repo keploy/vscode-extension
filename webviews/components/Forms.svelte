@@ -16,6 +16,13 @@
     });
   }
 
+  function handleBackClick() {
+    vscode.postMessage({
+      type: 'navigate',
+      value: 'ChooseLanguage',
+    });
+  }
+
   // Placeholder values based on selected language
   $: if (vscode.getState() && vscode.getState().language) {
     const language = vscode.getState().language;
@@ -123,11 +130,20 @@
     background-color: #ff914d;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    margin-top: 10px;
   }
 
   .button:hover {
     background-color: #d4af37;
     transform: translateY(-5px);
+  }
+
+  .back-button {
+    background-color: #333;
+  }
+
+  .back-button:hover {
+    background-color: #555;
   }
 </style>
 
@@ -135,8 +151,7 @@
   <div class="title">Generate Your Keploy Unit Tests</div>
   <div class="instructions">
     <ol>
-      <li>Keploy UTG needs coverage report in cobertura format. For more information visit - <a href="https://keploy.io/docs/running-keploy/unit-test-generator/" target="_blank" style="color: #ff914d;">Keploy Documentation</a>.</li>
-      <br>
+      <li>Keploy UTG needs coverage report in cobertura format. For information visit - <a href="https://keploy.io/docs/running-keploy/unit-test-generator/" target="_blank" style="color: #ff914d;">Keploy Documentation</a>.</li>
       <li>Make sure you are connected to the internet.</li>
     </ol>
   </div>
@@ -178,5 +193,6 @@
       />
     </div>
     <button type="submit" class="button">Generate</button>
+    <button type="button" class="button back-button" on:click={handleBackClick}>Back</button>
   </form>
 </div>

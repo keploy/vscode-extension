@@ -66,6 +66,13 @@
           "group": "navigation",
           "when": "keploy.signedIn != true"
         }
+      ],
+      "explorer/context": [
+        {
+          "command": "keploy.doSomething",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        }
       ]
     },
     "commands": [
@@ -93,6 +100,10 @@
       {
         "command": "keploy.viewDocumentation",
         "title": "View Docs"
+      },
+      {
+        "command": "keploy.doSomething",
+        "title": "Do Something"
       }
     ]
   },
@@ -111,10 +122,12 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@smui/button": "^7.0.0",
+    "@smui/card": "^7.0.0",
     "@tsconfig/svelte": "^1.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.6",
-    "@types/node": "18.x",
+    "@types/node": "^18.19.42",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^10.0.0",
     "@types/vscode": "^1.86.0",
@@ -132,8 +145,13 @@
   },
   "dependencies": {
     "@material-design-icons/svg": "^0.14.13",
+    "@types/express": "^4.17.21",
+    "@types/open": "^6.2.1",
+    "express": "^4.19.2",
+    "google-auth-library": "^9.12.0",
     "js-yaml": "^4.1.0",
     "lottie-web": "^5.12.2",
+    "open": "^10.1.0",
     "sinon": "^17.0.1",
     "svelte": "^4.2.12",
     "uuid": "^10.0.0",

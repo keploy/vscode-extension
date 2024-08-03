@@ -3,6 +3,7 @@ import { SidebarProvider } from './SidebarProvider';
 import SignIn  from './SignIn';
 import oneClickInstall from './OneClickInstall';
 
+// This method is called when your extension is activated
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
         context.subscriptions.push(
@@ -11,6 +12,13 @@ export function activate(context: vscode.ExtensionContext) {
                 sidebarProvider
             )
         );
+    // Register the command
+    let disposable = vscode.commands.registerCommand('keploy.doSomething', (uri: vscode.Uri) => {
+        // Your command logic here
+        vscode.window.showInformationMessage(`Selected file: HAHAH`);
+    });
+
+    context.subscriptions.push(disposable);
     oneClickInstall();
     
     let signedIn = context.globalState.get('ourToken');

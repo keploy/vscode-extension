@@ -32,6 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.loginAPI = void 0;
 const vscode = __importStar(require("vscode"));
 const http = __importStar(require("http"));
 const uuid_1 = require("uuid");
@@ -87,4 +88,35 @@ function fetchAccessToken(code) {
         return data;
     });
 }
+function loginAPI(url = "", provider = "", code = "") {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Default options are marked with *
+        // var response : Response
+        try {
+            const response = yield fetch(url, {
+                method: "POST",
+                // mode: 'no-cors', // no-cors, *cors, same-origin
+                // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                // credentials: 'omit', // include, *same-origin, omit
+                headers: {
+                    "Content-Type": "application/json"
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                redirect: "follow",
+                referrerPolicy: "no-referrer",
+                body: JSON.stringify({ provider: provider, code: code }) // body data type must match "Content-Type" header
+            });
+            if (response.status == 200) {
+                return response.json();
+            }
+            else {
+                return response.json();
+            }
+        }
+        catch (err) {
+            console.log("ERROR at login", err);
+        }
+    });
+}
+exports.loginAPI = loginAPI;
 //# sourceMappingURL=SignIn.js.map

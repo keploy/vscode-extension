@@ -40,9 +40,16 @@ const vscode = __importStar(require("vscode"));
 const SidebarProvider_1 = require("./SidebarProvider");
 const SignIn_1 = __importDefault(require("./SignIn"));
 const OneClickInstall_1 = __importDefault(require("./OneClickInstall"));
+// This method is called when your extension is activated
 function activate(context) {
     const sidebarProvider = new SidebarProvider_1.SidebarProvider(context.extensionUri);
     context.subscriptions.push(vscode.window.registerWebviewViewProvider("Keploy-Sidebar", sidebarProvider));
+    // Register the command
+    let disposable = vscode.commands.registerCommand('keploy.doSomething', (uri) => {
+        // Your command logic here
+        vscode.window.showInformationMessage(`Selected file: HAHAH`);
+    });
+    context.subscriptions.push(disposable);
     (0, OneClickInstall_1.default)();
     let signedIn = context.globalState.get('ourToken');
     console.log(context.globalState);
