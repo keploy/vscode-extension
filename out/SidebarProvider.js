@@ -365,7 +365,6 @@ class SidebarProvider {
     _getHtmlForWebview(webview, compiledCSSUri, scriptUri) {
         const styleResetUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "reset.css"));
         const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "sidebar", "sidebar.css"));
-        const scriptMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "sidebar", "sidebar.js"));
         const styleVSCodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, "media", "vscode.css"));
         // Use a nonce to only allow a specific script to be run.
         const nonce = (0, Utils_1.getNonce)();
@@ -399,7 +398,6 @@ class SidebarProvider {
         </script>
 			</head>
       <body>
-      <script nonce="${nonce}" src="${scriptMainUri}"></script>
       <script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>
 			</html>`;
