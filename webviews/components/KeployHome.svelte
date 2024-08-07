@@ -173,73 +173,6 @@
 
 <style>
 
-
-
-
-  .container {
-    padding: 16px;
-    
-    /* font-family: 'Arial', sans-serif; */
-  }
-
-  .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
-    margin-top: 28px;
-    flex-direction: column;
-  }
-  .icon-buttons {
-        display: flex;
-        justify-content: space-around;
-        border : 2px solid ;
-        border-color: var(--vscode-button-secondaryBackground);
-        border-radius: 5px;
-        padding: 5px;
-    }
-    .icon-button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      /* background-color: var(--vscode-button-background); */
-      background-color: var(--vscode-button-secondaryBackground);
-      border-radius: 5px;
-      /* border: 2px solid transparent; */
-      color: #FF914D;
-      font-size: 24px;
-      height: 40px;
-      width: 80svw;
-      cursor: pointer;
-    }
-    .icon-button.selected {
-      /* border-color: #ff9933; */
-      /* background-color: var(--vscode-button-background); */
-      background-color: #00163D;
-
-    }
-    .icon-button:hover {
-      color: #ff9933;
-      background-color: #606060;
-
-      /* background-color: #f9f9f9; */
-    }
-  .heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-  }
-
-  .header h1 {
-    font-size: 24px;
-    margin: 0;
-  }
-
-  .section {
-    margin-bottom: 32px;
-  }
-
   #testResults{
         margin: 20px auto;
         text-align: left;
@@ -267,106 +200,18 @@
         grid-template-columns: 1fr;
         place-items: center;
     }
-    .statusdiv{
-        display: grid;
-        grid-template-columns: 1fr;
-        place-items: center;
-    }
+
     #testResults{
       text-align: left;
     }
 
-  .card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px;
-    margin-bottom: 16px;
-    /* background-color: var(--vscode-button-background); */
-    background-color: #00163D;
-    color: #ff9933;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
-    cursor: pointer;
-  }
 
-
-  .card-icon {
-    display: flex;
-    align-items: center;
-    font-size: 24px;
-    height: 35px;
-    width: 35px;
-
-    margin-right: 16px;
-    color: #ff6f61;
-  }
-
-  .card-text {
-    flex-grow: 1;
-    font-size: 20px;
-    color: white;
-  }
-
-  .card-arrow {
-    font-size: 20px;
-    color: white;
-  }
-
-  .steps {
-    margin-top: 16px;
-    padding: 16px;
-    /* background-color: #e9e9e9; */
-    /* color: #b0b0b0; */
-    font-size: 16px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .step {
-    margin-bottom: 8px;
-  }
-
-  .stop-button {
-    display: inline;
-    cursor: pointer;
-    color: red;
-    font-size: 24px;
-    margin-left: 16px;
+  #completeSummaryHr{
+    display: none;
   }
   .loader {
         display: none;
     }
-    /* #animationWindow {
-    width: 400px;
-    height: 400px;
-  } */
-
-  .icon-button {
-    cursor: pointer;
-  }
-  .tooltip{
-    display: none;
-    position: absolute;
-    /* background-color: var(--vscode-button-background); */
-    background-color: #00163D;
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    width: 120px;
-    z-index: 1;
-    font-size: x-small;
-    top : 80px;
-
-  }
-  .icon-button:hover .tooltip{
-    display: block;
-  }
-  #completeSummaryHr{
-    display: none;
-  }
 </style>
 
 
@@ -374,9 +219,11 @@
 <div class="p-4 font-sans">
   <div class="flex justify-center space-x-2 border-2 border-[var(--vscode-button-secondaryBackground)] rounded-md p-1 mb-6">
     <button 
-      id="keploycommands" 
-      class="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] rounded-md text-[#FF914D] text-2xl h-10 w-[80vw] cursor-pointer hover:text-[#ff9933] hover:bg-[#606060] group {selectedIconButton === 1 ? 'bg-[#00163D]' : ''}"
-      on:click={() => selectButton(1)}
+    id="keploycommands"
+    class="flex justify-center items-center rounded-md text-2xl h-10 w-[80vw] cursor-pointer group 
+      {selectedIconButton === 1 ? 'bg-secondary-300' : 'bg-[var(--vscode-button-secondaryBackground)] text-[#FF914D]'}
+      hover:bg-[#606060]"
+    on:click={() => selectButton(1)}
     >
       <span class="hidden group-hover:block absolute top-20 bg-[#00163D] text-white text-center rounded-md p-1 w-30 z-10 text-xs">Record/Replay</span>
       {#if isRecording}
@@ -387,7 +234,9 @@
     </button>
     <button 
       id="displayPreviousTestResults" 
-      class="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] rounded-md text-[#FF914D] text-2xl h-10 w-[80vw] cursor-pointer hover:text-[#ff9933] hover:bg-[#606060] group {selectedIconButton === 2 ? 'bg-[#00163D]' : ''}"
+      class="flex justify-center items-center rounded-md text-2xl h-10 w-[80vw] cursor-pointer group 
+      {selectedIconButton === 2 ? 'bg-secondary-300' : 'bg-[var(--vscode-button-secondaryBackground)] text-[#FF914D]'}
+      hover:bg-[#606060]"
       on:click={() => selectButton(2)}
     >
       <span class="history-icon"></span>
@@ -395,7 +244,9 @@
     </button>
     <button 
       id="openConfig" 
-      class="flex justify-center items-center bg-[var(--vscode-button-secondaryBackground)] rounded-md text-[#FF914D] text-2xl h-10 w-[80vw] cursor-pointer hover:text-[#ff9933] hover:bg-[#606060] group {selectedIconButton === 3 ? 'bg-[#00163D]' : ''}"
+      class="flex justify-center items-center rounded-md text-2xl h-10 w-[80vw] cursor-pointer group 
+      {selectedIconButton === 3 ? 'bg-secondary-300' : 'bg-[var(--vscode-button-secondaryBackground)] text-[#FF914D]'}
+      hover:bg-[#606060]"
       on:click={() => selectButton(3)}
     >
       <span class="settings-icon"></span>
@@ -441,8 +292,8 @@
       <h3 id="testStatus" class="text-center"></h3>
       <div id="testResults" class="grid grid-cols-1 place-items-center my-5 text-left"></div>
       <button id="viewCompleteSummaryButton" class="w-full my-2.5">View Complete Test Summary</button>
-      <button id="viewTestLogsButton" class="w-full my-2.5">View Logs</button>  
-      <button id="viewRecordLogsButton" class="w-full my-2.5">View Logs</button>  
+      <button id="viewTestLogsButton" class="w-full my-2.5 bg-[#00163D] p-4 mb-4 shadow-md text-white text-xl">View Logs</button>  
+      <button id="viewRecordLogsButton" class="w-full my-2.5 bg-[#00163D] p-4 mb-4 shadow-md text-white text-xl">View Logs</button>  
       <hr id="completeSummaryHr" class="hidden" />
     </div>
   </div>
@@ -497,5 +348,5 @@
       {/if}
     </div>
   {/if}
-  <div class="hidden" id="loader"></div>
+  <div class="border-4 border-transparent border-l-primary-300 rounded-full w-10 h-10 animate-spin mx-auto mb-2.5" id="loader"></div>
 </div>

@@ -4,14 +4,13 @@
   let path = './';
   let passThroughPorts = '';
   import '../app.css';
-
   function handleSetupConfig() {
     showSettings = true;
   }
 </script>
 
 <body class="font-sans">
-  <div class="keploylogo"></div>
+  <div class="flex justify-center mt-5 mb-5 w-full h-[10%] keploylogo"></div>
   <div class={showSettings ? 'hidden' : 'flex flex-col items-center justify-center h-screen p-5 text-center'}>
     <div class="image-container"></div>
     <div class="mt-12 text-xl">Get Started</div>
