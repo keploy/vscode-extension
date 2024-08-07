@@ -40,14 +40,33 @@ const vscode = __importStar(require("vscode"));
 const SidebarProvider_1 = require("./SidebarProvider");
 const SignIn_1 = __importDefault(require("./SignIn"));
 const OneClickInstall_1 = __importDefault(require("./OneClickInstall"));
+const Utg_1 = __importDefault(require("./Utg"));
+class KeployCodeLensProvider {
+    provideCodeLenses(document, token) {
+        const fileName = document.uri.fsPath;
+        if (fileName.endsWith('.test.js')) {
+            return [];
+        }
+        const topOfDocument = new vscode.Range(0, 0, 0, 0);
+        return [
+            new vscode.CodeLens(topOfDocument, {
+                title: '⚙️ Generate keploy unit tests',
+                command: 'keploy.doSomething',
+                arguments: [document.uri.fsPath]
+            })
+        ];
+    }
+}
 // This method is called when your extension is activated
 function activate(context) {
     const sidebarProvider = new SidebarProvider_1.SidebarProvider(context.extensionUri);
-    context.subscriptions.push(vscode.window.registerWebviewViewProvider("Keploy-Sidebar", sidebarProvider));
+    context.subscriptions.push(vscode.window.registerWebviewViewProvider("Keploy-Sidebar", sidebarProvider), vscode.languages.registerCodeLensProvider({ language: 'javascript', scheme: 'file' }, new KeployCodeLensProvider()));
     // Register the command
     let disposable = vscode.commands.registerCommand('keploy.doSomething', (uri) => {
-        // Your command logic here
-        vscode.window.showInformationMessage(`Selected file: HAHAH`);
+        // The code you place here will be executed every time your command is executed
+        // Display a message box to the user
+        vscode.window.showInformationMessage('Hello World from Keploy!');
+        (0, Utg_1.default)(context);
     });
     context.subscriptions.push(disposable);
     (0, OneClickInstall_1.default)();

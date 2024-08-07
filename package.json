@@ -19,91 +19,23 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onCommand:keploy.doSomething",
+    "onLanguage:javascript"
+  ],
   "main": "./out/extension.js",
   "contributes": {
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "Keploy-Sidebar",
-          "title": "Keploy",
-          "icon": "media/logo.png"
-        }
-      ]
-    },
-    "views": {
-      "Keploy-Sidebar": [
-        {
-          "id": "Keploy-Sidebar",
-          "name": "Keploy",
-          "icon": "media/logo.png",
-          "type": "webview",
-          "webviewOptions": {
-            "retainContextWhenHidden": true
-          }
-        }
-      ]
-    },
-    "menus": {
-      "view/title": [
-        {
-          "command": "keploy.updateKeploy"
-        },
-        {
-          "command": "keploy.getLatestVersion"
-        },
-        {
-          "command": "keploy.KeployVersion"
-        },
-        {
-          "command": "keploy.viewChangeLog"
-        },
-        {
-          "command": "keploy.viewDocumentation"
-        },
-        {
-          "command": "keploy.SignIn",
-          "group": "navigation",
-          "when": "keploy.signedIn != true"
-        }
-      ],
-      "explorer/context": [
-        {
-          "command": "keploy.doSomething",
-          "when": "resourceLangId == markdown",
-          "group": "navigation"
-        }
-      ]
-    },
     "commands": [
       {
-        "command": "keploy.SignIn",
-        "title": "Sign In here",
-        "when": "keploy.signedIn != true"
-      },
-      {
-        "command": "keploy.updateKeploy",
-        "title": "Update your Keploy"
-      },
-      {
-        "command": "keploy.KeployVersion",
-        "title": "View Your Keploy Version"
-      },
-      {
-        "command": "keploy.getLatestVersion",
-        "title": "Get Latest Version"
-      },
-      {
-        "command": "keploy.viewChangeLog",
-        "title": "View Change Log"
-      },
-      {
-        "command": "keploy.viewDocumentation",
-        "title": "View Docs"
-      },
-      {
-        "command": "keploy.doSomething",
+        "command": "keploy.generateTests",
         "title": "Do Something"
+      }
+    ],
+    "codeLensProviders": [
+      {
+        "language": "javascript",
+        "scheme": "file",
+        "providerId": "keploy-codelens"
       }
     ]
   },

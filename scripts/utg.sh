@@ -1,24 +1,30 @@
 #!/bin/bash
 
-echo "Choose the type of test generation:"
-echo "1. Single Test File"
-echo "2. Entire Application"
-read -p "Enter the number corresponding to your choice: " choice
+export API_KEY="6ffb888dbc934365b8a2b947f4f236d1"
 
-if [ "$choice" -eq 1 ]; then
-    read -p "Enter the path to the source file: " sourceFilePath
-    read -p "Enter the path to the test file for the above source file: " testFilePath
-    read -p "Enter the path to the coverage report (coverage.xml): " coverageReportPath
-    
-    keploy gen --sourceFilePath="$sourceFilePath" --testFilePath="$testFilePath" --testCommand="npm test" --coverageReportPath="$coverageReportPath"
+echo $API_KEY
 
-elif [ "$choice" -eq 2 ]; then
-    read -p "Enter the path to the coverage report (coverage.xml): " coverageReportPath
+sourceFilePath=$1
+testFilePath=$2
+coverageReportPath=$3
 
-    echo "⚠️ Warning: Executing this command will generate unit tests for all files in the application. Depending on the size of the codebase, this process may take between 20 minutes to an hour and will incur costs related to LLM usage."
+echo "Generating tests for source file: $sourceFilePath"
+echo "Using test file: $testFilePath"
+echo "Coverage report path: $coverageReportPath"
 
-    keploy gen --testCommand="npm test" --testDir="test" --coverageReportPath="$coverageReportPath"
+# Add env variables to the npm test command
+utgEnv=" -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage"
 
-else
-    echo "Invalid choice. Please run the script again and choose either 1 or 2."
-fi
+testCommand="npm test "+ $utgEnv
+echo $testCommand
+# Run Keploy
+# keploy gen --sourceFilePath="./src/routes/routes.js" --testFilePath="./test/routes.test.js" --testCommand=$testCommand  --coverageReportPath="$coverageReportPath" --llmApiVersion="2024-02-01" --llmBaseUrl="https://keploy-open-ai-instance.openai.azure.com/openai/deployments/Keploy-gpt4o" --max-iterations="10"
+
+keploy gen --source-file-path="$sourceFilePath" \
+  --test-file-path="$testFilePath" \
+  --test-command="npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage
+" \
+  --coverage-report-path="./coverage/cobertura-coverage.xml"\
+ --llmApiVersion "2024-02-01" --llmBaseUrl "https://keploy-open-ai-instance.openai.azure.com/openai/deployments/Keploy-gpt4o" --max-iterations "10"
+
+
