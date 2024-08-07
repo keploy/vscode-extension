@@ -326,10 +326,10 @@ window.addEventListener('message', event => {
 
     if (message.error === true) {
         recordStatus.textContent = `Failed To Record Test Cases`;
-        recordStatus.classList.add("error");
+        recordStatus.classList.add("text-[#9c1a0c]", "text-center", "mt-1.25");
         const errorMessage = document.createElement('p');
         errorMessage.textContent = message.textContent;
-        errorMessage.classList.add("error");
+        errorMessage.classList.add("text-[#9c1a0c]", "text-center", "mt-1.25");
         recordedTestCasesDiv.appendChild(errorMessage);
         viewRecordLogsButton.style.display = "block";
         return;
@@ -339,12 +339,12 @@ window.addEventListener('message', event => {
       viewRecordLogsButton.style.display = "block";
         recordStatus.textContent = `No Test Cases Recorded`;
         recordedTestCasesDiv.style.display = "none";
-        recordStatus.classList.add("info");
+        recordStatus.classList.add("text-primary-300" ,"text-center", "mt-1");
         return;
     }
 
     recordStatus.textContent = `Test Cases Recorded`;
-    recordStatus.classList.add("success");
+    recordStatus.classList.add("text-accent-100", "text-center", "mt-1");
     console.log(message.textContent);
 
     if (recordedTestCasesDiv) {
@@ -358,7 +358,16 @@ window.addEventListener('message', event => {
 
             // Create a button to act as the dropdown toggle
             const dropdownToggle = document.createElement('div');
-            dropdownToggle.classList.add("dropdown-header");
+            dropdownToggle.classList.add(
+              "p-2.5", 
+              "flex", 
+              "justify-between", 
+              "items-center", 
+              "cursor-pointer", 
+              "hover:bg-primary-300", 
+              "hover:text-[#212121]"
+            );
+            
 
             // Create the toggle text
             const toggleText = document.createElement('span');
@@ -392,7 +401,7 @@ window.addEventListener('message', event => {
 
         // Create the test case element
         const testCaseElement = document.createElement('button');
-        testCaseElement.classList.add("recordedTestCase");
+        testCaseElement.classList.add("block", "w-full", "p-2.5", "mt-1.25", "text-left", "cursor-pointer");
         testCaseElement.addEventListener('click', async () => {
             vscode.postMessage({
                 type: "openRecordedTestFile",
@@ -417,7 +426,7 @@ window.addEventListener('message', event => {
     }
     testCaseElement.textContent = message.textSummary;
     if (message.textSummary.includes("test passed")) {
-      testCaseElement.classList.add("success");
+      testCaseElement.classList.add("text-accent-100" ,"text-center mt-1");
     }
     else if (message.textSummary.includes("test failed")) {
       //split the textSummary
@@ -425,10 +434,10 @@ window.addEventListener('message', event => {
       if (numErrors !== " 0") {
         viewTestLogsButton.style.display = "block";
       }
-      testCaseElement.classList.add("error");
+      testCaseElement.classList.add("text-[#9c1a0c]", "text-center", "mt-1.25");
     }
     else {
-      testCaseElement.classList.add("info");
+      testCaseElement.classList.add("text-primary-300" ,"text-center" ,"mt-1");
     }
     if (message.isCompleteSummary === true) {
       console.log("message.isCompleteSummary", message.isCompleteSummary);
@@ -466,7 +475,7 @@ window.addEventListener('message', event => {
       viewTestLogsButton.style.display = "block";
       if (testStatus) {
         testStatus.textContent = message.value;
-        testStatus.classList.add("error");
+        testStatus.classList.add("text-[#9c1a0c]", "text-center", "mt-1.25");
       }
       else {
         testResultsDiv.innerHTML = `<p class="error">${message.value}</p>`;
@@ -489,15 +498,16 @@ window.addEventListener('message', event => {
 
   else if (message.type === "configNotFound") {
     if(configNotFound){
-      configNotFound.classList.add("error");
+      configNotFound.classList.add("text-[#9c1a0c]", "text-center", "mt-1.25");
       configNotFound.textContent = message.value ;
     }
     const configInstruction = document.createElement('pre');
-      configInstruction.classList.add("info");
+      configInstruction.classList.add("text-primary-300","text-center", "mt-1");
       configInstruction.textContent = `Run the below command to generate the config file`;
       configNotFound.appendChild(configInstruction);
       const configCommand = document.createElement('pre');
-      configCommand.classList.add("terminal");
+
+      configCommand.classList.add('cursor-copy', 'bg-gray-900', 'text-white', 'font-mono', 'p-2.5', 'rounded-md', 'hover:bg-gray-700');
       configCommand.textContent = `keploy config --generate`;
       configCommand.addEventListener('click', async () => {
         navigator.clipboard.writeText('keploy config --generate');
@@ -539,7 +549,7 @@ window.addEventListener('message', event => {
           if (lastTestResultsDiv) {
               const errorElement = document.createElement('p');
               errorElement.textContent = "No Test Runs Found";
-              errorElement.classList.add("error");
+              errorElement.classList.add("text-[#9c1a0c]", "text-center", "mt-1.25");
               errorElement.id = "errorElement";
               lastTestResultsDiv.appendChild(errorElement);
           }
@@ -616,15 +626,16 @@ window.addEventListener('message', event => {
                       const testMethod = document.createElement('div');
                       testMethod.textContent = `${test.method}`;
                       if (test.status === 'PASSED') {
-                          testMethod.classList.add("testSuccess");
+                        testMethod.classList.add("text-[#16704C]", "text-left", "mt-1.25", "cursor-pointer");
+
                       } else {
-                          testMethod.classList.add("testError");
+                        testMethod.classList.add("text-[#9c1a0c]", "text-left", "mt-1.25", "cursor-pointer");
                       }
                       dropdownContent.appendChild(testMethod);
   
                       const testName = document.createElement('div');
                       testName.textContent = `${test.name}`;
-                      testName.classList.add("testName");
+                      testName.classList.add("text-primary-300" ,"text-left" ,"mt-1" ,"cursor-pointer");
                       dropdownContent.appendChild(testName);
   
                       testName.addEventListener('click', async () => {
