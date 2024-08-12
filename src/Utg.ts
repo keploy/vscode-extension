@@ -22,13 +22,29 @@ function Utg(context: vscode.ExtensionContext) {
 
     const sourceFilePath = currentFilePath;
     ensureTestFileExists(sourceFilePath);
-    const testFilePath = path.join('./test', path.basename(sourceFilePath).replace('.js', '.test.js'));
+
+
+    if (!vscode.workspace.workspaceFolders) {
+        vscode.window.showErrorMessage('No workspace is opened.');
+        return;
+    }
+    const rootDir = path.dirname(vscode.workspace.workspaceFolders[0].uri.fsPath); // Root directory of the project
+
+    const testDir = path.join(rootDir, 'test');
+    const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
+    if (!fs.existsSync(testFilePath)) {
+        vscode.window.showInformationMessage("Test doesn't exists", testFilePath);
+        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+    }
+
     vscode.window.showInformationMessage("testFilePath", testFilePath);
     const coverageReportPath = "./coverage/cobertura-coverage.xml";
     // Send the command to the terminal
     terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}"`);
 
     terminal.show();
+
+    context.subscriptions.push(terminal); // Ensure the terminal is disposed when the extension is deactivated
 }
 
 async function ensureTestFileExists(sourceFilePath: string): Promise<void> {

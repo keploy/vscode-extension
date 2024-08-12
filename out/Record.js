@@ -35,7 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.startRecording = exports.stopRecording = exports.displayRecordedTestCases = void 0;
 const vscode = __importStar(require("vscode"));
 const fs_1 = require("fs");
-const child_process = __importStar(require("child_process"));
+const childProcess = __importStar(require("child_process"));
 function extractTestSetName(logContent) {
     // Define the regular expression pattern to find the test set name
     const regex = /Keploy has captured test cases for the user's application\.\s*{"path": ".*\/(test-set-\d+)\/tests"/;
@@ -137,7 +137,7 @@ function startRecording(wslscriptPath, wsllogfilePath, bashScriptPath, zshScript
                         currentShell = process.env.SHELL || '';
                         if (!currentShell) {
                             // Fallback method if process.env.SHELL is not set
-                            currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
+                            currentShell = childProcess.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
                         }
                         console.log(`Current default shell: ${currentShell}`);
                         //uncomment the below line if you want to use the default shell (for zsh test)

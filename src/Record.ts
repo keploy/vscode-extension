@@ -1,18 +1,18 @@
 import * as vscode from 'vscode';
-import { readFileSync  , appendFile} from 'fs';
-import * as child_process from 'child_process';
+import { readFileSync, appendFile } from 'fs';
+import * as childProcess from 'child_process';
 import * as os from 'os';
 
 function extractTestSetName(logContent: string) {
     // Define the regular expression pattern to find the test set name
     const regex = /Keploy has captured test cases for the user's application\.\s*{"path": ".*\/(test-set-\d+)\/tests"/;
-  
+
     // Execute the regular expression on the log content
     const match = regex.exec(logContent);
-  
+
     // Check if a match was found and return the test set name, otherwise return null
     return match ? match[1] : null;
-  }
+}
 export async function displayRecordedTestCases(logfilePath: string, webview: any): Promise<void> {
     console.log('Displaying Recorded test  cases');
     let logData;
@@ -22,39 +22,40 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
         }
         catch (error) {
             appendFile(logfilePath, "", function (err) {
-                if (err) { console.log("err here" +  err); }
+                if (err) { console.log("err here" + err); }
             });
             logData = readFileSync(logfilePath, 'utf8');
         }
 
         const testSetName = extractTestSetName(logData);
-    // Split the log data into lines
-    const logLines = logData.split('\n');
-    // Filter out the lines containing the desired information
-    const capturedTestLines = logLines.filter(line => line.includes('🟠 Keploy has captured test cases'));
-    // Display the captured test cases in your frontend
-    if (capturedTestLines.length === 0) {
-        webview.postMessage({
-            type: 'testcaserecorded',
-            value: 'Test Case has been recorded',
-            textContent: "No test cases captured. Please try again.",
-            noTestCases: true
+        // Split the log data into lines
+        const logLines = logData.split('\n');
+        // Filter out the lines containing the desired information
+        const capturedTestLines = logLines.filter(line => line.includes('🟠 Keploy has captured test cases'));
+        // Display the captured test cases in your frontend
+        if (capturedTestLines.length === 0) {
+            webview.postMessage({
+                type: 'testcaserecorded',
+                value: 'Test Case has been recorded',
+                textContent: "No test cases captured. Please try again.",
+                noTestCases: true
+            });
+            return;
+        }
+        capturedTestLines.forEach(testLine => {
+            const testCaseInfo = JSON.parse(testLine.substring(testLine.indexOf('{')));
+            const textContent = `"${testCaseInfo['testcase name']}"`;
+            const path = testCaseInfo.path + '/' + testCaseInfo['testcase name'] + '.yaml';
+            webview.postMessage({
+                type: 'testcaserecorded',
+                value: 'Test Case has been recorded',
+                textContent: textContent,
+                path: path,
+                testSetName: testSetName
+            });
         });
-        return;
     }
-    capturedTestLines.forEach(testLine => {
-        const testCaseInfo = JSON.parse(testLine.substring(testLine.indexOf('{')));
-        const textContent = `"${testCaseInfo['testcase name']}"`;
-        const path = testCaseInfo.path + '/' + testCaseInfo['testcase name'] + '.yaml';
-        webview.postMessage({
-            type: 'testcaserecorded',
-            value: 'Test Case has been recorded',
-            textContent: textContent,
-            path: path,
-            testSetName: testSetName
-        });
-    });}
-    catch(error){
+    catch (error) {
         console.log(error);
         webview.postMessage({
             type: 'testcaserecorded',
@@ -67,29 +68,29 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
     }
 }
 
-export async function stopRecording(){
-    try{
+export async function stopRecording() {
+    try {
         vscode.window.activeTerminal?.sendText('\x03', true);
         //set timeout for 5 seconds
         setTimeout(() => {
             vscode.window.activeTerminal?.dispose();
         }, 5000);
 
-    return;
+        return;
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         throw error;
     }
 }
 
 
-export async function startRecording( wslscriptPath: string, wsllogfilePath: string, bashScriptPath: string, zshScriptPath : string ,  logfilePath: string, webview: any): Promise<void> {
+export async function startRecording(wslscriptPath: string, wsllogfilePath: string, bashScriptPath: string, zshScriptPath: string, logfilePath: string, webview: any): Promise<void> {
     try {
         return new Promise<void>((resolve, reject) => {
             try {
                 let terminalPath: string;
-                let currentShell ='';
+                let currentShell = '';
 
                 if (process.platform === 'win32') {
                     terminalPath = 'wsl.exe';
@@ -100,7 +101,7 @@ export async function startRecording( wslscriptPath: string, wsllogfilePath: str
 
                     if (!currentShell) {
                         // Fallback method if process.env.SHELL is not set
-                        currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
+                        currentShell = childProcess.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
                     }
 
                     console.log(`Current default shell: ${currentShell}`);

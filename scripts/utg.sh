@@ -1,8 +1,7 @@
 #!/bin/bash
 
-export API_KEY="6ffb888dbc934365b8a2b947f4f236d1"
+export API_KEY="1234"
 
-echo $API_KEY
 
 sourceFilePath=$1
 testFilePath=$2
@@ -20,11 +19,11 @@ echo $testCommand
 # Run Keploy
 # keploy gen --sourceFilePath="./src/routes/routes.js" --testFilePath="./test/routes.test.js" --testCommand=$testCommand  --coverageReportPath="$coverageReportPath" --llmApiVersion="2024-02-01" --llmBaseUrl="https://keploy-open-ai-instance.openai.azure.com/openai/deployments/Keploy-gpt4o" --max-iterations="10"
 
-keploy gen --source-file-path="$sourceFilePath" \
+sudo -E env PATH=$PATH oss gen --source-file-path="$sourceFilePath" \
   --test-file-path="$testFilePath" \
   --test-command="npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage
 " \
   --coverage-report-path="./coverage/cobertura-coverage.xml"\
- --llmApiVersion "2024-02-01" --llmBaseUrl "https://keploy-open-ai-instance.openai.azure.com/openai/deployments/Keploy-gpt4o" --max-iterations "10"
+ --llmApiVersion "2024-02-01" --llmBaseUrl "https://api.keploy.io" --max-iterations "10"
 
 
