@@ -89,12 +89,11 @@ function activate(context) {
     const sidebarProvider = new SidebarProvider_1.SidebarProvider(context.extensionUri);
     context.subscriptions.push(vscode.window.registerWebviewViewProvider("Keploy-Sidebar", sidebarProvider), vscode.languages.registerCodeLensProvider({ language: 'javascript', scheme: 'file' }, new KeployCodeLensProvider()), vscode.languages.registerCodeLensProvider({ language: 'typescript', scheme: 'file' }, new KeployCodeLensProvider()));
     // Register the command
-    let disposable = vscode.commands.registerCommand('keploy.doSomething', (uri) => {
-        // The code you place here will be executed every time your command is executed
+    let disposable = vscode.commands.registerCommand('keploy.doSomething', (uri) => __awaiter(this, void 0, void 0, function* () {
         // Display a message box to the user
-        vscode.window.showInformationMessage('Hello World from Keploy!');
-        (0, Utg_1.default)(context);
-    });
+        vscode.window.showInformationMessage('Welcome to Keploy!');
+        yield (0, Utg_1.default)(context);
+    }));
     context.subscriptions.push(disposable);
     (0, OneClickInstall_1.default)();
     let signedIn = context.globalState.get('ourToken');

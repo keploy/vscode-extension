@@ -36,40 +36,64 @@ const vscode = __importStar(require("vscode"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 function Utg(context) {
-    // Your command logic here
-    const editor = vscode.window.activeTextEditor;
-    let currentFilePath = "";
-    if (editor) {
-        const document = editor.document;
-        currentFilePath = document.uri.fsPath;
-        vscode.window.showInformationMessage(`Current opened file: ${currentFilePath}`);
-        // Add your additional logic here
-    }
-    else {
-        vscode.window.showInformationMessage('No file is currently opened.');
-    }
-    const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
-    // Create a terminal named "Keploy Terminal"
-    const terminal = vscode.window.createTerminal("Keploy Terminal");
-    const sourceFilePath = currentFilePath;
-    ensureTestFileExists(sourceFilePath);
-    if (!vscode.workspace.workspaceFolders) {
-        vscode.window.showErrorMessage('No workspace is opened.');
-        return;
-    }
-    const rootDir = path.dirname(vscode.workspace.workspaceFolders[0].uri.fsPath); // Root directory of the project
-    const testDir = path.join(rootDir, 'test');
-    const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
-    if (!fs.existsSync(testFilePath)) {
-        vscode.window.showInformationMessage("Test doesn't exists", testFilePath);
-        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
-    }
-    vscode.window.showInformationMessage("testFilePath", testFilePath);
-    const coverageReportPath = "./coverage/cobertura-coverage.xml";
-    // Send the command to the terminal
-    terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}"`);
-    terminal.show();
-    context.subscriptions.push(terminal); // Ensure the terminal is disposed when the extension is deactivated
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            return new Promise((resolve, reject) => {
+                try {
+                    // Create a terminal named "Keploy Terminal"
+                    const terminal = vscode.window.createTerminal("Keploy Terminal");
+                    terminal.show();
+                    // Your command logic here
+                    const editor = vscode.window.activeTextEditor;
+                    let currentFilePath = "";
+                    if (editor) {
+                        const document = editor.document;
+                        currentFilePath = document.uri.fsPath;
+                        vscode.window.showInformationMessage(`Current opened file: ${currentFilePath}`);
+                        // Add your additional logic here
+                    }
+                    else {
+                        vscode.window.showInformationMessage('No file is currently opened.');
+                    }
+                    const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
+                    const sourceFilePath = currentFilePath;
+                    ensureTestFileExists(sourceFilePath);
+                    if (!vscode.workspace.workspaceFolders) {
+                        vscode.window.showErrorMessage('No workspace is opened.');
+                        return;
+                    }
+                    const rootDir = path.dirname(vscode.workspace.workspaceFolders[0].uri.fsPath); // Root directory of the project
+                    const testDir = path.join(rootDir, 'test');
+                    const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exists", testFilePath);
+                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    }
+                    vscode.window.showInformationMessage("testFilePath", testFilePath);
+                    const coverageReportPath = "./coverage/cobertura-coverage.xml";
+                    terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}";exit 0`);
+                    // Listen for terminal close event
+                    const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
+                        console.log('Terminal closed');
+                        if (eventTerminal === terminal) {
+                            disposable.dispose(); // Dispose the listener
+                            resolve(); // Resolve the promise
+                        }
+                    });
+                }
+                catch (error) {
+                    console.log(error);
+                    vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
+                    reject(error);
+                }
+            });
+        }
+        catch (error) {
+            console.log(error);
+            vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
+            throw error;
+        }
+    });
 }
 function ensureTestFileExists(sourceFilePath) {
     return __awaiter(this, void 0, void 0, function* () {
