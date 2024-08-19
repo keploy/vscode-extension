@@ -31,6 +31,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SidebarProvider = void 0;
 const vscode = __importStar(require("vscode"));
@@ -40,6 +43,7 @@ const Utils_1 = require("./Utils");
 const Record_1 = require("./Record");
 const Test_1 = require("./Test");
 const Config_1 = require("./Config");
+const SignIn_1 = __importDefault(require("./SignIn"));
 const recordOptions = {
     canSelectFolders: true,
     canSelectMany: false,
@@ -238,7 +242,9 @@ class SidebarProvider {
                     }
                     if (data.value === "google") {
                         console.log('Navigate to Google');
-                        vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+                        // vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+                        const response = yield (0, SignIn_1.default)();
+                        console.log('Response from SignIn', response);
                     }
                     try {
                         console.log('Navigate to ' + data.value);

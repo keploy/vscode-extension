@@ -6,6 +6,8 @@ import { startRecording, stopRecording } from "./Record";
 import { startTesting, stopTesting, displayTestCases, displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";
 import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
+import SignIn from "./SignIn";
+import SignInWithGitHub from "./SignIn";
 
 const recordOptions: vscode.OpenDialogOptions = {
   canSelectFolders: true,
@@ -220,7 +222,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           if (data.value === "google") {
             console.log('Navigate to Google');
-            vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+            // vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
+            const response: any = await SignInWithGitHub();
+            console.log('Response from SignIn', response);
           }
           try {
             console.log('Navigate to ' + data.value);

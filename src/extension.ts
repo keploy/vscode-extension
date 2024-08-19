@@ -2,7 +2,10 @@ import * as vscode from 'vscode';
 import { SidebarProvider } from './SidebarProvider';
 import SignIn from './SignIn';
 import oneClickInstall from './OneClickInstall';
+import { getKeployVersion, getCurrentKeployVersion } from './version';
+import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
 import Utg from './Utg';
+import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
 
@@ -55,7 +58,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
     }
 }
 
-// This method is called when your extension is activated
+
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
     context.subscriptions.push(
@@ -73,6 +76,105 @@ export function activate(context: vscode.ExtensionContext) {
         )
     );
 
+
+    oneClickInstall();
+
+    let signedIn = context.globalState.get('ourToken');
+    console.log(context.globalState);
+    if (signedIn) {
+        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+        sidebarProvider.postMessage('navigateToHome', 'KeployHome');
+    }
+
+    // disable if access token is already present
+    // let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
+
+    //     getGitHubAccessToken().then((result) => {
+    //         if (result) {
+    //             const { accessToken, email } = result;
+    //             console.log('Access Token:', accessToken);
+    //             console.log('Email:', email);
+
+    //             getInstallationID();
+
+    //             // Use the access token and email as needed
+    //         } else {
+    //             console.log('Failed to get the session or email.');
+    //         }
+    //     });
+
+    //     // context.globalState.update('accessToken', response.accessToken);
+    //     vscode.window.showInformationMessage('You are now signed in!');
+    //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+
+    // }
+    // );
+    // context.subscriptions.push(signInCommand);
+
+
+    let viewKeployVersionDisposable = vscode.commands.registerCommand('keploy.KeployVersion', async () => {
+        const currentVersion = await getCurrentKeployVersion();
+        vscode.window.showInformationMessage(`The current version of Keploy is ${currentVersion}`);
+    }
+    );
+    context.subscriptions.push(viewKeployVersionDisposable);
+
+    let viewChangeLogDisposable = vscode.commands.registerCommand('keploy.viewChangeLog', () => {
+        const changeLogUrl = 'https://marketplace.visualstudio.com/items?itemName=Keploy.keployio';
+        vscode.env.openExternal(vscode.Uri.parse(changeLogUrl));
+    }
+    );
+    context.subscriptions.push(viewChangeLogDisposable);
+
+    let viewDocumentationDisposable = vscode.commands.registerCommand('keploy.viewDocumentation', () => {
+        const docsUrl = 'https://keploy.io/docs/';
+        vscode.env.openExternal(vscode.Uri.parse(docsUrl));
+    }
+    );
+    context.subscriptions.push(viewDocumentationDisposable);
+
+
+    let getLatestVersion = vscode.commands.registerCommand('keploy.getLatestVersion', async () => {
+        const latestVersion = await getKeployVersion();
+        vscode.window.showInformationMessage(`The latest version of Keploy is ${latestVersion}`);
+    }
+    );
+    context.subscriptions.push(getLatestVersion);
+
+    let updateKeployDisposable = vscode.commands.registerCommand('keploy.updateKeploy', () => {
+        //open popup to ask user to choose beteween keploy docker or keploy binary
+        const options = [
+            { label: "Keploy Docker", description: "Update using Keploy Docker" },
+            { label: "Keploy Binary", description: "Update using Keploy Binary" }
+        ];
+
+        vscode.window.showQuickPick(options, {
+            placeHolder: "Choose how to update Keploy"
+        }).then(async selection => {
+            if (selection) {
+                // Handle the user's choice here
+                if (selection.label === "Keploy Docker") {
+                    try {
+                        await downloadAndUpdateDocker();
+                        vscode.window.showInformationMessage('Keploy Docker updated!');
+                    } catch (error) {
+                        vscode.window.showErrorMessage(`Failed to update Keploy Docker: ${error}`);
+                    }
+                } else if (selection.label === "Keploy Binary") {
+                    try {
+                        await downloadAndUpdate();
+                        // this._view?.webview.postMessage({ type: 'success', value: 'Keploy binary updated!' });
+                    } catch (error) {
+                        vscode.window.showErrorMessage(`Failed to update Keploy binary: ${error}`);
+                    }
+                }
+            }
+        });
+
+    });
+
+    context.subscriptions.push(updateKeployDisposable);
+
     // Register the command
     let disposable = vscode.commands.registerCommand('keploy.doSomething', async (uri: vscode.Uri) => {
 
@@ -83,60 +185,12 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
-    oneClickInstall();
 
-    let signedIn = context.globalState.get('ourToken');
-    console.log(context.globalState);
-    if (signedIn) {
-        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-        sidebarProvider.postMessage('navigateToHome', 'KeployHome');
-    }
-    let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
+}
 
-        const response: any = await SignIn();
-        context.globalState.update('accessToken', response.accessToken);
-        vscode.window.showInformationMessage('You are now signed in!');
-        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-    });
-    context.subscriptions.push(signInCommand);
-
-    let getLatestKeployDisposable = vscode.commands.registerCommand('keploy.KeployVersion', () => {
-        // Logic to get the latest Keploy
-        vscode.window.showInformationMessage('Feature coming soon!');
-    });
-    context.subscriptions.push(getLatestKeployDisposable);
-
-    let viewChangeLogDisposable = vscode.commands.registerCommand('keploy.viewChangeLog', () => {
-        // Logic to view the change log
-        vscode.window.showInformationMessage('Feature coming soon!');
-    });
-    context.subscriptions.push(viewChangeLogDisposable);
-
-    let viewDocumentationDisposable = vscode.commands.registerCommand('keploy.viewDocumentation', () => {
-        // Logic to view the documentation
-        vscode.window.showInformationMessage('Feature coming soon!');
-    });
-    context.subscriptions.push(viewDocumentationDisposable);
-
-    let getLatestVersion = vscode.commands.registerCommand('keploy.getLatestVersion', () => {
-        // Logic to get the latest version
-        vscode.window.showInformationMessage('Feature coming soon!');
-    });
-    context.subscriptions.push(getLatestVersion);
-
-    let updateKeploy = vscode.commands.registerCommand('keploy.updateKeploy', () => {
-        // Logic to get the latest version
-        vscode.window.showInformationMessage('Feature coming soon!');
-    });
-    context.subscriptions.push(updateKeploy);
-
-    // Listen to terminal close event
-    vscode.window.onDidCloseTerminal((terminal) => {
-        if (terminal.name === "Keploy Terminal") {
-            vscode.window.showInformationMessage('Keploy Terminal closed.');
-            // Perform any additional cleanup if necessary
-        }
-    });
+function performAuthenticatedTasks(token: string) {
+    // Perform tasks that require authentication
+    console.log('Performing authenticated tasks with token:', token);
 }
 
 export function deactivate() { }

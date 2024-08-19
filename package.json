@@ -1,8 +1,8 @@
 {
-  "name": "keploy",
+  "name": "keployio",
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
@@ -25,17 +25,99 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "keploy.generateTests",
-        "title": "Do Something"
-      }
-    ],
     "codeLensProviders": [
       {
         "language": "javascript",
         "scheme": "file",
         "providerId": "keploy-codelens"
+      }
+    ],
+  
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "Keploy-Sidebar",
+          "title": "Keploy",
+          "icon": "media/logo.png"
+        }
+      ]
+    },
+    "views": {
+      "Keploy-Sidebar": [
+        {
+          "id": "Keploy-Sidebar",
+          "name": "Keploy",
+          "icon": "media/logo.png",
+          "type": "webview",
+          "webviewOptions": {
+            "retainContextWhenHidden": true
+          }
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "keploy.updateKeploy",
+          "when": "view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.getLatestVersion",
+          "when": "view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.KeployVersion",
+          "when": "view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.viewChangeLog",
+          "when": "view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.viewDocumentation",
+          "when": "view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.SignIn",
+          "group": "navigation",
+          "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "keploy.SignIn",
+        "title": "Sign In",
+        "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.updateKeploy",
+        "title": "Update your Keploy",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.KeployVersion",
+        "title": "View Your Keploy Version",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.getLatestVersion",
+        "title": "Get Latest Version",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.viewChangeLog",
+        "title": "View Change Log",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.viewDocumentation",
+        "title": "View Docs",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.generateTests",
+        "title": "Do Something"
       }
     ]
   },
@@ -54,12 +136,10 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@smui/button": "^7.0.0",
-    "@smui/card": "^7.0.0",
     "@tsconfig/svelte": "^1.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.6",
-    "@types/node": "^18.19.42",
+    "@types/node": "18.x",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^10.0.0",
     "@types/vscode": "^1.86.0",
@@ -76,19 +156,13 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@material-design-icons/svg": "^0.14.13",
-    "@types/express": "^4.17.21",
-    "@types/open": "^6.2.1",
-    "acorn": "^8.12.1",
     "acorn-walk": "^8.3.3",
-    "express": "^4.19.2",
-    "google-auth-library": "^9.12.0",
+    "axios": "^1.7.4",
     "js-yaml": "^4.1.0",
-    "lottie-web": "^5.12.2",
-    "open": "^10.1.0",
     "sinon": "^17.0.1",
     "svelte": "^4.2.12",
     "uuid": "^10.0.0",
+    "walk": "^2.3.15",
     "yaml": "^2.4.2"
   }
 }

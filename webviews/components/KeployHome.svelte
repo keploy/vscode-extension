@@ -83,8 +83,6 @@
         if (testCasesPassed) testCasesPassed.textContent = '';
         if (testCasesFailed) testCasesFailed.textContent = '';
         if (errorElement) errorElement.style.display = 'none';
-
-
     };
     const triggerAnimation = () => {
     if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
