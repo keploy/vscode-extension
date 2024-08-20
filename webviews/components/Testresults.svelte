@@ -42,9 +42,6 @@
         place-items: center;
         grid-template-columns: 1fr 1fr;
     }
-    #topGrid img {
-        width: 50%;
-    }
     #completeTestSummaryGrid {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;

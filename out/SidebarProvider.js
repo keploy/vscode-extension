@@ -142,9 +142,9 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Start Recording button clicked');
-                        const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.sh");
-                        const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_record_script.zsh");
-                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "record_mode.log");
+                        const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_record_script.sh");
+                        const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.zsh");
+                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "record_mode.log");
                         let wslscriptPath = bashScript.fsPath;
                         let wsllogPath = logfilePath.fsPath;
                         if (process.platform === 'win32') {
@@ -205,9 +205,9 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Start Testing button clicked');
-                        const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.sh");
-                        const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "keploy_test_script.zsh");
-                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
+                        const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_test_script.sh");
+                        const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_test_script.zsh");
+                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log");
                         let wslscriptPath = bashScript.fsPath;
                         let wsllogPath = logfilePath.fsPath;
                         if (process.platform === 'win32') {
@@ -278,7 +278,7 @@ class SidebarProvider {
                     }
                     try {
                         console.log('Opening Complete Summary...');
-                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
+                        const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log");
                         (0, Test_1.displayTestCases)(logfilePath.fsPath, (_p = this._view) === null || _p === void 0 ? void 0 : _p.webview, false, true);
                     }
                     catch (error) {
@@ -371,7 +371,7 @@ class SidebarProvider {
         const nonce = (0, Utils_1.getNonce)();
         //read the global state to check if the user is signed in
         // webview.postMessage({ type: 'displayPreviousTestResults', value: 'Displaying Previous Test Results' });
-        // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts", "test_mode.log");
+        // const logfilePath =  vscode.Uri.joinPath(this._extensionUri, "scripts","logs", "test_mode.log");
         //call the function below after 3 seconds
         // setTimeout(() => {
         //   displayTestCases(logfilePath.fsPath, webview ,  true , false);

@@ -22,9 +22,24 @@ Keploy is a Visual Studio Code extension designed to help developers record and 
 
 ### Start in development mode
 
-1. Press `F5` to open a new window with your extension loaded.
-2. Set breakpoints in your code inside `src/extension.ts` to debug your extension.
-3. From the debug console, you can see the output or errors if any.
+1. Run `npm install` to install any dependencies.
+
+2. Press `F5` to open a new window with your extension loaded.
+
+3. Set breakpoints in your code inside `src/extension.ts` to debug your extension.
+
+4. From the debug console, you can see the output or errors if any.
+
+### Make changes to Frontend
+
+1. Run `npm run rollup` to compile your svelte files into js files present in `out/compiled` dir.
+
+2. Make changes to your svelte code and the js files will be automatically re-compiled.
+
+3. Inorder to view your changes, after starting the extension in development mode, Press (`Ctrl+R` or `Cmd+R` on Mac) to reload the window with the fresh compiled js.
+
+4. To view the dev tools, press `ctrl + shift + p` to open the command palette and run `> Developer: Open Webview Developer tools` to open chrome dev tools.
+
 
 ### Make 
 
