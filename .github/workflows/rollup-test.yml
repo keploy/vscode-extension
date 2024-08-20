@@ -1,0 +1,23 @@
+name: Rollup Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Rollup
+        run: npm run rollup
+
+      - name: List contents of out/compiled directory
+        run: ls -R out/compiled
