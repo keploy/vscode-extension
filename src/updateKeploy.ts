@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getKeployVersion, getCurrentKeployVersion } from './version';
+import {getKeployVersion , getCurrentKeployVersion} from './version';
 
 export async function downloadAndUpdate(): Promise<void> {
     try {
@@ -27,9 +27,9 @@ export async function downloadAndUpdate(): Promise<void> {
             throw error;
         }
         );
-
-    } catch (error: any) {
-        if (error.toString().toLowerCase().includes("not found") || error.toString().toLowerCase().includes("command not found") || error.toString().toLowerCase().includes("no such file or directory")) {
+        
+    } catch (error : any) {
+        if (error.toString().toLowerCase().includes("not found") || error.toString().toLowerCase().includes("command not found") || error.toString().toLowerCase().includes("no such file or directory")){
             //post message to webview
             // webview.postMessage({ type: 'onError', value: `Keploy binary not found. Installing Keploy binary first.` });
             downloadAndInstallKeployBinary().then(() => {
@@ -41,10 +41,10 @@ export async function downloadAndUpdate(): Promise<void> {
                 throw error;
             }
             );
-        } else {
-            console.error('Error occurred during download and update:', error);
-            vscode.window.showErrorMessage('Error occurred during updating binary: ' + error);
-            throw error;
+        }else{
+        console.error('Error occurred during download and update:', error);
+        vscode.window.showErrorMessage('Error occurred during updating binary: ' + error);
+        throw error;
         }
     }
 }
@@ -52,8 +52,8 @@ export async function downloadAndUpdate(): Promise<void> {
 export async function downloadAndUpdateDocker(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         try {
-            console.log('Downloading and updating Keploy Docker image...');
-            let bashPath: string;
+        console.log('Downloading and updating Keploy Docker image...');
+        let bashPath: string;
             if (process.platform === 'win32') {
                 // If on Windows, use the correct path to WSL's Bash shell
                 bashPath = 'wsl.exe';
@@ -61,35 +61,35 @@ export async function downloadAndUpdateDocker(): Promise<void> {
                 // Otherwise, assume Bash is available at the standard location
                 bashPath = '/bin/bash';
             }
-            const terminal = vscode.window.createTerminal({
-                name: 'Keploy Terminal',
-                shellPath: bashPath
-            });
+        const terminal = vscode.window.createTerminal({
+            name: 'Keploy Terminal',
+            shellPath: bashPath
+        });
 
-            // Show the terminal
-            terminal.show();
+        // Show the terminal
+        terminal.show();
 
-            const dockerCmd = 'docker pull ghcr.io/keploy/keploy:latest ; exit 0';
-            terminal.sendText(dockerCmd);
-            vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
+        const dockerCmd = 'docker pull ghcr.io/keploy/keploy:latest ; exit 0';
+        terminal.sendText(dockerCmd);
+        vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
             // Listen for terminal close event
             const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                 console.log('Terminal closed');
                 if (eventTerminal === terminal) {
                     disposable.dispose(); // Dispose the listener
-                    resolve();
+                    resolve(); 
                 }
             });
-
-        } catch (error) {
+    
+        }   catch (error) {
             throw error;
             // reject(error); // Reject the promise if an error occurs during execution
-
+            
         }
     }
-    );
-}
-
+        );
+    }
+    
 export async function downloadAndInstallKeployBinary(): Promise<void> {
     console.log('Downloading and installing Keploy binary...');
     return new Promise<void>((resolve, reject) => {
@@ -114,14 +114,14 @@ export async function downloadAndInstallKeployBinary(): Promise<void> {
 
             const curlCmd = " curl --silent -O -L https://keploy.io/install.sh && source install.sh;exit 0";
             terminal.sendText(curlCmd);
-
+            
             vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
             // Listen for terminal close event
             const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                 console.log('Terminal closed');
                 if (eventTerminal === terminal) {
                     disposable.dispose(); // Dispose the listener
-                    resolve();
+                    resolve(); 
                 }
             });
         } catch (error) {
@@ -130,3 +130,4 @@ export async function downloadAndInstallKeployBinary(): Promise<void> {
     });
 }
 
+        

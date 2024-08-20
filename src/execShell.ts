@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import {exec} from 'child_process';
 import * as os from 'os';
 
 export const execShell = (cmd: string) => {
@@ -21,6 +21,6 @@ export const execShell = (cmd: string) => {
             }
             resolve(stdout);
         });
-
+        
     });
 };

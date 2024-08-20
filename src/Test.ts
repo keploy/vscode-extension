@@ -83,7 +83,9 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
 
         if (isCompleteSummary) {
             //remove fist 7 lines of summary
-            testSummaryList.splice(0, 7);
+            console.log("testSummaryList before splice", testSummaryList , "isCompleteSummary", isCompleteSummary);
+            testSummaryList.splice(0, 6);
+        console.log("testSummaryList", testSummaryList , "isCompleteSummary", isCompleteSummary);
             testSummaryList.forEach((line, index) => {
                 webview.postMessage({
                     type: 'testResults',
@@ -240,7 +242,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
         let totalFailure = 0;
         let totalTests = 0;
 
-        const testResults: { date: string; method: string; name: string; status: string , testCasePath : string }[] = [];
+        const testResults: { date: string; method: string; name: string; report: string; status: string , testCasePath : string }[] = [];
 
         for (const testRunDir of testRunDirs) {
             const testRunPath = path.join(reportsFolder, testRunDir);
@@ -263,6 +265,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
                             date: new Date(test.resp.header.Date).toLocaleDateString('en-GB'),
                             method: test.req.method,
                             name: test.test_case_id,
+                            report : test.name,
                             status: test.status,
                             testCasePath: testFilePath
                         });

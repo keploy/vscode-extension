@@ -25,7 +25,7 @@ export async function handleOpenKeployConfigFile(webview: any) {
 
   // Create a terminal and execute 'keploy config --generate'
   const terminal = vscode.window.createTerminal('Keploy Config Generator');
-  terminal.sendText('keploy config --generate');
+  terminal.sendText('keploy config --generate; exit 0');
   terminal.show();
 
   // Polling function to check if the config file is created

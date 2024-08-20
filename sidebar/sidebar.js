@@ -23,7 +23,6 @@ const completeSummaryHr = document.getElementById('completeSummaryHr');
 const displayPreviousTestResults = document.getElementById('displayPreviousTestResults');
 const openConfigButton = document.getElementById('openConfig');
 const setupConfigButton = document.getElementById('setupConfig');
-const completeTestSummaryDiv = document.getElementById('completeTestSummaryGrid');
 const lastTestResultsDiv = document.getElementById('lastTestResults');
 const testSuiteNameDiv = document.getElementById('testSuiteName');
 const totalTestCasesDiv = document.getElementById('totalTestCases');
@@ -34,6 +33,10 @@ const initialiseConfigButton = document.getElementById('initialiseConfigButton')
 const upperHR = document.getElementById('upperHR');
 const lowerHR = document.getElementById('lowerHR');
 const loader = document.getElementById('loader');
+const viewTestLogsButton = document.getElementById('viewTestLogsButton');
+const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
+// const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
+// const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 let FilePath = "";
 
 //cleanup required
@@ -52,6 +55,13 @@ function resetUI() {
     recordStatus.style.display = "none";
     recordStatus.textContent = "";
   }
+  if (viewRecordLogsButton) {
+    viewRecordLogsButton.style.display = "none";
+  }
+  if (viewTestLogsButton) {
+    viewTestLogsButton.style.display = "none";
+  }
+
   if (testResultsDiv) {
     testResultsDiv.innerHTML = "";
   }
@@ -115,73 +125,44 @@ if (rerunTestSuiteButton) {
 }
 
 
-const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
-if (selectRecordFolderButton) {
-  selectRecordFolderButton.addEventListener('click', async () => {
-    console.log("selectRecordFolderButton clicked");
+// if (selectRecordFolderButton) {
+//   selectRecordFolderButton.addEventListener('click', async () => {
+//     console.log("selectRecordFolderButton clicked");
+//     vscode.postMessage({
+//       type: "selectRecordFolder",
+//       value: "Selecting Record Folder..."
+//     });
+//   });
+// }
+// if (selectTestFolderButton) {
+//   selectTestFolderButton.addEventListener('click', async () => {
+//     console.log("selectTestFolderButton clicked");
+//     vscode.postMessage({
+//       type: "selectTestFolder",
+//       value: "Selecting Test Folder..."
+//     });
+//   });
+// }
+ 
+if (viewTestLogsButton) {
+  viewTestLogsButton.addEventListener('click', async () => {
+    console.log("viewTestLogsButton clicked");
     vscode.postMessage({
-      type: "selectRecordFolder",
-      value: "Selecting Record Folder..."
+      type: "viewLogs",
+      value: `logs/test_mode.log`
     });
   });
 }
-const selectTestFolderButton = document.getElementById('selectTestFolderButton');
-if (selectTestFolderButton) {
-  selectTestFolderButton.addEventListener('click', async () => {
-    console.log("selectTestFolderButton clicked");
+
+if(viewRecordLogsButton){
+  viewRecordLogsButton.addEventListener('click', async () => {
+    console.log("viewRecordLogsButton clicked");
     vscode.postMessage({
-      type: "selectTestFolder",
-      value: "Selecting Test Folder..."
+      type: "viewLogs",
+      value: `logs/record_mode.log`
     });
   });
-}
 
-async function getKeployVersion() {
-  // GitHub repository details
-  const repoOwner = "keploy";
-  const repoName = "keploy";
-
-  const apiURL = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
-
-  // Get the latest release
-  const response = await fetch(apiURL);
-  const data = await response.json();
-  const latestVersion = data.tag_name;
-  return latestVersion;
-}
-// Create a function to update the version display
-function updateVersionDisplay(version) {
-  const versionDisplay = document.getElementById('versionDisplay');
-  if (versionDisplay) {
-    versionDisplay.innerHTML = `Latest version:
-     <p>${version}</p>`;
-  }
-}
-
-
-
-const getVersionButton = document.getElementById('getVersionButton');
-if (getVersionButton) {
-  getVersionButton.addEventListener('click', async () => {
-    try {
-      // Call the getKeployVersion function
-      const version = await getKeployVersion();
-      console.log(`The latest version of Keploy is ${version}`);
-      // Update the version display
-      updateVersionDisplay(version);
-      // Post a message to the extension with the latest version
-      vscode.postMessage({
-        type: "onInfo",
-        value: `The latest version of Keploy is ${version}`
-      });
-    } catch (error) {
-      // Handle any errors that occur
-      vscode.postMessage({
-        type: "onError",
-        value: `Error getting Keploy version: ${error.message}`
-      });
-    }
-  });
 }
 
 
@@ -346,19 +327,22 @@ window.addEventListener('message', event => {
     recordedTestCasesDiv.style.display = "grid";
 
     if (message.error === true) {
-      recordStatus.textContent = `Failed To Record Test Cases`;
-      recordStatus.classList.add("error");
-      const errorMessage = document.createElement('p');
-      errorMessage.textContent = message.textContent;
-      errorMessage.classList.add("error");
-      recordedTestCasesDiv.appendChild(errorMessage);
-      return;
+        recordStatus.textContent = `Failed To Record Test Cases`;
+        recordStatus.classList.add("error");
+        const errorMessage = document.createElement('p');
+        errorMessage.textContent = message.textContent;
+        errorMessage.classList.add("error");
+        recordedTestCasesDiv.appendChild(errorMessage);
+        viewRecordLogsButton.style.display = "block";
+        return;
     }
 
     if (message.noTestCases === true) {
-      recordStatus.textContent = `No Test Cases Recorded`;
-      recordStatus.classList.add("info");
-      return;
+      viewRecordLogsButton.style.display = "block";
+        recordStatus.textContent = `No Test Cases Recorded`;
+        recordedTestCasesDiv.style.display = "none";
+        recordStatus.classList.add("info");
+        return;
     }
 
     recordStatus.textContent = `Test Cases Recorded`;
@@ -438,6 +422,11 @@ window.addEventListener('message', event => {
       testCaseElement.classList.add("success");
     }
     else if (message.textSummary.includes("test failed")) {
+      //split the textSummary
+      const numErrors = message.textSummary.split(":")[1];
+      if (numErrors !== " 0") {
+        viewTestLogsButton.style.display = "block";
+      }
       testCaseElement.classList.add("error");
     }
     else {
@@ -445,6 +434,7 @@ window.addEventListener('message', event => {
     }
     if (message.isCompleteSummary === true) {
       console.log("message.isCompleteSummary", message.isCompleteSummary);
+      console.log("message.textSummary", message.textSummary);
       let messageList = message.textSummary.split("\t");
       //remove all "" from the list
       messageList = messageList.filter(function (el) {
@@ -464,15 +454,18 @@ window.addEventListener('message', event => {
       testCasesFailedElement.textContent = messageList[3];
       testCasesFailedDiv.appendChild(testCasesFailedElement);
       return;
+      
     }
     if (message.error === true) {
       viewCompleteSummaryButton.style.display = "none";
+      viewTestLogsButton.style.display = "block";
     }
-    else {
-      viewCompleteSummaryButton.style.display = "block";
-      completeSummaryHr.style.display = "block";
-    }
+    else{
+    viewCompleteSummaryButton.style.display = "block";
+    completeSummaryHr.style.display = "block";
+  }
     if (message.error === true) {
+      viewTestLogsButton.style.display = "block";
       if (testStatus) {
         testStatus.textContent = message.value;
         testStatus.classList.add("error");
@@ -526,7 +519,7 @@ window.addEventListener('message', event => {
     catch (error) {
       console.log("error", error);
     }
-  }
+    }
 
 
   if (message.type === 'aggregatedTestResults') {

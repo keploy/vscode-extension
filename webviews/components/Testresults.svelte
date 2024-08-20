@@ -1,15 +1,17 @@
 <script>
 </script>
 
-<body>
+<body class="baloo-2-custom">
     <div class="loader" id="loader"></div>
     <div id="topGrid">
-        <img
+        <div
             class="keploylogo"
-            src="https://avatars.githubusercontent.com/u/92252339?s=200&v=4"
             alt="Keploy Logo"
-        />
-        <h2 class="info">Test Results Summary</h2>
+            style="
+    height: 30px;"
+        >
+        </div>  
+        <h2 class="info">Test Summary</h2>
     </div>
     <hr />
     <!-- 4 Column Grid -->
@@ -39,9 +41,6 @@
         display: grid;
         place-items: center;
         grid-template-columns: 1fr 1fr;
-    }
-    #topGrid img {
-        width: 50%;
     }
     #completeTestSummaryGrid {
         display: grid;

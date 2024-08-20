@@ -11,13 +11,19 @@
     color: var(--vscode-foreground);
     font-size: var(--vscode-font-size);
     font-weight: var(--vscode-font-weight);
-    font-family: var(--vscode-font-family);
+    /* font-family: var(--vscode-font-family); */
     /* background-color: #090B10; */
     /* background-color: #141416; */
     background-color: var(--vscode-editor-background);
   }
+  .baloo-2-custom {
+    font-family: "Baloo 2", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400; /* Example weight */
+    font-style: normal;
+  }
   button , select {
-    background-color: var(--vscode-editor-background);
+    background-color: #00163D;
   }
   ol,
   ul {
@@ -56,7 +62,8 @@
     outline: 1px solid transparent;
     outline-offset: 2px !important;
     color: var(--vscode-button-foreground);
-    background: var(--vscode-button-background);
+    /* background: var(--vscode-button-background); */
+    background: #00163D;
   }
 
   .secondaryDiv{
