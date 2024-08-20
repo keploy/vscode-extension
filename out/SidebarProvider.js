@@ -375,6 +375,19 @@ class SidebarProvider {
                     }
                     break;
                 }
+                // case "signIn": {
+                //   if (!data.value) {
+                //     return;
+                //   }
+                //   try {
+                //     console.log('Signing in...');
+                //     const response: any = await SignIn();
+                //     console.log('Response from SignIn', response);
+                //   } catch (error) {
+                //     this._view?.webview.postMessage({ type: 'error', value: `Failed to sign in ${error}` });
+                //   }
+                //   break;
+                // }
             }
         }));
     }

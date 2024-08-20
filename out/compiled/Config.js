@@ -726,19 +726,12 @@ var app = (function () {
 		let div0;
 		let t4;
 		let div1;
-		let button0;
-		let t6;
-		let button1;
-		let t8;
-		let button2;
-		let t10;
+		let t5;
 		let div2;
-		let t12;
+		let t7;
 		let div3;
-		let t14;
-		let button3;
-		let t16;
-		let button4;
+		let t9;
+		let button;
 		let div4_class_value;
 		let mounted;
 		let dispose;
@@ -756,51 +749,33 @@ var app = (function () {
 				div0.innerHTML = ``;
 				t4 = space();
 				div1 = element("div");
-				button0 = element("button");
-				button0.textContent = "Login with Google";
-				t6 = space();
-				button1 = element("button");
-				button1.textContent = "Login with Microsoft";
-				t8 = space();
-				button2 = element("button");
-				button2.textContent = "Login with GitHub";
-				t10 = space();
+				div1.innerHTML = ``;
+				t5 = space();
 				div2 = element("div");
 				div2.textContent = "Get Started";
-				t12 = space();
+				t7 = space();
 				div3 = element("div");
-				div3.textContent = "Integrate Keploy by installing the open-source agent locally. No code-changes required.";
-				t14 = space();
-				button3 = element("button");
-				button3.textContent = "Setup Keploy Config";
-				t16 = space();
-				button4 = element("button");
-				button4.textContent = "Sign In";
-				attr_dev(h1, "class", "heading svelte-are8wk");
-				add_location(h1, file, 127, 2, 2291);
-				attr_dev(h2, "class", "subheading svelte-are8wk");
-				add_location(h2, file, 128, 2, 2336);
+				div3.textContent = "Integrate Keploy by installing the open-source agent locally. No\n    code-changes required.";
+				t9 = space();
+				button = element("button");
+				button.textContent = "Setup Keploy Config";
+				attr_dev(h1, "class", "heading svelte-ay4rde");
+				add_location(h1, file, 28, 2, 515);
+				attr_dev(h2, "class", "subheading svelte-ay4rde");
+				add_location(h2, file, 29, 2, 560);
 				attr_dev(div0, "class", "image-container");
-				add_location(div0, file, 129, 2, 2389);
-				attr_dev(button0, "class", "oauth-button svelte-are8wk");
-				add_location(button0, file, 133, 4, 2495);
-				attr_dev(button1, "class", "oauth-button microsoft svelte-are8wk");
-				add_location(button1, file, 134, 4, 2599);
-				attr_dev(button2, "class", "oauth-button github svelte-are8wk");
-				add_location(button2, file, 135, 4, 2719);
-				attr_dev(div1, "class", "oauth-buttons svelte-are8wk");
-				add_location(div1, file, 132, 2, 2463);
-				attr_dev(div2, "class", "get-started svelte-are8wk");
-				add_location(div2, file, 137, 2, 2837);
-				attr_dev(div3, "class", "description svelte-are8wk");
-				add_location(div3, file, 138, 2, 2882);
-				attr_dev(button3, "class", "button svelte-are8wk");
-				attr_dev(button3, "id", "setupConfig");
-				add_location(button3, file, 141, 2, 3011);
-				attr_dev(button4, "class", "button svelte-are8wk");
-				add_location(button4, file, 142, 2, 3111);
-				attr_dev(div4, "class", div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-are8wk"));
-				add_location(div4, file, 126, 0, 2227);
+				add_location(div0, file, 30, 2, 613);
+				attr_dev(div1, "class", "oauth-buttons svelte-ay4rde");
+				add_location(div1, file, 33, 2, 687);
+				attr_dev(div2, "class", "get-started svelte-ay4rde");
+				add_location(div2, file, 38, 2, 1070);
+				attr_dev(div3, "class", "description svelte-ay4rde");
+				add_location(div3, file, 39, 2, 1115);
+				attr_dev(button, "class", "button svelte-ay4rde");
+				attr_dev(button, "id", "setupConfig");
+				add_location(button, file, 43, 2, 1248);
+				attr_dev(div4, "class", div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? "container-hide" : "container") + " svelte-ay4rde"));
+				add_location(div4, file, 27, 0, 453);
 			},
 			l: function claim(nodes) {
 				throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -814,34 +789,20 @@ var app = (function () {
 				append_dev(div4, div0);
 				append_dev(div4, t4);
 				append_dev(div4, div1);
-				append_dev(div1, button0);
-				append_dev(div1, t6);
-				append_dev(div1, button1);
-				append_dev(div1, t8);
-				append_dev(div1, button2);
-				append_dev(div4, t10);
+				append_dev(div4, t5);
 				append_dev(div4, div2);
-				append_dev(div4, t12);
+				append_dev(div4, t7);
 				append_dev(div4, div3);
-				append_dev(div4, t14);
-				append_dev(div4, button3);
-				append_dev(div4, t16);
-				append_dev(div4, button4);
+				append_dev(div4, t9);
+				append_dev(div4, button);
 
 				if (!mounted) {
-					dispose = [
-						listen_dev(button0, "click", /*click_handler*/ ctx[4], false),
-						listen_dev(button1, "click", /*click_handler_1*/ ctx[5], false),
-						listen_dev(button2, "click", /*click_handler_2*/ ctx[6], false),
-						listen_dev(button3, "click", /*handleSetupConfig*/ ctx[1], false),
-						listen_dev(button4, "click", /*handleSignIn*/ ctx[3], false)
-					];
-
+					dispose = listen_dev(button, "click", /*handleSetupConfig*/ ctx[1], false);
 					mounted = true;
 				}
 			},
 			p: function update(ctx, [dirty]) {
-				if (dirty & /*showSettings*/ 1 && div4_class_value !== (div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? 'container-hide' : 'container') + " svelte-are8wk"))) {
+				if (dirty & /*showSettings*/ 1 && div4_class_value !== (div4_class_value = "" + (null_to_empty(/*showSettings*/ ctx[0] ? "container-hide" : "container") + " svelte-ay4rde"))) {
 					attr_dev(div4, "class", div4_class_value);
 				}
 			},
@@ -853,7 +814,7 @@ var app = (function () {
 				}
 
 				mounted = false;
-				run_all(dispose);
+				dispose();
 			}
 		};
 
@@ -872,9 +833,9 @@ var app = (function () {
 		let { $$slots: slots = {}, $$scope } = $$props;
 		validate_slots('Config', slots, []);
 		let showSettings = false;
-		let appCommand = '';
-		let noise = '';
-		let passThroughPorts = '';
+		let appCommand = "";
+		let noise = "";
+		let passThroughPorts = "";
 		const vscode = acquireVsCodeApi();
 
 		function handleSetupConfig() {
@@ -882,11 +843,11 @@ var app = (function () {
 		}
 
 		function handleOAuthClick(provider) {
-			vscode.postMessage({ type: 'navigate', value: provider });
+			vscode.postMessage({ type: "navigate", value: provider });
 		}
 
 		function handleSignIn() {
-			vscode.postMessage({ type: 'navigate', value: 'Option' });
+			vscode.postMessage({ type: "signIn", value: "true" });
 		}
 
 		const writable_props = [];
@@ -894,10 +855,6 @@ var app = (function () {
 		Object.keys($$props).forEach(key => {
 			if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Config> was created with unknown prop '${key}'`);
 		});
-
-		const click_handler = () => handleOAuthClick('google');
-		const click_handler_1 = () => handleOAuthClick('microsoft');
-		const click_handler_2 = () => handleOAuthClick('github');
 
 		$$self.$capture_state = () => ({
 			showSettings,
@@ -921,15 +878,7 @@ var app = (function () {
 			$$self.$inject_state($$props.$$inject);
 		}
 
-		return [
-			showSettings,
-			handleSetupConfig,
-			handleOAuthClick,
-			handleSignIn,
-			click_handler,
-			click_handler_1,
-			click_handler_2
-		];
+		return [showSettings, handleSetupConfig];
 	}
 
 	class Config extends SvelteComponentDev {

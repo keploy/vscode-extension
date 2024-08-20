@@ -32,7 +32,6 @@
         "providerId": "keploy-codelens"
       }
     ],
-  
     "viewsContainers": {
       "activitybar": [
         {
@@ -81,6 +80,11 @@
           "command": "keploy.SignIn",
           "group": "navigation",
           "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.SignOut",
+          "group": "navigation",
+          "when": "keploy.signedOut != true && view == Keploy-Sidebar"
         }
       ]
     },
@@ -89,6 +93,49 @@
         "command": "keploy.SignIn",
         "title": "Sign In",
         "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.SignOut",
+        "title": "Sign Out",
+        "when": "keploy.signedOut != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.SignOut",
+        "title": "Sign Out",
+        "when": "keploy.signedOut != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.doSomething",
+        "title": "Do Something"
+      },
+      {
+        "command": "keploy.updateKeploy",
+        "title": "Update your Keploy",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.KeployVersion",
+        "title": "View Your Keploy Version",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.getLatestVersion",
+        "title": "Get Latest Version",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.viewChangeLog",
+        "title": "View Change Log",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.viewDocumentation",
+        "title": "View Docs",
+        "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.generateTests",
+        "title": "Do Something"
       },
       {
         "command": "keploy.updateKeploy",

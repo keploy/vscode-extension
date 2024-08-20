@@ -271,12 +271,12 @@ function extractID(output) {
 function validateFirst(token, serverURL) {
     return __awaiter(this, void 0, void 0, function* () {
         const url = `${serverURL}/auth/github`;
-        getInstallationID();
+        const installationID = yield getInstallationID();
+        // extract string from promise
         const requestBody = {
-            GitHubToken: "",
-            InstallationID: "",
+            GitHubToken: token,
+            InstallationID: installationID,
         };
-        console.log("requestBody.GitHubToken:", requestBody.GitHubToken, "requestBody.InstallationID:", requestBody.InstallationID);
         try {
             const response = yield axios_1.default.post(url, requestBody, {
                 headers: { 'Content-Type': 'application/json' },
@@ -285,7 +285,7 @@ function validateFirst(token, serverURL) {
                 throw new Error(`Failed to authenticate: ${response.data.Error}`);
             }
             const jwtToken = response.data.JwtToken;
-            console.log("THEN JWT TOKEN", jwtToken);
+            console.log("JWT Token:", jwtToken);
             return {
                 emailID: response.data.EmailID,
                 isValid: response.data.IsValid,

@@ -19,7 +19,7 @@ echo $testCommand
 # Run Keploy
 # keploy gen --sourceFilePath="./src/routes/routes.js" --testFilePath="./test/routes.test.js" --testCommand=$testCommand  --coverageReportPath="$coverageReportPath" --llmApiVersion="2024-02-01" --llmBaseUrl="https://keploy-open-ai-instance.openai.azure.com/openai/deployments/Keploy-gpt4o" --max-iterations="10"
 
-sudo -E env PATH=$PATH oss gen --source-file-path="$sourceFilePath" \
+oss gen --source-file-path="$sourceFilePath" \
   --test-file-path="$testFilePath" \
   --test-command="npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage
 " \

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SidebarProvider } from './SidebarProvider';
-import SignIn from './SignIn';
+import SignIn, { validateFirst } from './SignIn';
 import oneClickInstall from './OneClickInstall';
 import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
@@ -86,31 +86,47 @@ export function activate(context: vscode.ExtensionContext) {
         sidebarProvider.postMessage('navigateToHome', 'KeployHome');
     }
 
+    // Check if the access token is already present in the global state
+    const accessToken = context.globalState.get<string>('accessToken');
     // disable if access token is already present
-    // let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
+    if (accessToken) {
+        // Disable the sign-in command since the user is already signed in
+        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+        vscode.window.showInformationMessage('You are already signed in!');
+    } else {
+        // Register the sign-in command if not signed in
+        let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
+            getGitHubAccessToken().then((result) => {
+                if (result) {
+                    const { accessToken, email } = result;
+                    
+                    getInstallationID();
 
-    //     getGitHubAccessToken().then((result) => {
-    //         if (result) {
-    //             const { accessToken, email } = result;
-    //             console.log('Access Token:', accessToken);
-    //             console.log('Email:', email);
+                    // Store the access token in global state
+                    context.globalState.update('accessToken', accessToken);
 
-    //             getInstallationID();
+                    validateFirst(accessToken, "http://localhost:8083");
 
-    //             // Use the access token and email as needed
-    //         } else {
-    //             console.log('Failed to get the session or email.');
-    //         }
-    //     });
+                } else {
+                    console.log('Failed to get the session or email.');
+                }
+            });
 
-    //     // context.globalState.update('accessToken', response.accessToken);
-    //     vscode.window.showInformationMessage('You are now signed in!');
-    //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+            vscode.window.showInformationMessage('You are now signed in!');
+            vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+        });
 
-    // }
-    // );
-    // context.subscriptions.push(signInCommand);
+        context.subscriptions.push(signInCommand);
+    }
 
+
+    let signout = vscode.commands.registerCommand('keploy.SignOut', async () => {
+        context.globalState.update('accessToken', undefined);
+        vscode.window.showInformationMessage('You have been signed out.');
+        vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
+    });
+
+    context.subscriptions.push(signout);
 
     let viewKeployVersionDisposable = vscode.commands.registerCommand('keploy.KeployVersion', async () => {
         const currentVersion = await getCurrentKeployVersion();

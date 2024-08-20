@@ -193,7 +193,7 @@ export async function loginAPI(url = "", provider = "", code = "") {
 }
 
 
-export async function getInstallationID() {
+export async function getInstallationID(): Promise<string> {
     let id;
     try {
         const inDocker = process.env.IN_DOCKER === 'true';
@@ -248,13 +248,13 @@ interface AuthResp {
 
 export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string }> {
     const url = `${serverURL}/auth/github`;
-    getInstallationID();
-    const requestBody: AuthReq = {
-        GitHubToken: "",
-        InstallationID: "",
-    };
 
-    console.log("requestBody.GitHubToken:", requestBody.GitHubToken, "requestBody.InstallationID:", requestBody.InstallationID);
+    const installationID = await getInstallationID();
+    // extract string from promise
+    const requestBody: AuthReq = {
+        GitHubToken: token,
+        InstallationID: installationID,
+    };
 
     try {
         const response: AxiosResponse<AuthResp> = await axios.post<AuthResp>(url, requestBody, {
@@ -266,8 +266,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         }
 
         const jwtToken = response.data.JwtToken;
-        console.log("THEN JWT TOKEN", jwtToken);
-
+        console.log("JWT Token:", jwtToken);
         return {
             emailID: response.data.EmailID,
             isValid: response.data.IsValid,

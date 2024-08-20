@@ -38,10 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 const SidebarProvider_1 = require("./SidebarProvider");
+const SignIn_1 = require("./SignIn");
 const OneClickInstall_1 = __importDefault(require("./OneClickInstall"));
 const version_1 = require("./version");
 const updateKeploy_1 = require("./updateKeploy");
 const Utg_1 = __importDefault(require("./Utg"));
+const SignIn_2 = require("./SignIn");
 const acorn = __importStar(require("acorn"));
 const walk = __importStar(require("acorn-walk"));
 class KeployCodeLensProvider {
@@ -95,25 +97,40 @@ function activate(context) {
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
         sidebarProvider.postMessage('navigateToHome', 'KeployHome');
     }
+    // Check if the access token is already present in the global state
+    const accessToken = context.globalState.get('accessToken');
     // disable if access token is already present
-    // let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
-    //     getGitHubAccessToken().then((result) => {
-    //         if (result) {
-    //             const { accessToken, email } = result;
-    //             console.log('Access Token:', accessToken);
-    //             console.log('Email:', email);
-    //             getInstallationID();
-    //             // Use the access token and email as needed
-    //         } else {
-    //             console.log('Failed to get the session or email.');
-    //         }
-    //     });
-    //     // context.globalState.update('accessToken', response.accessToken);
-    //     vscode.window.showInformationMessage('You are now signed in!');
-    //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-    // }
-    // );
-    // context.subscriptions.push(signInCommand);
+    if (accessToken) {
+        // Disable the sign-in command since the user is already signed in
+        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+        vscode.window.showInformationMessage('You are already signed in!');
+    }
+    else {
+        // Register the sign-in command if not signed in
+        let signInCommand = vscode.commands.registerCommand('keploy.SignIn', () => __awaiter(this, void 0, void 0, function* () {
+            (0, SignIn_2.getGitHubAccessToken)().then((result) => {
+                if (result) {
+                    const { accessToken, email } = result;
+                    (0, SignIn_2.getInstallationID)();
+                    // Store the access token in global state
+                    context.globalState.update('accessToken', accessToken);
+                    (0, SignIn_1.validateFirst)(accessToken, "http://localhost:8083");
+                }
+                else {
+                    console.log('Failed to get the session or email.');
+                }
+            });
+            vscode.window.showInformationMessage('You are now signed in!');
+            vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+        }));
+        context.subscriptions.push(signInCommand);
+    }
+    let signout = vscode.commands.registerCommand('keploy.SignOut', () => __awaiter(this, void 0, void 0, function* () {
+        context.globalState.update('accessToken', undefined);
+        vscode.window.showInformationMessage('You have been signed out.');
+        vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
+    }));
+    context.subscriptions.push(signout);
     let viewKeployVersionDisposable = vscode.commands.registerCommand('keploy.KeployVersion', () => __awaiter(this, void 0, void 0, function* () {
         const currentVersion = yield (0, version_1.getCurrentKeployVersion)();
         vscode.window.showInformationMessage(`The current version of Keploy is ${currentVersion}`);

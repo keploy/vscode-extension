@@ -1,8 +1,8 @@
 <script>
   let showSettings = false;
-  let appCommand = '';
-  let noise = '';
-  let passThroughPorts = '';
+  let appCommand = "";
+  let noise = "";
+  let passThroughPorts = "";
 
   const vscode = acquireVsCodeApi();
 
@@ -12,21 +12,44 @@
 
   function handleOAuthClick(provider) {
     vscode.postMessage({
-      type: 'navigate',
+      type: "navigate",
       value: provider,
     });
   }
 
   function handleSignIn() {
     vscode.postMessage({
-      type: 'navigate',
-      value: 'Option',
+      type: "signIn",
+      value: "true",
     });
   }
 </script>
 
+<div class={showSettings ? "container-hide" : "container"}>
+  <h1 class="heading">Welcome to Keploy</h1>
+  <h2 class="subheading">Your AI Generator Tool</h2>
+  <div class="image-container">
+    <!-- Add your image here -->
+  </div>
+  <div class="oauth-buttons">
+    <!-- <button class="oauth-button" on:click={() => handleOAuthClick('google')}>Login with Google</button>
+    <button class="oauth-button microsoft" on:click={() => handleOAuthClick('microsoft')}>Login with Microsoft</button>
+    <button class="oauth-button github" on:click={() => handleOAuthClick('github')}>Login with GitHub</button> -->
+  </div>
+  <div class="get-started">Get Started</div>
+  <div class="description">
+    Integrate Keploy by installing the open-source agent locally. No
+    code-changes required.
+  </div>
+  <button class="button" id="setupConfig" on:click={handleSetupConfig}
+    >Setup Keploy Config</button
+  >
+  <!-- <button class="button" on:click={handleSignIn}>Sign In</button> -->
+</div>
+
 <style>
-  .container, .settings-container {
+  .container,
+  .settings-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -52,7 +75,7 @@
   .button {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #FF914D;
+    background-color: #ff914d;
     color: white;
     border: none;
     border-radius: 20px;
@@ -62,12 +85,12 @@
   }
 
   .button:hover {
-    background-color: #FF7A33;
+    background-color: #ff7a33;
   }
 
   .oauth-button {
     padding: 10px 20px;
-    background-color: #4285F4; /* default color for google */
+    background-color: #4285f4; /* default color for google */
     color: white;
     border: none;
     border-radius: 5px;
@@ -78,16 +101,16 @@
   }
 
   .oauth-button:hover {
-    background-color: #357AE8; /* slightly darker shade */
+    background-color: #357ae8; /* slightly darker shade */
   }
 
   .oauth-button.microsoft {
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     color: #000;
   }
 
   .oauth-button.microsoft:hover {
-    background-color: #E0E0E0;
+    background-color: #e0e0e0;
   }
 
   .oauth-button.github {
@@ -123,22 +146,3 @@
     display: none; /* Hide container when showSettings is true */
   }
 </style>
-
-<div class="{showSettings ? 'container-hide' : 'container'}">
-  <h1 class="heading">Welcome to Keploy</h1>
-  <h2 class="subheading">Your AI Generator Tool</h2>
-  <div class="image-container">
-    <!-- Add your image here -->
-  </div>
-  <div class="oauth-buttons">
-    <button class="oauth-button" on:click={() => handleOAuthClick('google')}>Login with Google</button>
-    <button class="oauth-button microsoft" on:click={() => handleOAuthClick('microsoft')}>Login with Microsoft</button>
-    <button class="oauth-button github" on:click={() => handleOAuthClick('github')}>Login with GitHub</button>
-  </div>
-  <div class="get-started">Get Started</div>
-  <div class="description">
-    Integrate Keploy by installing the open-source agent locally. No code-changes required.
-  </div>
-  <button class="button" id="setupConfig" on:click={handleSetupConfig}>Setup Keploy Config</button>
-  <button class="button" on:click={handleSignIn}>Sign In</button>
-</div>
