@@ -22,6 +22,12 @@ jobs:
 
       - name: Install dependencies
         run: npm i
+      
+      - name: Run Rollup
+        run: npm run rollupci
+
+      - name: List contents of out/compiled directory (for debugging)
+        run: ls -R out/compiled
 
       - name: Install vsce
         run: npm install -g @vscode/vsce
