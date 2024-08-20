@@ -2,8 +2,7 @@ name: Rollup Test
 
 on:
   push:
-    branches:
-      - main
+    branches: [ '*' ]
 
 jobs:
   build:
