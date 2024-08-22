@@ -6,7 +6,7 @@
   function handleTestSelection(testType) {
     vscode.postMessage({
       type: "navigate",
-      value: testType === "Unit Testing" ? "UtgDocs" : "",
+      value: testType === "Unit Testing" ? "UtgDocs" : "IntegrationTest",
     });
   }
 </script>

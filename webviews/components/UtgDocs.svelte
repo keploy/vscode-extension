@@ -1,10 +1,22 @@
 <script>
-  let screenshot1 = "media/codelens.png";
-  let screenshot2 = "media/commandpellete.png";
+  const vscode = acquireVsCodeApi();
+  let screenshot1 =
+    "https://raw.githubusercontent.com/Sarthak160/goApi/main/Frame%209.png";
+  let screenshot2 =
+    "https://github.com/Sarthak160/goApi/blob/main/Group%207.png?raw=true";
+
+    
+
+  function navigateToConfig() {
+    vscode.postMessage({
+      type: "navigate",
+      value: "Config",
+    });
+  }
 </script>
 
 <div class="container">
-  <h1 class="heading">Follow these steps to use Keploy UTG</h1>
+  <h1 class="heading">Steps to use Keploy UTG - </h1>
 
   <div class="instructions-box">
     <div class="instructions">
@@ -14,21 +26,13 @@
 
       <div class="step">
         <span class="step-number">2)</span> Click on the "Generate unit test".
-        <img
-          src={screenshot1}
-          alt="Generate unit test screenshot"
-          class="screenshot"
-        />
+        <img src={screenshot1} alt="Generate unit test" class="screenshot" />
       </div>
 
       <div class="step">
         <span class="step-number">3)</span> Use the command palette by
         right-clicking.
-        <img
-          src={screenshot2}
-          alt="Command palette screenshot"
-          class="screenshot"
-        />
+        <img src={screenshot2} alt="Command palette" class="screenshot" />
       </div>
 
       <div class="step">
@@ -37,6 +41,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Back Button -->
+  <button class="back-button" on:click={navigateToConfig}>
+    Back
+  </button>
 </div>
 
 <style>
@@ -65,7 +74,7 @@
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
-    color: var(--vscode-editor-foreground);
+    color: #ff914d;
   }
 
   .instructions-box {
@@ -99,5 +108,21 @@
   .step-number {
     font-weight: bold;
     color: var(--vscode-button-background);
+  }
+
+  /* Back Button Style */
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff914d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .back-button:hover {
+    background-color: #e6803a;
   }
 </style>

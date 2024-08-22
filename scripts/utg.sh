@@ -24,5 +24,5 @@ keploy gen --source-file-path="$sourceFilePath" \
   --test-command="npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage
 " \
   --coverage-report-path="./coverage/cobertura-coverage.xml"\
- --llmApiVersion "2024-02-01" --llmBaseUrl "https://api.keploy.io" --max-iterations "10" --debug
+ --llmApiVersion "2024-02-01" --llmBaseUrl "https://api.keploy.io" --max-iterations "10"
 
