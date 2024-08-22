@@ -1,4 +1,5 @@
 <script>
+  
   let showSettings = false;
 
   const vscode = acquireVsCodeApi();
@@ -12,31 +13,28 @@
 </script>
 
 <div class={showSettings ? "container-hide" : "main-container"}>
-  <div class="section welcome-section">
-    <h1 class="heading">
-      Welcome to <img
-        src="https://keploy.io/docs/img/keploy-logo-dark.svg"
-        alt="Keploy"
-        class="logo"
-      />
-    </h1>
+  <div class="main">
+  <div class="header">
+    <img src="https://raw.githubusercontent.com/Sarthak160/goApi/a47fc440a11368062260dcff9828b468bc9b2872/print_transparent.svg" alt="Keploy" class="logo">
+    <h1 class="welcome-heading">Welcome to Keploy</h1>
   </div>
-
-  <div class="section button-section">
+  
+  <div class="body-text">
+    <p>Ready to <span class="highlight">supercharge</span> your testing?</p>
+    <p>Generate your Unit Tests and <br/> Integration Tests with a click below!</p>
+  </div>
+  
+  <div class="btn-container">
     <button
-      class="large-button unit-button"
-      on:click={() => handleTestSelection("Unit Testing")}
-      >Generate Unit Test</button
-    >
-  </div>
-
-  <div class="section button-section">
+    class="btn"
+    on:click={() => handleTestSelection("Integration Testing")}
+    >Generate Unit tests</button>
     <button
-      class="large-button integration-button"
-      on:click={() => handleTestSelection("Integration Testing")}
-      >Generate Integration Test</button
-    >
+    class="btn"
+    on:click={() => handleTestSelection("Integration Testing")}
+    >Generate Integration tests</button>
   </div>
+</div>
 </div>
 
 <div class={showSettings ? "settings-container" : "container-hide"}>
@@ -60,38 +58,16 @@
   <button class="button" id="initialiseConfigButton">Save Configuration</button>
 </div>
 
+
+
 <style>
-  body {
-    font-family: "Baloo 2", sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f4f4f4;
-  }
+
 
   .main-container {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-  }
-
-  .section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex: 1;
-    text-align: center;
-    padding: 0;
-  }
-
-  .welcome-section {
-    flex-direction: column;
-    max-height: 10vh;
-    color: #ff914d;
   }
 
   .heading {
@@ -102,60 +78,6 @@
   .logo {
     height: 40px;
     vertical-align: top;
-  }
-
-  .gif-container {
-    margin-top: 10px;
-    width: 100%;
-    height: 150px; /* Adjust as needed */
-    background-color: #dcdcdc;
-  }
-
-  .button-section {
-    padding: 0;
-    flex-direction: column;
-  }
-
-  .large-button {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    font-size: 28px;
-    color: white;
-    border: none;
-    border-radius: 0; /* Remove border radius to make it fill the entire div */
-    cursor: pointer;
-    transition:
-      transform 0.3s ease,
-      background-color 0.3s ease;
-    background-size: cover; /* Ensure the background image covers the entire button */
-    background-position: center; /* Center the background image */
-    background-repeat: no-repeat; /* Prevent the background image from repeating */
-  }
-
-  .large-button:hover {
-    transform: scale(1.05); /* Slight zoom effect on hover */
-  }
-
-  .integration-button {
-    /* background-image: url("https://images.unsplash.com/photo-1517167685284-96a27681ad75?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZGFyayUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D"); Replace with your image path */
-    background-color: transparent; /* Fallback color */
-  }
-
-  .integration-button:hover {
-    /* background-color: #ff914d; */
-    color: #ff914d;
-  }
-
-  .unit-button {
-    /* background-image: url("https://plus.unsplash.com/premium_photo-1686195842977-cf9e434d9a49?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZGFyayUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D"); Replace with your image path */
-    background-color: transparent; /* Fallback color */
-    border-radius: 5px;
-  }
-
-  .unit-button:hover {
-    /* background-color: #ff914d; */
-    color: #ff914d;
   }
 
   .settings-container,
@@ -194,5 +116,89 @@
 
   .button:hover {
     background-color: #0056b3;
+  }  .main {
+    margin: 0;
+    padding: 0;
+    font-family: 'Baloo 2', sans-serif;
+    background-color: #000;
+    color: white;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
   }
-</style>
+
+  .header {
+    flex: 0 0 20%;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .logo {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  .welcome-heading {
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 15px 0;
+  }
+
+  .body-text {
+    flex: 0 0 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .body-text p:first-child {
+    font-size: 2.35rem; 
+  }
+
+  .body-text p:nth-child(2) {
+    margin-top: 40px;
+    font-size: 1.5rem; 
+    line-height: 1.5;
+  }
+
+  .highlight {
+    background: linear-gradient(90deg, #FFB388 0%, #FF5C00 50%, #F76B1C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+  .btn-container {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: initial;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    width: 300px;
+    padding: 15px;
+    margin: 15px 0;
+    text-decoration: none;
+    color: white;
+    background-color: #1a1a1a;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+  }
+
+  .btn:hover {
+    box-shadow: 0 0 40px rgba(247, 123, 62, 1);
+    transform: scale(1.05); 
+  }
+  </style>
