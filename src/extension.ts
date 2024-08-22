@@ -105,7 +105,7 @@ export function activate(context: vscode.ExtensionContext) {
                     // Store the access token in global state
                     context.globalState.update('accessToken', accessToken);
 
-                    validateFirst(accessToken, "http://localhost:8083");
+                    validateFirst(accessToken, "https://api.keploy.io");
 
                 } else {
                     console.log('Failed to get the session or email.');
