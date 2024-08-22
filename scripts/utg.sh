@@ -15,7 +15,7 @@ coverageReportPath=$3
 utgEnv=" -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage"
 
 testCommand="npm test "+ $utgEnv
-echo $testCommand
+# echo $testCommand
 # Run Keploy
 # keploy gen --sourceFilePath="./src/routes/routes.js" --testFilePath="./test/routes.test.js" --testCommand=$testCommand  --coverageReportPath="$coverageReportPath" --llmApiVersion="2024-02-01" --llmBaseUrl="https://keploy-open-ai-instance.openai.azure.com/openai/deployments/Keploy-gpt4o" --max-iterations="10"
 
