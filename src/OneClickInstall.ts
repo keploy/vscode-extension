@@ -1,7 +1,11 @@
 import { exec } from 'child_process';
 
 export default function executeKeployOneClickCommand(): void {
-    const command = 'curl --silent -O -L https://keploy.io/install.sh && bash install.sh';
+    const command = `
+        curl --silent --location "https://github.com/keploy/keploy/releases/latest/download/keploy_darwin_all.tar.gz" | tar xz -C /tmp && 
+        sudo mkdir -p /usr/local/bin && 
+        sudo mv /tmp/keploy /usr/local/bin/keploy
+    `;
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
