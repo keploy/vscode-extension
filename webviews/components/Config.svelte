@@ -1,103 +1,206 @@
 <script>
   let showSettings = false;
-  let appCommand = '';
-  let path = './';
-  let passThroughPorts = '';
 
-  function handleSetupConfig() {
-    showSettings = true;
+  const vscode = acquireVsCodeApi();
+
+  function handleTestSelection(testType) {
+    vscode.postMessage({
+      type: "navigate",
+      value: testType === "Unit Testing" ? "UtgDocs" : "IntegrationTest",
+    });
   }
 </script>
 
-<style>
-  .container, .settings-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: left;
-    height: 100vh;
-    padding: 20px;
-  }
+<div class={showSettings ? "container-hide" : "main-container"}>
+  <div class="main">
+    <div class="header">
+      <img
+        src="https://raw.githubusercontent.com/Sarthak160/goApi/a47fc440a11368062260dcff9828b468bc9b2872/print_transparent.svg"
+        alt="Keploy"
+        class="logo"
+      />
+      <h1 class="welcome-heading">Welcome to Keploy</h1>
+    </div>
 
-  .get-started {
-    margin-top: 50px;
-    text-align: center;
-    font-size: 18px;
-  }
+    <div class="body-text">
+      <p>Ready to <span class="highlight">supercharge</span> your testing?</p>
+      <p>
+        Generate your Unit Tests and <br /> Integration Tests with a click below!
+      </p>
+    </div>
 
-  .description {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 16px;
-    max-width: 300px;
-  }
-
-  .button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #FF914D;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  .button:hover {
-    background-color: #FF914D;
-  }
-
-  /* New UI Styles */
-  .settings-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 300px;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  
-  .settings-item input {
-    flex-grow: 1;
-  }
-
-  .heading {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .container-hide {
-    display: none; /* Hide container when showSettings is true */
-  }
-</style>
-<body class="baloo-2-custom">
-<div class="keploylogo"></div>
-<div class="{showSettings ? 'container-hide' : 'container'}">
-  
-  <div class="image-container">
+    <div class="btn-container">
+      <button class="btn" on:click={() => handleTestSelection("Unit Testing")}
+        >Generate Unit tests</button
+      >
+      <button
+        class="btn"
+        on:click={() => handleTestSelection("Integration Testing")}
+        >Generate Integration tests</button
+      >
+    </div>
   </div>
-  <div class="get-started">Get Started</div>
-  <div class="description">
-    Integrate Keploy by installing the open-source agent locally. No code-changes required.
-  </div>
-  <button class="button" id="setupConfig" on:click={handleSetupConfig}>Setup Keploy Config</button>
 </div>
 
-<div class="{showSettings ? 'settings-container' : 'container-hide'}">
+<div class={showSettings ? "settings-container" : "container-hide"}>
   <h1 class="heading">Initialise Keploy Config File</h1>
   <div class="settings-item">
-    <div class="code-icon "alt="Icon" > </div>
-    <input type="text" placeholder="Enter Command to Run the Application" bind:value={appCommand} id="configCommand">
+    <div class="code-icon" alt="Icon"></div>
+    <input
+      type="text"
+      placeholder="Enter Command to Run the Application"
+      id="configCommand"
+    />
   </div>
   <div class="settings-item">
-    <div class="code-icon "alt="Icon" > </div>
-    <input type="text" placeholder="Enter Application Path (default : './')" bind:value={path} id="configPath" >
+    <div class="code-icon" alt="Icon"></div>
+    <input
+      type="text"
+      placeholder="Enter Application Path (default : './')"
+      id="configPath"
+    />
   </div>
   <button class="button" id="initialiseConfigButton">Save Configuration</button>
 </div>
-</body>
+
+<style>
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  .heading {
+    font-size: 36px;
+    font-weight: bold;
+  }
+
+  .logo {
+    height: 40px;
+    vertical-align: top;
+  }
+
+  .settings-container,
+  .container-hide {
+    display: none;
+  }
+
+  .settings-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+
+  .settings-item {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .code-icon {
+    margin-right: 10px;
+  }
+
+  .button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #0056b3;
+  }
+  .main {
+    margin: 0;
+    padding: 0;
+    font-family: "Baloo 2", sans-serif;
+    background-color: #000;
+    color: white;
+    text-align: center;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  .header {
+    flex: 0 0 20%;
+    padding-top: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .logo {
+    height: 70px;
+    margin-bottom: 20px;
+  }
+
+  .welcome-heading {
+    font-size: 2.5rem;
+    font-weight: bold;
+    padding: 15px 0;
+  }
+
+  .body-text {
+    flex: 0 0 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .body-text p:first-child {
+    font-size: 2.35rem;
+  }
+
+  .body-text p:nth-child(2) {
+    margin-top: 40px;
+    font-size: 1.5rem;
+    line-height: 1.5;
+  }
+
+  .highlight {
+    background: linear-gradient(90deg, #ffb388 0%, #ff5c00 50%, #f76b1c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .btn-container {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: initial;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .btn {
+    width: 300px;
+    padding: 15px;
+    margin: 15px 0;
+    text-decoration: none;
+    color: white;
+    background-color: #1a1a1a;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+  }
+
+  .btn:hover {
+    box-shadow: 0 0 40px rgba(247, 123, 62, 1);
+    transform: scale(1.05);
+  }
+</style>
