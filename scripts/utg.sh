@@ -7,9 +7,6 @@ sourceFilePath=$1
 testFilePath=$2
 coverageReportPath=$3
 
-# echo "Generating tests for source file: $sourceFilePath"
-# echo "Using test file: $testFilePath"
-# echo "Coverage report path: $coverageReportPath"
 
 # Add env variables to the npm test command
 utgEnv=" -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage"

@@ -174,24 +174,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        // case "selectTestFolder":{
-        //   if (!data.value) {
-        //     return;
-        //   }
-        //   try {
-        //     console.log('Opening Test Dialogue Box...');
-        //     vscode.window.showOpenDialog(testOptions).then(async fileUri => {
-        //       if (fileUri && fileUri[0]) {
-        //         console.log('Selected file: ' + fileUri[0].fsPath);
-        //         this._view?.webview.postMessage({ type: 'testfile', value: `${fileUri[0].fsPath}` });
-        //       }
-        //     });
-        //   } catch (error) {
-        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
-        //   }
-        //   break;
-        // }
-
         case 'startTestingCommand': {
           if (!data.value) {
             return;
@@ -239,7 +221,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           if (data.value === "google") {
             console.log('Navigate to Google');
-            // vscode.env.openExternal(vscode.Uri.parse('https://www.google.com'));
             const response: any = await SignInWithGitHub();
             console.log('Response from SignIn', response);
           }
@@ -278,14 +259,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               sveltePageCss = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Option.css")
               );
-            } else if (data.value === 'Forms') {
-              sveltePageJs = webviewView.webview.asWebviewUri(
-                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Forms.js")
-              );
-              sveltePageCss = webviewView.webview.asWebviewUri(
-                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Forms.css")
-              );
-            } else {
+            }  else {
               throw new Error("Unsupported navigation value");
             }
 
