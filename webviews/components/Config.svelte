@@ -42,26 +42,6 @@
   </div>
 </div>
 
-<div class={showSettings ? "settings-container" : "container-hide"}>
-  <h1 class="heading">Initialise Keploy Config File</h1>
-  <div class="settings-item">
-    <div class="code-icon" alt="Icon"></div>
-    <input
-      type="text"
-      placeholder="Enter Command to Run the Application"
-      id="configCommand"
-    />
-  </div>
-  <div class="settings-item">
-    <div class="code-icon" alt="Icon"></div>
-    <input
-      type="text"
-      placeholder="Enter Application Path (default : './')"
-      id="configPath"
-    />
-  </div>
-  <button class="button" id="initialiseConfigButton">Save Configuration</button>
-</div>
 
 <style>
   .main-container {
