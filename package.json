@@ -172,6 +172,7 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "rollup": "rollup -c -w --bundleConfigAsCjs",
+    "rollupci": "rollup -c --bundleConfigAsCjs",
     "watch": "tsc -watch -p ./",
     "debug": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
