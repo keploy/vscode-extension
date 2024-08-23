@@ -44,7 +44,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
                 vscode.window.showInformationMessage("testFilePath", testFilePath);
                 const coverageReportPath = "./coverage/cobertura-coverage.xml";
-                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}";exit 0`);
+                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}";`);
 
                 // Listen for terminal close event
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {

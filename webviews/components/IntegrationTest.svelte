@@ -3,15 +3,13 @@
   let appCommand = "";
   let path = "./";
   let passThroughPorts = "";
-const vscode = acquireVsCodeApi();
+  let navigateToConfig = false;
+  // const vscode = acquireVsCodeApi();
   function handleSetupConfig() {
     showSettings = true;
   }
-  function navigateToConfig() {
-    vscode.postMessage({
-      type: "navigate",
-      value: "Config",
-    });
+  function NavigateToConfig() {
+    navigateToConfig = true;
   }
 </script>
 
@@ -27,7 +25,9 @@ const vscode = acquireVsCodeApi();
     <button class="button" id="setupConfig" on:click={handleSetupConfig}
       >Setup Keploy Config</button
     >
-    <button class="button" on:click={navigateToConfig}> Back </button>
+    <button class="button" id="backtoHome" on:click={NavigateToConfig}>
+      Back
+    </button>
   </div>
 
   <div class={showSettings ? "settings-container" : "container-hide"}>
@@ -51,9 +51,11 @@ const vscode = acquireVsCodeApi();
       />
     </div>
     <button class="button" id="initialiseConfigButton"
-      >Save Configurations</button
+      >Save Configuration</button
     >
-    <button class="button" on:click={navigateToConfig}> Back </button>
+    <button class="button" id="backtoHome" on:click={NavigateToConfig}>
+      Back
+    </button>
   </div>
 </body>
 
