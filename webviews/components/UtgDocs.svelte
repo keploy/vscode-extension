@@ -1,9 +1,9 @@
 <script>
   const vscode = acquireVsCodeApi();
   let screenshot1 =
-    "https://raw.githubusercontent.com/Sarthak160/goApi/main/Frame%209.png";
+    "https://github.com/Sarthak160/goApi/blob/main/codeLens.png?raw=true";
   let screenshot2 =
-    "https://github.com/Sarthak160/goApi/blob/main/Group%207.png?raw=true";
+    "https://github.com/Sarthak160/goApi/blob/main/command.png?raw=true";
 
     
 
