@@ -259,7 +259,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               sveltePageCss = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Option.css")
               );
-            }  else {
+            } else if (data.value === 'KeployHome') {
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.css")
+              );
+            } else {
               throw new Error("Unsupported navigation value");
             }
 
