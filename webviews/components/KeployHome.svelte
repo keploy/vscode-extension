@@ -2,44 +2,7 @@
   import { fly } from 'svelte/transition';
   // import { onMount } from 'svelte';
   // import lottie from 'lottie-web';
-
-  // const intro = 60; // final frame of the intro sequence
-  // const stopFrame = 180; // final frame of the stop icon appearing
-  // const recFrame = 240; // final frame of the record frame appearing (last frame which matches the intro frame to ensure it loops)
-
-  // let animationWindow;
-  // let anim;
-
-  // onMount(() => {
-  //   anim = lottie.loadAnimation({
-  //     container: animationWindow,
-  //     renderer: 'svg',
-  //     loop: false,
-  //     autoplay: true,
-  //     // we play the intro immediately
-  //     initialSegment: [0, intro],
-  //     path: 'https://assets.codepen.io/35984/record_button.json'
-  //   });
-
-  //   anim.setSpeed(1.61);
-
-  //   const onClick = (e) => {
-  //     if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
-  //       console.log('playing from stop to record');
-  //       anim.playSegments([stopFrame, recFrame], true);
-  //     } else {
-  //       console.log('playing to stop icon');
-  //       anim.playSegments([intro, stopFrame], true);
-  //     }
-  //   };
-
-  //   // animationWindow.addEventListener('click', onClick);
-
-  //   return () => {
-  //     animationWindow.removeEventListener('click', onClick);
-  //     anim.destroy();
-  //   };
-  // });
+  const vscode = acquireVsCodeApi();
 
   let startRecordingButton;
   let startTestingButton;
@@ -73,6 +36,12 @@
           }
           
     };
+  function navigateToConfig() {
+    vscode.postMessage({
+      type: "navigate",
+      value: "Config",
+    });
+  }
     const clearLastTestResults = () => {
         const testSuiteName = document.getElementById('testSuiteName');
         const totalTestCases = document.getElementById('totalTestCases');
@@ -87,15 +56,6 @@
 
 
     };
-  //   const triggerAnimation = () => {
-  //   if (anim.currentFrame > intro && anim.currentFrame <= stopFrame - intro - 1) {
-  //     console.log('playing from stop to record');
-  //     anim.playSegments([stopFrame, recFrame], true);
-  //   } else {
-  //     console.log('playing to stop icon');
-  //     anim.playSegments([intro, stopFrame], true);
-  //   }
-  // };
 
   const toggleRecording = () => {
     isRecording = !isRecording;
@@ -173,7 +133,7 @@
 <style>
   .container {
     padding: 16px;
-    
+    margin-top: 35px;
     /* font-family: 'Arial', sans-serif; */
   }
 
@@ -271,13 +231,27 @@
       text-align: left;
     }
 
+      /* Back Button Style */
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #ff914d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .back-button:hover {
+    background-color: #e6803a;
+  }
   .card {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px;
     margin-bottom: 16px;
-    /* background-color: var(--vscode-button-background); */
     background-color: #00163D;
     color: #ff9933;
     border-radius: 8px;
@@ -304,9 +278,10 @@
     color: white;
   }
 
-  .card-arrow {
+.card-arrow {
     font-size: 20px;
     color: white;
+    margin-right: 16px; /* Adjust this value as needed */
   }
 
   .steps {
@@ -339,8 +314,19 @@
   } */
 
   .icon-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--vscode-button-secondaryBackground);
+    border-radius: 5px;
+    color: #FF914D;
+    font-size: 24px;
+    height: 40px;
+    width: 80svw;
     cursor: pointer;
+    margin-right: 10px; /* Add margin to separate buttons */
   }
+
   .tooltip{
     display: none;
     position: absolute;
@@ -362,9 +348,58 @@
   #completeSummaryHr{
     display: none;
   }
+  /* Back Arrow SVG Style */
+  .back-arrow {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    fill: var(--vscode-foreground); /* Dynamic color based on VS Code theme */
+    transition: fill 0.3s ease;
+    margin-right: 10px; /* Add margin to separate from other elements */
+  }
+
+  .back-arrow:hover {
+    fill: var(--vscode-button-hoverBackground); /* Change color on hover */
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: 28px;
+    flex-direction: column;
+  }
+
+  .icon-buttons {
+    display: flex;
+    justify-content: space-around;
+    border: 2px solid;
+    border-color: var(--vscode-button-secondaryBackground);
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+
 </style>
 
 <div class="container baloo-2-custom">
+    <svg
+    class="back-arrow"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    on:click={navigateToConfig}
+  >
+    <path d="M19 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H19v-2z" />
+  </svg>
+
   <div class="icon-buttons">
     <button id="keploycommands" class="icon-button {selectedIconButton === 1 ? 'selected' : ''}" on:click={() => selectButton(1)}>
       <span class="tooltip">Record/Replay</span>
@@ -382,7 +417,7 @@
     <button id="openConfig" class="icon-button {selectedIconButton === 3 ? 'selected' : ''}" on:click={() => selectButton(3)}>
       <span class="settings-icon"></span> 
       <span class="tooltip">Settings</span>
-    </button>
+
 </div>
   <div class="header">
     <div class="heading">

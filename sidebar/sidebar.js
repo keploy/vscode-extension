@@ -36,6 +36,7 @@ const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
 // const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 const navigateToConfigButton = document.getElementById('backtoHome');
+const navigateToConfigButton2 = document.getElementById('backtoHome2');
 let FilePath = "";
 
 //cleanup required

@@ -31,7 +31,7 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
 
 export async function getGitHubAccessToken() {
     try {
-        const session = await vscode.authentication.getSession('github', ['repo', 'user:email'], { createIfNone: true });
+        const session = await vscode.authentication.getSession('github', ['user:email'], { createIfNone: true });
         if (session) {
             const accessToken = session.accessToken;
             console.log('Access Token:', accessToken);
@@ -233,7 +233,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
             throw new Error(`Failed to authenticate: ${response.data.Error}`);
         }
 
-        const jwtToken = response.data.JwtToken;
+        const jwtToken =  response.data.JwtToken;
         console.log("JWT Token:", jwtToken);
         return {
             emailID: response.data.EmailID,
