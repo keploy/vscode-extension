@@ -4,12 +4,18 @@
   let path = "./";
   let passThroughPorts = "";
   let navigateToConfig = false;
-  // const vscode = acquireVsCodeApi();
+  let navigateToConfig2 = false;
+
   function handleSetupConfig() {
     showSettings = true;
   }
   function NavigateToConfig() {
     navigateToConfig = true;
+  }
+  
+  function NavigateToConfig2() {
+    console.log("NavigateToConfig2");
+    navigateToConfig2 = true;
   }
 </script>
 
@@ -53,7 +59,7 @@
     <button class="button" id="initialiseConfigButton"
       >Save Configuration</button
     >
-    <button class="button" id="backtoHome" on:click={NavigateToConfig}>
+    <button class="button" id="backtoHome2" on:click={NavigateToConfig2}>
       Back
     </button>
   </div>

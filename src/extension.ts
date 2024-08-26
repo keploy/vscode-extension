@@ -96,24 +96,33 @@ export function activate(context: vscode.ExtensionContext) {
     } else {
         // Register the sign-in command if not signed in
         let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
-            getGitHubAccessToken().then((result) => {
+            try {
+                const result = await getGitHubAccessToken();
+
                 if (result) {
                     const { accessToken, email } = result;
 
                     getInstallationID();
 
                     // Store the access token in global state
-                    context.globalState.update('accessToken', accessToken);
+                    await context.globalState.update('accessToken', accessToken);
 
-                    validateFirst(accessToken, "https://api.keploy.io");
+                    const { emailID, isValid, error } = await validateFirst(accessToken, "https://api.keploy.io");
 
+                    // if (isValid) {
+                        vscode.window.showInformationMessage('You are now signed in!');
+                        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                    // } else {
+                    //     console.log('Validation failed for the user !');
+                    // }
                 } else {
                     console.log('Failed to get the session or email.');
+                    vscode.window.showInformationMessage('Failed to sign in Keploy!');
                 }
-            });
-
-            vscode.window.showInformationMessage('You are now signed in!');
-            vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+            } catch (error) {
+                // console.error('Error during sign-in:', error);
+                vscode.window.showInformationMessage('Failed to sign in Keploy!');
+            }
         });
 
         context.subscriptions.push(signInCommand);
