@@ -80,11 +80,13 @@ jobs:
           echo "::set-output name=unique_tag::release-${{ needs.package.outputs.version }}-$timestamp"
 
       - name: Create tag
+        id: create_tag
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git tag ${{ steps.generate_tag.outputs.unique_tag }}
           git push origin ${{ steps.generate_tag.outputs.unique_tag }}
+          echo "::set-output name=tag::${{ steps.generate_tag.outputs.unique_tag }}"
           
       # - name: Commit tagger
       #   uses: tvdias/github-tagger@v0.0.2
@@ -98,7 +100,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ needs.package.outputs.tag }}
+          tag_name: ${{ needs.create_tag.outputs.tag }}
           release_name: Release ${{ needs.package.outputs.version }}
           draft: false
           prerelease: false
@@ -107,5 +109,5 @@ jobs:
         uses: AButler/upload-release-assets@v2.0
         with:
           files: ${{ needs.package.outputs.packageName }}
-          release-tag:  ${{ needs.package.outputs.tag }}
+          release-tag:  ${{ needs.create_tag.outputs.tag }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
