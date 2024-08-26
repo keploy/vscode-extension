@@ -30,7 +30,7 @@
       </div>
 
       <div class="step">
-        <span class="step-number">3)</span> Use the command palette by
+        <span class="step-number">3)</span> Or, Use the command palette by
         right-clicking.
         <img src={screenshot2} alt="Command palette" class="screenshot" />
       </div>
@@ -41,8 +41,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Back Button -->
   <button class="back-button" on:click={navigateToConfig}>
     Back
   </button>

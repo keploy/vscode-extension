@@ -33,8 +33,7 @@ async function Utg(context: vscode.ExtensionContext) {
                     vscode.window.showErrorMessage('No workspace is opened.');
                     return;
                 }
-                const rootDir = path.dirname(vscode.workspace.workspaceFolders[0].uri.fsPath); // Root directory of the project
-
+                const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
                 const testDir = path.join(rootDir, 'test');
                 const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
                 if (!fs.existsSync(testFilePath)) {

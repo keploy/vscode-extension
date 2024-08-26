@@ -61,17 +61,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.css")
     );
 
-    //if config file is already present then navigate to keploy page
-    const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-    const configFilePath = folderPath + '/keploy.yml';
-    // if (existsSync(configFilePath)) {
-    //   scriptUri = webviewView.webview.asWebviewUri(
-    //     vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.js")
-    //   );
-    //   compiledCSSUri = webviewView.webview.asWebviewUri(
-    //     vscode.Uri.joinPath(this._extensionUri, "out", "compiled/KeployHome.css")
-    //   );
-    // }
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
 
@@ -237,14 +226,28 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "UtgDocs.css")
               );
             } else if (data.value === "IntegrationTest") {
-              sveltePageJs = webviewView.webview.asWebviewUri(
-                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "IntegrationTest.js")
-              );
-              sveltePageCss = webviewView.webview.asWebviewUri(
-                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "IntegrationTest.css")
-              );
+
+              //if config file is already present then navigate to keploy page
+              const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
+              const configFilePath = folderPath + '/keploy.yml';
+              if (existsSync(configFilePath)) {
+                sveltePageJs = webviewView.webview.asWebviewUri(
+                  vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.js")
+                );
+                sveltePageCss = webviewView.webview.asWebviewUri(
+                  vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.css")
+                );
+              } else {
+                sveltePageJs = webviewView.webview.asWebviewUri(
+                  vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "IntegrationTest.js")
+                );
+                sveltePageCss = webviewView.webview.asWebviewUri(
+                  vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "IntegrationTest.css")
+                );
+              }
+
             } else if (data.value === 'Config') {
-              
+
               sveltePageJs = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.js")
               );
