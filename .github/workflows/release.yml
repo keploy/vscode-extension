@@ -72,22 +72,19 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: ${{ needs.package.outputs.packageName }}
-          
-      - name: Check if tag exists
-        id: check_tag
+    
+      - name: Generate unique tag
+        id: generate_tag
         run: |
-          if git rev-parse ${{ needs.package.outputs.tag }} >/dev/null 2>&1; then
-            echo "::set-output name=exists::true"
-          else
-            echo "::set-output name=exists::false"
-          fi
+          timestamp=$(date +%Y%m%d%H%M%S)
+          echo "::set-output name=unique_tag::release-${{ needs.package.outputs.version }}-$timestamp"
+
       - name: Create tag
-        if: steps.check_tag.outputs.exists == 'false'
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git tag ${{ needs.package.outputs.tag }}
-          git push origin ${{ needs.package.outputs.tag }}
+          git tag ${{ steps.generate_tag.outputs.unique_tag }}
+          git push origin ${{ steps.generate_tag.outputs.unique_tag }}
           
       # - name: Commit tagger
       #   uses: tvdias/github-tagger@v0.0.2
