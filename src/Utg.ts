@@ -35,7 +35,7 @@ async function Utg(context: vscode.ExtensionContext) {
                 }
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
                 const testDir = path.join(rootDir, 'test');
-                let testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
+                const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
                 if (!fs.existsSync(testFilePath)) {
                     vscode.window.showInformationMessage("Test doesn't exists", testFilePath);
                     fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
