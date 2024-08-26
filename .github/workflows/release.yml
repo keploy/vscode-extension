@@ -65,15 +65,35 @@ jobs:
     needs: package
     if: startsWith(needs.package.outputs.tag, 'release/') && needs.package.outputs.tag != github.ref
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
       - uses: actions/download-artifact@v3
         with:
           name: ${{ needs.package.outputs.packageName }}
-
-      - name: Commit tagger
-        uses: tvdias/github-tagger@v0.0.2
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ needs.package.outputs.tag }}
+          
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse ${{ needs.package.outputs.tag }} >/dev/null 2>&1; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+      - name: Create tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git tag ${{ needs.package.outputs.tag }}
+          git push origin ${{ needs.package.outputs.tag }}
+          
+      # - name: Commit tagger
+      #   uses: tvdias/github-tagger@v0.0.2
+      #   with:
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag: ${{ needs.package.outputs.tag }}
           
       - name: Create Release
         id: create-release
