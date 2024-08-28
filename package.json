@@ -101,11 +101,6 @@
         "when": "keploy.signedOut != true && view == Keploy-Sidebar"
       },
       {
-        "command": "keploy.SignOut",
-        "title": "Sign Out",
-        "when": "keploy.signedOut != true && view == Keploy-Sidebar"
-      },
-      {
         "command": "keploy.utg",
         "title": "Keploy: Unit Test Generation"
       },

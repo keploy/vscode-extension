@@ -93,7 +93,11 @@ export function activate(context: vscode.ExtensionContext) {
         // Disable the sign-in command since the user is already signed in
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
         vscode.window.showInformationMessage('You are already signed in!');
+        // enable the signout command
+        vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+
     } else {
+        vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
         // Register the sign-in command if not signed in
         let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
             try {
@@ -110,11 +114,13 @@ export function activate(context: vscode.ExtensionContext) {
                     const { emailID, isValid, error } = await validateFirst(accessToken, "https://api.keploy.io");
 
                     // if (isValid) {
-                        vscode.window.showInformationMessage('You are now signed in!');
-                        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                    vscode.window.showInformationMessage('You are now signed in!');
+                    vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                    vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
                     // } else {
                     //     console.log('Validation failed for the user !');
                     // }
+
                 } else {
                     console.log('Failed to get the session or email.');
                     vscode.window.showInformationMessage('Failed to sign in Keploy!');
@@ -133,6 +139,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.globalState.update('accessToken', undefined);
         vscode.window.showInformationMessage('You have been signed out.');
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
+        vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
     });
 
     context.subscriptions.push(signout);
