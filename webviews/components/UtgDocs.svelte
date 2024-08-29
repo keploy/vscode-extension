@@ -5,8 +5,6 @@
   let screenshot2 =
     "https://github.com/Sarthak160/goApi/blob/main/command.png?raw=true";
 
-    
-
   function navigateToConfig() {
     vscode.postMessage({
       type: "navigate",
@@ -16,34 +14,57 @@
 </script>
 
 <div class="container">
-  <h1 class="heading">Steps to use Keploy UTG - </h1>
+  <h1 class="heading">Steps to Setup UTG</h1>
 
-  <div class="instructions-box">
-    <div class="instructions">
-      <div class="step">
-        <span class="step-number">1)</span> Open the desired source file.
+  <div class="subTools">
+    <div class="back-button" on:click={navigateToConfig}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        fill="currentColor"
+        class="bi bi-arrow-left"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M15 8a.5.5 0 0 1-.5.5H4.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708.708L4.707 7.5H14.5A.5.5 0 0 1 15 8z"
+        />
+      </svg>
+    </div>
+    <div class="progress">
+      <div class="progress-container">
+        <div class="progress-bar"></div>
       </div>
-
-      <div class="step">
-        <span class="step-number">2)</span> Click on the "Generate unit test".
-        <img src={screenshot1} alt="Generate unit test" class="screenshot" />
-      </div>
-
-      <div class="step">
-        <span class="step-number">3)</span> Or, Use the command palette by
-        right-clicking.
-        <img src={screenshot2} alt="Command palette" class="screenshot" />
-      </div>
-
-      <div class="step">
-        <span class="step-number">4)</span> Your unit tests will get generated for
-        that source file under the `.test.js` or `.test.ts` file.
-      </div>
+      <span>9/10 sessions</span>
     </div>
   </div>
-  <button class="back-button" on:click={navigateToConfig}>
-    Back
-  </button>
+
+  <div class="steps-container">
+    <div class="step-first">
+      <div class="step-box">
+        <h2 class="step-title">Step 1</h2>
+        <p class="step-description">
+          Open the desired file that you would like to generate the test cases.<br>
+          Eg: Click on foo.js if you want to generate for the functions in it.
+        </p>
+      </div>
+
+      <div class="step-box">
+        <h2 class="step-title">Step 2</h2>
+        <p class="step-description">Click on the <br> <span class="FileName">"Generate unit test."</span></p>
+        <img src={screenshot1} alt="Generate unit test" class="screenshot" />
+      </div>
+    </div>
+
+    <div class="step-box">
+      <h2 class="step-title">Step 3</h2>
+      <p class="step-description">
+        Your unit tests will get generated for that source file under the
+        <span class="FileName">`.test.js`</span> or <span class="FileName">`.test.ts`</span> file. <br>Continue the same to generate more!
+      </p>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -53,74 +74,155 @@
     font-family: var(--vscode-font-family);
     font-size: var(--vscode-font-size);
     color: var(--vscode-foreground);
-    background-color: var(--vscode-editor-background);
+    background-color: #000;
   }
 
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     padding: 20px;
     width: 100%;
     height: 100vh;
     box-sizing: border-box;
-    overflow-y: auto; /* Allow scrolling if content is too long */
+    overflow-y: auto;
+    background-color: #000;
   }
 
   .heading {
-    font-size: 24px;
+    font-size: 32px;
     margin-bottom: 20px;
+    color: #ffffff;
     text-align: center;
-    color: #ff914d;
   }
 
-  .instructions-box {
-    background-color: var(
-      --vscode-sideBar-background
-    ); /* Slightly lighter background */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(234, 221, 221, 0.2);
+  .subTools {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 600px;
+    width: 30%;
+  }
+
+  .progress-container {
+    width: 50%; /* Full width of the parent */
+    background-color: #000000; /* Black background */
+    border-radius: 5px;
+    overflow: hidden;
+    border: 2px solid #f77b3e;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+  }
+
+  .progress-bar {
+    height: 7px;
+    width: 70%; /* Adjust this to represent the filled portion */
+    background-color: #ff914d;
+    border-radius: 2px;
+  }
+
+  .progress span {
+    margin-left: 10px;
+    color: #ffffff;
+    font-size: 16px;
+  }
+
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
     max-width: 800px;
+    gap: 15px;
+    align-items: center;
   }
 
-  .instructions {
+  .step-first {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+    gap: 15px;
+    flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
+  }
+
+  .step-box {
+    background-color: inherit;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%; /* Full width on small screens */
+    max-width: 45%; /* 45% width on larger screens */
+    text-align: center;
+    color: #e0e0e0;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+  }
+
+  .step-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ffffff;
+  }
+
+  .FileName{
+    font-weight: bold;
+  }  
+
+  .step-description {
     font-size: 16px;
-    line-height: 1.6;
-    color: var(--vscode-editor-foreground);
+    line-height: 1.5;
   }
 
   .screenshot {
     width: 100%;
-    margin: 20px 0;
+    margin-top: 10px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 
-  .step {
-    margin-bottom: 20px;
-  }
-
-  .step-number {
-    font-weight: bold;
-    color: var(--vscode-button-background);
-  }
-
-  /* Back Button Style */
   .back-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #ff914d;
-    color: white;
+    color: #ffffff;
     border: none;
     border-radius: 5px;
+    background-color: inherit;
     cursor: pointer;
     font-size: 16px;
-  }
+    align-items: center;
+    margin-bottom: 20px;
+  } 
 
-  .back-button:hover {
-    background-color: #e6803a;
+  /* Media Queries for Responsiveness */
+  @media (max-width: 400px) {
+    .subTools {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .progress {
+      width: 100%;
+    }
+
+    .step-first {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .step-box {
+      width: 100%;
+      max-width: 100%;
+    }
   }
 </style>
