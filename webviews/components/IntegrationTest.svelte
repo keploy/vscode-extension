@@ -93,231 +93,352 @@
     <button class="buttonBlack" id="initialiseConfigButton"
       ><span class="BoldName">Save Configuration </span></button
     >
-    </div>
     <div class="stepper-container">
+      <div class="step-line"></div>
       <div class="step">
-        <span class="step-number">1.</span> Setup Configuration
+        <span class="step-number">1. Setup Configuration</span>
         <div class="step-circle active"></div>
       </div>
       <div class="step">
-        <div class="step-line"></div>
-        <span class="step-number">2.</span> Record Test
-        <div class="step-circle"></div>
+        <div class="step-circle inactive"></div>
+        <span class="step-number bottom">2. Record Test</span>
       </div>
       <div class="step">
-        <div class="step-line"></div>
-        <span class="step-number">3.</span> Replay Test
-        <div class="step-circle"></div>
+        <!-- <div class="step-line"></div> -->
+        <span class="step-number">3. Replay Test</span>
+        <div class="step-circle inactive"></div>
       </div>
       <div class="step">
-        <div class="step-line"></div>
-        <span class="step-number">4.</span> CI/CD setup
-        <div class="step-circle"></div>
+        <!-- <div class="step-line"></div> -->
+        <div class="step-circle inactive"></div>
+        <span class="step-number bottom">4. CI/CD setup</span>
       </div>
       <div class="step">
-        <div class="step-line"></div>
-        <span class="step-number">5.</span> Add users
-        <div class="step-circle"></div>
+        <span class="step-number">5. Add users</span>
+        <div class="step-circle inactive"></div>
       </div>
+    </div>
     </div>
     
   </div>
 </body>
 
 <style>
-  .container,
-  .settings-container {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    height: 100vh;
-    padding: 50px;
-    background-color: black;
-  }
-
-  .setting-Card-Container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: left;
-    height: 100vh;
-    padding: 40px;
-    background-color: black; 
-    border: 2px solid #f77b3e;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
-  
-  }
-  .main-heading{
-    font-size: 35px;
-    text-align: center;
-  }
-
-  .get-started {
-    margin-top: 50px;
-    text-align: center;
-    font-size: 18px;
-  }
-
-  .description {
-    margin-top: 10px;
-    text-align: center;
-    font-size: 16px;
-    max-width: 300px;
-  }
-
-  .button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #ff914d;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-size: 20px;
-    cursor: pointer;
-  }
-
-  .button:hover {
-    background-color: #ff914d;
-  }
-
-  .buttonBlack{
-    background-color: inherit;
-    padding: 20px;
-    border-radius: 10px;
-    width: 100%; /* Full width on small screens */
-    max-width: 45%; /* 45% width on larger screens */
-    text-align: center;
-    color: #e0e0e0;
-    border: 2px solid #f77b3e;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
-  
-  }
-
-  .lang-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  /* New UI Styles */
-  .settings-item {
-    align-items: center;
-    width: 100%;
-    padding: 10px;
-    margin: 10px 5px 0 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .settings-item input {
-    flex-grow: 1;
-    padding: 10px;
-    border-radius: 5px;
-  }
-
-  .InputContainer{
-    width: 70%; 
-    align-items: center;
-    margin-bottom: 30px;
-  }
-
-  .heading {
-    font-size: 18px;
-    margin-bottom: 5px;
-    text-align: center;
-  }
-
-  .subHeader{
-    font-size: 13px;
-    text-align: center;
-  }
-
-  .BoldName {
-    font-weight: bold;
-  }
-
-  .back-button{
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    background-color: inherit;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 20px;
-  
-  }
-
-  .language-icons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-
-  .container-hide {
-    display: none; /* Hide container when showSettings is true */
-  }
-
-  .stepper-container {
+.container,
+.settings-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 20px 0;
-  padding: 0 10px;
+  flex-direction: column;
+  text-align: left;
+  height: 100%;
+  padding: 2rem;
+  background-color: black;
 }
 
-.step {
+.setting-Card-Container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  position: relative;
-  font-size: 18px;
+  text-align: left;
+  height: 100%;
+  padding: 2rem;
+  background-color: black;
+  border: 2px solid #f77b3e;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+}
+
+.main-heading {
+  font-size: 2rem;
+  text-align: center;
+}
+
+.get-started {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.description {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 1rem;
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button {
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #ff914d;
   color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
 }
 
-.step-number {
-  margin-right: 10px;
-  font-weight: bold;
-}
-
-.step-circle {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #ff914d;
-  background-color: #333;
-  position: relative;
-}
-
-.step-circle.active {
+.button:hover {
   background-color: #ff914d;
 }
 
+.buttonBlack {
+  background-color: inherit;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  text-align: center;
+  color: #e0e0e0;
+  border: 2px solid #f77b3e;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+}
+
+.lang-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.settings-item {
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-item input {
+  flex-grow: 1;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.InputContainer {
+  width: 100%;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subHeader {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.BoldName {
+  font-weight: bold;
+}
+
+.back-button {
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: inherit;
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.language-icons {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.container-hide {
+  display: none;
+}
+
+.stepper-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: auto;
+  margin-bottom: 20px;
+  z-index: 1;
+  position: relative;
+}
+
+
+.step:nth-of-type(2) div {  
+  margin-right: auto;
+
+}
+
+.step:last-child {
+  align-items: flex-end; /* Align last circle to the right */
+  text-align: right;
+}
+
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+  color: white;
+  z-index: 2;
+  flex: 1; /* Allows the steps to take equal space */
+}
+
+
+.step-number {
+  position: absolute;
+  top: -2.5rem; /* Adjust to position text above the circle */
+  font-size: 0.9rem;
+  color: white;
+  width: 100%;
+  white-space: nowrap; /* Prevent text from overflowing horizontally */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis if text is too long */
+  padding: 0 0.5rem;
+}
+
+.step-number.bottom {
+  top: 2.5rem; /* Adjust to position text below the circle */
+}
+
+.step-circle {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: black;
+  position: relative;
+  z-index: 3;
+}
+
+.step-circle.active {
+  border: 2px solid #ff914d;
+}
+
+.step-circle.inactive {
+  border: 2px solid #969390;
+}
+
+.step-circle.active::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  background-color: #ff914d;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.step-circle.inactive::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  background-color: #969390;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .step-line {
-  width: 100px;
+  width: 100%;
   height: 2px;
   background-color: #ff914d;
   position: absolute;
   top: 50%;
-  left: -50px;
-  z-index: -1;
+  left: 0;
+  z-index: 1;
 }
 
 .step:not(:first-child) .step-line {
-  left: 10px;
-  right: -50px;
+  left: 0;
 }
 
-.step:not(:last-child) .step-line:after {
+.step:not(:last-child) .step-line::after {
   content: '';
-  width: 100px;
+  width: 100%;
   height: 2px;
   background-color: #ff914d;
   position: absolute;
   top: 0;
   left: 100%;
 }
+
+@media screen and (max-width: 768px) {
+  .main-heading {
+    font-size: 1.5rem;
+  }
+
+  .get-started {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.9rem;
+  }
+
+  .stepper-container {
+    transform: scale(0.8);
+  }
+
+  .button, .buttonBlack {
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+
+  .step-circle {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .step-circle.active::before,
+  .step-circle.inactive::before {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-heading {
+    font-size: 1.2rem;
+  }
+
+  .get-started {
+    font-size: 0.8rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+  }
+
+  .stepper-container {
+    transform: scale(0.7);
+  }
+
+  .button, .buttonBlack {
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .step-circle {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .step-circle.active::before,
+  .step-circle.inactive::before {
+    width: 0.6rem;
+    height: 0.6rem;
+  }
+}
+
 
 </style>
