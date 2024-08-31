@@ -17,7 +17,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         token: vscode.CancellationToken
     ): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const fileName = document.uri.fsPath;
-        if (fileName.endsWith('.test.js') || fileName.endsWith('.test.ts')) {
+        if (fileName.endsWith('.test.js') || fileName.endsWith('.test.ts') || fileName.endsWith('_test.go')) {
             return [];
         }
 
@@ -25,36 +25,52 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         const codeLenses: vscode.CodeLens[] = [];
 
         try {
-            const ast = acorn.parse(text, { ecmaVersion: 2020, sourceType: 'module' });
-
-            walk.fullAncestor(ast, (node: any, state: any, ancestors: any[]) => {
-                if (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression') {
-                    const line = document.positionAt(node.start).line;
-                    const range = new vscode.Range(line, 0, line, 0);
-                    codeLenses.push(new vscode.CodeLens(range, {
-                        title: '🐰 Generate unit tests',
-                        command: 'keploy.utg',
-                        arguments: [document.uri.fsPath]
-                    }));
-                } else if (node.type === 'ArrowFunctionExpression') {
-                    const parent = ancestors[ancestors.length - 2];
-                    if (parent.type !== 'CallExpression' || (parent.callee.property?.name !== 'then' && parent.callee.property?.name !== 'catch')) {
-                        const line = document.positionAt(node.start).line;
-                        const range = new vscode.Range(line, 0, line, 0);
-                        codeLenses.push(new vscode.CodeLens(range, {
-                            title: '🐰 Generate unit tests',
-                            command: 'keploy.utg',
-                            arguments: [document.uri.fsPath]
-                        }));
-                    }
-                }
-            });
-
+            if (fileName.endsWith('.go')) {
+                this.parseGoFile(text, document, codeLenses);
+            } else {
+                this.parseJstsFile(text, document, codeLenses);
+            }
         } catch (error) {
             console.error(error);
         }
 
         return codeLenses;
+    }
+
+    private parseGoFile(text: string, document: vscode.TextDocument, codeLenses: vscode.CodeLens[]) {
+        const functionRegex = /func\s+(\w+)\s*\([^)]*\)\s*(\([^)]*\))?\s*{/g;
+        let match;
+        while ((match = functionRegex.exec(text)) !== null) {
+            const line = document.positionAt(match.index).line;
+            this.addCodeLens(document, line, codeLenses);
+        }
+    }
+
+    private parseJstsFile(text: string, document: vscode.TextDocument, codeLenses: vscode.CodeLens[]) {
+        const ast = acorn.parse(text, { ecmaVersion: 2020, sourceType: 'module' });
+        walk.simple(ast, {
+            FunctionDeclaration: (node: any) => {
+                const line = document.positionAt(node.start).line;
+                this.addCodeLens(document, line, codeLenses);
+            },
+            FunctionExpression: (node: any) => {
+                const line = document.positionAt(node.start).line;
+                this.addCodeLens(document, line, codeLenses);
+            },
+            ArrowFunctionExpression: (node: any) => {
+                const line = document.positionAt(node.start).line;
+                this.addCodeLens(document, line, codeLenses);
+            }
+        });
+    }
+
+    private addCodeLens(document: vscode.TextDocument, line: number, codeLenses: vscode.CodeLens[]) {
+        const range = new vscode.Range(line, 0, line, 0);
+        codeLenses.push(new vscode.CodeLens(range, {
+            title: '🐰 Generate unit tests',
+            command: 'keploy.utg',
+            arguments: [document.uri.fsPath]
+        }));
     }
 }
 
@@ -67,15 +83,14 @@ export function activate(context: vscode.ExtensionContext) {
             sidebarProvider
         ),
         vscode.languages.registerCodeLensProvider(
-            { language: 'javascript', scheme: 'file' },
-            new KeployCodeLensProvider()
-        ),
-        vscode.languages.registerCodeLensProvider(
-            { language: 'typescript', scheme: 'file' },
+            [
+                { language: 'javascript', scheme: 'file' },
+                { language: 'typescript', scheme: 'file' },
+                { language: 'go', scheme: 'file' }
+            ],
             new KeployCodeLensProvider()
         )
     );
-
 
     oneClickInstall();
 
