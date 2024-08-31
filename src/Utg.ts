@@ -54,7 +54,18 @@ async function Utg(context: vscode.ExtensionContext) {
                     command = `pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${path.basename(testFilePath)}`;
                     coverageReportPath = "./coverage.xml";
 
-                } else {
+                }else if (extension === '.java') {
+                    const testDir = path.join(rootDir, 'src', 'test', 'java');
+                    const testFileName = path.basename(sourceFilePath).replace('.java', 'Test.java');
+                    testFilePath = path.join(testDir, testFileName);
+
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+                        fs.writeFileSync(testFilePath, `# Test file for ${testFilePath}`);
+                    }
+                    command = `mvn clean test jacoco:report`;
+                    coverageReportPath = "./target/site/jacoco/jacoco.xml";
+                }  else {
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
                     return;
                 }
@@ -97,6 +108,8 @@ async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
         testFileName = sourceFileName.replace(extension, `.test${extension}`);
     } else if (extension === '.py') {
         testFileName = sourceFileName.replace('.py', '_test.py');
+    } else if (extension === '.java') {
+        testFileName = sourceFileName.replace('.java', 'Test.java');
     } else {
         vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
         return;
