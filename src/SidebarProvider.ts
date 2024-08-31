@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as path from 'path';
 // import context from "vscode";
 import { getNonce } from "./Utils";
 // import { downloadAndUpdate , downloadAndInstallkeployary ,downloadAndUpdateDocker  } from './updateKeploy';
@@ -120,29 +121,41 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           try {
             console.log('Start Recording button clicked');
 
-            const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_record_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.zsh");
-            const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "record_mode.log");
-            let wslscriptPath = bashScript.fsPath;
-            let wsllogPath = logfilePath.fsPath;
-            if (process.platform === 'win32') {
-              //convert filepaths to windows format
-              wslscriptPath = wslscriptPath.replace(/\\/g, '/');
-              wsllogPath = wsllogPath.replace(/\\/g, '/');
-              //add /mnt/ to the start of the path
-              wslscriptPath = '/mnt/' + wslscriptPath;
-              wsllogPath = '/mnt/' + wsllogPath;
-              // remove : from the path
-              wslscriptPath = wslscriptPath.replace(/:/g, '');
-              wsllogPath = wsllogPath.replace(/:/g, '');
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+              throw new Error('No active editor found');
             }
-            console.log("bashScript path" + wslscriptPath);
-            console.log(wsllogPath);
 
+            const filePath = editor.document.uri.fsPath;
+            const isGoFile = filePath.endsWith('.go');
 
-            await startRecording(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, this._view?.webview);
+            let recordCmd: string;
+            let logfilePath: string;
+            if (isGoFile) {
+              const packageName = path.basename(path.dirname(filePath));
+              recordCmd = `keploy record -c "go run ${filePath}" --delay 5`;
+              logfilePath = path.join(path.dirname(filePath), 'keploy_record.log');
+            } else {
+              const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_record_script.sh");
+              const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.zsh");
+              logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "record_mode.log").fsPath;
+              let wslscriptPath = bashScript.fsPath;
+              let wsllogPath = logfilePath;
+              if (process.platform === 'win32') {
+                wslscriptPath = '/mnt/' + wslscriptPath.replace(/\\/g, '/').replace(/:/g, '');
+                wsllogPath = '/mnt/' + wsllogPath.replace(/\\/g, '/').replace(/:/g, '');
+              }
+              recordCmd = process.platform === 'win32' ? 
+                `${wslscriptPath} "${wsllogPath}"` :
+                `"${process.env.SHELL?.includes('zsh') ? zshScript.fsPath : bashScript.fsPath}" "${logfilePath}"`;
+            }
+
+            const terminal = vscode.window.createTerminal("Keploy Recording");
+            terminal.show();
+            terminal.sendText(recordCmd);
+
             this._view?.webview.postMessage({ type: 'success', value: 'Recording Started' });
-            this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath.fsPath });
+            this._view?.webview.postMessage({ type: 'writeRecord', value: 'Write Recorded test cases ', logfilePath: logfilePath });
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to record ${error}` });
           }
@@ -169,23 +182,51 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           try {
             console.log('Start Testing button clicked');
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+              throw new Error('No active editor found');
+            }
+
+            const filePath = editor.document.uri.fsPath;
+            const isGoFile = filePath.endsWith('.go');
+
+            let testCmd: string;
+            let logfilePath: string;
+            let wslscriptPath: string;
+            let wsllogPath: string;
+
             const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_test_script.sh");
             const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_test_script.zsh");
-            const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log");
-            let wslscriptPath = bashScript.fsPath;
-            let wsllogPath = logfilePath.fsPath;
-            if (process.platform === 'win32') {
-              //convert filepaths to windows format
-              wslscriptPath = wslscriptPath.replace(/\\/g, '/');
-              wsllogPath = wsllogPath.replace(/\\/g, '/');
-              //add /mnt/ to the start of the path
-              wslscriptPath = '/mnt/' + wslscriptPath;
-              wsllogPath = '/mnt/' + wsllogPath;
-              // remove : from the path
-              wslscriptPath = wslscriptPath.replace(/:/g, '');
-              wsllogPath = wsllogPath.replace(/:/g, '');
+
+            if (isGoFile) {
+              testCmd = `go test -v ${filePath}`;
+              logfilePath = path.join(path.dirname(filePath), 'keploy_test.log');
+              wslscriptPath = logfilePath;
+              wsllogPath = logfilePath;
+            } else {
+              logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log").fsPath;
+              wslscriptPath = bashScript.fsPath;
+              wsllogPath = logfilePath;
+              if (process.platform === 'win32') {
+                wslscriptPath = '/mnt/' + wslscriptPath.replace(/\\/g, '/').replace(/:/g, '');
+                wsllogPath = '/mnt/' + wsllogPath.replace(/\\/g, '/').replace(/:/g, '');
+              }
+              testCmd = process.platform === 'win32' ? 
+                `${wslscriptPath} "${wsllogPath}"` :
+                `"${process.env.SHELL?.includes('zsh') ? zshScript.fsPath : bashScript.fsPath}" "${logfilePath}"`;
             }
-            await startTesting(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath.fsPath, this._view?.webview);
+
+            const terminal = vscode.window.createTerminal("Keploy Testing");
+            terminal.show();
+            terminal.sendText(testCmd);
+
+            if (!isGoFile) {
+              await startTesting(wslscriptPath, wsllogPath, bashScript.fsPath, zshScript.fsPath, logfilePath, this._view?.webview);
+            } else {
+              terminal.sendText(`echo "Test results for Go file: ${filePath}" > "${logfilePath}"`);
+              terminal.sendText(`go test -v ${filePath} >> "${logfilePath}"`);
+              setTimeout(() => displayTestCases(logfilePath, this._view?.webview, false, false), 5000);
+            }
           } catch (error) {
             this._view?.webview.postMessage({ type: 'error', value: `Failed to test ${error}` });
           }

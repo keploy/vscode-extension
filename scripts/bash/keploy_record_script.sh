@@ -27,8 +27,23 @@ touch "$log_file_path"
 chmod 666 "$log_file_path"
 
 if [[ "$command" =~ .*"go".* ]]; then
-  go mod download
-  go build -o application
+  # Check for go.mod file
+  if [[ -f "go.mod" ]]; then
+    go mod download
+  else
+    echo "No go.mod file found. Skipping dependency download."
+  fi
+
+  # Check if the command is 'go run'
+  if [[ "$command" =~ "go run" ]]; then
+    echo "Using 'go run' command as specified."
+  else
+    # Build the application
+    go build -o application
+  fi
+
+  # You could add more Go-specific setup here if needed
+fi
 
 elif [[ "$command" =~ .*"python3".* ]]; then
   # echo "Python3 command found"

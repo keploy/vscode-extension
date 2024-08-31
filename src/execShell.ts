@@ -11,7 +11,19 @@ export const execShell = (cmd: string) => {
             // Execute the command in the default shell if on other platforms
             commandToExecute = cmd;
         }
-        exec(commandToExecute, (err, stdout, stderr) => {
+
+        // Set up environment for Go commands
+        const env = { ...process.env };
+        if (cmd.startsWith('go ')) {
+            // Ensure GOPATH is set
+            if (!env.GOPATH) {
+                env.GOPATH = `${os.homedir()}/go`;
+            }
+            // Add Go binary directory to PATH
+            env.PATH = `${env.GOPATH}/bin:${env.PATH}`;
+        }
+
+        exec(commandToExecute, { env }, (err, stdout, stderr) => {
             if (err) {
                 reject(err.message);
                 return;
@@ -21,6 +33,5 @@ export const execShell = (cmd: string) => {
             }
             resolve(stdout);
         });
-        
     });
 };

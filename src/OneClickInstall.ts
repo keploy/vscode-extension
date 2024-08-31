@@ -1,19 +1,60 @@
 import { exec } from 'child_process';
+import * as os from 'os';
+import * as vscode from 'vscode';
 
 export default function executeKeployOneClickCommand(): void {
-    const command = `curl--silent - O - L https://keploy.io/install.sh && bash install.sh`;
+    const platform = os.platform();
+    let command: string;
 
-    exec(command, (error, stdout, stderr) => {
+    if (platform === 'win32') {
+        command = `powershell -Command "iwr https://raw.githubusercontent.com/keploy/keploy/main/windows-install.ps1 -useb | iex"`;
+    } else if (platform === 'darwin' || platform === 'linux') {
+        command = `curl --silent -L https://raw.githubusercontent.com/keploy/keploy/main/install.sh | bash`;
+    } else {
+        vscode.window.showErrorMessage(`Unsupported platform: ${platform}`);
+        return;
+    }
+
+    const terminal = vscode.window.createTerminal('Keploy Installation');
+    terminal.show();
+    terminal.sendText(command);
+
+    terminal.sendText('keploy --version');
+
+    // Check if Go is installed
+    checkGoInstallation(terminal);
+}
+
+function checkGoInstallation(terminal: vscode.Terminal): void {
+    exec('go version', (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing command: ${error.message}`);
-            return;
+            vscode.window.showWarningMessage('Go is not installed. Installing Go is recommended for using Keploy with Go projects.');
+            const installGoCommand = getGoInstallCommand();
+            if (installGoCommand) {
+                vscode.window.showInformationMessage('Would you like to install Go?', 'Yes', 'No')
+                    .then(selection => {
+                        if (selection === 'Yes') {
+                            terminal.sendText(installGoCommand);
+                        }
+                    });
+            }
+        } else {
+            vscode.window.showInformationMessage(`Go is installed: ${stdout.trim()}`);
         }
-
-        if (stderr) {
-            console.error(`Command execution returned an error: ${stderr}`);
-            return;
-        }
-
-        console.log(`Command executed successfully: ${stdout}`);
     });
+}
+
+function getGoInstallCommand(): string | null {
+    const platform = os.platform();
+    switch (platform) {
+        case 'darwin':
+            return 'brew install go';
+        case 'linux':
+            return 'sudo apt-get update && sudo apt-get install golang-go';
+        case 'win32':
+            return 'choco install golang';
+        default:
+            vscode.window.showErrorMessage(`Unsupported platform for Go installation: ${platform}`);
+            return null;
+    }
 }
