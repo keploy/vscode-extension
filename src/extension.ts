@@ -10,6 +10,7 @@ import TreeSitter from 'tree-sitter';
 import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
+import TreeSitterGo from 'tree-sitter-go';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -19,11 +20,13 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         token: vscode.CancellationToken
     ): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const fileName = document.uri.fsPath;
-        if (fileName.endsWith('.test.js') ||
-            fileName.endsWith('.test.ts') ||
-            fileName.endsWith('_test.py') ||
+        if (
+            fileName.endsWith('.test.js') || 
+            fileName.endsWith('.test.ts') || 
+            fileName.endsWith('_test.py') || 
             fileName.endsWith('Test.java') ||  // Check for Java test file ending
-            fileName.includes('/Test')         // Check for Java test file prefix in the path
+            fileName.includes('/Test')   ||      // Check for Java test file prefix in the path
+            (fileName.startsWith('test_') && fileName.endsWith('.py')) 
         ) {
             return [];
         }
@@ -40,6 +43,8 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                 parser.setLanguage(TreeSitterPython);
             } else if (fileName.endsWith('.java')) {
                 parser.setLanguage(TreeSitterJava);
+            } else if (fileName.endsWith('.go')) {
+                parser.setLanguage(TreeSitterGo);
             } else {
                 return codeLenses; // Return if file type is unsupported
             }
@@ -83,6 +88,14 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         arguments: [document.uri.fsPath]
                     }));
                 } else if (fileName.endsWith('.java') && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
+                    const line = document.positionAt(node.startIndex).line;
+                    const range = new vscode.Range(line, 0, line, 0);
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit tests',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath]
+                    }));
+                } else if (fileName.endsWith('.go') && node.type === 'function_declaration') {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
                     codeLenses.push(new vscode.CodeLens(range, {
@@ -135,9 +148,14 @@ export function activate(context: vscode.ExtensionContext) {
             new KeployCodeLensProvider()
         ),
         vscode.languages.registerCodeLensProvider(
+            { language: 'go', scheme: 'file' },
+            new KeployCodeLensProvider()
+        ),
+        vscode.languages.registerCodeLensProvider(
             { language: 'java', scheme: 'file' },
             new KeployCodeLensProvider()
-        )
+        ),
+
     );
 
 
