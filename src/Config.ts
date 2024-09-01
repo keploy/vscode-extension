@@ -44,8 +44,6 @@ export async function handleOpenKeployConfigFile(webview: any) {
   const fileExists = await checkFileExists();
 
   if (!fileExists) {
-    // webview.postMessage({ type: '', value: 'KeployHome' });
-
     webview.postMessage({ type: 'configNotFound', value: 'Config file could not be generated.' });
   }
 }
@@ -59,6 +57,9 @@ export async function handleInitializeKeployConfigFile(webview: any, path: strin
   if (path === '') {
     path = "./";
   }
+
+  const language = getLanguage(command);
+  const goCoverage = language === 'go';
 
   // Initialize the config file with the provided path and command
   const initContent = `
@@ -82,12 +83,12 @@ test:
     test-sets: {}
   delay: 5
   apiTimeout: 5
-  coverage: false
-  goCoverage: false
-  coverageReportPath: ""
+  coverage: true
+  goCoverage: ${goCoverage}
+  coverageReportPath: "${getCoverageReportPath(language)}"
   ignoreOrdering: true
   mongoPassword: "default@123"
-  language: ""
+  language: "${language}"
   removeUnusedMocks: false
 record:
   recordTimer: 0s
@@ -114,4 +115,25 @@ fallbackOnMiss: false
   });
   console.log('finalContent', finalContent);
   webview.postMessage({ type: 'navigateToHome', value: 'KeployHome' });
+}
+
+function getLanguage(command: string): string {
+  if (command.startsWith('go ')) {
+    return 'go';
+  } else if (command.includes('node') || command.includes('npm') || command.includes('yarn')) {
+    return 'javascript';
+  } else {
+    return '';
+  }
+}
+
+function getCoverageReportPath(language: string): string {
+  switch (language) {
+    case 'go':
+      return './coverage.out';
+    case 'javascript':
+      return './coverage/cobertura-coverage.xml';
+    default:
+      return '';
+  }
 }

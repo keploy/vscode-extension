@@ -3,7 +3,6 @@ import { readFileSync, appendFile } from 'fs';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'yaml';
-// eslint-disable-next-line @typescript-eslint/naming-convention
 import * as child_process from 'child_process';
 import * as os from 'os';
 import * as jsyaml from 'js-yaml';
@@ -21,11 +20,16 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
             });
             logData = readFileSync(logfilePath, 'utf8');
         }
-        // console.log(logData);
+
         // Split the log data into lines
         const logLines = logData.split('\n');
-        // Filter out the lines containing the desired information
-        // Find the index of the line containing the start of the desired part
+        
+        // Check if it's a Go test output
+        if (logLines[0].startsWith('=== RUN')) {
+            return processGoTestOutput(logLines, webview, isHomePage, isCompleteSummary);
+        }
+
+        // Existing logic for JS/TS test output
         const startIndex = logLines.findIndex(line => line.includes('COMPLETE TESTRUN SUMMARY.'));
         if (startIndex === -1) {
             console.log('Start index not found');
@@ -40,7 +44,6 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
             return;
         }
 
-        // Find the index of the line containing the end of the desired part
         const endIndex = logLines.findIndex((line, index) => index > startIndex && line.includes('<=========================================>'));
         if (endIndex === -1) {
             console.log('End index not found');
@@ -55,9 +58,7 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
             return;
         }
 
-        // Extract the desired part
         const testSummary = logLines.slice(startIndex, endIndex + 1).join('\n');
-        // Display the captured test cases in your frontend
         if (testSummary.length === 0) {
             webview.postMessage({
                 type: 'testResults',
@@ -69,23 +70,19 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
             });
             return;
         }
-        //remove ansi escape codes
+
         const ansiRegex = /[\u001B\u009B][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
         const cleanSummary = testSummary.replace(ansiRegex, '');
         console.log(cleanSummary);
         const testSummaryList = cleanSummary.split('\n');
         console.log(testSummaryList);
-        //remove last line of summary which is pattern
         testSummaryList.pop();
-        //remove first line of summary which is header
         testSummaryList.shift();
 
-
         if (isCompleteSummary) {
-            //remove fist 7 lines of summary
             console.log("testSummaryList before splice", testSummaryList , "isCompleteSummary", isCompleteSummary);
             testSummaryList.splice(0, 6);
-        console.log("testSummaryList", testSummaryList , "isCompleteSummary", isCompleteSummary);
+            console.log("testSummaryList", testSummaryList , "isCompleteSummary", isCompleteSummary);
             testSummaryList.forEach((line, index) => {
                 webview.postMessage({
                     type: 'testResults',
@@ -97,7 +94,6 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
             });
         }
         else {
-        //send first three lines of summary
             testSummaryList.forEach((line, index) => {
                 if (index > 2) {
                     return;
@@ -116,6 +112,50 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
         console.log(error);
         vscode.window.showErrorMessage('Error occurred Keploy Test: ' + error);
         throw error;
+    }
+}
+
+function processGoTestOutput(logLines: string[], webview: any, isHomePage: boolean, isCompleteSummary: boolean): void {
+    let passed = 0;
+    let failed = 0;
+    let total = 0;
+    const testResults: string[] = [];
+
+    logLines.forEach(line => {
+        if (line.startsWith('--- PASS:')) {
+            passed++;
+            total++;
+            testResults.push(line);
+        } else if (line.startsWith('--- FAIL:')) {
+            failed++;
+            total++;
+            testResults.push(line);
+        }
+    });
+
+    const summary = `Total: ${total}, Passed: ${passed}, Failed: ${failed}`;
+    testResults.unshift(summary);
+
+    if (isCompleteSummary) {
+        testResults.forEach(line => {
+            webview.postMessage({
+                type: 'testResults',
+                value: 'Test Summary Generated',
+                textSummary: line,
+                isHomePage: false,
+                isCompleteSummary: true
+            });
+        });
+    } else {
+        testResults.slice(0, 3).forEach(line => {
+            webview.postMessage({
+                type: 'testResults',
+                value: 'Test Summary Generated',
+                textSummary: line,
+                isHomePage: isHomePage,
+                isCompleteSummary: false
+            });
+        });
     }
 }
 
@@ -309,17 +349,11 @@ export async function startTesting(wslscriptPath: string, wsllogfilePath: string
                     terminalPath = 'wsl.exe';
                 } else {
                     terminalPath = '/bin/bash';
-                    // Get the default shell for the current user
                     currentShell = process.env.SHELL || '';
-
                     if (!currentShell) {
-                        // Fallback method if process.env.SHELL is not set
                         currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
                     }
-
                     console.log(`Current default shell: ${currentShell}`);
-                    //uncomment the below line if you want to use the default shell (for zsh test)
-                    // terminalPath = currentShell;
                 }
                 console.log(`Terminal path: ${terminalPath}`);
                 const terminal = vscode.window.createTerminal({
@@ -328,33 +362,41 @@ export async function startTesting(wslscriptPath: string, wsllogfilePath: string
                 });
 
                 terminal.show();
-                if (process.platform === 'win32') {
-                    const testCmd = `${wslscriptPath}  "${wsllogfilePath}" ;exit 0  `;
-                    terminal.sendText(testCmd);
-                }
-                else {
-                    let testCmd: string;
-                    if (currentShell.includes('zsh')) {
-                        // Use a Zsh-specific script if needed
-                        console.log('Using Zsh script');
-                        //replace bashScriptPath with zshScriptPath for zsh
-                        testCmd = `"${bashScriptPath}" "${logfilePath}"; exit 0`;
+                let testCmd: string;
+                
+                const editor = vscode.window.activeTextEditor;
+                if (editor) {
+                    const document = editor.document;
+                    const filePath = document.uri.fsPath;
+                    if (filePath.endsWith('.go')) {
+                        // For Go files
+                        testCmd = `go test -v ${filePath} > "${logfilePath}"; exit 0`;
                     } else {
-                        // Default to Bash script
-                         testCmd = `"${bashScriptPath}" "${logfilePath}" ; exit 0`;
+                        // For JS/TS files
+                        if (process.platform === 'win32') {
+                            testCmd = `${wslscriptPath}  "${wsllogfilePath}" ;exit 0  `;
+                        } else {
+                            if (currentShell.includes('zsh')) {
+                                testCmd = `"${bashScriptPath}" "${logfilePath}"; exit 0`;
+                            } else {
+                                testCmd = `"${bashScriptPath}" "${logfilePath}" ; exit 0`;
+                            }
+                        }
                     }
-                    // const exitCmd = 'exit';
-                    terminal.sendText(testCmd);
+                } else {
+                    vscode.window.showErrorMessage('No active editor found');
+                    reject(new Error('No active editor found'));
+                    return;
                 }
-                // terminal.sendText('exit', true);
 
-                // Listen for terminal close event
+                terminal.sendText(testCmd);
+
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                     console.log('Terminal closed');
                     if (eventTerminal === terminal) {
-                        disposable.dispose(); // Dispose the listener
-                        displayTestCases(logfilePath, webview, false, false); // Call function when terminal is closed
-                        resolve(); // Resolve the promise
+                        disposable.dispose();
+                        displayTestCases(logfilePath, webview, false, false);
+                        resolve();
                     }
                 });
 
