@@ -68,14 +68,31 @@
 </div>
 
 <style>
-  :global(body) {
+   @font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat-VariableFont_wght.ttf') format('woff2'),
+         url('../../font/Montserrat-VariableFont_wght.ttf') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../../font/Montserrat-Italic-VariableFont_wght.ttf') format('woff2'),
+         url('../../font/Montserrat-Italic-VariableFont_wght.ttf') format('woff');
+    font-weight: 700;
+    font-style: italic;
+}
+
+:global(body) {
     margin: 0;
     padding: 0;
-    font-family: var(--vscode-font-family);
+    font-family: 'Montserrat', sans-serif; /* Use Montserrat here */
     font-size: var(--vscode-font-size);
     color: var(--vscode-foreground);
     background-color: #000;
-  }
+}
+
 
   .container {
     display: flex;

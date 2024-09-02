@@ -3,7 +3,6 @@
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
   "version": "1.0.6",
-
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
@@ -180,6 +179,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@rollup/plugin-url": "^8.0.2",
     "@tsconfig/svelte": "^1.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.6",
