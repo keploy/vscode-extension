@@ -18,6 +18,13 @@ if [ "$extension" = "py" ]; then
   pip3 install pytest-cov --break-system-packages
 fi
 
+if [ "$extension" = "go" ]; then
+  echo "Installing Go coverage tools..."
+  go install github.com/axw/gocov/gocov@v1.1.0
+  go install github.com/AlekSi/gocov-xml@v1.1.0
+  export PATH=$PATH:$(go env GOPATH)/bin
+fi
+
 # Add env variables to the npm test command
 # utgEnv=" -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage"
 

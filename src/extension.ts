@@ -23,10 +23,10 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         if (
             fileName.endsWith('.test.js') || 
             fileName.endsWith('.test.ts') || 
-            fileName.endsWith('_test.py') || 
             fileName.endsWith('Test.java') ||  // Check for Java test file ending
             fileName.includes('/Test')   ||      // Check for Java test file prefix in the path
-            (fileName.startsWith('test_') && fileName.endsWith('.py')) 
+            fileName.includes('/test/') ||    // Skip files in a "tests" directory
+            fileName.endsWith('_test.go')
         ) {
             return [];
         }
@@ -95,7 +95,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'keploy.utg',
                         arguments: [document.uri.fsPath]
                     }));
-                } else if (fileName.endsWith('.go') && node.type === 'function_declaration') {
+                } else if (fileName.endsWith('.go') && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
                     codeLenses.push(new vscode.CodeLens(range, {
@@ -104,7 +104,6 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         arguments: [document.uri.fsPath]
                     }));
                 }
-
 
                 // Traverse to the first child node
                 if (cursor.gotoFirstChild()) {

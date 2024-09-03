@@ -36,6 +36,8 @@ async function Utg(context: vscode.ExtensionContext) {
                 let testFilePath: string;
                 let command: string;
                 let coverageReportPath: string;
+                let testFileContent:string;
+                
                 if (extension === '.js' || extension === '.ts') {
                     testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));
                     if (!fs.existsSync(testFilePath)) {
@@ -46,12 +48,13 @@ async function Utg(context: vscode.ExtensionContext) {
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
 
                 } else if (extension === '.py') {
-                    testFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.py', '_test.py'));
+                    const testDir = path.join(rootDir,'test');
+                    testFilePath = path.join(testDir,'test_'+ path.basename(sourceFilePath));
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `# Test file for ${testFilePath}`);
+                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                     }
-                    command = `pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${path.basename(testFilePath)}`;
+                    command = `PYTHONPATH=./ pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml test/${path.basename(testFilePath)}`;
                     coverageReportPath = "./coverage.xml";
 
                 }else if (extension === '.java') {
@@ -65,7 +68,20 @@ async function Utg(context: vscode.ExtensionContext) {
                     }
                     command = `mvn clean test jacoco:report`;
                     coverageReportPath = "./target/site/jacoco/jacoco.xml";
-                }  else {
+                } else if (extension === '.go') {
+                    const testDir = path.join(rootDir, 'test');
+                    console.log(testDir,rootDir,"testDir")
+                    testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
+
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test')
+                        testFileContent = `package main\n\nimport "testing"\n\nfunc ${uniqueFuncName}(t *testing.T) {\n    t.Log("Placeholder test")\n}\n`;
+                        fs.writeFileSync(testFilePath, testFileContent);                    }
+                    command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
+                    coverageReportPath = "./coverage.xml";
+                } 
+                 else {
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
                     return;
                 }
@@ -97,40 +113,41 @@ async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
         return;
     }
 
-    const rootDir = path.dirname(vscode.workspace.workspaceFolders[0].uri.fsPath); // Root directory of the project
+    // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
     const extension = path.extname(sourceFilePath);
-    const testDir = path.join(rootDir, 'test');
-    const relativeSourceFilePath = path.relative(rootDir, sourceFilePath);
-    const sourceFileName = path.basename(sourceFilePath)
+    const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
+    const testDir = path.join(sourceDir, 'test'); // 'test' directory under the source directory
+    const sourceFileName = path.basename(sourceFilePath);
     let testFileName: string;
+    let testFileContent = '';
 
     if (extension === '.js' || extension === '.ts') {
         testFileName = sourceFileName.replace(extension, `.test${extension}`);
     } else if (extension === '.py') {
-        testFileName = sourceFileName.replace('.py', '_test.py');
+        testFileName = "test_" + sourceFileName;
     } else if (extension === '.java') {
         testFileName = sourceFileName.replace('.java', 'Test.java');
+    } else if (extension === '.go') {
+        testFileName = sourceFileName.replace('.go', '_test.go');
+        testFileContent = `package main\n\nimport "testing"\n\nfunc TestPlaceholder(t *testing.T) {\n    t.Log("Placeholder test")\n}\n`;
     } else {
         vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
         return;
     }
 
-    const testFilePath = path.join(testDir, relativeSourceFilePath.replace(sourceFileName, testFileName));
+    const testFilePath = path.join(testDir, testFileName);
+    console.log(testFilePath, testDir, "testFilePath");
 
     if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
     }
 
-    const testFileDir = path.dirname(testFilePath);
-    if (!fs.existsSync(testFileDir)) {
-        fs.mkdirSync(testFileDir, { recursive: true });
-    }
-
     if (!fs.existsSync(testFilePath)) {
-        fs.writeFileSync(testFilePath, `// Test file for ${sourceFileName}`);
+        fs.writeFileSync(testFilePath, testFileContent);
         vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
     } else {
         vscode.window.showInformationMessage(`Test file already exists: ${testFilePath}`);
     }
 }
+
 export default Utg;
