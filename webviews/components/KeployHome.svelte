@@ -204,13 +204,16 @@
         {:else if selectedIconButton === 2}
           <h1>View Previous Test Results</h1>
         {:else}
-          <h1>
-            {isRecording
-              ? "Recording Started"
-              : isTesting
-                ? "Testing Started"
-                : "Running Keploy"}
-          </h1>
+        <h1>
+          {#if isRecording}
+            Recording Started
+          {:else if isTesting}
+            Testing Started
+          {:else}
+            <span class="highlight">Increase</span> your Test coverage now!!
+          {/if}
+        </h1>
+        
         {/if}
         <span
           class="stop-button"
@@ -425,26 +428,23 @@
     display: flex;
     flex-direction: row;
     align-items: start;
-    border: 2px solid;
-    border-color: var(--vscode-button-secondaryBackground);
-    border-radius: 5px;
     padding: 5px;
     width: 100%; /* Full width of the container */
     justify-content: flex-start; /* Align icons to the left */
-    gap: 10px; /* Optional: Add spacing between buttons */
   }
 
   .icon-button {
     display: flex;
-    justify-content: center;
+    justify-content: start;
     border-radius: 5px;
-    color: #ff914d;
+    color: white;
     background-color: black;
     font-size: 24px;
     height: 40px;
     padding: 0 10px; /* Add padding inside buttons */
     cursor: pointer;
     border: none;
+    width: auto;
   }
 
   .heading {
@@ -464,12 +464,11 @@
     width: 70%;
   }
 
-  #displayPreviousTestResults {
-    width: 50px;
-  }
-
-  #openConfig {
-    width: 50px;
+  .highlight {
+    background: linear-gradient(90deg, #ffb388 0%, #ff5c00 50%, #f76b1c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   #testResults {
@@ -590,6 +589,14 @@
   #completeSummaryHr {
     display: none;
   }
+
+  button:focus {
+    outline: none; /* Remove the blue border on focus for all buttons */
+  }
+  button {
+    outline: none; /* Remove the blue border on focus for all buttons */
+  }
+
   /* Back Arrow SVG Style */
   .back-arrow {
     color: #ffffff;
@@ -613,15 +620,6 @@
     margin-bottom: 10px;
     margin-top: 28px;
     flex-direction: column;
-  }
-
-  .icon-buttons {
-    display: flex;
-    justify-content: space-around;
-    border: 2px solid;
-    border-color: var(--vscode-button-secondaryBackground);
-    border-radius: 5px;
-    padding: 5px;
   }
 
   .stepper-container {

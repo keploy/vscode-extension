@@ -303,6 +303,47 @@ hr {
   margin-right: 20px;
 }
 
+.golang-icon{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+  background: url("golang.png") no-repeat center center;
+  background-size: contain;
+}
+
+.node-icon{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+  background: url("nodejs.png") no-repeat center center;
+  background-size: contain;
+}
+
+.java-icon{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+  background: url("java.png") no-repeat center center;
+  background-size: contain;
+}
+
+.python-icon{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+  background: url("python.png") no-repeat center center;
+  background-size: contain;
+}
+
+
 .replay-icon.open {
   transform: rotate(180deg);
 }

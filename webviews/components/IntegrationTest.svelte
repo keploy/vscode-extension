@@ -29,7 +29,7 @@
   }
 </script>
 
-<body class="baloo-2-custom">
+<body>
   <div class={"settings-container"}>
     <h1 class="main-heading">Steps to setup Config</h1>
     <button class="back-button" on:click={() => handleTestSelection("Config")}>
@@ -49,9 +49,7 @@
     </button>
     <div class="setting-Card-Container">
       <div class="InputContainer">
-        <h1 class="heading">
-          Enter the command that runs your application.
-        </h1>
+        <h1 class="heading">Enter the command that runs your application.</h1>
         <div class="settings-item">
           <input
             type="text"
@@ -60,10 +58,26 @@
             id="configCommand"
           />
           <div class="language-icons">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <div class="language-icons-row">
+              <div class="icon-info">
+                <span class="golang-icon"></span>
+                <p>go run main.go</p>
+              </div>
+              <div class="icon-info">
+                <span class="node-icon"></span>
+                <p>npm run start</p>
+              </div>
+            </div>
+            <div class="language-icons-row">
+              <div class="icon-info">
+                <span class="python-icon"></span>
+                <p>Python3 main.py</p>
+              </div>
+              <div class="icon-info">
+                <span class="java-icon"></span>
+                <p>java xyz.jar</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -100,6 +114,35 @@
 </body>
 
 <style>
+
+@font-face {
+    font-family: "Montserrat";
+    src:
+      url("../../font/Montserrat-VariableFont_wght.ttf") format("woff2"),
+      url("../../font/Montserrat-VariableFont_wght.ttf") format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src:
+      url("../../font/Montserrat-Italic-VariableFont_wght.ttf") format("woff2"),
+      url("../../font/Montserrat-Italic-VariableFont_wght.ttf") format("woff");
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif; /* Use Montserrat here */
+    font-size: var(--vscode-font-size);
+    color: var(--vscode-foreground);
+    background-color: #000;
+  }
+
+
   .container,
   .settings-container {
     display: flex;
@@ -163,17 +206,14 @@
     background-color: inherit;
     padding: 1rem;
     border-radius: 0.5rem;
-    width: 100%;
+    width: 60%;
+    margin-top: auto;
+    margin-bottom: auto;
     text-align: center;
     color: #e0e0e0;
     border: 2px solid #f77b3e;
     transition: all 0.3s ease;
     box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
-  }
-
-  .lang-icon {
-    width: 2rem;
-    height: 2rem;
   }
 
   .settings-item {
@@ -189,6 +229,50 @@
     flex-grow: 1;
     padding: 0.5rem;
     border-radius: 0.5rem;
+  }
+
+  .settings-item input:focus {
+    outline: none;
+  }
+
+  .golang-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    background: url("../../sidebar/golang.png") no-repeat center center;
+    background-size: contain;
+  }
+
+  .node-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    background: url("../../sidebar/nodejs.png") no-repeat center center;
+    background-size: contain;
+  }
+
+  .java-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    background: url("../../sidebar/java.png") no-repeat center center;
+    background-size: contain;
+  }
+
+  .python-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    transition: transform 0.3s;
+    background: url("../../sidebar/python.png") no-repeat center center;
+    background-size: contain;
   }
 
   .InputContainer {
@@ -221,12 +305,35 @@
     font-size: 1.5rem;
     margin-bottom: 1rem;
     text-align: start;
+    width: 10%
+  }
+
+  button:focus {
+    outline: none; /* Remove the blue border on focus for all buttons */
+  }
+  button {
+    outline: none; /* Remove the blue border on focus for all buttons */
   }
 
   .language-icons {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
     gap: 0.5rem;
+    margin-top: 20px;
+  }
+
+  .language-icons-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .icon-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
 
   .container-hide {
@@ -238,8 +345,8 @@
     align-items: center;
     width: 100%;
     justify-content: space-between;
-    margin-top: auto;
     margin-bottom: 20px;
+    margin-top: 50px;
     z-index: 1;
     scale: 120%;
     position: relative;
