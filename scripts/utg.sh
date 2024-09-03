@@ -28,11 +28,22 @@ fi
 # Add env variables to the npm test command
 # utgEnv=" -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage"
 
-# testCommand="npm test "+ $utgEnv
-
-
-keploy gen --source-file-path="$sourceFilePath" \
-  --test-file-path="$testFilePath" \
-  --test-command="$command" \
-  --coverage-report-path="$coverageReportPath" \
-  --llmApiVersion "2024-02-01" --llmBaseUrl "https://api.keploy.io" --max-iterations "10"
+# Construct the keploy gen command
+if [ "$extension" = "java" ]; then
+  keploy gen --source-file-path="$sourceFilePath" \
+    --test-file-path="$testFilePath" \
+    --test-command="$command" \
+    --coverage-report-path="$coverageReportPath" \
+    --llmApiVersion "2024-02-01" \
+    --llmBaseUrl "https://api.keploy.io" \
+    --max-iterations "10" \
+    --coverageFormat jacoco
+else
+  keploy gen --source-file-path="$sourceFilePath" \
+    --test-file-path="$testFilePath" \
+    --test-command="$command" \
+    --coverage-report-path="$coverageReportPath" \
+    --llmApiVersion "2024-02-01" \
+    --llmBaseUrl "https://api.keploy.io" \
+    --max-iterations "10"
+fi

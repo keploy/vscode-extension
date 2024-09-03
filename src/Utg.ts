@@ -64,7 +64,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `# Test file for ${testFilePath}`);
+                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                     }
                     command = `mvn clean test jacoco:report`;
                     coverageReportPath = "./target/site/jacoco/jacoco.xml";
