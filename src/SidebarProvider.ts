@@ -67,7 +67,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.onDidChangeVisibility(() => {
       if (webviewView.visible) {
-        oneClickInstall()
+        oneClickInstall();
       }
     });
     webviewView.webview.onDidReceiveMessage(async (data) => {
