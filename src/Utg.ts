@@ -70,13 +70,12 @@ async function Utg(context: vscode.ExtensionContext) {
                     coverageReportPath = "./target/site/jacoco/jacoco.xml";
                 } else if (extension === '.go') {
                     const testDir = path.join(rootDir, 'test');
-                    console.log(testDir,rootDir,"testDir")
                     testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
 
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test')
-                        testFileContent = `package main\n\nimport "testing"\n\nfunc ${uniqueFuncName}(t *testing.T) {\n    t.Log("Placeholder test")\n}\n`;
+                        testFileContent = `package main\n\nimport "testing"`;
                         fs.writeFileSync(testFilePath, testFileContent);                    }
                     command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
                     coverageReportPath = "./coverage.xml";
@@ -129,7 +128,7 @@ async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
         testFileName = sourceFileName.replace('.java', 'Test.java');
     } else if (extension === '.go') {
         testFileName = sourceFileName.replace('.go', '_test.go');
-        testFileContent = `package main\n\nimport "testing"\n\nfunc TestPlaceholder(t *testing.T) {\n    t.Log("Placeholder test")\n}\n`;
+        testFileContent = `package main\n\nimport "testing"`;
     } else {
         vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
         return;
