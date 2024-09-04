@@ -65,6 +65,10 @@ export async function getMicrosoftAccessToken() {
     }
 }
 
+function generateRandomState() {
+    return [...Array(30)].map(() => Math.random().toString(36)[2]).join('');
+}
+
 
 
 export default async function SignInWithGitHub() {
@@ -109,9 +113,69 @@ export default async function SignInWithGitHub() {
                 res.end('<h1>State mismatch. Authentication failed.</h1>');
             }
             server.close();
-        }
+        }   
     }).listen(3000); // Change the port if needed
 }
+
+
+export async function SignInWithOthers() {
+    const state = generateRandomState();  // Generate a secure random state
+    const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
+    vscode.env.openExternal(vscode.Uri.parse(authUrl));
+
+    return new Promise((resolve, reject) => {
+        const server = http.createServer(async (req, res) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+            if (req.method === 'OPTIONS') {
+                res.writeHead(200);
+                res.end();
+                return;
+            }
+
+            if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
+                const url = new URL(req.url, `http://${req.headers.host}`);
+                const receivedState = url.searchParams.get('state');
+                const token = url.searchParams.get('token');
+                console.log("Received state:", receivedState);
+                console.log("Received token:", token);
+
+                if (!receivedState || !token) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing state or token' }));
+                    reject(new Error('Missing state or token'));
+                    server.close();
+                    return;
+                }
+
+                try {
+                    // Simulate processing the token
+                    console.log("Processing token...");
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
+
+                    // Resolve the promise with the token
+                    resolve(token.toString());
+                } catch (err) {
+                    console.error('Error processing token:', err);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                    reject(err);
+                } finally {
+                    server.close();  // Close the server once the request is handled
+                }
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Not Found' }));
+            }
+        }).listen(3001, () => {
+            console.log('Server listening on port 3001');
+        });
+    });
+}
+ 
 
 // async function fetchAccessToken(code: string | null) {
 //     // Exchange the authorization code for an access token
@@ -223,7 +287,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         GitHubToken: token,
         InstallationID: installationID,
     };
-
+    console.log("Request Body:", requestBody);
     try {
         const response: AxiosResponse<AuthResp> = await axios.post<AuthResp>(url, requestBody, {
             headers: { 'Content-Type': 'application/json' },

@@ -22,7 +22,8 @@
   ],
   "activationEvents": [
     "onCommand:keploy.utg",
-    "onLanguage:javascript"
+    "onLanguage:javascript",
+    "onUri:keploy.handleUri"
   ],
   "main": "./out/extension.js",
   "contributes": {

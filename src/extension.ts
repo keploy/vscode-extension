@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SidebarProvider } from './SidebarProvider';
-import SignIn, { validateFirst } from './SignIn';
+import SignIn, { validateFirst,SignInWithOthers } from './SignIn';
 import oneClickInstall from './OneClickInstall';
 import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
@@ -62,6 +62,11 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
     context.subscriptions.push(
+        vscode.window.registerUriHandler({
+            handleUri(uri: vscode.Uri): vscode.ProviderResult<void> {
+              vscode.window.showInformationMessage(`URI handler called: ${uri.toString()}`);
+            }
+          }),
         vscode.window.registerWebviewViewProvider(
             "Keploy-Sidebar",
             sidebarProvider
@@ -101,30 +106,42 @@ export function activate(context: vscode.ExtensionContext) {
         // Register the sign-in command if not signed in
         let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
             try {
-                const result = await getGitHubAccessToken();
+                const result = await SignInWithOthers();
+                const accessToken = result as string; // Assert that result is a string
+                getInstallationID();
 
-                if (result) {
-                    const { accessToken, email } = result;
+                await context.globalState.update('accessToken', accessToken);
 
-                    getInstallationID();
+            if (Boolean(accessToken)) {
+                vscode.window.showInformationMessage('You are now signed in!');
+                vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+            } else {
+                console.log('Validation failed for the user !');
+                vscode.window.showInformationMessage('Failed to sign in Keploy!');
+            }
+                // if (result) {
+                //     const { accessToken, email } = result;
 
-                    // Store the access token in global state
-                    await context.globalState.update('accessToken', accessToken);
+                //     getInstallationID();
 
-                    const { emailID, isValid, error } = await validateFirst(accessToken, "https://api.keploy.io");
+                //     // Store the access token in global state
+                //     await context.globalState.update('accessToken', accessToken);
 
-                    // if (isValid) {
-                    vscode.window.showInformationMessage('You are now signed in!');
-                    vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-                    vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-                    // } else {
-                    //     console.log('Validation failed for the user !');
-                    // }
+                //     const { emailID, isValid, error } = await validateFirst(accessToken, "https://api.keploy.io");
 
-                } else {
-                    console.log('Failed to get the session or email.');
-                    vscode.window.showInformationMessage('Failed to sign in Keploy!');
-                }
+                //     // if (isValid) {
+                //     vscode.window.showInformationMessage('You are now signed in!');
+                //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                //     vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                //     // } else {
+                //     //     console.log('Validation failed for the user !');
+                //     // }
+
+                // } else {
+                //     console.log('Failed to get the session or email.');
+                //     vscode.window.showInformationMessage('Failed to sign in Keploy!');
+                // }
             } catch (error) {
                 // console.error('Error during sign-in:', error);
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
@@ -217,7 +234,6 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(disposable);
-
 }
 
 
