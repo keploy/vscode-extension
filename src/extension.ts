@@ -26,7 +26,8 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
             fileName.endsWith('Test.java') ||  // Check for Java test file ending
             fileName.includes('/Test')   ||      // Check for Java test file prefix in the path
             fileName.includes('/test/') ||    // Skip files in a "tests" directory
-            fileName.endsWith('_test.go')
+            fileName.endsWith('_test.go') ||
+            fileName.includes('test_')
         ) {
             return [];
         }

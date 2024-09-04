@@ -49,12 +49,12 @@ async function Utg(context: vscode.ExtensionContext) {
 
                 } else if (extension === '.py') {
                     const testDir = path.join(rootDir,'test');
-                    testFilePath = path.join(testDir,'test_'+ path.basename(sourceFilePath));
+                    testFilePath = path.join(rootDir,'test_'+ path.basename(sourceFilePath));
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                     }
-                    command = `PYTHONPATH=./ pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml test/${path.basename(testFilePath)}`;
+                    command = `pytest --cov=${path.basename(sourceFilePath,'.py')} --cov-report=xml:coverage.xml ${testFilePath}`;
                     coverageReportPath = "./coverage.xml";
 
                 }else if (extension === '.java') {
