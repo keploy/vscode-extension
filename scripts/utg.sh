@@ -45,5 +45,6 @@ else
     --coverage-report-path="$coverageReportPath" \
     --llmApiVersion "2024-02-01" \
     --llmBaseUrl "https://api.keploy.io" \
-    --max-iterations "10"
+    --max-iterations "10" \
+    --coverageFormat cobertura
 fi
