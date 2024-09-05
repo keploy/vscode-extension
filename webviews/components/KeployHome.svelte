@@ -74,7 +74,7 @@
     // triggerAnimation();
   };
 
-  $: {
+     {
     if (startRecordingButton) {
       startRecordingButton.style.display =
         isRecording || isTesting || selectedIconButton !== 1 ? "none" : "flex";

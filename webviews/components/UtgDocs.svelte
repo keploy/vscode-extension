@@ -1,9 +1,18 @@
 <script>
+  import { onMount } from 'svelte';
+
   const vscode = acquireVsCodeApi();
   let screenshot1 =
     "https://github.com/Sarthak160/goApi/blob/main/codeLens.png?raw=true";
   let screenshot2 =
     "https://github.com/Sarthak160/goApi/blob/main/command.png?raw=true";
+
+  // Initialize variables for total sessions and used sessions
+  let totalCall = 0; // This will come from the API response
+  let usedCall = 0; // This will come from the API response
+  let progressPercentage = 0;
+
+  let apiResponseElement;
 
   function navigateToConfig() {
     vscode.postMessage({
@@ -11,11 +20,57 @@
       value: "Config",
     });
   }
+
+  // Update the progress percentage based on usedCall/totalCall
+  function updateProgress() {
+    if (totalCall > 0) {
+      progressPercentage = (usedCall / totalCall) * 100;
+    } else {
+      progressPercentage = 0;
+    }
+  }
+
+  onMount(() => {
+    apiResponseElement = document.getElementById('apiResponseDisplay');
+
+    // Add event listener for messages from the VSCode extension
+    window.addEventListener("message", (event) => {
+      const message = event.data;
+      if (message.type === "apiResponse") {
+        const apiResponse = message.value;
+        console.log("Received API response in sidebar:", apiResponse);
+
+        try {
+          // If the response is a JSON string
+          const parsedResponse = JSON.parse(apiResponse);
+          usedCall = parsedResponse.usedCall;
+          totalCall = parsedResponse.totalCall;
+          console.log("usedCall" , usedCall);
+          console.log("totalCall" , totalCall);
+          updateProgress(); // Update the progress bar after setting values
+        } catch (error) {
+          console.error("Error parsing API response:", error);
+        }
+
+        if (apiResponseElement) {
+          console.log("apiResponseElement is present");
+          // apiResponseElement.textContent = `API Response: ${apiResponse}`;
+        }
+      }
+    });
+  });
 </script>
 
 <div class="container">
   <h1 class="heading">Steps to Setup UTG</h1>
-  <div id="apiResponseDisplay">hi</div>
+  
+  <!-- Display usedCall/totalCall above the sidebar -->
+  <!-- <div class="session-info">
+    {usedCall} / {totalCall} sessions used
+  </div> -->
+
+  <div id="apiResponseDisplay"></div>
+  
   <div class="subTools">
     <div class="back-button" on:click={navigateToConfig}>
       <svg
@@ -32,11 +87,17 @@
         />
       </svg>
     </div>
+
+    <!-- Progress bar container -->
     <div class="progress">
       <div class="progress-container">
-        <div class="progress-bar"></div>
+        <!-- Progress bar width is updated dynamically based on usedCall/totalCall -->
+        <div
+          class="progress-bar"
+          style="width: {progressPercentage}%;"
+        ></div>
       </div>
-      <span>9/10 sessions</span>
+      <span>{usedCall}/{totalCall} sessions</span>
     </div>
   </div>
 
@@ -45,14 +106,17 @@
       <div class="step-box">
         <h2 class="step-title">Step 1</h2>
         <p class="step-description">
-          Open the desired file that you would like to generate the test cases.<br>
+          Open the desired file that you would like to generate the test cases.<br />
           Eg: Click on foo.js if you want to generate for the functions in it.
         </p>
       </div>
 
       <div class="step-box">
         <h2 class="step-title">Step 2</h2>
-        <p class="step-description">Click on the <br> <span class="FileName">"Generate unit test."</span></p>
+        <p class="step-description">
+          Click on the <br />
+          <span class="FileName">"Generate unit test."</span>
+        </p>
         <img src={screenshot1} alt="Generate unit test" class="screenshot" />
       </div>
     </div>
@@ -61,38 +125,41 @@
       <h2 class="step-title">Step 3</h2>
       <p class="step-description">
         Your unit tests will get generated for that source file under the
-        <span class="FileName">`.test.js`</span> or <span class="FileName">`.test.ts`</span> file. <br>Continue the same to generate more!
+        <span class="FileName">`.test.js`</span> or
+        <span class="FileName">`.test.ts`</span>
+        file. <br />Continue the same to generate more!
       </p>
     </div>
   </div>
 </div>
 
 <style>
-   @font-face {
-    font-family: 'Montserrat';
-    src: url('../../font/Montserrat-VariableFont_wght.ttf') format('woff2'),
-         url('../../font/Montserrat-VariableFont_wght.ttf') format('woff');
+  @font-face {
+    font-family: "Montserrat";
+    src:
+      url("../../font/Montserrat-VariableFont_wght.ttf") format("woff2"),
+      url("../../font/Montserrat-VariableFont_wght.ttf") format("woff");
     font-weight: 400;
     font-style: normal;
-}
+  }
 
-@font-face {
-    font-family: 'Montserrat';
-    src: url('../../font/Montserrat-Italic-VariableFont_wght.ttf') format('woff2'),
-         url('../../font/Montserrat-Italic-VariableFont_wght.ttf') format('woff');
+  @font-face {
+    font-family: "Montserrat";
+    src:
+      url("../../font/Montserrat-Italic-VariableFont_wght.ttf") format("woff2"),
+      url("../../font/Montserrat-Italic-VariableFont_wght.ttf") format("woff");
     font-weight: 700;
     font-style: italic;
-}
+  }
 
-:global(body) {
+  :global(body) {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', sans-serif; /* Use Montserrat here */
+    font-family: "Montserrat", sans-serif;
     font-size: var(--vscode-font-size);
     color: var(--vscode-foreground);
     background-color: #000;
-}
-
+  }
 
   .container {
     display: flex;
@@ -111,6 +178,12 @@
     margin-bottom: 20px;
     color: #ffffff;
     text-align: center;
+  }
+
+  .session-info {
+    color: #ffffff;
+    font-size: 18px;
+    margin-bottom: 10px;
   }
 
   .subTools {
@@ -132,7 +205,7 @@
   }
 
   .progress-container {
-    width: 50%; /* Full width of the parent */
+    width: 100%; /* Full width of the parent */
     background-color: #000000; /* Black background */
     border-radius: 5px;
     overflow: hidden;
@@ -143,15 +216,8 @@
 
   .progress-bar {
     height: 7px;
-    width: 70%; /* Adjust this to represent the filled portion */
     background-color: #ff914d;
     border-radius: 2px;
-  }
-
-  .progress span {
-    margin-left: 10px;
-    color: #ffffff;
-    font-size: 16px;
   }
 
   .steps-container {
@@ -170,15 +236,15 @@
     width: 100%;
     max-width: 800px;
     gap: 15px;
-    flex-wrap: wrap; /* Allows items to wrap to the next line on smaller screens */
+    flex-wrap: wrap;
   }
 
   .step-box {
     background-color: inherit;
     padding: 20px;
     border-radius: 10px;
-    width: 100%; /* Full width on small screens */
-    max-width: 45%; /* 45% width on larger screens */
+    width: 100%;
+    max-width: 45%;
     text-align: center;
     color: #e0e0e0;
     border: 2px solid #f77b3e;
@@ -194,9 +260,9 @@
     color: #ffffff;
   }
 
-  .FileName{
+  .FileName {
     font-weight: bold;
-  }  
+  }
 
   .step-description {
     font-size: 16px;
@@ -219,9 +285,8 @@
     font-size: 16px;
     align-items: center;
     margin-bottom: 20px;
-  } 
+  }
 
-  /* Media Queries for Responsiveness */
   @media (max-width: 400px) {
     .subTools {
       flex-direction: column;

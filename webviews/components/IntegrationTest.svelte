@@ -1,5 +1,4 @@
 <script>
-  
   let showSettings = false;
   let appCommand = "";
   let path = "./";
@@ -24,6 +23,13 @@
     vscode.postMessage({
       type: "navigate",
       value: testType,
+    });
+  }
+
+  function handleConfig() {
+    vscode.postMessage({
+      type: "openConfigFile",
+      value: `/keploy.yml`,
     });
   }
 </script>
@@ -80,8 +86,10 @@
           </div>
         </div>
       </div>
-      <button class="buttonBlack" id="setupConfig"
-        ><span class="BoldName" id="setupConfig">Save Configuration </span></button
+      <button class="buttonBlack" id="setupConfig" on:click={handleConfig()}
+        ><span class="BoldName" id="setupConfig"
+          >Save Configuration
+        </span></button
       >
       <div class="stepper-container">
         <div class="step-line"></div>
