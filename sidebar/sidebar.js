@@ -33,6 +33,9 @@ const lowerHR = document.getElementById('lowerHR');
 const loader = document.getElementById('loader');
 const viewTestLogsButton = document.getElementById('viewTestLogsButton');
 const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
+const apiResponseElement = document.getElementById('apiResponseDisplay');
+
+// const apiResponseDisplayLog  = document.getElementById('apiResponseDisplay');
 // const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 const navigateToConfigButton = document.getElementById('backtoHome');
@@ -530,6 +533,15 @@ window.addEventListener('message', event => {
     }
   }
 
+  if (message.type === 'apiResponse') {
+    const apiResponse = message.value;
+    console.log('Received API response in sidebar:', apiResponse);
+
+    // Update the UI with the API response (if you have an element to display it)
+    if (apiResponseElement) {
+      apiResponseElement.textContent = `API Response: ${apiResponse}`;
+    }
+  }
 
   if (message.type === 'aggregatedTestResults') {
     console.log("message.value", message.value);

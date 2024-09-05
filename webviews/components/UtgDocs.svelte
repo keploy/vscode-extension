@@ -15,7 +15,7 @@
 
 <div class="container">
   <h1 class="heading">Steps to Setup UTG</h1>
-
+  <div id="apiResponseDisplay">hi</div>
   <div class="subTools">
     <div class="back-button" on:click={navigateToConfig}>
       <svg

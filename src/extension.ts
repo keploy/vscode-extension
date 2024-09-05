@@ -60,7 +60,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
 
 
 export function activate(context: vscode.ExtensionContext) {
-    const sidebarProvider = new SidebarProvider(context.extensionUri);
+    const sidebarProvider = new SidebarProvider(context.extensionUri , context);
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider(
             "Keploy-Sidebar",
@@ -205,6 +205,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     });
 
+    
     context.subscriptions.push(updateKeployDisposable);
 
     // Register the command

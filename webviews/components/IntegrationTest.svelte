@@ -1,6 +1,5 @@
 <script>
-  import codelens from "../media/codeLens.png";
-
+  
   let showSettings = false;
   let appCommand = "";
   let path = "./";
@@ -81,8 +80,8 @@
           </div>
         </div>
       </div>
-      <button class="buttonBlack" id="initialiseConfigButton"
-        ><span class="BoldName">Save Configuration </span></button
+      <button class="buttonBlack" id="setupConfig"
+        ><span class="BoldName" id="setupConfig">Save Configuration </span></button
       >
       <div class="stepper-container">
         <div class="step-line"></div>
@@ -114,8 +113,7 @@
 </body>
 
 <style>
-
-@font-face {
+  @font-face {
     font-family: "Montserrat";
     src:
       url("../../font/Montserrat-VariableFont_wght.ttf") format("woff2"),
@@ -141,7 +139,6 @@
     color: var(--vscode-foreground);
     background-color: #000;
   }
-
 
   .container,
   .settings-container {
@@ -170,36 +167,6 @@
   .main-heading {
     font-size: 2rem;
     text-align: center;
-  }
-
-  .get-started {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 1.2rem;
-  }
-
-  .description {
-    margin-top: 1rem;
-    text-align: center;
-    font-size: 1rem;
-    max-width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .button {
-    margin-top: 1.5rem;
-    padding: 0.8rem 1.5rem;
-    background-color: #ff914d;
-    color: white;
-    border: none;
-    border-radius: 1rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-
-  .button:hover {
-    background-color: #ff914d;
   }
 
   .buttonBlack {
@@ -287,11 +254,6 @@
     text-align: center;
   }
 
-  .subHeader {
-    font-size: 1rem;
-    text-align: center;
-  }
-
   .BoldName {
     font-weight: bold;
   }
@@ -305,7 +267,7 @@
     font-size: 1.5rem;
     margin-bottom: 1rem;
     text-align: start;
-    width: 10%
+    width: 10%;
   }
 
   button:focus {
@@ -334,10 +296,6 @@
     display: flex;
     align-items: center;
     gap: 5px;
-  }
-
-  .container-hide {
-    display: none;
   }
 
   .stepper-container {
@@ -457,19 +415,10 @@
       font-size: 1.5rem;
     }
 
-    .get-started {
-      font-size: 1rem;
-    }
-
-    .description {
-      font-size: 0.9rem;
-    }
-
     .stepper-container {
       transform: scale(0.8);
     }
 
-    .button,
     .buttonBlack {
       font-size: 1rem;
       padding: 0.8rem;
@@ -492,19 +441,10 @@
       font-size: 1.2rem;
     }
 
-    .get-started {
-      font-size: 0.8rem;
-    }
-
-    .description {
-      font-size: 0.8rem;
-    }
-
     .stepper-container {
       transform: scale(0.7);
     }
 
-    .button,
     .buttonBlack {
       font-size: 0.9rem;
       padding: 0.7rem;

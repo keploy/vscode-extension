@@ -27,8 +27,9 @@ const testOptions: vscode.OpenDialogOptions = {
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
+  _interval?: NodeJS.Timeout; // Store the interval reference
 
-  constructor(private readonly _extensionUri: vscode.Uri) {
+  constructor(private readonly _extensionUri: vscode.Uri ,   private readonly _context: vscode.ExtensionContext) {
   }
 
   public postMessage(type: any, value: any) {
@@ -53,6 +54,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       ],
     };
 
+    const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
+
 
     let scriptUri = webviewView.webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.js")
@@ -63,6 +66,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
+    console.log("here in sidebarProvider.ts" , apiResponse)
+
+    this._sendApiResponseToWebview(apiResponse);
+
+    // Start sending the updated `apiResponse` to the webview every 3 seconds
+    this._startApiResponseUpdates();
+;
+
+
 
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
@@ -403,7 +415,30 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     });
   }
+   private _startApiResponseUpdates() {
+    this._interval = setInterval(() => {
+      const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
+      this._sendApiResponseToWebview(apiResponse);
+    }, 3000); // 3 seconds
+  }
 
+  // Stop the interval when the webview is no longer active
+  public dispose() {
+    if (this._interval) {
+      clearInterval(this._interval);
+    }
+  }
+
+  // Helper function to send `apiResponse` to the webview
+  private _sendApiResponseToWebview(apiResponse: string) {
+    if (this._view) {
+      console.log("api response withing 3 seconds wala" , apiResponse);
+      this._view.webview.postMessage({
+        type: 'apiResponse',
+        value: apiResponse,
+      });
+    }
+  }
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }

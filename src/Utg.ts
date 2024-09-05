@@ -1,12 +1,18 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import axios, { AxiosResponse } from 'axios';
 
-
-async function Utg(context: vscode.ExtensionContext) {
+async function Utg(context: vscode.ExtensionContext): Promise<void> {
     try {
-        return new Promise<void>((resolve, reject) => {
+        return new Promise<void>(async (resolve, reject) => {
             try {
+                vscode.window.showInformationMessage('Attempting to trigger API request...');
+                const apiResponse = await makeApiRequest();
+                if (apiResponse) {
+                    vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
+                    context.globalState.update('apiResponse', apiResponse);
+                }
                 // Create a terminal named "Keploy Terminal"
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
 
@@ -18,16 +24,13 @@ async function Utg(context: vscode.ExtensionContext) {
                     const document = editor.document;
                     currentFilePath = document.uri.fsPath;
                     vscode.window.showInformationMessage(`Current opened file: ${currentFilePath}`);
-                    // Add your additional logic here
                 } else {
                     vscode.window.showInformationMessage('No file is currently opened.');
                 }
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
 
-
                 const sourceFilePath = currentFilePath;
-                ensureTestFileExists(sourceFilePath);
-
+                await ensureTestFileExists(sourceFilePath);
 
                 if (!vscode.workspace.workspaceFolders) {
                     vscode.window.showErrorMessage('No workspace is opened.');
@@ -37,13 +40,16 @@ async function Utg(context: vscode.ExtensionContext) {
                 const testDir = path.join(rootDir, 'test');
                 const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
                 if (!fs.existsSync(testFilePath)) {
-                    vscode.window.showInformationMessage("Test doesn't exists", testFilePath);
+                    vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                     fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                 }
 
                 vscode.window.showInformationMessage("testFilePath", testFilePath);
                 const coverageReportPath = "./coverage/cobertura-coverage.xml";
                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}";`);
+
+                // Call the separate API request function and await the result
+                
 
                 // Listen for terminal close event
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
@@ -67,6 +73,33 @@ async function Utg(context: vscode.ExtensionContext) {
     }
 }
 
+// Separate function for making the API request using axios
+async function makeApiRequest(): Promise<string | null> {
+    const url = 'http://localhost:8080/ai/call/count';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IiIsImlkIjoiIiwiZW1haWwiOiJzaGl2YW0uamhhQGtlcGxveS5pbyIsInJvbGUiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFIiwiY2lkIjoia2VwbG95LmlvIiwiZmVhdHVyZUZsYWdzIjp7IkVOVEVSUFJJU0VfQ09OU09MRSI6dHJ1ZX0sImV4cCI6MTcyNjczNjg3NX0.uRf6jgnrxRTobEm2TEO6uoezdrBwp__6SUcrXQzuTlM';
+
+    try {
+        const response: AxiosResponse = await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        vscode.window.showInformationMessage(`API call successful: ${JSON.stringify(response.data)}`);
+        return JSON.stringify(response.data);  // Return the API response data as a string
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            // Handle axios-specific error
+            vscode.window.showErrorMessage(`API call failed: ${error.message}`);
+        } else {
+            // Handle other errors (in case they are not Axios errors)
+            vscode.window.showErrorMessage('An unknown error occurred.');
+        }
+
+        return null;  // Return null in case of error
+    }
+}
+
+// Ensure test file exists
 async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
     if (!vscode.workspace.workspaceFolders) {
         vscode.window.showErrorMessage('No workspace is opened.');
