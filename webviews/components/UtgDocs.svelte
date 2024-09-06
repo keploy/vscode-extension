@@ -9,7 +9,7 @@
 
   // Initialize variables for total sessions and used sessions
   let totalCall = 0; // This will come from the API response
-  let usedCall = 0; // This will come from the API response
+  let usedCall = 5; // This will come from the API response
   let progressPercentage = 0;
   let isModalOpen = false;
   let activeImage = "";
@@ -29,6 +29,13 @@
     vscode.postMessage({
       type: "navigate",
       value: "Config",
+    });
+  }
+
+  function navigateToKeploy() {
+    vscode.postMessage({
+      type: "openLink",
+      url: "https://app.keploy.io/", // Replace this with the URL you want to navigate to
     });
   }
 
@@ -101,11 +108,17 @@
 
     <!-- Progress bar container -->
     <div class="progress">
-      <div class="progress-container">
-        <!-- Progress bar width is updated dynamically based on usedCall/totalCall -->
-        <div class="progress-bar" style="width: {progressPercentage}%;"></div>
-      </div>
-      <span>{usedCall}/{totalCall} sessions</span>
+      {#if usedCall == totalCall}
+        <button on:click={navigateToKeploy} class="complete-button">
+          Upgrade
+        </button>
+      {:else}
+        <div class="progress-container">
+          <!-- Progress bar width is updated dynamically based on usedCall/totalCall -->
+          <div class="progress-bar" style="width: {progressPercentage}%;"></div>
+        </div>
+        <span>{usedCall}/{totalCall} sessions</span>
+      {/if}
     </div>
   </div>
 
@@ -283,6 +296,28 @@
 
   .FileName {
     font-weight: bold;
+  }
+
+  
+  .complete-button {
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+    text-decoration: none;
+    color: white;
+    background-color: #1a1a1a;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+  }
+
+  .complete-button:hover {
+    scale: 101%;
+    background-color: #323131; 
   }
 
   .step-description {
