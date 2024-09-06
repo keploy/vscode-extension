@@ -34,6 +34,7 @@ const loader = document.getElementById('loader');
 const viewTestLogsButton = document.getElementById('viewTestLogsButton');
 const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
 const apiResponseElement = document.getElementById('apiResponseDisplay');
+const backConfigbutton = document.getElementById('backConfig');
 // const apiResponseDisplayLog  = document.getElementById('apiResponseDisplay');
 // const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
@@ -125,6 +126,17 @@ if (rerunTestSuiteButton) {
   });
 
 }
+
+if(backConfigbutton){
+  backConfigbutton.addEventListener('click',async () =>{
+    console.log("backconfig button clicked")
+    vscode.postMessage({
+      type:"navigate",
+      value:"Config"
+    })
+  })
+}
+
 if (navigateToConfigButton) {
   console.log("here is button")
   navigateToConfigButton.addEventListener('click', async () => {

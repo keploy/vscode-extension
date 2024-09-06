@@ -2,7 +2,6 @@
   import { fly } from "svelte/transition";
   // import { onMount } from 'svelte';
   // import lottie from 'lottie-web';
-
   // let navigateToConfig = false;
   let startRecordingButton;
   let startTestingButton;
@@ -27,6 +26,7 @@
   const selectButton = (buttonNumber) => {
     console.log("buttonNumber", buttonNumber);
     selectedIconButton = buttonNumber;
+
     if (buttonNumber !== 2) {
       clearLastTestResults();
     }
@@ -46,11 +46,8 @@
   function navigateToConfig() {
     if (selectedIconButton !== 1) {
       selectedIconButton = 1;
+      console.log("in button config");
     } else {
-      vscode.postMessage({
-        type: "navigate",
-        value: "Config",
-      });
     }
   }
   const clearLastTestResults = () => {
@@ -65,6 +62,8 @@
     if (testCasesFailed) testCasesFailed.textContent = "";
     if (errorElement) errorElement.style.display = "none";
   };
+
+  const StartRecording = () => {};
 
   const toggleRecording = () => {
     isRecording = !isRecording;
@@ -153,7 +152,7 @@
 
 <div class="container">
   <h1 class="main-heading">Running integration tests</h1>
-  <button class="back-button" on:click={navigateToConfig}>
+  <button class="back-button" id="backConfig" on:click={navigateToConfig}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="32"
@@ -343,11 +342,11 @@
       <div class="steps" transition:fly={{ y: 20, duration: 300 }}>
         {#if isRecording}
           {#each recordingSteps as step}
-            <div class="step">{step}</div>
+            <div class="step-recording">{step}</div>
           {/each}
         {:else if isTesting}
           {#each replayingSteps as step}
-            <div class="step">{step}</div>
+            <div class="step-testing">{step}</div>
           {/each}
         {/if}
       </div>
@@ -538,6 +537,17 @@
     display: none;
     width: 100%;
     margin: 10px auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: black;
+
+    color: white;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    cursor: pointer;
   }
   #recordStatus {
     display: none;
@@ -609,6 +619,7 @@
   .steps {
     margin-top: 16px;
     padding: 16px;
+    text-align: start;
     /* background-color: #e9e9e9; */
     /* color: #b0b0b0; */
     font-size: 16px;

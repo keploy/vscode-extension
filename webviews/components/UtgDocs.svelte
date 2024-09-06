@@ -8,8 +8,8 @@
     "https://github.com/Sarthak160/goApi/blob/main/command.png?raw=true";
 
   // Initialize variables for total sessions and used sessions
-  let totalCall = 0; // This will come from the API response
-  let usedCall = 5; // This will come from the API response
+  let totalCall = 5; // This will come from the API response
+  let usedCall = 0; // This will come from the API response
   let progressPercentage = 0;
   let isModalOpen = false;
   let activeImage = "";
@@ -56,7 +56,7 @@
       const message = event.data;
       if (message.type === "apiResponse") {
         const apiResponse = message.value;
-        console.log("Received API response in sidebar:", apiResponse);
+        // console.log("Received API response in sidebar:", apiResponse);
 
         try {
           // If the response is a JSON string
