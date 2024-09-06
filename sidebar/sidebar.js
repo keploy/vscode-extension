@@ -324,6 +324,34 @@ if (setupConfigButton) {
   });
 }
 
+
+document.addEventListener('ciCdStepClick', function (e) {
+  // Logic to handle CI/CD setup click event
+  if (e.detail.step === 'ci-cd-setup') {
+    console.log('CI/CD setup step clicked');
+    // Perform your action here, such as redirecting or opening something in the sidebar
+    // Example: Trigger navigation or link opening logic
+    vscode.postMessage({
+      type: "openLink",
+      url: "https://keploy.io/docs", // Replace this with the URL you want to navigate to
+    });// Example of opening a link
+  }
+});
+
+document.addEventListener('addUsersClick', function (e) {
+  // Logic to handle CI/CD setup click event
+  if (e.detail.step === 'add-users') {
+    console.log('add users  step clicked');
+    // Perform your action here, such as redirecting or opening something in the sidebar
+    // Example: Trigger navigation or link opening logic
+    vscode.postMessage({
+      type: "openLink",
+      url: "https://app.keploy.io", // Replace this with the URL you want to navigate to
+    });// Example of opening a link
+  }
+});
+
+
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
   const message = event.data;

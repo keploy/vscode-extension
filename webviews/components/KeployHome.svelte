@@ -63,13 +63,27 @@
     if (errorElement) errorElement.style.display = "none";
   };
 
-  const StartRecording = () => {};
-
+  function handleStepClick(stepNumber) {
+    if (stepNumber == 4) {
+      console.log("here in the handlestepclick")
+      const event = new CustomEvent('ciCdStepClick', {
+        detail: { step: 'ci-cd-setup' },
+      });
+      goToNextStep(5);
+      document.dispatchEvent(event); // Dispatch the event to be captured in sidebar.js
+    }else if(stepNumber  == 5){
+      console.log("here in the last step")
+      const event = new CustomEvent('addUsersClick', {
+        detail: { step: 'add-users' },
+      });
+      document.dispatchEvent(event);
+    }
+  }
   const toggleRecording = () => {
     isRecording = !isRecording;
     isTesting = false;
     showSteps = !showSteps;
-    if (isRecording) {
+    if (isRecording) {  
       goToNextStep(2);
     } else {
       goToNextStep(1);
@@ -82,7 +96,7 @@
     isRecording = false;
     showSteps = !showSteps;
     if (isTesting) {
-      goToNextStep(3);
+      goToNextStep(4);
     } else {
       goToNextStep(2);
     }
@@ -391,13 +405,14 @@
         ></div>
         <span
           class="step-number bottom {currentStep >= 4
-            ? 'activeStep'
-            : 'InactiveStep'}">4. CI/CD setup</span
+            ? 'activeStep pointer'
+            : 'InactiveStep'}" on:click={handleStepClick(currentStep)}>4. CI/CD setup</span
         >
       </div>
       <div class="step">
         <span
-          class="step-number {currentStep >= 5 ? 'activeStep' : 'InactiveStep'}"
+          class="step-number {currentStep >= 5 ? 'activeStep pointer' : 'InactiveStep'}"
+          on:click={handleStepClick(currentStep)}
           >5. Add users</span
         >
         <div
@@ -457,6 +472,10 @@
   }
   .main-heading {
     text-align: center;
+  }
+
+  .pointer{
+    cursor: pointer;
   }
 
   .container-card {
