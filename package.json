@@ -84,6 +84,11 @@
           "when": "keploy.signedIn != true && view == Keploy-Sidebar"
         },
         {
+          "command": "keploy.SignInWithOthers",
+          "group": "navigation",
+          "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+        },
+        {
           "command": "keploy.SignOut",
           "group": "navigation",
           "when": "keploy.signedOut != true && view == Keploy-Sidebar"
@@ -94,6 +99,11 @@
       {
         "command": "keploy.SignIn",
         "title": "Sign In",
+        "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.SignInWithOthers",
+        "title": "Sign In With Others",
         "when": "keploy.signedIn != true && view == Keploy-Sidebar"
       },
       {
