@@ -4,7 +4,6 @@
   let path = "./";
   let passThroughPorts = "";
   let navigateToConfig = false;
-  let navigateToConfig2 = false;
 
   function handleSetupConfig() {
     showSettings = true;
@@ -13,10 +12,6 @@
     navigateToConfig = true;
   }
   
-  function NavigateToConfig2() {
-    console.log("NavigateToConfig2");
-    navigateToConfig2 = true;
-  }
 </script>
 
 <body class="baloo-2-custom">
@@ -59,9 +54,6 @@
     <button class="button" id="initialiseConfigButton"
       >Save Configuration</button
     >
-    <button class="button" id="backtoHome2" on:click={NavigateToConfig2}>
-      Back
-    </button>
   </div>
 </body>
 
