@@ -1,24 +1,23 @@
 <script>
+  import KeployHome from "./KeployHome.svelte";
+  import { onMount } from "svelte";
   let showSettings = false;
   let appCommand = "";
   let path = "./";
   let passThroughPorts = "";
-  let navigateToConfig = false;
-  let navigateToConfig2 = false;
+  let command="";
+  let initialiseConfigButton;
   const vscode = acquireVsCodeApi();
 
-  function handleSetupConfig() {
-    showSettings = true;
-  }
-  function NavigateToConfig() {
-    navigateToConfig = true;
-  }
+  onMount(() => {
+    vscode.postMessage({
+      type: "openConfigFile",
+      value: `/keploy.yml`,
+    });
 
-  function NavigateToConfig2() {
-    console.log("NavigateToConfig2");
-    navigateToConfig2 = true;
-  }
+  });
 
+ 
   function handleTestSelection(testType) {
     vscode.postMessage({
       type: "navigate",
@@ -27,11 +26,23 @@
   }
 
   function handleConfig() {
-    vscode.postMessage({
-      type: "openConfigFile",
-      value: `/keploy.yml`,
-    });
+    command = document.getElementById("configCommand").value;
+    if (command) {
+      console.log("Initializing Config with command:", command);
+      vscode.postMessage({
+        type: "initialiseConfig",
+        value: `Initialise Config`,
+        command: command,
+        path: path
+      });
+      handleTestSelection("KeployHome");
+    } else {
+      console.error("Command is required to initialize the config.");
+      alert("Please enter a valid command to run your application.");
+    }
+    handleTestSelection("KeployHome");
   }
+
 </script>
 
 <body>
@@ -86,7 +97,7 @@
           </div>
         </div>
       </div>
-      <button class="buttonBlack" id="setupConfig" on:click={handleConfig()}
+      <button class="buttonBlack" id="setupConfig" on:click={handleConfig}
         ><span class="BoldName" id="setupConfig"
           >Save Configuration
         </span></button

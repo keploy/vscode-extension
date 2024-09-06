@@ -14,6 +14,15 @@
   let showSteps = false;
   let selectedIconButton = 1;
   let settingsIcon = document.querySelector(".settings-icon");
+  let currentStep = 1;
+
+  function goToNextStep(step) {
+    currentStep = step;
+  }
+
+  function resetCurrentStep() {
+    currentStep = 1;
+  }
 
   const selectButton = (buttonNumber) => {
     console.log("buttonNumber", buttonNumber);
@@ -35,10 +44,14 @@
     }
   };
   function navigateToConfig() {
-    vscode.postMessage({
-      type: "navigate",
-      value: "Config",
-    });
+    if (selectedIconButton !== 1) {
+      selectedIconButton = 1;
+    } else {
+      vscode.postMessage({
+        type: "navigate",
+        value: "Config",
+      });
+    }
   }
   const clearLastTestResults = () => {
     const testSuiteName = document.getElementById("testSuiteName");
@@ -57,6 +70,11 @@
     isRecording = !isRecording;
     isTesting = false;
     showSteps = !showSteps;
+    if (isRecording) {
+      goToNextStep(2);
+    } else {
+      goToNextStep(1);
+    }
     // triggerAnimation();
   };
 
@@ -64,6 +82,11 @@
     isTesting = !isTesting;
     isRecording = false;
     showSteps = !showSteps;
+    if (isTesting) {
+      goToNextStep(3);
+    } else {
+      goToNextStep(2);
+    }
     // triggerAnimation();
   };
 
@@ -74,7 +97,7 @@
     // triggerAnimation();
   };
 
-     {
+  $: {
     if (startRecordingButton) {
       startRecordingButton.style.display =
         isRecording || isTesting || selectedIconButton !== 1 ? "none" : "flex";
@@ -204,16 +227,15 @@
         {:else if selectedIconButton === 2}
           <h1>View Previous Test Results</h1>
         {:else}
-        <h1>
-          {#if isRecording}
-            Recording Started
-          {:else if isTesting}
-            Testing Started
-          {:else}
-            <span class="highlight">Increase</span> your Test coverage now!!
-          {/if}
-        </h1>
-        
+          <h1>
+            {#if isRecording}
+              Recording Started
+            {:else if isTesting}
+              Testing Started
+            {:else}
+              <span class="highlight">Increase</span> your Test coverage now!!
+            {/if}
+          </h1>
         {/if}
         <span
           class="stop-button"
@@ -334,26 +356,54 @@
     <div class="stepper-container">
       <div class="step-line"></div>
       <div class="step">
-        <span class="step-number">1. Setup Configuration</span>
-        <div class="step-circle active"></div>
+        <span
+          class="step-number {currentStep >= 1
+            ? 'activeStep'
+            : 'InactiveStep'} ">1. Setup Configuration</span
+        >
+        <div
+          class="step-circle {currentStep >= 1 ? 'active' : 'inactive'} "
+        ></div>
       </div>
       <div class="step">
-        <div class="step-circle inactive"></div>
-        <span class="step-number bottom">2. Record Test</span>
+        <div
+          class="step-circle {currentStep >= 2 ? 'active' : 'inactive'} "
+        ></div>
+        <span
+          class="step-number bottom {currentStep >= 2
+            ? 'activeStep'
+            : 'InactiveStep'}">2. Record Test</span
+        >
       </div>
       <div class="step">
         <!-- <div class="step-line"></div> -->
-        <span class="step-number">3. Replay Test</span>
-        <div class="step-circle inactive"></div>
+        <span
+          class="step-number {currentStep >= 3 ? 'activeStep' : 'InactiveStep'}"
+          >3. Replay Test</span
+        >
+        <div
+          class="step-circle {currentStep >= 3 ? 'active' : 'inactive'}"
+        ></div>
       </div>
       <div class="step">
         <!-- <div class="step-line"></div> -->
-        <div class="step-circle inactive"></div>
-        <span class="step-number bottom">4. CI/CD setup</span>
+        <div
+          class="step-circle {currentStep >= 4 ? 'active' : 'inactive'}"
+        ></div>
+        <span
+          class="step-number bottom {currentStep >= 4
+            ? 'activeStep'
+            : 'InactiveStep'}">4. CI/CD setup</span
+        >
       </div>
       <div class="step">
-        <span class="step-number">5. Add users</span>
-        <div class="step-circle inactive"></div>
+        <span
+          class="step-number {currentStep >= 5 ? 'activeStep' : 'InactiveStep'}"
+          >5. Add users</span
+        >
+        <div
+          class="step-circle {currentStep >= 5 ? 'active' : 'inactive'} "
+        ></div>
       </div>
     </div>
   </div>
@@ -654,11 +704,18 @@
     flex: 1; /* Allows the steps to take equal space */
   }
 
+  .activeStep {
+    color: white;
+  }
+
+  .InactiveStep {
+    color: grey;
+  }
+
   .step-number {
     position: absolute;
     top: -2.5rem; /* Adjust to position text above the circle */
     font-size: 0.9rem;
-    color: white;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
