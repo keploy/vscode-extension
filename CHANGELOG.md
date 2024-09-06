@@ -19,3 +19,6 @@ First Release for Vs Code Extension.
 
 ## [1.0.2]
 - UI improvements and Bug fixes: Commands and Signin was visible in other extension views
+
+## [1.0.6]
+- Releasing a stable version for UTG and fix terminal conection of e2e tests

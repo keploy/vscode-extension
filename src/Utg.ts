@@ -3,7 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import axios, { AxiosResponse } from 'axios';
 
-async function Utg(context: vscode.ExtensionContext): Promise<void> {
+
+async function Utg(context: vscode.ExtensionContext) {
+    
     try {
         return new Promise<void>(async (resolve, reject) => {
             try {
@@ -15,9 +17,8 @@ async function Utg(context: vscode.ExtensionContext): Promise<void> {
                 }
                 // Create a terminal named "Keploy Terminal"
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
-
                 terminal.show();
-                // Your command logic here
+
                 const editor = vscode.window.activeTextEditor;
                 let currentFilePath = "";
                 if (editor) {
@@ -26,7 +27,9 @@ async function Utg(context: vscode.ExtensionContext): Promise<void> {
                     vscode.window.showInformationMessage(`Current opened file: ${currentFilePath}`);
                 } else {
                     vscode.window.showInformationMessage('No file is currently opened.');
+                    return;
                 }
+
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
 
                 const sourceFilePath = currentFilePath;
@@ -36,31 +39,70 @@ async function Utg(context: vscode.ExtensionContext): Promise<void> {
                     vscode.window.showErrorMessage('No workspace is opened.');
                     return;
                 }
-                const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
-                const testDir = path.join(rootDir, 'test');
-                const testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.js', '.test.js'));
-                if (!fs.existsSync(testFilePath)) {
-                    vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                    fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+
+                const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
+                const extension = path.extname(sourceFilePath);
+                let testFilePath: string;
+                let command: string;
+                let coverageReportPath: string;
+                let testFileContent:string;
+                
+                if (extension === '.js' || extension === '.ts') {
+                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    }
+                    command = `npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage`;
+                    coverageReportPath = "./coverage/cobertura-coverage.xml";
+
+                } else if (extension === '.py') {
+                    const testDir = path.join(rootDir,'test');
+                    testFilePath = path.join(rootDir,'test_'+ path.basename(sourceFilePath));
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    }
+                    command = `pytest --cov=${path.basename(sourceFilePath,'.py')} --cov-report=xml:coverage.xml ${testFilePath}`;
+                    coverageReportPath = "./coverage.xml";
+
+                }else if (extension === '.java') {
+                    const testDir = path.join(rootDir, 'src', 'test', 'java');
+                    const testFileName = path.basename(sourceFilePath).replace('.java', 'Test.java');
+                    testFilePath = path.join(testDir, testFileName);
+
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    }
+                    command = `mvn clean test jacoco:report`;
+                    coverageReportPath = "./target/site/jacoco/jacoco.xml";
+                } else if (extension === '.go') {
+                    const testDir = path.join(rootDir, 'test');
+                    testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
+
+                    if (!fs.existsSync(testFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test')
+                        testFileContent = `package main\n\nimport "testing"`;
+                        fs.writeFileSync(testFilePath, testFileContent);                    }
+                    command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
+                    coverageReportPath = "./coverage.xml";
+                } 
+                 else {
+                    vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
+                    return;
                 }
 
-                vscode.window.showInformationMessage("testFilePath", testFilePath);
-                const coverageReportPath = "./coverage/cobertura-coverage.xml";
-                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}";`);
+                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}";`);
 
-                // Call the separate API request function and await the result
-                
-
-                // Listen for terminal close event
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
-                    console.log('Terminal closed');
                     if (eventTerminal === terminal) {
-                        disposable.dispose(); // Dispose the listener
-                        resolve(); // Resolve the promise
+                        disposable.dispose();
+                        resolve();
                     }
                 });
-
-            } catch (error) {
+            }  catch (error) {
                 console.log(error);
                 vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
                 reject(error);
@@ -105,25 +147,38 @@ async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
         vscode.window.showErrorMessage('No workspace is opened.');
         return;
     }
-    const rootDir = path.dirname(vscode.workspace.workspaceFolders[0].uri.fsPath); // Root directory of the project
 
-    const testDir = path.join(rootDir, 'test');
-    const relativeSourceFilePath = path.relative(rootDir, sourceFilePath);
+    // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
+    const extension = path.extname(sourceFilePath);
+    const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
+    const testDir = path.join(sourceDir, 'test'); // 'test' directory under the source directory
     const sourceFileName = path.basename(sourceFilePath);
-    const testFileName = sourceFileName.replace('.js', '.test.js');
-    const testFilePath = path.join(testDir, relativeSourceFilePath.replace(sourceFileName, testFileName));
+    let testFileName: string;
+    let testFileContent = '';
+
+    if (extension === '.js' || extension === '.ts') {
+        testFileName = sourceFileName.replace(extension, `.test${extension}`);
+    } else if (extension === '.py') {
+        testFileName = "test_" + sourceFileName;
+    } else if (extension === '.java') {
+        testFileName = sourceFileName.replace('.java', 'Test.java');
+    } else if (extension === '.go') {
+        testFileName = sourceFileName.replace('.go', '_test.go');
+        testFileContent = `package main\n\nimport "testing"`;
+    } else {
+        vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
+        return;
+    }
+
+    const testFilePath = path.join(testDir, testFileName);
+    console.log(testFilePath, testDir, "testFilePath");
 
     if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
     }
 
-    const testFileDir = path.dirname(testFilePath);
-    if (!fs.existsSync(testFileDir)) {
-        fs.mkdirSync(testFileDir, { recursive: true });
-    }
-
     if (!fs.existsSync(testFilePath)) {
-        fs.writeFileSync(testFilePath, `// Test file for ${sourceFileName}`);
+        fs.writeFileSync(testFilePath, testFileContent);
         vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
     } else {
         vscode.window.showInformationMessage(`Test file already exists: ${testFilePath}`);

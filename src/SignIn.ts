@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as http from 'http';
+import * as fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
@@ -163,17 +164,56 @@ export async function loginAPI(url = "", provider = "", code = "") {
 
 export async function getInstallationID(): Promise<string> {
     let id;
+
+    const dbusPath = "/var/lib/dbus/machine-id";
+    // dbusPathEtc is the default path for dbus machine id located in /etc.
+	// Some systems (like Fedora 20) only know this path.
+	// Sometimes it's the other way round.
+    const dbusPathEtc = "/etc/machine-id";
+
+    // Reads the content of a file and returns it as a string.
+    // If the file cannot be read, it throws an error.
+    function readFile(filePath: string): string {
+        try {
+            return fs.readFileSync(filePath, 'utf-8').trim();
+        } catch (err) {
+            throw new Error(`Error reading file ${filePath}: ${err}`);
+        }
+    }
+
+    function machineID(): string {
+        let id = "";
+        try {
+            id = readFile(dbusPath);
+        } catch (err) {
+            // Try the fallback path
+            try {
+                id = readFile(dbusPathEtc);
+            } catch (err) {
+                console.error("Failed to read machine ID from both paths:", err);
+                throw new Error("Failed to get machine ID");
+            }
+        }
+        return id;
+    }
     try {
         const inDocker = process.env.IN_DOCKER === 'true';
 
         if (inDocker) {
             id = process.env.INSTALLATION_ID;
         } else {
-            // Run the macOS specific command to get the IOPlatformUUID
-            const output = execSync('ioreg -rd1 -c IOPlatformExpertDevice').toString();
-            id = extractID(output);
+            const platform = os.platform();
+            if (platform === 'darwin') {
+                // macOS specific command to get the IOPlatformUUID
+                const output = execSync('ioreg -rd1 -c IOPlatformExpertDevice').toString();
+                id = extractID(output);
+            } else if (platform === 'linux') {
+                // Use the new machineID function for Linux
+                id = machineID();
+            } else {
+                throw new Error(`Unsupported platform: ${platform}`);
+            }
         }
-
         if (!id) {
             console.error("Got empty machine id");
             throw new Error("Empty machine id");

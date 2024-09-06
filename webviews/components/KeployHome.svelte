@@ -2,8 +2,8 @@
   import { fly } from "svelte/transition";
   // import { onMount } from 'svelte';
   // import lottie from 'lottie-web';
-  const vscode = acquireVsCodeApi();
 
+  // let navigateToConfig = false;
   let startRecordingButton;
   let startTestingButton;
   let buttonsSection = document.getElementById("buttonsSection");

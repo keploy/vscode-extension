@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   const vscode = acquireVsCodeApi();
   let screenshot1 =
@@ -11,8 +11,19 @@
   let totalCall = 0; // This will come from the API response
   let usedCall = 0; // This will come from the API response
   let progressPercentage = 0;
-
+  let isModalOpen = false;
+  let activeImage = "";
   let apiResponseElement;
+
+  function openModal(imageSrc) {
+    isModalOpen = true;
+    activeImage = imageSrc;
+  }
+
+  function closeModal() {
+    isModalOpen = false;
+    activeImage = "";
+  }
 
   function navigateToConfig() {
     vscode.postMessage({
@@ -31,7 +42,7 @@
   }
 
   onMount(() => {
-    apiResponseElement = document.getElementById('apiResponseDisplay');
+    apiResponseElement = document.getElementById("apiResponseDisplay");
 
     // Add event listener for messages from the VSCode extension
     window.addEventListener("message", (event) => {
@@ -45,8 +56,8 @@
           const parsedResponse = JSON.parse(apiResponse);
           usedCall = parsedResponse.usedCall;
           totalCall = parsedResponse.totalCall;
-          console.log("usedCall" , usedCall);
-          console.log("totalCall" , totalCall);
+          console.log("usedCall", usedCall);
+          console.log("totalCall", totalCall);
           updateProgress(); // Update the progress bar after setting values
         } catch (error) {
           console.error("Error parsing API response:", error);
@@ -63,14 +74,14 @@
 
 <div class="container">
   <h1 class="heading">Steps to Setup UTG</h1>
-  
+
   <!-- Display usedCall/totalCall above the sidebar -->
   <!-- <div class="session-info">
     {usedCall} / {totalCall} sessions used
   </div> -->
 
   <div id="apiResponseDisplay"></div>
-  
+
   <div class="subTools">
     <div class="back-button" on:click={navigateToConfig}>
       <svg
@@ -92,10 +103,7 @@
     <div class="progress">
       <div class="progress-container">
         <!-- Progress bar width is updated dynamically based on usedCall/totalCall -->
-        <div
-          class="progress-bar"
-          style="width: {progressPercentage}%;"
-        ></div>
+        <div class="progress-bar" style="width: {progressPercentage}%;"></div>
       </div>
       <span>{usedCall}/{totalCall} sessions</span>
     </div>
@@ -106,7 +114,8 @@
       <div class="step-box">
         <h2 class="step-title">Step 1</h2>
         <p class="step-description">
-          Open the desired file that you would like to generate the test cases.<br />
+          Open the desired file that you would like to generate the test cases.<br
+          />
           Eg: Click on foo.js if you want to generate for the functions in it.
         </p>
       </div>
@@ -117,7 +126,12 @@
           Click on the <br />
           <span class="FileName">"Generate unit test."</span>
         </p>
-        <img src={screenshot1} alt="Generate unit test" class="screenshot" />
+        <img
+          src={screenshot1}
+          alt="Generate unit test"
+          class="screenshot"
+          on:click={() => openModal(screenshot1)}
+        />
       </div>
     </div>
 
@@ -131,6 +145,13 @@
       </p>
     </div>
   </div>
+  {#if isModalOpen}
+    <div class="modal-overlay" on:click={closeModal}>
+      <div class="modal-content">
+        <img src={activeImage} alt="Enlarged Image" class="modal-image" />
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -274,6 +295,7 @@
     margin-top: 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
   }
 
   .back-button {
@@ -285,6 +307,35 @@
     font-size: 16px;
     align-items: center;
     margin-bottom: 20px;
+  }
+
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-image {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 10px;
   }
 
   @media (max-width: 400px) {

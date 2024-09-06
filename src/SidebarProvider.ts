@@ -8,6 +8,7 @@ import { existsSync } from "fs";
 import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
 import SignIn from "./SignIn";
 import SignInWithGitHub from "./SignIn";
+import oneClickInstall from './OneClickInstall';
 
 const recordOptions: vscode.OpenDialogOptions = {
   canSelectFolders: true,
@@ -76,6 +77,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
 
+    webviewView.onDidChangeVisibility(() => {
+      if (webviewView.visible) {
+        oneClickInstall();
+      }
+    });
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
         case "onInfo": {

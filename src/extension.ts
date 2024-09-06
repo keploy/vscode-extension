@@ -6,8 +6,11 @@ import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
 import Utg from './Utg';
 import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
-import * as acorn from 'acorn';
-import * as walk from 'acorn-walk';
+import TreeSitter from 'tree-sitter';
+import TreeSitterJavaScript from 'tree-sitter-javascript';
+import TreeSitterPython from 'tree-sitter-python';
+import TreeSitterJava from 'tree-sitter-java';
+import TreeSitterGo from 'tree-sitter-go';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -17,7 +20,15 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         token: vscode.CancellationToken
     ): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const fileName = document.uri.fsPath;
-        if (fileName.endsWith('.test.js') || fileName.endsWith('.test.ts')) {
+        if (
+            fileName.endsWith('.test.js') || 
+            fileName.endsWith('.test.ts') || 
+            fileName.endsWith('Test.java') ||  // Check for Java test file ending
+            fileName.includes('/Test')   ||      // Check for Java test file prefix in the path
+            fileName.includes('/test/') ||    // Skip files in a "tests" directory
+            fileName.endsWith('_test.go') ||
+            fileName.includes('test_')
+        ) {
             return [];
         }
 
@@ -25,30 +36,88 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         const codeLenses: vscode.CodeLens[] = [];
 
         try {
-            const ast = acorn.parse(text, { ecmaVersion: 2020, sourceType: 'module' });
+            const parser = new TreeSitter();
 
-            walk.fullAncestor(ast, (node: any, state: any, ancestors: any[]) => {
-                if (node.type === 'FunctionDeclaration' || node.type === 'FunctionExpression') {
-                    const line = document.positionAt(node.start).line;
+            if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
+                parser.setLanguage(TreeSitterJavaScript);
+            } else if (fileName.endsWith('.py')) {
+                parser.setLanguage(TreeSitterPython);
+            } else if (fileName.endsWith('.java')) {
+                parser.setLanguage(TreeSitterJava);
+            } else if (fileName.endsWith('.go')) {
+                parser.setLanguage(TreeSitterGo);
+            } else {
+                return codeLenses; // Return if file type is unsupported
+            }
+
+            const tree = parser.parse(text);
+            const cursor = tree.walk();
+
+            const traverseTree = (cursor: TreeSitter.TreeCursor, ancestors: TreeSitter.SyntaxNode[] = []) => {
+                const node = cursor.currentNode;
+
+                if (
+                    (fileName.endsWith('.js') || fileName.endsWith('.ts')) &&
+                    (node.type === 'function_declaration' || node.type === 'function_expression')
+                ) {
+                    const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
                         arguments: [document.uri.fsPath]
                     }));
-                } else if (node.type === 'ArrowFunctionExpression') {
-                    const parent = ancestors[ancestors.length - 2];
-                    if (parent.type !== 'CallExpression' || (parent.callee.property?.name !== 'then' && parent.callee.property?.name !== 'catch')) {
-                        const line = document.positionAt(node.start).line;
-                        const range = new vscode.Range(line, 0, line, 0);
-                        codeLenses.push(new vscode.CodeLens(range, {
-                            title: '🐰 Generate unit tests',
-                            command: 'keploy.utg',
-                            arguments: [document.uri.fsPath]
-                        }));
+                } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
+                    if (node.type === 'arrow_function') {
+                        const parent = ancestors[ancestors.length - 1];
+                        if (parent?.type !== 'CallExpression') {
+                            const line = document.positionAt(node.startIndex).line;
+                            const range = new vscode.Range(line, 0, line, 0);
+                            codeLenses.push(new vscode.CodeLens(range, {
+                                title: '🐰 Generate unit tests',
+                                command: 'keploy.utg',
+                                arguments: [document.uri.fsPath]
+                            }));
+                        }
                     }
+                } else if (fileName.endsWith('.py') && node.type === 'function_definition') {
+                    const line = document.positionAt(node.startIndex).line;
+                    const range = new vscode.Range(line, 0, line, 0);
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit tests',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath]
+                    }));
+                } else if (fileName.endsWith('.java') && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
+                    const line = document.positionAt(node.startIndex).line;
+                    const range = new vscode.Range(line, 0, line, 0);
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit tests',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath]
+                    }));
+                } else if (fileName.endsWith('.go') && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
+                    const line = document.positionAt(node.startIndex).line;
+                    const range = new vscode.Range(line, 0, line, 0);
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit tests',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath]
+                    }));
                 }
-            });
+
+                // Traverse to the first child node
+                if (cursor.gotoFirstChild()) {
+                    traverseTree(cursor, ancestors.concat(node));
+                    cursor.gotoParent(); // Go back to parent after finishing with the child
+                }
+                // Traverse to the next sibling node
+                if (cursor.gotoNextSibling()) {
+                    traverseTree(cursor, ancestors);
+                }
+            };
+
+            traverseTree(cursor);
 
         } catch (error) {
             console.error(error);
@@ -73,7 +142,20 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCodeLensProvider(
             { language: 'typescript', scheme: 'file' },
             new KeployCodeLensProvider()
-        )
+        ),
+        vscode.languages.registerCodeLensProvider(
+            { language: 'python', scheme: 'file' },
+            new KeployCodeLensProvider()
+        ),
+        vscode.languages.registerCodeLensProvider(
+            { language: 'go', scheme: 'file' },
+            new KeployCodeLensProvider()
+        ),
+        vscode.languages.registerCodeLensProvider(
+            { language: 'java', scheme: 'file' },
+            new KeployCodeLensProvider()
+        ),
+
     );
 
 

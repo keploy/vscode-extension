@@ -38,7 +38,7 @@ const apiResponseElement = document.getElementById('apiResponseDisplay');
 // const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 const navigateToConfigButton = document.getElementById('backtoHome');
-const navigateToConfigButton2 = document.getElementById('backtoHome2');
+const backtoHome = document.getElementById('backArrow');
 let FilePath = "";
 
 //cleanup required
@@ -136,6 +136,15 @@ if (navigateToConfigButton) {
   );
 }
 
+if (backtoHome) {
+  backtoHome.addEventListener('click', async () => {
+    vscode.postMessage({
+      type: "navigate",
+      value: "Config"
+    });
+  }
+  );
+}
 
 // if (selectRecordFolderButton) {
 //   selectRecordFolderButton.addEventListener('click', async () => {
