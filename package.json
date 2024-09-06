@@ -3,7 +3,6 @@
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
   "version": "1.0.7",
-
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
@@ -186,7 +185,7 @@
     "@types/node": "18.x",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^10.0.0",
-    "@types/vscode": "^1.86.0",
+    "@types/vscode": "^1.93.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "@vscode/test-cli": "^0.0.4",
@@ -200,6 +199,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@sentry/node": "^8.28.0",
     "acorn-walk": "^8.3.3",
     "axios": "^1.7.4",
     "js-yaml": "^4.1.0",
