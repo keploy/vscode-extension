@@ -29,6 +29,8 @@ jobs:
       
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
+        env:
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com

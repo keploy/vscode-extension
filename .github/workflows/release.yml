@@ -99,6 +99,7 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         with:
           tag_name: ${{ steps.create-tag.outputs.tag }}
           release_name: Release ${{ needs.package.outputs.version }}
