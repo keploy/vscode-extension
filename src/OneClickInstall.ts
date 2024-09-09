@@ -3,7 +3,7 @@ import { exec } from 'child_process';
 export default function executeKeployOneClickCommand(): void {
     // check before if keploy has been installed first
     const checkKeployExistsCommand = `keploy`;
-    const installationCommand = `curl--silent - O - L https://keploy.io/install.sh && bash install.sh`;
+    const installationCommand = `curl --silent -O -L https://keploy.io/install.sh && bash install.sh`;
 
     exec(checkKeployExistsCommand, (error, stdout, stderr) => {
         if (error) {

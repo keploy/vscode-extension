@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as http from 'http';
+import * as fs from 'fs'
 import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
@@ -65,6 +66,10 @@ export async function getMicrosoftAccessToken() {
     }
 }
 
+function generateRandomState() {
+    return [...Array(30)].map(() => Math.random().toString(36)[2]).join('');
+}
+
 
 
 export default async function SignInWithGitHub() {
@@ -109,9 +114,69 @@ export default async function SignInWithGitHub() {
                 res.end('<h1>State mismatch. Authentication failed.</h1>');
             }
             server.close();
-        }
+        }   
     }).listen(3000); // Change the port if needed
 }
+
+
+export async function SignInWithOthers() {
+    const state = generateRandomState();  // Generate a secure random state
+    const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
+    vscode.env.openExternal(vscode.Uri.parse(authUrl));
+
+    return new Promise((resolve, reject) => {
+        const server = http.createServer(async (req, res) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+            if (req.method === 'OPTIONS') {
+                res.writeHead(200);
+                res.end();
+                return;
+            }
+
+            if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
+                const url = new URL(req.url, `http://${req.headers.host}`);
+                const receivedState = url.searchParams.get('state');
+                const token = url.searchParams.get('token');
+                console.log("Received state:", receivedState);
+                console.log("Received token:", token);
+
+                if (!receivedState || !token) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing state or token' }));
+                    reject(new Error('Missing state or token'));
+                    server.close();
+                    return;
+                }
+
+                try {
+                    // Simulate processing the token
+                    console.log("Processing token...");
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
+
+                    // Resolve the promise with the token
+                    resolve(token.toString());
+                } catch (err) {
+                    console.error('Error processing token:', err);
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                    reject(err);
+                } finally {
+                    server.close();  // Close the server once the request is handled
+                }
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Not Found' }));
+            }
+        }).listen(3001, () => {
+            console.log('Server listening on port 3001');
+        });
+    });
+}
+ 
 
 // async function fetchAccessToken(code: string | null) {
 //     // Exchange the authorization code for an access token
@@ -163,17 +228,56 @@ export async function loginAPI(url = "", provider = "", code = "") {
 
 export async function getInstallationID(): Promise<string> {
     let id;
+
+    const dbusPath = "/var/lib/dbus/machine-id";
+    // dbusPathEtc is the default path for dbus machine id located in /etc.
+	// Some systems (like Fedora 20) only know this path.
+	// Sometimes it's the other way round.
+    const dbusPathEtc = "/etc/machine-id";
+
+    // Reads the content of a file and returns it as a string.
+    // If the file cannot be read, it throws an error.
+    function readFile(filePath: string): string {
+        try {
+            return fs.readFileSync(filePath, 'utf-8').trim();
+        } catch (err) {
+            throw new Error(`Error reading file ${filePath}: ${err}`);
+        }
+    }
+
+    function machineID(): string {
+        let id = "";
+        try {
+            id = readFile(dbusPath);
+        } catch (err) {
+            // Try the fallback path
+            try {
+                id = readFile(dbusPathEtc);
+            } catch (err) {
+                console.error("Failed to read machine ID from both paths:", err);
+                throw new Error("Failed to get machine ID");
+            }
+        }
+        return id;
+    }
     try {
         const inDocker = process.env.IN_DOCKER === 'true';
 
         if (inDocker) {
             id = process.env.INSTALLATION_ID;
         } else {
-            // Run the macOS specific command to get the IOPlatformUUID
-            const output = execSync('ioreg -rd1 -c IOPlatformExpertDevice').toString();
-            id = extractID(output);
+            const platform = os.platform();
+            if (platform === 'darwin') {
+                // macOS specific command to get the IOPlatformUUID
+                const output = execSync('ioreg -rd1 -c IOPlatformExpertDevice').toString();
+                id = extractID(output);
+            } else if (platform === 'linux') {
+                // Use the new machineID function for Linux
+                id = machineID();
+            } else {
+                throw new Error(`Unsupported platform: ${platform}`);
+            }
         }
-
         if (!id) {
             console.error("Got empty machine id");
             throw new Error("Empty machine id");
@@ -223,7 +327,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         GitHubToken: token,
         InstallationID: installationID,
     };
-
+    console.log("Request Body:", requestBody);
     try {
         const response: AxiosResponse<AuthResp> = await axios.post<AuthResp>(url, requestBody, {
             headers: { 'Content-Type': 'application/json' },

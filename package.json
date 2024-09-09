@@ -2,7 +2,7 @@
   "name": "keployio",
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
-  "version": "1.0.7",
+  "version": "1.0.6",
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
@@ -21,7 +21,8 @@
   ],
   "activationEvents": [
     "onCommand:keploy.utg",
-    "onLanguage:javascript"
+    "onLanguage:javascript",
+    "onUri:keploy.handleUri"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -82,6 +83,11 @@
           "when": "keploy.signedIn != true && view == Keploy-Sidebar"
         },
         {
+          "command": "keploy.SignInWithOthers",
+          "group": "navigation",
+          "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+        },
+        {
           "command": "keploy.SignOut",
           "group": "navigation",
           "when": "keploy.signedOut != true && view == Keploy-Sidebar"
@@ -92,6 +98,11 @@
       {
         "command": "keploy.SignIn",
         "title": "Sign In",
+        "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.SignInWithOthers",
+        "title": "Sign In With Others",
         "when": "keploy.signedIn != true && view == Keploy-Sidebar"
       },
       {
@@ -205,6 +216,11 @@
     "js-yaml": "^4.1.0",
     "sinon": "^17.0.1",
     "svelte": "^4.2.12",
+    "tree-sitter": "^0.21.1",
+    "tree-sitter-java": "^0.21.0",
+    "tree-sitter-go": "^0.23.0",
+    "tree-sitter-javascript": "^0.21.4",
+    "tree-sitter-python": "^0.21.0",
     "uuid": "^10.0.0",
     "walk": "^2.3.15",
     "yaml": "^2.4.2"
