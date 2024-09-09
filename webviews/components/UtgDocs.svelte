@@ -63,8 +63,8 @@
           const parsedResponse = JSON.parse(apiResponse);
           usedCall = parsedResponse.usedCall;
           totalCall = parsedResponse.totalCall;
-          console.log("usedCall", usedCall);
-          console.log("totalCall", totalCall);
+          // console.log("usedCall", usedCall);
+          // console.log("totalCall", totalCall);
           updateProgress(); // Update the progress bar after setting values
         } catch (error) {
           console.error("Error parsing API response:", error);

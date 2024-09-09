@@ -175,6 +175,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Check if the access token is already present in the global state
     const accessToken = context.globalState.get<string>('accessToken');
+    console.log("accessToken " , accessToken)
     // disable if access token is already present
     if (accessToken) {
         // Disable the sign-in command since the user is already signed in

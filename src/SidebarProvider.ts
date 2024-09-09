@@ -452,7 +452,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   // Helper function to send `apiResponse` to the webview
   private _sendApiResponseToWebview(apiResponse: string) {
     if (this._view) {
-      console.log("api response withing 3 seconds wala" , apiResponse);
+      // console.log("api response withing 3 seconds wala" , apiResponse);
       this._view.webview.postMessage({
         type: 'apiResponse',
         value: apiResponse,

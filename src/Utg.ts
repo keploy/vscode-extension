@@ -9,11 +9,17 @@ async function Utg(context: vscode.ExtensionContext) {
     try {
         return new Promise<void>(async (resolve, reject) => {
             try {
+
+                const token  = await context.globalState.get<'string'>('accessToken');
                 vscode.window.showInformationMessage('Attempting to trigger API request...');
-                const apiResponse = await makeApiRequest();
-                if (apiResponse) {
-                    vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
-                    context.globalState.update('apiResponse', apiResponse);
+                if(token){
+                    const apiResponse = await makeApiRequest(token);
+                    if (apiResponse) {
+                        vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
+                            context.globalState.update('apiResponse', apiResponse);
+                    }
+                }else{
+                    console.log("token no defined");
                 }
                 // Create a terminal named "Keploy Terminal"
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
@@ -33,14 +39,16 @@ async function Utg(context: vscode.ExtensionContext) {
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
 
                 const sourceFilePath = currentFilePath;
-                await ensureTestFileExists(sourceFilePath);
-
+              
                 if (!vscode.workspace.workspaceFolders) {
                     vscode.window.showErrorMessage('No workspace is opened.');
                     return;
                 }
 
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
+
+                await ensureTestFileExists(sourceFilePath , rootDir);
+
                 const extension = path.extname(sourceFilePath);
                 let testFilePath: string;
                 let command: string;
@@ -116,9 +124,8 @@ async function Utg(context: vscode.ExtensionContext) {
 }
 
 // Separate function for making the API request using axios
-async function makeApiRequest(): Promise<string | null> {
-    const url = 'http://localhost:8080/ai/call/count';
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IiIsImlkIjoiIiwiZW1haWwiOiJzaGl2YW0uamhhQGtlcGxveS5pbyIsInJvbGUiOiJVU0VSIiwic3RhdHVzIjoiQUNUSVZFIiwiY2lkIjoia2VwbG95LmlvIiwiZmVhdHVyZUZsYWdzIjp7IkVOVEVSUFJJU0VfQ09OU09MRSI6dHJ1ZX0sImV4cCI6MTcyNjczNjg3NX0.uRf6jgnrxRTobEm2TEO6uoezdrBwp__6SUcrXQzuTlM';
+async function makeApiRequest(token:string): Promise<string | null> {
+    const url = 'https://api.staging.keploy.io/';
 
     try {
         const response: AxiosResponse = await axios.get(url, {
@@ -142,7 +149,7 @@ async function makeApiRequest(): Promise<string | null> {
 }
 
 // Ensure test file exists
-async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
+async function ensureTestFileExists(sourceFilePath: string , DirectoryPath:string ): Promise<void> {
     if (!vscode.workspace.workspaceFolders) {
         vscode.window.showErrorMessage('No workspace is opened.');
         return;
@@ -151,7 +158,7 @@ async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
     // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
     const extension = path.extname(sourceFilePath);
     const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
-    const testDir = path.join(sourceDir, 'test'); // 'test' directory under the source directory
+    const testDir = path.join(DirectoryPath, 'test'); // 'test' directory under the source directory
     const sourceFileName = path.basename(sourceFilePath);
     let testFileName: string;
     let testFileContent = '';
