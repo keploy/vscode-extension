@@ -17,21 +17,9 @@ export default function executeKeployOneClickCommand(): void {
                     console.error(`Error during installation: ${installError.message}`);
                     return;
                 }
-                setTimeout(()=>{2000})
-
-                // if (installStderr) {
-                //     console.error(`Installation process returned an error: ${installStderr}`);
-                //     return;
-                // }
-
-                // console.log(`Installation output: ${installStdout}`);
             });
         } else {
             console.log(`Keploy is already installed: ${stdout}`);
         }
     });
 }
-
-// curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && sh/tmp/install.sh -noRoot
-
-// /Users/yashkhare/Documents/keploy/samples-typescript/express-mongoose
