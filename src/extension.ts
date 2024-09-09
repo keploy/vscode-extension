@@ -234,6 +234,28 @@ export function activate(context: vscode.ExtensionContext) {
             }
         });
 
+        let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
+            try {
+                const result = await SignInWithOthers();
+                const accessToken = result as string; // Assert that result is a string
+                getInstallationID();
+
+                await context.globalState.update('accessToken', accessToken);
+
+            if (Boolean(accessToken)) {
+                vscode.window.showInformationMessage('You are now signed in!');
+                vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+            } else {
+                console.log('Validation failed for the user !');
+                vscode.window.showInformationMessage('Failed to sign in Keploy!');
+            }
+            } catch (error) {
+                // console.error('Error during sign-in:', error);
+                vscode.window.showInformationMessage('Failed to sign in Keploy!');
+            }
+        });
+
         context.subscriptions.push(signInCommand);
         context.subscriptions.push(signInWithOthersCommand);
     }
