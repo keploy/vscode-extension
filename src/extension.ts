@@ -8,7 +8,7 @@ import Utg from './Utg';
 import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
-import { SentryInit } from './sentryInit';
+import { SentryInstance } from './sentryInit';
 import TreeSitter from 'tree-sitter';
 import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
@@ -130,7 +130,6 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
     }
 }
 
-const Sentry = SentryInit()
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri);
     context.subscriptions.push(
@@ -163,9 +162,7 @@ export function activate(context: vscode.ExtensionContext) {
             { language: 'java', scheme: 'file' },
             new KeployCodeLensProvider()
         ),
-
     );
-
 
     oneClickInstall();
 
@@ -185,22 +182,18 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('You are already signed in!');
         // enable the signout command
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-
     } else {
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
         // Register the sign-in command if not signed in
         let signInCommand = vscode.commands.registerCommand('keploy.SignIn', async () => {
             try {
                 const result = await getGitHubAccessToken();
-
                 if (result) {
                     const { accessToken, email } = result;
-
                     getInstallationID();
 
                     // Store the access token in global state
                     await context.globalState.update('accessToken', accessToken);
-
                     const { emailID, isValid, error } = await validateFirst(accessToken, "https://api.keploy.io");
 
                     // if (isValid) {
@@ -216,7 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showInformationMessage('Failed to sign in Keploy!');
                 }
             } catch (error) {
-                Sentry?.captureException(error);
+                SentryInstance?.captureException(error);
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
         });
@@ -226,37 +219,33 @@ export function activate(context: vscode.ExtensionContext) {
                 const result = await SignInWithOthers();
                 const accessToken = result as string; // Assert that result is a string
                 getInstallationID();
-
                 await context.globalState.update('accessToken', accessToken);
-
-            if (Boolean(accessToken)) {
-                vscode.window.showInformationMessage('You are now signed in!');
-                vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-                vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-            } else {
+                if (Boolean(accessToken)) {
+                    vscode.window.showInformationMessage('You are now signed in!');
+                    vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                    vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                } else {
                 console.log('Validation failed for the user !');
-                vscode.window.showInformationMessage('Failed to sign in Keploy!');
-            }
+                    vscode.window.showInformationMessage('Failed to sign in Keploy!');
+                }
             } catch (error) {
-                // console.error('Error during sign-in:', error);
+                SentryInstance?.captureException(error);
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
         });
 
         context.subscriptions.push(signInCommand);
         context.subscriptions.push(signInWithOthersCommand);
-
     }
 
-
     let signout = vscode.commands.registerCommand('keploy.SignOut', async () => {
-        try{
+        try {
             context.globalState.update('accessToken', undefined);
             vscode.window.showInformationMessage('You have been signed out.');
             vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
             vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
-        }catch(error){
-            Sentry?.captureException(error);
+        } catch (error) {
+            SentryInstance?.captureException(error);
             vscode.window.showErrorMessage('Failed to sign out Keploy!');
         }
     });
@@ -264,51 +253,51 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(signout);
 
     let viewKeployVersionDisposable = vscode.commands.registerCommand('keploy.KeployVersion', async () => {
-        try{
+        try {
             const currentVersion = await getCurrentKeployVersion();
             vscode.window.showInformationMessage(`The current version of Keploy is ${currentVersion}`);
-        }catch(error){
-            Sentry?.captureException(error);
-            vscode.window.showErrorMessage(`Failed to get Keploy version`);
+        } catch (error) {
+            SentryInstance?.captureException(error);
+            vscode.window.showErrorMessage('Failed to get Keploy version');
         }
-    }
-    );
+    });
+
     context.subscriptions.push(viewKeployVersionDisposable);
 
     let viewChangeLogDisposable = vscode.commands.registerCommand('keploy.viewChangeLog', () => {
-        try{
+        try {
             const changeLogUrl = 'https://marketplace.visualstudio.com/items?itemName=Keploy.keployio';
             vscode.env.openExternal(vscode.Uri.parse(changeLogUrl));
-        }catch(error){
-            Sentry?.captureException(error);
-            vscode.window.showErrorMessage(`Failed to open change log`);
+        } catch (error) {
+            SentryInstance?.captureException(error);
+            vscode.window.showErrorMessage('Failed to open change log');
         }
-    }
-    );
+    });
+
     context.subscriptions.push(viewChangeLogDisposable);
 
     let viewDocumentationDisposable = vscode.commands.registerCommand('keploy.viewDocumentation', () => {
-        try{
+        try {
             const docsUrl = 'https://keploy.io/docs/';
             vscode.env.openExternal(vscode.Uri.parse(docsUrl));
-        }catch(error){
-            Sentry?.captureException(error);
-            vscode.window.showErrorMessage(`Failed to open documentation`);
+        } catch (error) {
+            SentryInstance?.captureException(error);
+            vscode.window.showErrorMessage('Failed to open documentation');
         }
-    }
-    );
+    });
+
     context.subscriptions.push(viewDocumentationDisposable);
 
-
     let getLatestVersion = vscode.commands.registerCommand('keploy.getLatestVersion', async () => {
-        try{
+        try {
             const latestVersion = await getKeployVersion();
             vscode.window.showInformationMessage(`The latest version of Keploy is ${latestVersion}`);
-        }catch(error){
-            Sentry?.captureException(error);
-            vscode.window.showErrorMessage(`Failed to get latest version of Keploy`);
-        }}
-    );
+        } catch (error) {
+            SentryInstance?.captureException(error);
+            vscode.window.showErrorMessage('Failed to get latest version of Keploy');
+        }
+    });
+
     context.subscriptions.push(getLatestVersion);
 
     let updateKeployDisposable = vscode.commands.registerCommand('keploy.updateKeploy', () => {
@@ -318,10 +307,10 @@ export function activate(context: vscode.ExtensionContext) {
                 { label: "Keploy Docker", description: "Update using Keploy Docker" },
                 { label: "Keploy Binary", description: "Update using Keploy Binary" }
             ];
-    
+
             vscode.window.showQuickPick(options, {
                 placeHolder: "Choose how to update Keploy"
-            }).then(async selection => {
+            }).then(async (selection) => {
                 if (selection) {
                     // Handle the user's choice here
                     if (selection.label === "Keploy Docker") {
@@ -330,6 +319,7 @@ export function activate(context: vscode.ExtensionContext) {
                             vscode.window.showInformationMessage('Keploy Docker updated!');
                         } catch (error) {
                             vscode.window.showErrorMessage(`Failed to update Keploy Docker: ${error}`);
+                            SentryInstance?.captureException(error);
                         }
                     } else if (selection.label === "Keploy Binary") {
                         try {
@@ -337,13 +327,14 @@ export function activate(context: vscode.ExtensionContext) {
                             // this._view?.webview.postMessage({ type: 'success', value: 'Keploy binary updated!' });
                         } catch (error) {
                             vscode.window.showErrorMessage(`Failed to update Keploy binary: ${error}`);
+                            SentryInstance?.captureException(error);
                         }
                     }
                 }
             });
-        }catch(error){
-            Sentry?.captureException(error);
-            vscode.window.showErrorMessage(`Failed to update Keploy`);
+        } catch (error) {
+            SentryInstance?.captureException(error);
+            vscode.window.showErrorMessage('Failed to update Keploy');
         }
     });
 
@@ -354,11 +345,10 @@ export function activate(context: vscode.ExtensionContext) {
         try{
             // Display a message box to the user
             vscode.window.showInformationMessage('Welcome to Keploy!');
-    
             await Utg(context);
-        }catch(error){
-            Sentry?.captureException(error);
-            vscode.window.showErrorMessage(`Failed to generate unit tests`);
+        } catch (error) {
+            SentryInstance?.captureException(error);
+            vscode.window.showErrorMessage('Failed to generate unit tests');
         }
     });
 
@@ -368,5 +358,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 export function deactivate() { 
-    Sentry?.close(2000);
+    SentryInstance?.close(2000);
 }

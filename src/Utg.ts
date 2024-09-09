@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import { SentryInstance } from './sentryInit';
 
 
 async function Utg(context: vscode.ExtensionContext) {
@@ -102,6 +103,7 @@ async function Utg(context: vscode.ExtensionContext) {
     } catch (error) {
         console.log(error);
         vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
+        SentryInstance?.captureException(error);
         throw error;
     }
 }

@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import { SentryInstance } from './sentryInit';
 
 export default function executeKeployOneClickCommand(): void {
     // check before if keploy has been installed first
@@ -9,11 +10,13 @@ export default function executeKeployOneClickCommand(): void {
         if (error) {
             exec(installationCommand, (error, stdout, stderr) => {
                 if (error) {
+                    SentryInstance?.captureException(error);
                     console.error(`Error executing command: ${error.message}`);
                     return;
                 }
 
                 if (stderr) {
+                    SentryInstance?.captureException(new Error(stderr));
                     console.error(`Command execution returned an error: ${stderr}`);
                     return;
                 }

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { readFileSync  , appendFile} from 'fs';
 import * as child_process from 'child_process';
 import * as os from 'os';
+import { SentryInstance } from './sentryInit';
 
 function extractTestSetName(logContent: string) {
     // Define the regular expression pattern to find the test set name
@@ -62,6 +63,7 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
             textContent: error,
             error: true
         });
+        SentryInstance?.captureException(error);
         vscode.window.showErrorMessage('Error occurred Keploy Record: ' + error);
         throw error;
     }
@@ -78,6 +80,7 @@ export async function stopRecording(){
     return;
     }
     catch(error){
+        SentryInstance?.captureException(error);
         console.log(error);
         throw error;
     }
@@ -142,12 +145,14 @@ export async function startRecording( wslscriptPath: string, wsllogfilePath: str
 
             } catch (error) {
                 console.log(error);
+                SentryInstance?.captureException(error);
                 vscode.window.showErrorMessage('Error occurred Keploy Record: ' + error);
                 reject(error);
             }
         });
     } catch (error) {
         console.log(error);
+        SentryInstance?.captureException(error);
         vscode.window.showErrorMessage('Error occurred Keploy Record: ' + error);
         throw error;
     }
