@@ -5,7 +5,7 @@ export default function executeKeployOneClickCommand(): void {
     const checkKeployExistsCommand = `keploy`;
     
     // The command to download and install Keploy
-    const installationCommand = `curl --show-error -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && source /tmp/install.sh -noRoot`;
+    const installationCommand = `curl --show-error -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && . /tmp/install.sh -noRoot`;
 
     exec(checkKeployExistsCommand, (error, stdout, stderr) => {
         if (error) {
