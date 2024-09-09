@@ -9,8 +9,6 @@ export default function executeKeployOneClickCommand(): void {
 
     exec(checkKeployExistsCommand, (error, stdout, stderr) => {
         if (error) {
-            console.log("Keploy is not installed. Installing...");
-
             // Execute the installation command
             exec(installationCommand, (installError, installStdout, installStderr) => {
                 if (installError) {
