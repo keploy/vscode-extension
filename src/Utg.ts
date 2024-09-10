@@ -65,12 +65,13 @@ async function Utg(context: vscode.ExtensionContext) {
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
 
                 } else if (extension === '.py') {
-                    const testDir = path.join(rootDir,'test');
+                    // const testDir = path.join(rootDir,'test');
                     testFilePath = path.join(rootDir,'test_'+ path.basename(sourceFilePath));
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                     }
+                    console.log(sourceFilePath , testFilePath , "python wala");
                     command = `pytest --cov=${path.basename(sourceFilePath,'.py')} --cov-report=xml:coverage.xml ${testFilePath}`;
                     coverageReportPath = "./coverage.xml";
 
@@ -86,9 +87,9 @@ async function Utg(context: vscode.ExtensionContext) {
                     command = `mvn clean test jacoco:report`;
                     coverageReportPath = "./target/site/jacoco/jacoco.xml";
                 } else if (extension === '.go') {
-                    const testDir = path.join(rootDir, 'test');
+                    const testDir = rootDir;
                     testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
-
+                    console.log(testFilePath , "in the go block");
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test')
@@ -158,7 +159,7 @@ async function ensureTestFileExists(sourceFilePath: string , DirectoryPath:strin
     // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
     const extension = path.extname(sourceFilePath);
     const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
-    const testDir = path.join(DirectoryPath, 'test'); // 'test' directory under the source directory
+    let testDir = path.join(DirectoryPath, 'test'); // 'test' directory under the source directory
     const sourceFileName = path.basename(sourceFilePath);
     let testFileName: string;
     let testFileContent = '';
@@ -166,10 +167,12 @@ async function ensureTestFileExists(sourceFilePath: string , DirectoryPath:strin
     if (extension === '.js' || extension === '.ts') {
         testFileName = sourceFileName.replace(extension, `.test${extension}`);
     } else if (extension === '.py') {
+        testDir = DirectoryPath;
         testFileName = "test_" + sourceFileName;
     } else if (extension === '.java') {
         testFileName = sourceFileName.replace('.java', 'Test.java');
     } else if (extension === '.go') {
+        testDir = DirectoryPath;
         testFileName = sourceFileName.replace('.go', '_test.go');
         testFileContent = `package main\n\nimport "testing"`;
     } else {

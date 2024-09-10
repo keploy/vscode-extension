@@ -351,11 +351,10 @@ document.addEventListener('addUsersClick', function (e) {
   }
 });
 
-
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
   const message = event.data;
-  console.log("message", message);
+  // console.log("message", message);
 
   if (message.type === 'navigateToHome') {
     vscode.postMessage({
@@ -582,15 +581,6 @@ window.addEventListener('message', event => {
     }
   }
 
-  if (message.type === 'apiResponse') {
-    const apiResponse = message.value;
-    console.log('Received API response in sidebar:', apiResponse);
-
-    // Update the UI with the API response (if you have an element to display it)
-    if (apiResponseElement) {
-      apiResponseElement.textContent = `API Response: ${apiResponse}`;
-    }
-  }
 
   if (message.type === 'aggregatedTestResults') {
     console.log("message.value", message.value);

@@ -67,8 +67,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
-    console.log("here in sidebarProvider.ts" , apiResponse)
-
+ 
     this._sendApiResponseToWebview(apiResponse);
 
     // Start sending the updated `apiResponse` to the webview every 3 seconds
@@ -114,7 +113,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         //   }
         //   break;
         // }
-
         case 'viewLogs': {
           if (!data.value) {
             return;
@@ -506,10 +504,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap" rel="stylesheet"> 
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 				<link href="${styleResetUri}" rel="stylesheet">
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <link href="${compiledCSSUri}" rel="stylesheet">
+        
 			</head>
       <body>
 				
