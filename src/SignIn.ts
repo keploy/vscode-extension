@@ -74,7 +74,7 @@ function generateRandomState() {
 
 export default async function SignInWithGitHub() {
     const state = uuidv4(); // Generate a unique state parameter for security
-    const redirectUri = `http://localhost:3000/login/github/callback`; // Change the port if needed
+    const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
     const clientId = 'Ov23liNPnpLFCh1lYJkB';
     const scope = 'user:email';
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
@@ -121,7 +121,7 @@ export default async function SignInWithGitHub() {
 
 export async function SignInWithOthers() {
     const state = generateRandomState();  // Generate a secure random state
-    const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
+    const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
     vscode.env.openExternal(vscode.Uri.parse(authUrl));
 
     return new Promise((resolve, reject) => {
