@@ -2,27 +2,22 @@ import { exec } from 'child_process';
 import { SentryInstance } from './sentryInit';
 
 export default function executeKeployOneClickCommand(): void {
-    // check before if keploy has been installed first
+    // Check if Keploy is installed by trying to run the `keploy` command
     const checkKeployExistsCommand = `keploy`;
-    const installationCommand = `curl --silent -O -L https://keploy.io/install.sh && bash install.sh`;
-
+    
+    // The command to download and install Keploy
+    const installationCommand = `curl --silent -O -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && bash /tmp/install.sh -noRoot`;
     exec(checkKeployExistsCommand, (error, stdout, stderr) => {
         if (error) {
-            exec(installationCommand, (error, stdout, stderr) => {
-                if (error) {
-                    SentryInstance?.captureException(error);
-                    console.error(`Error executing command: ${error.message}`);
+            // Execute the installation command
+            exec(installationCommand, (installError, installStdout, installStderr) => {
+                if (installError) {
+                    console.error(`Error during installation: ${installError.message}`);
                     return;
                 }
-
-                if (stderr) {
-                    SentryInstance?.captureException(new Error(stderr));
-                    console.error(`Command execution returned an error: ${stderr}`);
-                    return;
-                }
-
-                console.log(`Command executed successfully: ${stdout}`);
             });
+        } else {
+            console.log(`Keploy is already installed: ${stdout}`);
         }
     });
 }
