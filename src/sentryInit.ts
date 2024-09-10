@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import * as Sentry from '@sentry/node';
+import * as SentryOptions from '@sentry/node';
 
-function SentryInit(): Sentry.NodeClient | undefined {
-    return Sentry.init({
+function SentryInit(): SentryOptions.NodeClient | undefined {
+    return SentryOptions.init({
         dsn: process.env.SENTRY_DSN,
         beforeSend(event) {
             const telemetryEnabled = vscode.workspace.getConfiguration('telemetry').get<boolean>('enableTelemetry');
@@ -15,6 +15,6 @@ function SentryInit(): Sentry.NodeClient | undefined {
     });
 }
 
-const SentryInstance = SentryInit();
+const Sentry = SentryInit();
 
-export { SentryInstance };
+export { Sentry };

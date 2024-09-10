@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
 import axios, { AxiosResponse } from 'axios';
-import { SentryInstance } from './sentryInit';
+import { Sentry } from './sentryInit';
 
 
 async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
@@ -26,7 +26,7 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
 
         return primaryEmail ? primaryEmail.email : null;
     } catch (error) {
-        SentryInstance?.captureException(error);
+        Sentry?.captureException(error);
         vscode.window.showErrorMessage(`Failed to fetch email: ${error}`);
         return null;
     }
@@ -48,7 +48,7 @@ export async function getGitHubAccessToken() {
             vscode.window.showErrorMessage('Failed to get GitHub session.');
         }
     } catch (error) {
-        SentryInstance?.captureException(error);
+        Sentry?.captureException(error);
         vscode.window.showErrorMessage(`Error: ${error}`);
     }
 }
@@ -65,7 +65,7 @@ export async function getMicrosoftAccessToken() {
             vscode.window.showErrorMessage('Failed to get Microsoft session.');
         }
     } catch (error) {
-        SentryInstance?.captureException(error);    
+        Sentry?.captureException(error);    
         vscode.window.showErrorMessage(`Error: ${error}`);
     }
 }
@@ -125,67 +125,72 @@ export default async function SignInWithGitHub() {
     catch(error){
         console.log(error);
         vscode.window.showErrorMessage('Error occurred while signing in with GitHub');
-        SentryInstance?.captureException(error);
+        Sentry?.captureException(error);
     }
 }
  
 
 export async function SignInWithOthers() {
-    const state = generateRandomState();  // Generate a secure random state
-    const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
-    vscode.env.openExternal(vscode.Uri.parse(authUrl));
-
-    return new Promise((resolve, reject) => {
-        const server = http.createServer(async (req, res) => {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-            if (req.method === 'OPTIONS') {
-                res.writeHead(200);
-                res.end();
-                return;
-            }
-
-            if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
-                const url = new URL(req.url, `http://${req.headers.host}`);
-                const receivedState = url.searchParams.get('state');
-                const token = url.searchParams.get('token');
-                console.log("Received state:", receivedState);
-                console.log("Received token:", token);
-
-                if (!receivedState || !token) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Missing state or token' }));
-                    reject(new Error('Missing state or token'));
-                    server.close();
+    try{
+        const state = generateRandomState();  // Generate a secure random state
+        const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
+        vscode.env.openExternal(vscode.Uri.parse(authUrl));
+    
+        return new Promise((resolve, reject) => {
+            const server = http.createServer(async (req, res) => {
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+                res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+                if (req.method === 'OPTIONS') {
+                    res.writeHead(200);
+                    res.end();
                     return;
                 }
-
-                try {
-                    // Simulate processing the token
-                    console.log("Processing token...");
-
-                    res.writeHead(200, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
-
-                    // Resolve the promise with the token
-                    resolve(token.toString());
-                } catch (err) {
-                    console.error('Error processing token:', err);
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Internal Server Error' }));
-                    reject(err);
-                } finally {
-                    server.close();  // Close the server once the request is handled
+    
+                if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
+                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    const receivedState = url.searchParams.get('state');
+                    const token = url.searchParams.get('token');
+                    console.log("Received state:", receivedState);
+                    console.log("Received token:", token);
+    
+                    if (!receivedState || !token) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'Missing state or token' }));
+                        reject(new Error('Missing state or token'));
+                        server.close();
+                        return;
+                    }
+    
+                    try {
+                        // Simulate processing the token
+                        console.log("Processing token...");
+    
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
+    
+                        // Resolve the promise with the token
+                        resolve(token.toString());
+                    } catch (err) {
+                        console.error('Error processing token:', err);
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                        reject(err);
+                    } finally {
+                        server.close();  // Close the server once the request is handled
+                    }
+                } else {
+                    res.writeHead(404, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Not Found' }));
                 }
-            } else {
-                res.writeHead(404, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Not Found' }));
-            }
-        }).listen(3001, () => {
-            console.log('Server listening on port 3001');
+            }).listen(3001, () => {
+                console.log('Server listening on port 3001');
+            });
         });
-    });
+    }catch(error){
+        vscode.window.showErrorMessage('Error occurred while signing in');
+        Sentry?.captureException(error);
+    }
 }
  
 
@@ -233,7 +238,7 @@ export async function loginAPI(url = "", provider = "", code = "") {
         }
     } catch (err) {
         console.log("ERROR at login", err);
-        SentryInstance?.captureException(err);
+        Sentry?.captureException(err);
     }
 }
 
@@ -298,8 +303,8 @@ export async function getInstallationID(): Promise<string> {
         return id;
     } catch (err) {
         console.error("Failed to get installation ID:", err);
+        Sentry?.captureException(err);
         throw new Error("Failed to get installation ID");
-        SentryInstance?.captureException(err);
     }
 }
 
@@ -359,7 +364,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
+        Sentry?.captureException(err);
         throw new Error(`Failed to authenticate: ${err.message}`);
-        SentryInstance?.captureException(err);
     }
 }

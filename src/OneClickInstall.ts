@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { SentryInstance } from './sentryInit';
+import { Sentry } from './sentryInit';
 
 export default function executeKeployOneClickCommand(): void {
     // Check if Keploy is installed by trying to run the `keploy` command

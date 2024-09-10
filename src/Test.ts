@@ -7,7 +7,7 @@ import * as yaml from 'yaml';
 import * as child_process from 'child_process';
 import * as os from 'os';
 import * as jsyaml from 'js-yaml';
-import { SentryInstance } from './sentryInit';
+import { Sentry } from './sentryInit';
 
 export async function displayTestCases(logfilePath: string, webview: any, isHomePage: boolean, isCompleteSummary: boolean): Promise<void> {
     console.log('Displaying test cases');
@@ -116,7 +116,7 @@ export async function displayTestCases(logfilePath: string, webview: any, isHome
     catch (error) {
         console.log(error);
         vscode.window.showErrorMessage('Error occurred Keploy Test: ' + error);
-        SentryInstance?.captureException(error);
+        Sentry?.captureException(error);
         throw error;
     }
 }
@@ -295,7 +295,7 @@ export async function displayPreviousTestResults(webview: any): Promise<void> {
             error: true,
             value: 'Run keploy test to generate test reports.'
         });
-        SentryInstance?.captureException(error);
+        Sentry?.captureException(error);
     }
 }
 
@@ -371,7 +371,7 @@ export async function startTesting(wslscriptPath: string, wsllogfilePath: string
     catch (error) {
         console.log(error);
         vscode.window.showErrorMessage('Error occurred Keploy Test: ' + error);
-        SentryInstance?.captureException(error);
+        Sentry?.captureException(error);
         throw error;
     }
 }

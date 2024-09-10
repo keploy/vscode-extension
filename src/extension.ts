@@ -8,7 +8,7 @@ import Utg from './Utg';
 import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
-import { SentryInstance } from './sentryInit';
+import { Sentry } from './sentryInit';
 import TreeSitter from 'tree-sitter';
 import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
@@ -209,7 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.window.showInformationMessage('Failed to sign in Keploy!');
                 }
             } catch (error) {
-                SentryInstance?.captureException(error);
+                Sentry?.captureException(error);
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
         });
@@ -247,7 +247,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
             vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to sign out Keploy!');
         }
     });
@@ -259,7 +259,7 @@ export function activate(context: vscode.ExtensionContext) {
             const currentVersion = await getCurrentKeployVersion();
             vscode.window.showInformationMessage(`The current version of Keploy is ${currentVersion}`);
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to get Keploy version');
         }
     });
@@ -271,7 +271,7 @@ export function activate(context: vscode.ExtensionContext) {
             const changeLogUrl = 'https://marketplace.visualstudio.com/items?itemName=Keploy.keployio';
             vscode.env.openExternal(vscode.Uri.parse(changeLogUrl));
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to open change log');
         }
     });
@@ -283,7 +283,7 @@ export function activate(context: vscode.ExtensionContext) {
             const docsUrl = 'https://keploy.io/docs/';
             vscode.env.openExternal(vscode.Uri.parse(docsUrl));
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to open documentation');
         }
     });
@@ -295,7 +295,7 @@ export function activate(context: vscode.ExtensionContext) {
             const latestVersion = await getKeployVersion();
             vscode.window.showInformationMessage(`The latest version of Keploy is ${latestVersion}`);
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to get latest version of Keploy');
         }
     });
@@ -321,7 +321,7 @@ export function activate(context: vscode.ExtensionContext) {
                             vscode.window.showInformationMessage('Keploy Docker updated!');
                         } catch (error) {
                             vscode.window.showErrorMessage(`Failed to update Keploy Docker: ${error}`);
-                            SentryInstance?.captureException(error);
+                            Sentry?.captureException(error);
                         }
                     } else if (selection.label === "Keploy Binary") {
                         try {
@@ -329,13 +329,13 @@ export function activate(context: vscode.ExtensionContext) {
                             // this._view?.webview.postMessage({ type: 'success', value: 'Keploy binary updated!' });
                         } catch (error) {
                             vscode.window.showErrorMessage(`Failed to update Keploy binary: ${error}`);
-                            SentryInstance?.captureException(error);
+                            Sentry?.captureException(error);
                         }
                     }
                 }
             });
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to update Keploy');
         }
     });
@@ -349,7 +349,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage('Welcome to Keploy!');
             await Utg(context);
         } catch (error) {
-            SentryInstance?.captureException(error);
+            Sentry?.captureException(error);
             vscode.window.showErrorMessage('Failed to generate unit tests');
         }
     });
@@ -360,5 +360,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 export function deactivate() { 
-    SentryInstance?.close(2000);
+    Sentry?.close(2000);
 }
