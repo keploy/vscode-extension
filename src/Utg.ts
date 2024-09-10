@@ -39,7 +39,8 @@ async function Utg(context: vscode.ExtensionContext) {
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
 
                 const sourceFilePath = currentFilePath;
-              
+                // ensureTestFileExists(sourceFilePath);
+
                 if (!vscode.workspace.workspaceFolders) {
                     vscode.window.showErrorMessage('No workspace is opened.');
                     return;
@@ -65,8 +66,8 @@ async function Utg(context: vscode.ExtensionContext) {
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
 
                 } else if (extension === '.py') {
-                    // const testDir = path.join(rootDir,'test');
-                    testFilePath = path.join(rootDir,'test_'+ path.basename(sourceFilePath));
+                    const testDir = path.join(rootDir,'test');
+                    testFilePath = path.join(testDir,'test_'+ path.basename(sourceFilePath));
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
@@ -181,7 +182,7 @@ async function ensureTestFileExists(sourceFilePath: string , DirectoryPath:strin
     }
 
     const testFilePath = path.join(testDir, testFileName);
-    console.log(testFilePath, testDir, "testFilePath");
+    // console.log(testFilePath, testDir, "testFilePath");
 
     if (!fs.existsSync(testDir)) {
         fs.mkdirSync(testDir, { recursive: true });
