@@ -118,7 +118,11 @@ async function Utg(context: vscode.ExtensionContext) {
                  try {
                     if(token){
                         apiResponse = await makeApiRequest(token) || 'no response';
-                        context.globalState.update('apiResponse', apiResponse);
+                        const response = JSON.parse(apiResponse);
+                        await context.globalState.update('apiResponse', apiResponse);
+                        if(response.usedCall == response.totalCall ){
+                            await context.globalState.update('SubscriptionEnded' , true);
+                        }
                     }else{
                         console.log("token not found");
                     }
@@ -149,7 +153,7 @@ async function Utg(context: vscode.ExtensionContext) {
 }
 
 // Separate function for making the API request using axios
-async function makeApiRequest(token:string): Promise<string | null> {
+export async function makeApiRequest(token:string): Promise<string | null> {
     const url = 'https://api.keploy.io/ai/call/count ';
 
     try {

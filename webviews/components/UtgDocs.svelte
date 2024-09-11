@@ -8,7 +8,7 @@
     "https://github.com/Sarthak160/goApi/blob/main/command.png?raw=true";
 
   // Initialize variables for total sessions and used sessions
-  let totalCall = 5; // This will come from the API response
+  let totalCall = 10; // This will come from the API response
   let usedCall = 0; // This will come from the API response
   let progressPercentage = 0;
   let isModalOpen = false;
@@ -67,6 +67,8 @@
           // console.log("totalCall", totalCall);
           updateProgress(); // Update the progress bar after setting values
         } catch (error) {
+            totalCall = 10;
+            usedCall = 0;
           console.error("Error parsing API response:", error);
         }
 

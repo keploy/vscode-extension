@@ -289,6 +289,40 @@ export async function getInstallationID(): Promise<string> {
     }
 }
 
+
+export async function ValidateSignInWithOthers(jwtToken: string, serverURL: string): Promise<{}> {
+    const url = `${serverURL}/user/connect`;
+
+    try {
+        // Assuming getInstallationID returns a promise that resolves to a string
+        const installationID: string = await getInstallationID();
+
+        const requestBody = {
+            InstallationID: installationID,
+        };
+
+        const response: AxiosResponse<any> = await axios.post(url, requestBody, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`, // JWT token in the header
+            },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(`Failed to authenticate: ${response.data.Error}`);
+        }
+
+        // You can customize the returned object with response data if needed
+        return { response };
+    } catch (err: any) {
+        console.error("Failed to authenticate:", err.message);
+        throw new Error(`Failed to authenticate: ${err.message}`);
+    }
+}
+
+ 
+
+
 function extractID(output: any) {
     const lines = output.split('\n');
     for (let line of lines) {
