@@ -11,18 +11,26 @@ async function Utg(context: vscode.ExtensionContext) {
             try {
 
                 const token  = await context.globalState.get<'string'>('accessToken');
-                console.log("token in the utg, " , token);
                 vscode.window.showInformationMessage('Attempting to trigger API request...');
                 if(token){
                     const apiResponse = await makeApiRequest(token);
                     if (apiResponse) {
                         vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
-                            context.globalState.update('apiResponse', apiResponse);
+                        const parsedResponse = JSON.parse(apiResponse);
+                        if (parsedResponse.usedCall == parsedResponse.totalCall) {
+                            // Throwing an error to prevent further execution
+                            vscode.window.showErrorMessage('API call limit reached. Stopping execution.');
+                            reject(new Error('API call limit reached'));
+                            return;
+                        }
+
+                        context.globalState.update('apiResponse', apiResponse);
                     }
                 }else{
                     console.log("token no defined");
                 }
                 // Create a terminal named "Keploy Terminal"
+
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
                 terminal.show();
 
