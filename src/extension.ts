@@ -199,7 +199,7 @@ export function activate(context: vscode.ExtensionContext) {
                     // Store the access token in global state
                     await context.globalState.update('accessToken', accessToken);
 
-                    const { emailID, isValid, error , JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
+                    const { emailID, isValid, error , JwtToken } = await validateFirst(accessToken, "https://api.staging.keploy.io");
 
                     await context.globalState.update('JwtToken', JwtToken);
 
@@ -226,8 +226,8 @@ export function activate(context: vscode.ExtensionContext) {
                 const result = await SignInWithOthers();
                 const accessToken = result as string; // Assert that result is a string
                 getInstallationID();
-
-                await context.globalState.update('accessToken', accessToken);
+                console.log('Access token:', accessToken);
+                await context.globalState.update('JwtToken', accessToken);
 
             if (Boolean(accessToken)) {
                 vscode.window.showInformationMessage('You are now signed in!');
@@ -250,7 +250,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     let signout = vscode.commands.registerCommand('keploy.SignOut', async () => {
-        context.globalState.update('accessToken', undefined);
+        console.log("logging out");
+        await context.globalState.update('accessToken', undefined);
+        await context.globalState.update('JwtToken', undefined);
         vscode.window.showInformationMessage('You have been signed out.');
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
