@@ -11,11 +11,6 @@ async function Utg(context: vscode.ExtensionContext) {
             try {
 
                 const token  = await context.globalState.get<'string'>('JwtToken');
-                if(!token){
-                    console.log("token not define")
-                    return;
-                }
-                console.log(token);
                 let apiResponse:string = '';
                 // vscode.window.showInformationMessage('Attempting to trigger API request...');
                 // if(token){
@@ -121,9 +116,12 @@ async function Utg(context: vscode.ExtensionContext) {
  
 
                  try {
-                    apiResponse = await makeApiRequest(token) || 'no response';
-                    vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
-                    context.globalState.update('apiResponse', apiResponse);
+                    if(token){
+                        apiResponse = await makeApiRequest(token) || 'no response';
+                        context.globalState.update('apiResponse', apiResponse);
+                    }else{
+                        console.log("token not found");
+                    }
                 } catch (apiError) {
                     vscode.window.showErrorMessage('Error during API request: ' + apiError);
                 }
@@ -152,7 +150,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
 // Separate function for making the API request using axios
 async function makeApiRequest(token:string): Promise<string | null> {
-    const url = 'https://api.staging.keploy.io/ai/call/count ';
+    const url = 'https://api.keploy.io/ai/call/count ';
 
     try {
         const response: AxiosResponse = await axios.get(url, {
@@ -160,7 +158,6 @@ async function makeApiRequest(token:string): Promise<string | null> {
                 'Authorization': `Bearer ${token}`
             }
         });
-        console.log(`API call successful: ${JSON.stringify(response.data)}`);
         return JSON.stringify(response.data);  // Return the API response data as a string
     } catch (error) {
         if (axios.isAxiosError(error)) {

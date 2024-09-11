@@ -346,7 +346,7 @@ document.addEventListener('addUsersClick', function (e) {
     // Example: Trigger navigation or link opening logic
     vscode.postMessage({
       type: "openLink",
-      url: "https://app.staging.keploy.io", // Replace this with the URL you want to navigate to
+      url: "https://app.keploy.io", // Replace this with the URL you want to navigate to
     });// Example of opening a link
   }
 });

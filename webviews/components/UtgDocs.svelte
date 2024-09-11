@@ -35,7 +35,7 @@
   function navigateToKeploy() {
     vscode.postMessage({
       type: "openLink",
-      url: "https://app.staging.keploy.io/signin?take_to_pricing=true", // Replace this with the URL you want to navigate to
+      url: "https://app.keploy.io/signin?take_to_pricing=true", // Replace this with the URL you want to navigate to
     });
   }
 

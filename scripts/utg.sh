@@ -35,7 +35,7 @@ if [ "$extension" = "java" ]; then
     --test-command="$command" \
     --coverage-report-path="$coverageReportPath" \
     --llmApiVersion "2024-02-01" \
-    --llmBaseUrl "https://api.staging.keploy.io" \
+    --llmBaseUrl "https://api.keploy.io" \
     --max-iterations "5" \
     --coverageFormat jacoco
 else
@@ -44,7 +44,7 @@ else
     --test-command="$command" \
     --coverage-report-path="$coverageReportPath" \
     --llmApiVersion "2024-02-01" \
-    --llmBaseUrl "https://api.staging.keploy.io" \
+    --llmBaseUrl "https://api.keploy.io" \
     --max-iterations "5" \
     --coverageFormat cobertura
 fi
