@@ -77,92 +77,93 @@ function generateRandomState() {
 
 
 export default async function SignInWithGitHub() {
-    const state = uuidv4(); // Generate a unique state parameter for security
-    const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
-    const clientId = 'Ov23liNPnpLFCh1lYJkB';
-    const scope = 'user:email';
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
+    try {
+        const state = uuidv4(); // Generate a unique state parameter for security
+        const redirectUri = `https://app.keploy.io/login/github/callback`;
+        const clientId = 'Ov23liNPnpLFCh1lYJkB';
+        const scope = 'user:email';
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
+    
+        // Open the authentication URL in the default web browser
+        vscode.env.openExternal(vscode.Uri.parse(authUrl));
+    
+        // Create a local server to handle the callback
+        const server = http.createServer(async (req, res) => {
+            if (req.url?.startsWith('/login/github/callback')) {
+                const url = new URL(req.url, `http://${req.headers.host}`);
+                const receivedState = url.searchParams.get('state');
+                const code = url.searchParams.get('code');
+                console.log("Received code", code);
+                
+                if (receivedState === state) {
+                    // Make a POST request to the backend server to exchange the code for an access token
+                    const backendUrl = `http://localhost:8083/auth/login`;
 
-    // Open the authentication URL in the default web browser
-    vscode.env.openExternal(vscode.Uri.parse(authUrl));
-
-    // Create a local server to handle the callback
-    const server = http.createServer(async (req: any, res: any) => {
-        if (req.url.startsWith('/login/github/callback')) {
-            const url = new URL(req.url, `http://${req.headers.host}`);
-            const receivedState = url.searchParams.get('state');
-            const code = url.searchParams.get('code');
-            console.log("Received code", code);
-            if (receivedState === state) {
-                // Make a POST request to the backend server to exchange the code for an access token
-                const backendUrl = `http://localhost:8083/auth/login`;
-                // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
-                try {
-                    // Await the response from the backend
-                    const response = await loginAPI(backendUrl, 'github', code?.toString());
-
-                    if (response.error) {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: response.error }));
-                    } else {
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        const resp = JSON.stringify(response);
-                        res.end(resp);  // Send the JSON response back
+                    try {
+                        // Await the response from the backend
+                        const response = await loginAPI(backendUrl, 'github', code?.toString());
+    
+                        if (response.error) {
+                            res.writeHead(400, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ error: response.error }));
+                        } else {
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify(response)); // Send the JSON response back
+                        }
+                    } catch (err) {
+                        console.log("Error during loginAPI call", err);
+                        res.writeHead(500, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'Internal server error' }));
                     }
                 } else {
                     res.writeHead(400, { 'Content-Type': 'text/html' });
                     res.end('<h1>State mismatch. Authentication failed.</h1>');
                 }
+                
                 server.close();
-            }   
+            } else {
+                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.end('<h1>Not Found</h1>');
+            }
         }).listen(3000); // Change the port if needed
     }
-    catch(error){
+    catch (error) {
         console.log(error);
         vscode.window.showErrorMessage('Error occurred while signing in with GitHub');
         Sentry?.captureException(error);
     }
 }
- 
 
 export async function SignInWithOthers() {
-    const state = generateRandomState();  // Generate a secure random state
-    const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
-    vscode.env.openExternal(vscode.Uri.parse(authUrl));
+    try {
+        const state = generateRandomState(); // Generate a secure random state
+        const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
+        vscode.env.openExternal(vscode.Uri.parse(authUrl));
 
-    return new Promise((resolve, reject) => {
-        const server = http.createServer(async (req, res) => {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-            if (req.method === 'OPTIONS') {
-                res.writeHead(200);
-                res.end();
-                return;
-            }
+        return new Promise((resolve, reject) => {
+            const server = http.createServer(async (req, res) => {
+                // Set headers to allow CORS
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+                res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-            if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
-                const url = new URL(req.url, `http://${req.headers.host}`);
-                const receivedState = url.searchParams.get('state');
-                const token = url.searchParams.get('token');
-                console.log("Received state:", receivedState);
-                console.log("Received token:", token);
-
-                if (!receivedState || !token) {
-                    res.writeHead(400, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Missing state or token' }));
-                    reject(new Error('Missing state or token'));
-                    server.close();
+                // Handle preflight requests
+                if (req.method === 'OPTIONS') {
+                    res.writeHead(200);
+                    res.end();
                     return;
                 }
-    
-                if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
+
+                // Handle the callback URL
+                if (req.url && req.url.startsWith('/login/keploy/callback')) {
                     const url = new URL(req.url, `http://${req.headers.host}`);
                     const receivedState = url.searchParams.get('state');
                     const token = url.searchParams.get('token');
+
                     console.log("Received state:", receivedState);
                     console.log("Received token:", token);
-    
+
+                    // Validate state and token
                     if (!receivedState || !token) {
                         res.writeHead(400, { 'Content-Type': 'application/json' });
                         res.end(JSON.stringify({ error: 'Missing state or token' }));
@@ -170,23 +171,31 @@ export async function SignInWithOthers() {
                         server.close();
                         return;
                     }
-    
-                    try {
-                        // Simulate processing the token
-                        console.log("Processing token...");
-    
-                        res.writeHead(200, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
-    
-                        // Resolve the promise with the token
-                        resolve(token.toString());
-                    } catch (err) {
-                        console.error('Error processing token:', err);
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Internal Server Error' }));
-                        reject(err);
-                    } finally {
-                        server.close();  // Close the server once the request is handled
+
+                    // Check if the received state matches the original state
+                    if (receivedState === state) {
+                        try {
+                            // Simulate processing the token
+                            console.log("Processing token...");
+
+                            res.writeHead(200, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
+
+                            // Resolve the promise with the token
+                            resolve(token.toString());
+                        } catch (err) {
+                            console.error('Error processing token:', err);
+                            res.writeHead(500, { 'Content-Type': 'application/json' });
+                            res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                            reject(err);
+                        } finally {
+                            server.close(); // Close the server once the request is handled
+                        }
+                    } else {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: 'State mismatch' }));
+                        reject(new Error('State mismatch'));
+                        server.close();
                     }
                 } else {
                     res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -196,7 +205,8 @@ export async function SignInWithOthers() {
                 console.log('Server listening on port 3001');
             });
         });
-    }catch(error){
+    } catch (error) {
+        console.error('Error in SignInWithOthers:', error);
         vscode.window.showErrorMessage('Error occurred while signing in');
         Sentry?.captureException(error);
     }
