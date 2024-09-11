@@ -77,42 +77,37 @@ function generateRandomState() {
 
 
 export default async function SignInWithGitHub() {
-    try{
-        const state = uuidv4(); // Generate a unique state parameter for security
-        const redirectUri = `http://localhost:3000/login/github/callback`; // Change the port if needed
-        const clientId = 'Ov23liNPnpLFCh1lYJkB';
-        const scope = 'user:email';
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
-    
-        // Open the authentication URL in the default web browser
-        vscode.env.openExternal(vscode.Uri.parse(authUrl));
-    
-        // Create a local server to handle the callback
-        const server = http.createServer(async (req: any, res: any) => {
-            if (req.url.startsWith('/login/github/callback')) {
-                const url = new URL(req.url, `http://${req.headers.host}`);
-                const receivedState = url.searchParams.get('state');
-                const code = url.searchParams.get('code');
-                console.log("Received code", code);
-                if (receivedState === state) {
-                    // Make a POST request to the backend server to exchange the code for an access token
-                    const backendUrl = `http://localhost:8083/auth/login`;
-                    // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
-                    try {
-                        // Await the response from the backend
-                        const response = await loginAPI(backendUrl, 'github', code?.toString());
-    
-                        if (response.error) {
-                            res.writeHead(400, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ error: response.error }));
-                        } else {
-                            res.writeHead(200, { 'Content-Type': 'application/json' });
-                            const resp = JSON.stringify(response);
-                            res.end(resp);  // Send the JSON response back
-                        }
-                    } catch (err) {
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Internal Server Error' }));
+    const state = uuidv4(); // Generate a unique state parameter for security
+    const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
+    const clientId = 'Ov23liNPnpLFCh1lYJkB';
+    const scope = 'user:email';
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
+
+    // Open the authentication URL in the default web browser
+    vscode.env.openExternal(vscode.Uri.parse(authUrl));
+
+    // Create a local server to handle the callback
+    const server = http.createServer(async (req: any, res: any) => {
+        if (req.url.startsWith('/login/github/callback')) {
+            const url = new URL(req.url, `http://${req.headers.host}`);
+            const receivedState = url.searchParams.get('state');
+            const code = url.searchParams.get('code');
+            console.log("Received code", code);
+            if (receivedState === state) {
+                // Make a POST request to the backend server to exchange the code for an access token
+                const backendUrl = `http://localhost:8083/auth/login`;
+                // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
+                try {
+                    // Await the response from the backend
+                    const response = await loginAPI(backendUrl, 'github', code?.toString());
+
+                    if (response.error) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: response.error }));
+                    } else {
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        const resp = JSON.stringify(response);
+                        res.end(resp);  // Send the JSON response back
                     }
                 } else {
                     res.writeHead(400, { 'Content-Type': 'text/html' });
@@ -131,19 +126,33 @@ export default async function SignInWithGitHub() {
  
 
 export async function SignInWithOthers() {
-    try{
-        const state = generateRandomState();  // Generate a secure random state
-        const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
-        vscode.env.openExternal(vscode.Uri.parse(authUrl));
-    
-        return new Promise((resolve, reject) => {
-            const server = http.createServer(async (req, res) => {
-                res.setHeader('Access-Control-Allow-Origin', '*');
-                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-                res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-                if (req.method === 'OPTIONS') {
-                    res.writeHead(200);
-                    res.end();
+    const state = generateRandomState();  // Generate a secure random state
+    const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
+    vscode.env.openExternal(vscode.Uri.parse(authUrl));
+
+    return new Promise((resolve, reject) => {
+        const server = http.createServer(async (req, res) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+            if (req.method === 'OPTIONS') {
+                res.writeHead(200);
+                res.end();
+                return;
+            }
+
+            if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
+                const url = new URL(req.url, `http://${req.headers.host}`);
+                const receivedState = url.searchParams.get('state');
+                const token = url.searchParams.get('token');
+                console.log("Received state:", receivedState);
+                console.log("Received token:", token);
+
+                if (!receivedState || !token) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Missing state or token' }));
+                    reject(new Error('Missing state or token'));
+                    server.close();
                     return;
                 }
     
