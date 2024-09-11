@@ -109,84 +109,45 @@ async function Utg(context: vscode.ExtensionContext) {
 }
 
 async function ensureTestFileExists(sourceFilePath: string): Promise<void> {
+    if (!vscode.workspace.workspaceFolders) {
+        vscode.window.showErrorMessage('No workspace is opened.');
+        return;
+    }
 
-    try{
-        if (!vscode.workspace.workspaceFolders) {
-            vscode.window.showErrorMessage('No workspace is opened.');
-            return;
-        }
+    // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
+    const extension = path.extname(sourceFilePath);
+    const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
+    const testDir = path.join(sourceDir, 'test'); // 'test' directory under the source directory
+    const sourceFileName = path.basename(sourceFilePath);
+    let testFileName: string;
+    let testFileContent = '';
 
-        // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
-        const extension = path.extname(sourceFilePath);
-        const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
-        const testDir = path.join(sourceDir, 'test'); // 'test' directory under the source directory
-        const sourceFileName = path.basename(sourceFilePath);
-        let testFileName: string;
-        let testFileContent = '';
+    if (extension === '.js' || extension === '.ts') {
+        testFileName = sourceFileName.replace(extension, `.test${extension}`);
+    } else if (extension === '.py') {
+        testFileName = "test_" + sourceFileName;
+    } else if (extension === '.java') {
+        testFileName = sourceFileName.replace('.java', 'Test.java');
+    } else if (extension === '.go') {
+        testFileName = sourceFileName.replace('.go', '_test.go');
+        testFileContent = `package main\n\nimport "testing"`;
+    } else {
+        vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
+        return;
+    }
 
-        if (extension === '.js' || extension === '.ts') {
-            testFileName = sourceFileName.replace(extension, `.test${extension}`);
-        } else if (extension === '.py') {
-            testFileName = "test_" + sourceFileName;
-        } else if (extension === '.java') {
-            testFileName = sourceFileName.replace('.java', 'Test.java');
-        } else if (extension === '.go') {
-            testFileName = sourceFileName.replace('.go', '_test.go');
-            testFileContent = `package main\n\nimport "testing"`;
-        } else {
-            vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
-            return;
-        }
+    const testFilePath = path.join(testDir, testFileName);
+    // console.log(testFilePath, testDir, "testFilePath");
 
-        const testFilePath = path.join(testDir, testFileName);
-        // console.log(testFilePath, testDir, "testFilePath");
+    if (!fs.existsSync(testDir)) {
+        fs.mkdirSync(testDir, { recursive: true });
+    }
 
-        if (!fs.existsSync(testDir)) {
-            fs.mkdirSync(testDir, { recursive: true });
-        }
-
-        if (!vscode.workspace.workspaceFolders) {
-            vscode.window.showErrorMessage('No workspace is opened.');
-            return;
-        }
-    
-        // const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath; // Root directory of the project
-        const extension = path.extname(sourceFilePath);
-        const sourceDir = path.dirname(sourceFilePath); // Directory of the source file
-        const testDir = path.join(sourceDir, 'test'); // 'test' directory under the source directory
-        const sourceFileName = path.basename(sourceFilePath);
-        let testFileName: string;
-        let testFileContent = '';
-    
-        if (extension === '.js' || extension === '.ts') {
-            testFileName = sourceFileName.replace(extension, `.test${extension}`);
-        } else if (extension === '.py') {
-            testFileName = "test_" + sourceFileName;
-        } else if (extension === '.java') {
-            testFileName = sourceFileName.replace('.java', 'Test.java');
-        } else if (extension === '.go') {
-            testFileName = sourceFileName.replace('.go', '_test.go');
-            testFileContent = `package main\n\nimport "testing"`;
-        } else {
-            vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
-            return;
-        }
-    
-        const testFilePath = path.join(testDir, testFileName);
-        console.log(testFilePath, testDir, "testFilePath");
-    
-        if (!fs.existsSync(testDir)) {
-            fs.mkdirSync(testDir, { recursive: true });
-        }
-    
-        if (!fs.existsSync(testFilePath)) {
-            fs.writeFileSync(testFilePath, testFileContent);
-            vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
-        } else {
-            vscode.window.showInformationMessage(`Test file already exists: ${testFilePath}`);
-        }
-    }catch(error){
-        Sentry?.captureException(error);
+    if (!fs.existsSync(testFilePath)) {
+        fs.writeFileSync(testFilePath, testFileContent);
+        vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
+    } else {
+        vscode.window.showInformationMessage(`Test file already exists: ${testFilePath}`);
     }
 }
 
