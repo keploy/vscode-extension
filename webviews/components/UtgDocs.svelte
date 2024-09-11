@@ -35,7 +35,7 @@
   function navigateToKeploy() {
     vscode.postMessage({
       type: "openLink",
-      url: "https://app.keploy.io/", // Replace this with the URL you want to navigate to
+      url: "https://app.staging.keploy.io/signin?take_to_pricing=true", // Replace this with the URL you want to navigate to
     });
   }
 
@@ -109,9 +109,14 @@
     <!-- Progress bar container -->
     <div class="progress">
       {#if usedCall == totalCall}
-        <button on:click={navigateToKeploy} class="complete-button">
-          Upgrade
-        </button>
+      <div class="tooltip-container">
+        <div class="tooltip">All sessions used. Upgrade your plan!</div>
+          <div class="progress-container">
+            <!-- Progress bar width is updated dynamically based on usedCall/totalCall -->
+            <div class="progress-bar" style="width: {progressPercentage}%;" on:click={navigateToKeploy} ></div>
+          </div>
+        </div>
+        <span>{usedCall}/{totalCall} sessions</span>
       {:else}
         <div class="progress-container">
           <!-- Progress bar width is updated dynamically based on usedCall/totalCall -->
@@ -252,6 +257,7 @@
     height: 7px;
     background-color: #ff914d;
     border-radius: 2px;
+    cursor: pointer;
   }
 
   .steps-container {
@@ -263,6 +269,35 @@
     gap: 15px;
     align-items: center;
   }
+
+  .tooltip-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 8px;
+  position: absolute;
+  bottom: 100%; /* Positions tooltip above the progress bar */
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 10px; /* Space between tooltip and progress bar */
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 1;
+}
+
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
 
   .step-first {
     display: flex;

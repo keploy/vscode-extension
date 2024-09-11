@@ -199,7 +199,9 @@ export function activate(context: vscode.ExtensionContext) {
                     // Store the access token in global state
                     await context.globalState.update('accessToken', accessToken);
 
-                    const { emailID, isValid, error } = await validateFirst(accessToken, "https://api.keploy.io");
+                    const { emailID, isValid, error , JwtToken } = await validateFirst(accessToken, "https://api.staging.keploy.io");
+
+                    await context.globalState.update('JwtToken', JwtToken);
 
                     // if (isValid) {
                     vscode.window.showInformationMessage('You are now signed in!');

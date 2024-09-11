@@ -10,25 +10,24 @@ async function Utg(context: vscode.ExtensionContext) {
         return new Promise<void>(async (resolve, reject) => {
             try {
 
-                const token  = await context.globalState.get<'string'>('accessToken');
-                vscode.window.showInformationMessage('Attempting to trigger API request...');
-                if(token){
-                    const apiResponse = await makeApiRequest(token);
-                    if (apiResponse) {
-                        vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
-                        const parsedResponse = JSON.parse(apiResponse);
-                        if (parsedResponse.usedCall == parsedResponse.totalCall) {
-                            // Throwing an error to prevent further execution
-                            vscode.window.showErrorMessage('API call limit reached. Stopping execution.');
-                            reject(new Error('API call limit reached'));
-                            return;
-                        }
-
-                        context.globalState.update('apiResponse', apiResponse);
-                    }
-                }else{
-                    console.log("token no defined");
+                const token  = await context.globalState.get<'string'>('JwtToken');
+                if(!token){
+                    console.log("token not define")
+                    return;
                 }
+                console.log(token);
+                let apiResponse:string = '';
+                // vscode.window.showInformationMessage('Attempting to trigger API request...');
+                // if(token){
+                //     apiResponse = (await makeApiRequest(token)) || 'no response';  // Fallback to empty string if null
+                //     if (apiResponse) {
+                //         vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
+
+                //         context.globalState.update('apiResponse', apiResponse);
+                //     }
+                // }else{
+                //     console.log("token no defined");
+                // }
                 // Create a terminal named "Keploy Terminal"
 
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
@@ -113,13 +112,30 @@ async function Utg(context: vscode.ExtensionContext) {
                     return;
                 }
 
-                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}";`);
+                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}";`);
+
+                 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+                 // Add a 5-second delay before calling the API
+                 await delay(5000);
+ 
+
+                 try {
+                    apiResponse = await makeApiRequest(token) || 'no response';
+                    vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
+                    context.globalState.update('apiResponse', apiResponse);
+                } catch (apiError) {
+                    vscode.window.showErrorMessage('Error during API request: ' + apiError);
+                }
 
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                     if (eventTerminal === terminal) {
                         disposable.dispose();
                         resolve();
                     }
+
+               
+    
                 });
             }  catch (error) {
                 console.log(error);
@@ -144,15 +160,15 @@ async function makeApiRequest(token:string): Promise<string | null> {
                 'Authorization': `Bearer ${token}`
             }
         });
-        vscode.window.showInformationMessage(`API call successful: ${JSON.stringify(response.data)}`);
+        console.log(`API call successful: ${JSON.stringify(response.data)}`);
         return JSON.stringify(response.data);  // Return the API response data as a string
     } catch (error) {
         if (axios.isAxiosError(error)) {
             // Handle axios-specific error
-            vscode.window.showErrorMessage(`API call failed: ${error.message}`);
+            console.log(`API call failed: ${error.message}`);
         } else {
-            // Handle other errors (in case they are not Axios errors)
-            vscode.window.showErrorMessage('An unknown error occurred.');
+            // Handle oth   er errors (in case they are not Axios errors)
+            console.log('An unknown error occurred.');
         }
 
         return null;  // Return null in case of error

@@ -74,7 +74,7 @@ function generateRandomState() {
 
 export default async function SignInWithGitHub() {
     const state = uuidv4(); // Generate a unique state parameter for security
-    const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
+    const redirectUri = `https://app.staging.keploy.io/login/github/callback`; // Change the port if needed
     const clientId = 'Ov23liNPnpLFCh1lYJkB';
     const scope = 'user:email';
     const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
@@ -121,7 +121,7 @@ export default async function SignInWithGitHub() {
 
 export async function SignInWithOthers() {
     const state = generateRandomState();  // Generate a secure random state
-    const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
+    const authUrl = `https://app.staging.keploy.io/signin?vscode=true&state=${state}`;
     vscode.env.openExternal(vscode.Uri.parse(authUrl));
 
     return new Promise((resolve, reject) => {
@@ -140,8 +140,7 @@ export async function SignInWithOthers() {
                 const receivedState = url.searchParams.get('state');
                 const token = url.searchParams.get('token');
                 console.log("Received state:", receivedState);
-                console.log("Received token:", token);
-
+              
                 if (!receivedState || !token) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Missing state or token' }));
@@ -180,7 +179,7 @@ export async function SignInWithOthers() {
 
 // async function fetchAccessToken(code: string | null) {
 //     // Exchange the authorization code for an access token
-//     const response = await fetch('https://app.keploy.io/token', {
+//     const response = await fetch('https://app.staging.keploy.io/token', {
 //         method: 'POST',
 //         headers: {
 //             'Content-Type': 'application/json',
@@ -313,12 +312,12 @@ interface AuthReq {
 interface AuthResp {
     EmailID: string;
     IsValid: boolean;
-    JwtToken: string;
+    jwtToken: string;
     Error: string;
 }
 
 
-export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string }> {
+export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string , JwtToken:string }> {
     const url = `${serverURL}/auth/github`;
 
     const installationID = await getInstallationID();
@@ -336,13 +335,12 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         if (response.status !== 200) {
             throw new Error(`Failed to authenticate: ${response.data.Error}`);
         }
-
-        const jwtToken =  response.data.JwtToken;
-        console.log("JWT Token:", jwtToken);
+        
         return {
             emailID: response.data.EmailID,
             isValid: response.data.IsValid,
             error: response.data.Error,
+            JwtToken: response.data.jwtToken,
         };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
