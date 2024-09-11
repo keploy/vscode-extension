@@ -11,6 +11,7 @@ async function Utg(context: vscode.ExtensionContext) {
             try {
 
                 const token  = await context.globalState.get<'string'>('accessToken');
+                console.log("token in the utg, " , token);
                 vscode.window.showInformationMessage('Attempting to trigger API request...');
                 if(token){
                     const apiResponse = await makeApiRequest(token);
@@ -127,7 +128,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
 // Separate function for making the API request using axios
 async function makeApiRequest(token:string): Promise<string | null> {
-    const url = 'https://api.staging.keploy.io/';
+    const url = 'https://api.staging.keploy.io/ai/call/count ';
 
     try {
         const response: AxiosResponse = await axios.get(url, {
