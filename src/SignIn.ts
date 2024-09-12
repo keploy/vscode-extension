@@ -140,8 +140,7 @@ export async function SignInWithOthers() {
                 const receivedState = url.searchParams.get('state');
                 const token = url.searchParams.get('token');
                 console.log("Received state:", receivedState);
-                console.log("Received token:", token);
-
+              
                 if (!receivedState || !token) {
                     res.writeHead(400, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Missing state or token' }));
@@ -290,6 +289,41 @@ export async function getInstallationID(): Promise<string> {
     }
 }
 
+
+export async function ValidateSignInWithOthers(jwtToken: string, serverURL: string): Promise<{}> {
+    console.log("serverurl " , serverURL);
+    const url = `${serverURL}/user/connect`;
+    console.log("url" , url);
+    try {
+        // Assuming getInstallationID returns a promise that resolves to a string
+        console.log("token in the validate other " , jwtToken);
+        const installationID: string = await getInstallationID();
+
+        const requestBody = {
+            InstallationID: installationID,
+        };
+
+        const response: AxiosResponse<any> = await axios.post("https://api.keploy.io/user/connect", requestBody, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`, // JWT token in the header
+            },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(`Failed to authenticate: ${response.data.Error}`);
+        }
+
+        return { response };
+    } catch (err: any) {
+        console.error("Failed to authenticate:", err.message);
+        throw new Error(`Failed to authenticate: ${err.message}`);
+    }
+}
+
+ 
+
+
 function extractID(output: any) {
     const lines = output.split('\n');
     for (let line of lines) {
@@ -313,12 +347,12 @@ interface AuthReq {
 interface AuthResp {
     EmailID: string;
     IsValid: boolean;
-    JwtToken: string;
+    jwtToken: string;
     Error: string;
 }
 
 
-export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string }> {
+export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string , JwtToken:string }> {
     const url = `${serverURL}/auth/github`;
 
     const installationID = await getInstallationID();
@@ -336,13 +370,12 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         if (response.status !== 200) {
             throw new Error(`Failed to authenticate: ${response.data.Error}`);
         }
-
-        const jwtToken =  response.data.JwtToken;
-        console.log("JWT Token:", jwtToken);
+        
         return {
             emailID: response.data.EmailID,
             isValid: response.data.IsValid,
             error: response.data.Error,
+            JwtToken: response.data.jwtToken,
         };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);

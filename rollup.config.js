@@ -6,6 +6,8 @@ import sveltePreprocess from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
 import path from "path";
 import fs from "fs";
+import url from '@rollup/plugin-url';
+
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -49,6 +51,10 @@ export default fs
           inlineSources: !production,
         }),
 
+        url({
+          include: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.gif'],
+          limit: 0, // or set a size limit to inline the files
+        }),
         // In dev mode, call `npm run start` once
         // the bundle has been generated
         // !production && serve(),

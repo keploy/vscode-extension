@@ -2,8 +2,7 @@
   import { fly } from "svelte/transition";
   // import { onMount } from 'svelte';
   // import lottie from 'lottie-web';
-
-  let navigateToConfig = false;
+  // let navigateToConfig = false;
   let startRecordingButton;
   let startTestingButton;
   let buttonsSection = document.getElementById("buttonsSection");
@@ -14,10 +13,20 @@
   let showSteps = false;
   let selectedIconButton = 1;
   let settingsIcon = document.querySelector(".settings-icon");
+  let currentStep = 1;
+
+  function goToNextStep(step) {
+    currentStep = step;
+  }
+
+  function resetCurrentStep() {
+    currentStep = 1;
+  }
 
   const selectButton = (buttonNumber) => {
     console.log("buttonNumber", buttonNumber);
     selectedIconButton = buttonNumber;
+
     if (buttonNumber !== 2) {
       clearLastTestResults();
     }
@@ -34,9 +43,12 @@
       settingsIcon.classList.toggle("open"); // Update icon based on dropdown state
     }
   };
-
-  function NavigateToConfig() {
-    navigateToConfig = true;
+  function navigateToConfig() {
+    if (selectedIconButton !== 1) {
+      selectedIconButton = 1;
+      console.log("in button config");
+    } else {
+    }
   }
   const clearLastTestResults = () => {
     const testSuiteName = document.getElementById("testSuiteName");
@@ -51,10 +63,31 @@
     if (errorElement) errorElement.style.display = "none";
   };
 
+  function handleStepClick(stepNumber) {
+    if (stepNumber == 4) {
+      console.log("here in the handlestepclick")
+      const event = new CustomEvent('ciCdStepClick', {
+        detail: { step: 'ci-cd-setup' },
+      });
+      goToNextStep(5);
+      document.dispatchEvent(event); // Dispatch the event to be captured in sidebar.js
+    }else if(stepNumber  == 5){
+      console.log("here in the last step")
+      const event = new CustomEvent('addUsersClick', {
+        detail: { step: 'add-users' },
+      });
+      document.dispatchEvent(event);
+    }
+  }
   const toggleRecording = () => {
     isRecording = !isRecording;
     isTesting = false;
     showSteps = !showSteps;
+    if (isRecording) {  
+      goToNextStep(2);
+    } else {
+      goToNextStep(1);
+    }
     // triggerAnimation();
   };
 
@@ -62,6 +95,11 @@
     isTesting = !isTesting;
     isRecording = false;
     showSteps = !showSteps;
+    if (isTesting) {
+      goToNextStep(4);
+    } else {
+      goToNextStep(2);
+    }
     // triggerAnimation();
   };
 
@@ -126,207 +164,301 @@
   ];
 </script>
 
-<div class="container baloo-2-custom">
-  <svg
-    class="back-arrow"
-    id = "backArrow"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-    on:click={NavigateToConfig}
+<div class="container">
+  <h1 class="main-heading">Running integration tests</h1>
+  <button class="back-button" id="backConfig" on:click={navigateToConfig}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      fill="currentColor"
+      class="bi bi-arrow-left"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M15 8a.5.5 0 0 1-.5.5H4.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708.708L4.707 7.5H14.5A.5.5 0 0 1 15 8z"
+      />
+    </svg></button
   >
-    <path d="M19 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H19v-2z" />
-  </svg>
-
-  <div class="icon-buttons">
-    <button
-      id="keploycommands"
-      class="icon-button {selectedIconButton === 1 ? 'selected' : ''}"
-      on:click={() => selectButton(1)}
-    >
-      <span class="tooltip">Record/Replay</span>
-      {#if isRecording}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35px"
-          height="35px"
-          viewBox="0 0 24 24"
-          ><path
-            fill="#FF914D"
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"
-          /></svg
-        >
-      {:else}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35px"
-          height="35px"
-          viewBox="0 0 24 24"
-          ><path
-            fill="#FF914D"
-            d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6"
-            opacity="0.3"
-          /><path
-            fill="#FF914D"
-            d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"
-          /></svg
-        >
-      {/if}
-      <!-- <div bind:this={animationWindow} id="animationWindow"></div> -->
-    </button>
-    <button
-      id="displayPreviousTestResults"
-      class="icon-button {selectedIconButton === 2 ? 'selected' : ''}"
-      on:click={() => selectButton(2)}
-    >
-      <span class="history-icon"></span>
-      <span class="tooltip">History</span>
-    </button>
-    <button
-      id="openConfig"
-      class="icon-button {selectedIconButton === 3 ? 'selected' : ''}"
-      on:click={() => selectButton(3)}
-    >
-      <span class="settings-icon"></span>
-      <span class="tooltip">Settings</span>
-    </button>
-  </div>
-  <div class="header">
-    <div class="heading">
-      {#if selectedIconButton === 3}
-        <h1>Make changes to keploy config</h1>
-      {:else if selectedIconButton === 2}
-        <h1>View Previous Test Results</h1>
-      {:else}
-        <h1>
-          {isRecording
-            ? "Recording Started"
-            : isTesting
-              ? "Testing Started"
-              : "Running Keploy"}
-        </h1>
-      {/if}
-      <span
-        class="stop-button"
-        on:click={stop}
-        on:keydown={(e) => e.key === "Enter" && stop()}
-        id="stopRecordingButton"
-        bind:this={stopRecordingButton}
-        role="button"
-        tabindex="0"
+  <div class="container-card">
+    <div class="icon-buttons">
+      <!-- <button
+        id="keploycommands"
+        class="icon-button {selectedIconButton === 1 ? 'selected' : ''}"
+        on:click={() => selectButton(1)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35px"
-          height="35px"
-          viewBox="0 0 24 24"
-          ><path
-            fill="#FF914D"
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"
-          /></svg
-        >
-      </span>
-      <span
-        class="stop-button"
-        on:click={stop}
-        on:keydown={(e) => e.key === "Enter" && stop()}
-        id="stopTestingButton"
-        bind:this={stopTestingButton}
-        role="button"
-        tabindex="0"
+        <span class="tooltip">Record/Replay</span>
+        {#if isRecording}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            viewBox="0 0 24 24"
+            ><path
+              fill="#FF914D"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"
+            /></svg
+          >
+        {:else}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            viewBox="0 0 24 24"
+            ><path
+              fill="#FF914D"
+              d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6"
+              opacity="0.3"
+            /><path
+              fill="#FF914D"
+              d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"
+            /></svg
+          >
+        {/if}
+        <!-- <div bind:this={animationWindow} id="animationWindow"></div> -->
+      <!-- </button> -->
+      <button
+        id="displayPreviousTestResults"
+        class="icon-button {selectedIconButton === 2 ? 'selected' : ''}"
+        on:click={() => selectButton(2)}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35px"
-          height="35px"
-          viewBox="0 0 24 24"
-          ><path
-            fill="#FF914D"
-            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"
-          /></svg
+        <span class="history-icon"></span>
+      </button>
+      <button
+        id="openConfig"
+        class="icon-button {selectedIconButton === 3 ? 'selected' : ''}"
+        on:click={() => selectButton(3)}
+      >
+        <span class="settings-icon"></span>
+      </button>
+    </div>
+    <div class="header">
+      <div class="heading">
+        {#if selectedIconButton === 3}
+          <h1>Make changes to keploy config</h1>
+        {:else if selectedIconButton === 2}
+          <h1>View Previous Test Results</h1>
+        {:else}
+          <h1>
+            {#if isRecording}
+              Recording Started
+            {:else if isTesting}
+              Testing Started
+            {:else}
+              <span class="highlight">Increase</span> your Test coverage now!!
+            {/if}
+          </h1>
+        {/if}
+        <span
+          class="stop-button"
+          on:click={stop}
+          on:keydown={(e) => e.key === "Enter" && stop()}
+          id="stopRecordingButton"
+          bind:this={stopRecordingButton}
+          role="button"
+          tabindex="0"
         >
-      </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            viewBox="0 0 24 24"
+            ><path
+              fill="#FF914D"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"
+            /></svg
+          >
+        </span>
+        <span
+          class="stop-button"
+          on:click={stop}
+          on:keydown={(e) => e.key === "Enter" && stop()}
+          id="stopTestingButton"
+          bind:this={stopTestingButton}
+          role="button"
+          tabindex="0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            viewBox="0 0 24 24"
+            ><path
+              fill="#FF914D"
+              d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2m0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8m4-4H8V8h8z"
+            /></svg
+          >
+        </span>
+      </div>
+      <div class="statusdiv" id="statusdiv">
+        <h3 id="recordStatus"></h3>
+        <div id="recordedTestCases"></div>
+        <h3 id="testStatus"></h3>
+        <div id="testResults"></div>
+        <button id="viewCompleteSummaryButton"
+          >View Complete Test Summary</button
+        >
+        <button id="viewTestLogsButton">View Logs</button>
+        <button id="viewRecordLogsButton">View Logs</button>
+        <hr id="completeSummaryHr" />
+      </div>
     </div>
-    <div class="statusdiv" id="statusdiv">
-      <h3 id="recordStatus"></h3>
-      <div id="recordedTestCases"></div>
-      <h3 id="testStatus"></h3>
-      <div id="testResults"></div>
-      <button id="viewCompleteSummaryButton">View Complete Test Summary</button>
-      <button id="viewTestLogsButton">View Logs</button>
-      <button id="viewRecordLogsButton">View Logs</button>
-      <hr id="completeSummaryHr" />
-    </div>
-  </div>
-  {#if selectedIconButton === 2}
-    <div id="lastTestResults">
-      <h3 id="testSuiteName"></h3>
-    </div>
-  {/if}
+    {#if selectedIconButton === 2}
+      <div id="lastTestResults">
+        <h3 id="testSuiteName"></h3>
+      </div>
+    {/if}
 
-  <div class="section" id="buttonsSection">
-    <div
-      class="card"
-      on:click={toggleRecording}
-      on:keydown={(e) => e.key === "Enter" && toggleRecording()}
-      tabindex="0"
-      role="button"
-      id="startRecordingButton"
-      bind:this={startRecordingButton}
-    >
-      <div class="card-icon">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35px"
-          height="35px"
-          viewBox="0 0 24 24"
-          ><path
-            fill="#FF914D"
-            d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6"
-            opacity="0.3"
-          /><path
-            fill="#FF914D"
-            d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"
-          /></svg
+    <div class="section" id="buttonsSection">
+      <div
+        class="card"
+        on:click={toggleRecording}
+        on:keydown={(e) => e.key === "Enter" && toggleRecording()}
+        tabindex="0"
+        role="button"
+        id="startRecordingButton"
+        bind:this={startRecordingButton}
+      >
+        <div class="card-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="35px"
+            viewBox="0 0 24 24"
+            ><path
+              fill="#FF914D"
+              d="M12 18c3.31 0 6-2.69 6-6s-2.69-6-6-6s-6 2.69-6 6s2.69 6 6 6"
+              opacity="0.3"
+            /><path
+              fill="#FF914D"
+              d="M12 20c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-14c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6s2.69-6 6-6"
+            /></svg
+          >
+        </div>
+        <div class="card-text">Record Test Cases</div>
+      </div>
+      <div
+        class="card"
+        on:click={toggleTesting}
+        on:keydown={(e) => e.key === "Enter" && toggleTesting()}
+        tabindex="0"
+        role="button"
+        id="startTestingButton"
+        bind:this={startTestingButton}
+      >
+        <div class="card-icon replay-icon"></div>
+        <div class="card-text">Replay Test Cases</div>
+      </div>
+    </div>
+
+    {#if showSteps}
+      <div class="steps" transition:fly={{ y: 20, duration: 300 }}>
+        {#if isRecording}
+          {#each recordingSteps as step}
+            <div class="step-recording">{step}</div>
+          {/each}
+        {:else if isTesting}
+          {#each replayingSteps as step}
+            <div class="step-testing">{step}</div>
+          {/each}
+        {/if}
+      </div>
+    {/if}
+    <div class="loader" id="loader"></div>
+    <div class="stepper-container">
+      <div class="step-line"></div>
+      <div class="step">
+        <span
+          class="step-number {currentStep >= 1
+            ? 'activeStep'
+            : 'InactiveStep'} ">1. Setup Configuration</span
+        >
+        <div
+          class="step-circle {currentStep >= 1 ? 'active' : 'inactive'} "
+        ></div>
+      </div>
+      <div class="step">
+        <div
+          class="step-circle {currentStep >= 2 ? 'active' : 'inactive'} "
+        ></div>
+        <span
+          class="step-number bottom {currentStep >= 2
+            ? 'activeStep'
+            : 'InactiveStep'}">2. Record Test</span
         >
       </div>
-      <div class="card-text">Record Test Cases</div>
-      <div class="card-arrow">➔</div>
-    </div>
-    <div
-      class="card"
-      on:click={toggleTesting}
-      on:keydown={(e) => e.key === "Enter" && toggleTesting()}
-      tabindex="0"
-      role="button"
-      id="startTestingButton"
-      bind:this={startTestingButton}
-    >
-      <div class="card-icon replay-icon"></div>
-      <div class="card-text">Replay Test Cases</div>
-      <div class="card-arrow">➔</div>
+      <div class="step">
+        <!-- <div class="step-line"></div> -->
+        <span
+          class="step-number {currentStep >= 3 ? 'activeStep' : 'InactiveStep'}"
+          >3. Replay Test</span
+        >
+        <div
+          class="step-circle {currentStep >= 3 ? 'active' : 'inactive'}"
+        ></div>
+      </div>
+      <div class="step">
+        <!-- <div class="step-line"></div> -->
+        <div
+          class="step-circle {currentStep >= 4 ? 'active' : 'inactive'}"
+        ></div>
+        <span
+          class="step-number bottom {currentStep >= 4
+            ? 'activeStep pointer'
+            : 'InactiveStep'}" on:click={handleStepClick(currentStep)}>4. CI/CD setup</span
+        >
+      </div>
+      <div class="step">
+        <span
+          class="step-number {currentStep >= 5 ? 'activeStep pointer' : 'InactiveStep'}"
+          on:click={handleStepClick(currentStep)}
+          >5. Add users</span
+        >
+        <div
+          class="step-circle {currentStep >= 5 ? 'active' : 'inactive'} "
+        ></div>
+      </div>
     </div>
   </div>
-
-  {#if showSteps}
-    <div class="steps" transition:fly={{ y: 20, duration: 300 }}>
-      {#if isRecording}
-        {#each recordingSteps as step}
-          <div class="step">{step}</div>
-        {/each}
-      {:else if isTesting}
-        {#each replayingSteps as step}
-          <div class="step">{step}</div>
-        {/each}
-      {/if}
-    </div>
-  {/if}
-  <div class="loader" id="loader"></div>
 </div>
 
 <style>
+  @font-face {
+    font-family: "Montserrat";
+    src:
+      url("../../font/Montserrat-VariableFont_wght.ttf") format("woff2"),
+      url("../../font/Montserrat-VariableFont_wght.ttf") format("woff");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Montserrat";
+    src:
+      url("../../font/Montserrat-Italic-VariableFont_wght.ttf") format("woff2"),
+      url("../../font/Montserrat-Italic-VariableFont_wght.ttf") format("woff");
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  :global(body) {
+    margin: 0;
+    padding: 0;
+    font-family: "Montserrat", sans-serif; /* Use Montserrat here */
+    font-size: var(--vscode-font-size);
+    color: var(--vscode-foreground);
+    background-color: #000;
+  }
+
   .container {
     padding: 16px;
-    margin-top: 35px;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    font-family: "Montserrat", sans-serif; /* Use Montserrat here */
+
     /* font-family: 'Arial', sans-serif; */
   }
 
@@ -335,42 +467,54 @@
     justify-content: center;
     align-items: center;
     margin-bottom: 10px;
-    margin-top: 28px;
+    margin-top: 30px;
     flex-direction: column;
   }
-  .icon-buttons {
-    display: flex;
-    justify-content: space-around;
-    border: 2px solid;
-    border-color: var(--vscode-button-secondaryBackground);
-    border-radius: 5px;
-    padding: 5px;
+  .main-heading {
+    text-align: center;
   }
-  .icon-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* background-color: var(--vscode-button-background); */
-    background-color: var(--vscode-button-secondaryBackground);
-    border-radius: 5px;
-    /* border: 2px solid transparent; */
-    color: #ff914d;
-    font-size: 24px;
-    height: 40px;
-    width: 80svw;
+
+  .pointer{
     cursor: pointer;
   }
-  .icon-button.selected {
-    /* border-color: #ff9933; */
-    /* background-color: var(--vscode-button-background); */
-    background-color: #00163d;
-  }
-  .icon-button:hover {
-    color: #ff9933;
-    background-color: #606060;
 
-    /* background-color: #f9f9f9; */
+  .container-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    height: 100%;
+    padding: 2rem;
+    background-color: black;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
   }
+
+  .icon-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    padding: 5px;
+    width: 100%; /* Full width of the container */
+    justify-content: flex-start; /* Align icons to the left */
+  }
+
+  .icon-button {
+    display: flex;
+    justify-content: start;
+    border-radius: 5px;
+    color: white;
+    background-color: black;
+    font-size: 24px;
+    height: 40px;
+    padding: 0 10px; /* Add padding inside buttons */
+    cursor: pointer;
+    border: none;
+    width: auto;
+  }
+
   .heading {
     display: flex;
     align-items: center;
@@ -385,6 +529,14 @@
 
   .section {
     margin-bottom: 32px;
+    width: 70%;
+  }
+
+  .highlight {
+    background: linear-gradient(90deg, #ffb388 0%, #ff5c00 50%, #f76b1c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   #testResults {
@@ -404,6 +556,17 @@
     display: none;
     width: 100%;
     margin: 10px auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: black;
+
+    color: white;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    cursor: pointer;
   }
   #recordStatus {
     display: none;
@@ -429,28 +592,28 @@
   .back-button {
     margin-top: 20px;
     padding: 10px 20px;
-    background-color: #ff914d;
+    background-color: black;
     color: white;
     border: none;
     border-radius: 5px;
+    width: auto;
     cursor: pointer;
     font-size: 16px;
+    text-align: start;
   }
 
-  .back-button:hover {
-    background-color: #e6803a;
-  }
   .card {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px;
     margin-bottom: 16px;
-    background-color: #00163d;
-    color: #ff9933;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s;
+    background-color: black;
+    color: white;
+    border: 2px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
     cursor: pointer;
   }
 
@@ -462,34 +625,31 @@
     width: 35px;
 
     margin-right: 16px;
-    color: #ff6f61;
+    color: white;
   }
 
   .card-text {
     flex-grow: 1;
     font-size: 20px;
+    text-align: center;
     color: white;
-  }
-
-  .card-arrow {
-    font-size: 20px;
-    color: white;
-    margin-right: 16px; /* Adjust this value as needed */
   }
 
   .steps {
     margin-top: 16px;
     padding: 16px;
+    text-align: start;
     /* background-color: #e9e9e9; */
     /* color: #b0b0b0; */
     font-size: 16px;
     border-radius: 8px;
+    padding-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .step {
+  /* .step {
     margin-bottom: 8px;
-  }
+  } */
 
   .stop-button {
     display: inline;
@@ -506,55 +666,27 @@
     height: 400px;
   } */
 
-  .icon-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--vscode-button-secondaryBackground);
-    border-radius: 5px;
-    color: #ff914d;
-    font-size: 24px;
-    height: 40px;
-    width: 80svw;
-    cursor: pointer;
-    margin-right: 10px; /* Add margin to separate buttons */
-  }
-
-  .tooltip {
-    display: none;
-    position: absolute;
-    /* background-color: var(--vscode-button-background); */
-    background-color: #00163d;
-    color: white;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    width: 120px;
-    z-index: 1;
-    font-size: x-small;
-    top: 80px;
-  }
-  .icon-button:hover .tooltip {
-    display: block;
-  }
   #completeSummaryHr {
     display: none;
   }
-  /* Back Arrow SVG Style */
-  .back-arrow {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    fill: var(--vscode-foreground); /* Dynamic color based on VS Code theme */
-    transition: fill 0.3s ease;
-    margin-right: 10px; /* Add margin to separate from other elements */
+
+  button:focus {
+    outline: none; /* Remove the blue border on focus for all buttons */
+  }
+  button {
+    outline: none; /* Remove the blue border on focus for all buttons */
   }
 
-  .back-arrow:hover {
-    fill: var(--vscode-button-hoverBackground); /* Change color on hover */
+  /* Back Arrow SVG Style */
+  .back-arrow {
+    color: #ffffff;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: inherit;
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: start;
   }
 
   .container {
@@ -570,12 +702,122 @@
     flex-direction: column;
   }
 
-  .icon-buttons {
+  .stepper-container {
     display: flex;
-    justify-content: space-around;
-    border: 2px solid;
-    border-color: var(--vscode-button-secondaryBackground);
-    border-radius: 5px;
-    padding: 5px;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: auto;
+    z-index: 1;
+    scale: 90%;
+    position: relative;
+    margin-bottom: 20px;
+  }
+
+  .step:nth-of-type(2) div {
+    margin-right: auto;
+  }
+
+  .step:last-child {
+    align-items: flex-end; /* Align last circle to the right */
+    text-align: right;
+  }
+
+  .step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1rem;
+    color: white;
+    z-index: 2;
+    flex: 1; /* Allows the steps to take equal space */
+  }
+
+  .activeStep {
+    color: white;
+  }
+
+  .InactiveStep {
+    color: grey;
+  }
+
+  .step-number {
+    position: absolute;
+    top: -2.5rem; /* Adjust to position text above the circle */
+    font-size: 0.9rem;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis if text is too long */
+    padding: 0 0.5rem;
+  }
+
+  .step-number.bottom {
+    top: 2.5rem; /* Adjust to position text below the circle */
+  }
+
+  .step-circle {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    background-color: black;
+    position: relative;
+    z-index: 3;
+  }
+
+  .step-circle.active {
+    border: 2px solid #ff914d;
+  }
+
+  .step-circle.inactive {
+    border: 2px solid #969390;
+  }
+
+  .step-circle.active::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 1rem;
+    background-color: #ff914d;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .step-circle.inactive::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1rem;
+    height: 1rem;
+    background-color: #969390;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .step-line {
+    width: 100%;
+    height: 2px;
+    background-color: #ff914d;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    z-index: 1;
+  }
+
+  .step:not(:first-child) .step-line {
+    left: 0;
+  }
+
+  .step:not(:last-child) .step-line::after {
+    content: "";
+    width: 100%;
+    height: 2px;
+    background-color: #ff914d;
+    position: absolute;
+    top: 0;
+    left: 100%;
   }
 </style>

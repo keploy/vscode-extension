@@ -78,11 +78,6 @@
           "when": "view == Keploy-Sidebar"
         },
         {
-          "command": "keploy.SignIn",
-          "group": "navigation",
-          "when": "keploy.signedIn != true && view == Keploy-Sidebar"
-        },
-        {
           "command": "keploy.SignInWithOthers",
           "group": "navigation",
           "when": "keploy.signedIn != true && view == Keploy-Sidebar"
@@ -96,13 +91,8 @@
     },
     "commands": [
       {
-        "command": "keploy.SignIn",
-        "title": "Sign In",
-        "when": "keploy.signedIn != true && view == Keploy-Sidebar"
-      },
-      {
         "command": "keploy.SignInWithOthers",
-        "title": "Sign In With Others",
+        "title": "Sign In",
         "when": "keploy.signedIn != true && view == Keploy-Sidebar"
       },
       {
@@ -190,6 +180,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@rollup/plugin-url": "^8.0.2",
     "@tsconfig/svelte": "^1.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.6",
