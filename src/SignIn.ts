@@ -291,17 +291,19 @@ export async function getInstallationID(): Promise<string> {
 
 
 export async function ValidateSignInWithOthers(jwtToken: string, serverURL: string): Promise<{}> {
+    console.log("serverurl " , serverURL);
     const url = `${serverURL}/user/connect`;
-
+    console.log("url" , url);
     try {
         // Assuming getInstallationID returns a promise that resolves to a string
+        console.log("token in the validate other " , jwtToken);
         const installationID: string = await getInstallationID();
 
         const requestBody = {
             InstallationID: installationID,
         };
 
-        const response: AxiosResponse<any> = await axios.post(url, requestBody, {
+        const response: AxiosResponse<any> = await axios.post("https://api.keploy.io/user/connect", requestBody, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${jwtToken}`, // JWT token in the header
@@ -312,7 +314,6 @@ export async function ValidateSignInWithOthers(jwtToken: string, serverURL: stri
             throw new Error(`Failed to authenticate: ${response.data.Error}`);
         }
 
-        // You can customize the returned object with response data if needed
         return { response };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);

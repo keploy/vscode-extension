@@ -14,6 +14,7 @@
   let isModalOpen = false;
   let activeImage = "";
   let apiResponseElement;
+  let ProgressBarVisibility = false;
 
   function openModal(imageSrc) {
     isModalOpen = true;
@@ -73,9 +74,20 @@
         }
 
         if (apiResponseElement) {
-          console.log("apiResponseElement is present");
+          // console.log("apiResponseElement is present");
           // apiResponseElement.textContent = `API Response: ${apiResponse}`;
         }
+      }
+
+      if(message.type === "signedIn"){
+        const signedInResponse = message.value;
+          if(signedInResponse == "false"){
+              ProgressBarVisibility = false;
+              // console.log("Progress Bar is not Visible")
+          }else{
+            // console.log("Progress Bar is  Visible")
+            ProgressBarVisibility = true;
+          }
       }
     });
   });
@@ -109,6 +121,7 @@
     </div>
 
     <!-- Progress bar container -->
+     {#if ProgressBarVisibility == true}
     <div class="progress">
       {#if usedCall == totalCall}
       <div class="tooltip-container">
@@ -127,6 +140,7 @@
         <span>{usedCall}/{totalCall} sessions</span>
       {/if}
     </div>
+    {/if}
   </div>
 
   <div class="steps-container">

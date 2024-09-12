@@ -56,6 +56,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     };
 
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
+    const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
+
+    console.log("signedIn others  value" , signedIn);
 
 
     let scriptUri = webviewView.webview.asWebviewUri(
@@ -68,7 +71,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
  
-    this._sendApiResponseToWebview(apiResponse);
+    this._sendApiResponseToWebview(apiResponse,signedIn);
+
 
     // Start sending the updated `apiResponse` to the webview every 3 seconds
     this._startApiResponseUpdates();
@@ -436,7 +440,9 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
    private _startApiResponseUpdates() {
     this._interval = setInterval(() => {
       const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
-      this._sendApiResponseToWebview(apiResponse);
+      const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
+
+      this._sendApiResponseToWebview(apiResponse , signedIn);
     }, 3000); // 3 seconds
   }
 
@@ -448,12 +454,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   }
 
   // Helper function to send `apiResponse` to the webview
-  private _sendApiResponseToWebview(apiResponse: string) {
+  private _sendApiResponseToWebview(apiResponse: string , signedIn:string) {
     if (this._view) {
-      // console.log("api response withing 3 seconds wala" , apiResponse);
+      // console.log("api response withing 3 seconds" , apiResponse);
       this._view.webview.postMessage({
         type: 'apiResponse',
         value: apiResponse,
+      });
+
+      this._view.webview.postMessage({
+        type: 'signedIn',
+        value: signedIn,
       });
     }
   }

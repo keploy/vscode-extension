@@ -11,6 +11,7 @@ async function Utg(context: vscode.ExtensionContext) {
             try {
 
                 const token  = await context.globalState.get<'string'>('JwtToken');
+                console.log("token in the utg" , token);
                 let apiResponse:string = '';
                 // vscode.window.showInformationMessage('Attempting to trigger API request...');
                 // if(token){
@@ -117,6 +118,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
                  try {
                     if(token){
+                        console.log("token inside the try block in utg.ts" , token);
                         apiResponse = await makeApiRequest(token) || 'no response';
                         const response = JSON.parse(apiResponse);
                         await context.globalState.update('apiResponse', apiResponse);
