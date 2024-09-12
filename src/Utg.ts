@@ -61,7 +61,7 @@ async function Utg(context: vscode.ExtensionContext) {
                 let testFileContent:string;
                 
                 if (extension === '.js' || extension === '.ts') {
-                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));
+                    testFilePath = sourceFilePath.replace(extension, `.test${extension}`);
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
@@ -92,8 +92,7 @@ async function Utg(context: vscode.ExtensionContext) {
                     command = `mvn clean test jacoco:report`;
                     coverageReportPath = "./target/site/jacoco/jacoco.xml";
                 } else if (extension === '.go') {
-                    const testDir = rootDir;
-                    testFilePath = path.join(testDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
+                    testFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
                     console.log(testFilePath , "in the go block");
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
