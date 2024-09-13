@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { SidebarProvider } from './SidebarProvider';
-import SignIn, { validateFirst,SignInWithOthers, ValidateSignInWithOthers } from './SignIn';
+import SignIn, { validateFirst,SignInWithOthers,ValidateSignInWithOthers } from './SignIn';
 import oneClickInstall from './OneClickInstall';
 import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
