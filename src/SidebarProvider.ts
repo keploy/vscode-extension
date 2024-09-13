@@ -28,8 +28,9 @@ const testOptions: vscode.OpenDialogOptions = {
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
+  _interval?: NodeJS.Timeout; // Store the interval reference
 
-  constructor(private readonly _extensionUri: vscode.Uri) {
+  constructor(private readonly _extensionUri: vscode.Uri ,   private readonly _context: vscode.ExtensionContext) {
   }
 
   public postMessage(type: any, value: any) {
@@ -54,6 +55,11 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       ],
     };
 
+    const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
+    const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
+
+    console.log("signedIn others  value" , signedIn);
+
 
     let scriptUri = webviewView.webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.js")
@@ -64,6 +70,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
+ 
+    this._sendApiResponseToWebview(apiResponse,signedIn);
+
+
+    // Start sending the updated `apiResponse` to the webview every 3 seconds
+    this._startApiResponseUpdates();
+;
+
+
 
     webviewView.onDidChangeVisibility(() => {
       if (webviewView.visible) {
@@ -102,7 +117,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         //   }
         //   break;
         // }
-
         case 'viewLogs': {
           if (!data.value) {
             return;
@@ -290,6 +304,20 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+
+        case "openLink":{
+          if (!data.url) {
+            return;
+          }
+          try {
+            console.log("Opening external link: " + data.url);
+            vscode.env.openExternal(vscode.Uri.parse(data.url));
+          } catch (error) {
+            this._view?.webview.postMessage({ type: 'error', value: `Failed to open external link: ${error}` });
+          }
+          break;
+        }
+
         case "openRecordedTestFile": {
           if (!data.value) {
             return;
@@ -409,7 +437,37 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     });
   }
+   private _startApiResponseUpdates() {
+    this._interval = setInterval(() => {
+      const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
+      const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
 
+      this._sendApiResponseToWebview(apiResponse , signedIn);
+    }, 3000); // 3 seconds
+  }
+
+  // Stop the interval when the webview is no longer active
+  public dispose() {
+    if (this._interval) {
+      clearInterval(this._interval);
+    }
+  }
+
+  // Helper function to send `apiResponse` to the webview
+  private _sendApiResponseToWebview(apiResponse: string , signedIn:string) {
+    if (this._view) {
+      // console.log("api response withing 3 seconds" , apiResponse);
+      this._view.webview.postMessage({
+        type: 'apiResponse',
+        value: apiResponse,
+      });
+
+      this._view.webview.postMessage({
+        type: 'signedIn',
+        value: signedIn,
+      });
+    }
+  }
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
@@ -457,10 +515,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap" rel="stylesheet"> 
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 				<link href="${styleResetUri}" rel="stylesheet">
 				<link href="${styleVSCodeUri}" rel="stylesheet">
         <link href="${styleMainUri}" rel="stylesheet">
         <link href="${compiledCSSUri}" rel="stylesheet">
+        
 			</head>
       <body>
 				

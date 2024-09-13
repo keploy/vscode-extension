@@ -33,6 +33,9 @@ const lowerHR = document.getElementById('lowerHR');
 const loader = document.getElementById('loader');
 const viewTestLogsButton = document.getElementById('viewTestLogsButton');
 const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
+const apiResponseElement = document.getElementById('apiResponseDisplay');
+const backConfigbutton = document.getElementById('backConfig');
+// const apiResponseDisplayLog  = document.getElementById('apiResponseDisplay');
 // const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 const navigateToConfigButton = document.getElementById('backtoHome');
@@ -123,7 +126,19 @@ if (rerunTestSuiteButton) {
   });
 
 }
+
+if(backConfigbutton){
+  backConfigbutton.addEventListener('click',async () =>{
+    console.log("backconfig button clicked")
+    vscode.postMessage({
+      type:"navigate",
+      value:"Config"
+    })
+  })
+}
+
 if (navigateToConfigButton) {
+  console.log("here is button")
   navigateToConfigButton.addEventListener('click', async () => {
     vscode.postMessage({
       type: "navigate",
@@ -309,10 +324,37 @@ if (setupConfigButton) {
   });
 }
 
+
+document.addEventListener('ciCdStepClick', function (e) {
+  // Logic to handle CI/CD setup click event
+  if (e.detail.step === 'ci-cd-setup') {
+    console.log('CI/CD setup step clicked');
+    // Perform your action here, such as redirecting or opening something in the sidebar
+    // Example: Trigger navigation or link opening logic
+    vscode.postMessage({
+      type: "openLink",
+      url: "https://keploy.io/docs", // Replace this with the URL you want to navigate to
+    });// Example of opening a link
+  }
+});
+
+document.addEventListener('addUsersClick', function (e) {
+  // Logic to handle CI/CD setup click event
+  if (e.detail.step === 'add-users') {
+    console.log('add users  step clicked');
+    // Perform your action here, such as redirecting or opening something in the sidebar
+    // Example: Trigger navigation or link opening logic
+    vscode.postMessage({
+      type: "openLink",
+      url: "https://app.keploy.io", // Replace this with the URL you want to navigate to
+    });// Example of opening a link
+  }
+});
+
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
   const message = event.data;
-  console.log("message", message);
+  // console.log("message", message);
 
   if (message.type === 'navigateToHome') {
     vscode.postMessage({

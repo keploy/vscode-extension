@@ -1,1 +1,3 @@
-sudo: a password is required
+Sorry, try again.
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: 2 incorrect password attempts

@@ -77,9 +77,10 @@ function generateRandomState() {
 
 
 export default async function SignInWithGitHub() {
-    try {
+    try{
+
         const state = uuidv4(); // Generate a unique state parameter for security
-        const redirectUri = `https://app.keploy.io/login/github/callback`;
+        const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
         const clientId = 'Ov23liNPnpLFCh1lYJkB';
         const scope = 'user:email';
         const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
@@ -88,17 +89,16 @@ export default async function SignInWithGitHub() {
         vscode.env.openExternal(vscode.Uri.parse(authUrl));
     
         // Create a local server to handle the callback
-        const server = http.createServer(async (req, res) => {
-            if (req.url?.startsWith('/login/github/callback')) {
+        const server = http.createServer(async (req: any, res: any) => {
+            if (req.url.startsWith('/login/github/callback')) {
                 const url = new URL(req.url, `http://${req.headers.host}`);
                 const receivedState = url.searchParams.get('state');
                 const code = url.searchParams.get('code');
                 console.log("Received code", code);
-                
                 if (receivedState === state) {
                     // Make a POST request to the backend server to exchange the code for an access token
                     const backendUrl = `http://localhost:8083/auth/login`;
-
+                    // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
                     try {
                         // Await the response from the backend
                         const response = await loginAPI(backendUrl, 'github', code?.toString());
@@ -108,107 +108,22 @@ export default async function SignInWithGitHub() {
                             res.end(JSON.stringify({ error: response.error }));
                         } else {
                             res.writeHead(200, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify(response)); // Send the JSON response back
+                            const resp = JSON.stringify(response);
+                            res.end(resp);  // Send the JSON response back
                         }
                     } catch (err) {
-                        console.log("Error during loginAPI call", err);
                         res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Internal server error' }));
+                        res.end(JSON.stringify({ error: 'Internal Server Error' }));
                     }
                 } else {
                     res.writeHead(400, { 'Content-Type': 'text/html' });
                     res.end('<h1>State mismatch. Authentication failed.</h1>');
                 }
-                
                 server.close();
-            } else {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
-                res.end('<h1>Not Found</h1>');
-            }
+            }   
         }).listen(3000); // Change the port if needed
-    }
-    catch (error) {
-        console.log(error);
-        vscode.window.showErrorMessage('Error occurred while signing in with GitHub');
-        Sentry?.captureException(error);
-    }
-}
-
-export async function SignInWithOthers() {
-    try {
-        const state = generateRandomState(); // Generate a secure random state
-        const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
-        vscode.env.openExternal(vscode.Uri.parse(authUrl));
-
-        return new Promise((resolve, reject) => {
-            const server = http.createServer(async (req, res) => {
-                // Set headers to allow CORS
-                res.setHeader('Access-Control-Allow-Origin', '*');
-                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-                res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-                // Handle preflight requests
-                if (req.method === 'OPTIONS') {
-                    res.writeHead(200);
-                    res.end();
-                    return;
-                }
-
-                // Handle the callback URL
-                if (req.url && req.url.startsWith('/login/keploy/callback')) {
-                    const url = new URL(req.url, `http://${req.headers.host}`);
-                    const receivedState = url.searchParams.get('state');
-                    const token = url.searchParams.get('token');
-
-                    console.log("Received state:", receivedState);
-                    console.log("Received token:", token);
-
-                    // Validate state and token
-                    if (!receivedState || !token) {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Missing state or token' }));
-                        reject(new Error('Missing state or token'));
-                        server.close();
-                        return;
-                    }
-
-                    // Check if the received state matches the original state
-                    if (receivedState === state) {
-                        try {
-                            // Simulate processing the token
-                            console.log("Processing token...");
-
-                            res.writeHead(200, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ message: 'Token received and processed', token, receivedState }));
-
-                            // Resolve the promise with the token
-                            resolve(token.toString());
-                        } catch (err) {
-                            console.error('Error processing token:', err);
-                            res.writeHead(500, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ error: 'Internal Server Error' }));
-                            reject(err);
-                        } finally {
-                            server.close(); // Close the server once the request is handled
-                        }
-                    } else {
-                        res.writeHead(400, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'State mismatch' }));
-                        reject(new Error('State mismatch'));
-                        server.close();
-                    }
-                } else {
-                    res.writeHead(404, { 'Content-Type': 'application/json' });
-                    res.end(JSON.stringify({ error: 'Not Found' }));
-                }
-            }).listen(3001, () => {
-                console.log('Server listening on port 3001');
-            });
-        });
-    } catch (error) {
-        console.error('Error in SignInWithOthers:', error);
-        vscode.window.showErrorMessage('Error occurred while signing in');
-        Sentry?.captureException(error);
+    }catch(error){
+        Sentry?.captureException(error)
     }
 }
  
@@ -327,6 +242,41 @@ export async function getInstallationID(): Promise<string> {
     }
 }
 
+
+export async function ValidateSignInWithOthers(jwtToken: string, serverURL: string): Promise<{}> {
+    console.log("serverurl " , serverURL);
+    const url = `${serverURL}/user/connect`;
+    console.log("url" , url);
+    try {
+        // Assuming getInstallationID returns a promise that resolves to a string
+        console.log("token in the validate other " , jwtToken);
+        const installationID: string = await getInstallationID();
+
+        const requestBody = {
+            InstallationID: installationID,
+        };
+
+        const response: AxiosResponse<any> = await axios.post("https://api.keploy.io/user/connect", requestBody, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${jwtToken}`, // JWT token in the header
+            },
+        });
+
+        if (response.status !== 200) {
+            throw new Error(`Failed to authenticate: ${response.data.Error}`);
+        }
+
+        return { response };
+    } catch (err: any) {
+        console.error("Failed to authenticate:", err.message);
+        throw new Error(`Failed to authenticate: ${err.message}`);
+    }
+}
+
+ 
+
+
 function extractID(output: any) {
     const lines = output.split('\n');
     for (let line of lines) {
@@ -350,12 +300,12 @@ interface AuthReq {
 interface AuthResp {
     EmailID: string;
     IsValid: boolean;
-    JwtToken: string;
+    jwtToken: string;
     Error: string;
 }
 
 
-export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string }> {
+export async function validateFirst(token: string, serverURL: string): Promise<{ emailID: string; isValid: boolean; error: string , JwtToken:string }> {
     const url = `${serverURL}/auth/github`;
 
     const installationID = await getInstallationID();
@@ -373,13 +323,12 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         if (response.status !== 200) {
             throw new Error(`Failed to authenticate: ${response.data.Error}`);
         }
-
-        const jwtToken =  response.data.JwtToken;
-        console.log("JWT Token:", jwtToken);
+        
         return {
             emailID: response.data.EmailID,
             isValid: response.data.IsValid,
             error: response.data.Error,
+            JwtToken: response.data.jwtToken,
         };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
