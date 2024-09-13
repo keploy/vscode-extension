@@ -121,7 +121,7 @@ export default async function SignInWithGitHub() {
 
 export async function SignInWithOthers() {
     const state = generateRandomState();  // Generate a secure random state
-    const authUrl = `https://app.keploy.io/signin?vscode=true&state=${state}`;
+    const authUrl = `http://localhost:3000/signin?vscode=true&state=${state}`;
     vscode.env.openExternal(vscode.Uri.parse(authUrl));
 
     return new Promise((resolve, reject) => {
@@ -136,7 +136,7 @@ export async function SignInWithOthers() {
             }
 
             if (req && req.url && req.url.startsWith('/login/keploy/callback')) {
-                const url = new URL(req.url, `https://${req.headers.host}`);
+                const url = new URL(req.url, `http://${req.headers.host}`);
                 const receivedState = url.searchParams.get('state');
                 const token = url.searchParams.get('token');
                 console.log("Received state:", receivedState);
