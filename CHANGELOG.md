@@ -22,3 +22,8 @@ First Release for Vs Code Extension.
 
 ## [1.0.6]
 - Releasing a stable version for UTG and fix terminal conection of e2e tests
+
+## [1.0.10]
+- Resolved issues with Cross-Origin Resource Sharing that were preventing resources from being accessed.
+- Updated the port settings to ensure proper connectivity and service availability.
+- Corrected URL configurations to ensure links and endpoints function correctly.
