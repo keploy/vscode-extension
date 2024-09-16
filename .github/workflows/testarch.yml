@@ -13,7 +13,7 @@ jobs:
         architecture: [amd64, arm64]
         exclude:
           - os: windows-latest
-            architecture: arm64  
+            architecture: arm64
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -31,6 +31,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Only runs Rollup on non-Windows and non-arm64
       - name: Run Rollup (Only when not in infinite loop)
         if: ${{ runner.os != 'Windows' && matrix.architecture != 'arm64' }}
         run: npm run rollupci
@@ -40,7 +41,7 @@ jobs:
 
       - name: Install VSCode Test dependencies
         run: npm install --save-dev vscode-test
-      
+
       - name: Run VSCode Extension Tests
         run: |
           npx vscode-test \
