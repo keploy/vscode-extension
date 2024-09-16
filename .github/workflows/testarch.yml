@@ -1,4 +1,4 @@
-name: Publish Extension
+name: Build and Test VSCode Extension
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-test:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -14,7 +14,8 @@ jobs:
         exclude:
           - os: windows-latest
             architecture: arm64  # Windows GitHub runners don't support arm64
-    runs-on:  ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,8 +31,34 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Rollup
+      # Conditional Rollup Execution to prevent infinite loops
+      - name: Run Rollup (conditionally)
+        if: ${{ runner.os != 'Windows' && matrix.architecture != 'arm64' }}
         run: npm run rollupci
 
       - name: List contents of out/compiled directory (for debugging)
         run: ls -R out/compiled
+
+      # Install VSCode Test dependencies
+      - name: Install VSCode Test dependencies
+        run: npm install --save-dev vscode-test
+
+      # Run VSCode Extension Tests
+      - name: Run VSCode Extension Tests
+        run: |
+          # Create a directory for logs
+          mkdir -p logs
+          # Run the tests and capture logs
+          npx vscode-test \
+            --extensionDevelopmentPath=. \
+            --extensionTestsPath=./out/test \
+            --logsDirectory=logs \
+            --verbose
+
+      # Upload logs if tests fail
+      - name: Upload Test Logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs-${{ matrix.os }}-${{ matrix.architecture }}
+          path: logs/
