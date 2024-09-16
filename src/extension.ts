@@ -167,28 +167,28 @@ export function activate(context: vscode.ExtensionContext) {
     oneClickInstall();
 
     // let signedIn = context.globalState.get('ourToken');
-    context.globalState.update('SignedOthers' , undefined)
-    context.globalState.update('SubscriptionEnded' , undefined)
+    context.globalState.update('SignedOthers' , undefined);
+    context.globalState.update('SubscriptionEnded' , undefined);
     console.log(context.globalState);
     // if (signedIn) {
     //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
     //     sidebarProvider.postMessage('navigateToHome', 'KeployHome');
     // }
 
-    let accessToken = context.globalState.get<string>('JwtToken')
+    let accessToken = context.globalState.get<string>('JwtToken');
 
     // Check if the access token is already present in the global state
     // const accessToken = context.globalState.get<string>('accessToken');
     // disable if access token is already present
     if (accessToken) {
-        console.log("accessToken is verfied user us logged in")
+        console.log("accessToken is verfied user us logged in");
         // Disable the sign-in command since the user is already signed in
 
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
         vscode.window.showInformationMessage('You are already signed in!');
         // enable the signout command
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-        context.globalState.update('SignedOthers' , true)
+        context.globalState.update('SignedOthers' , true);
 
 
     } else {
@@ -238,7 +238,7 @@ export function activate(context: vscode.ExtensionContext) {
             // console.log('Jwt token:', accessToken);
             await context.globalState.update('JwtToken', accessToken);
             await context.globalState.update('SignedOthers', true);
-            const reponse = await ValidateSignInWithOthers(accessToken)
+            const reponse = await ValidateSignInWithOthers(accessToken);
         
 
 

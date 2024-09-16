@@ -96,7 +96,7 @@ async function Utg(context: vscode.ExtensionContext) {
                     console.log(testFilePath , "in the go block");
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test')
+                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test');
                         testFileContent = `package main\n\nimport "testing"`;
                         fs.writeFileSync(testFilePath, testFileContent);                    }
                     command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
@@ -121,7 +121,7 @@ async function Utg(context: vscode.ExtensionContext) {
                         apiResponse = await makeApiRequest(token) || 'no response';
                         const response = JSON.parse(apiResponse);
                         await context.globalState.update('apiResponse', apiResponse);
-                        if(response.usedCall == response.totalCall ){
+                        if(response.usedCall === response.totalCall ){
                             await context.globalState.update('SubscriptionEnded' , true);
                         }
                     }else{
