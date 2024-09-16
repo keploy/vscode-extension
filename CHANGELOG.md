@@ -40,12 +40,10 @@ First Release for Vs Code Extension.
 
 ## [1.0.9]
 
-- Changed port to resolve conflicts.
-- Resolved CORS error.
-- Corrected URL configurations.
-
-## [1.0.10]
-
 - Resolved issues with Cross-Origin Resource Sharing that were preventing resources from being accessed.
 - Updated the port settings to ensure proper connectivity and service availability.
 - Corrected URL configurations to ensure links and endpoints function correctly.
+
+## [1.0.10]
+
+- Resolved sign-up bug for cross browser callbacks.
