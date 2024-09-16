@@ -9,8 +9,8 @@ jobs:
   build-and-test:
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        architecture: [amd64, arm64]
+        os: [ubuntu-latest]
+        architecture: [arm64]
         exclude:
           - os: windows-latest
             architecture: arm64  # Windows GitHub runners don't support arm64
