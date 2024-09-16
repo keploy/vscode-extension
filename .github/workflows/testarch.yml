@@ -1,0 +1,37 @@
+name: Publish Extension
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        architecture: [amd64, arm64]
+        exclude:
+          - os: windows-latest
+            architecture: arm64  
+    runs-on:  ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Set architecture environment variable
+        run: echo "ARCH=${{ matrix.architecture }}" >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Rollup
+        run: npm run rollupci
+
+      - name: List contents of out/compiled directory (for debugging)
+        run: ls -R out/compiled
