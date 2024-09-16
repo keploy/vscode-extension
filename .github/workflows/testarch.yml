@@ -42,7 +42,7 @@ jobs:
           # Ubuntu ARM64
           - os: ubuntu-latest
             arch: arm64
-            runs-on: [ubuntu-latest, ARM64]
+            runs-on: ubuntu-latest
           # macOS x64
           - os: macos-latest
             arch: x64
