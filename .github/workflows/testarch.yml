@@ -6,13 +6,9 @@ on:
       - main
 
 jobs:
-  build-and-test:
-    strategy:
-      matrix:
-        os: [macos-latest, ubuntu-latest]
-        architecture: [amd64, arm64]
+  build:
+    runs-on: ubuntu-latest
 
-    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,20 +24,63 @@ jobs:
       - name: Run Rollup
         run: npm run rollupci
 
-      - name: List contents of out/compiled directory (for debugging)
-        run: ls -R out/compiled
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: extension-build
+          path: out/compiled
 
-      - name: Install Xvfb
+  test:
+    needs: build
+    strategy:
+      matrix:
+        include:
+          # Ubuntu x64
+          - os: ubuntu-latest
+            arch: x64
+            runs-on: ubuntu-latest
+          # Ubuntu ARM64
+          - os: ubuntu-latest
+            arch: arm64
+            runs-on: [ubuntu-latest, ARM64]
+          # macOS x64
+          - os: macos-latest
+            arch: x64
+            runs-on: macos-latest
+    runs-on: ${{ matrix.runs-on }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: extension-build
+          path: out/compiled
+
+      - name: Install dependencies
+        run: npm install
+
+      # Install Xvfb on Linux (both x64 and ARM64)
+      - name: Install Xvfb (Linux only)
+        if: runner.os == 'Linux'
         run: sudo apt-get install -y xvfb
 
       - name: Run VSCode Extension Tests
         env:
           DISPLAY: ':99.0'
         run: |
-          # Start Xvfb
-          Xvfb :99 -ac -screen 0 1920x1080x24 &
-          # Wait to ensure Xvfb starts
-          sleep 3
+          # Start Xvfb if on Linux
+          if [ "${{ runner.os }}" == "Linux" ]; then
+            Xvfb :99 -ac -screen 0 1920x1080x24 &
+            sleep 3
+          fi
           # Create a directory for logs
           mkdir -p logs
           # Run the tests and capture logs
@@ -55,5 +94,5 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v3
         with:
-          name: test-logs-${{ runner.os }}-${{ runner.arch }}
+          name: test-logs-${{ matrix.os }}-${{ matrix.arch }}
           path: logs/
