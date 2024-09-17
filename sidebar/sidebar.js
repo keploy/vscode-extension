@@ -398,6 +398,7 @@ window.addEventListener('message', event => {
     }
 
     if (message.noTestCases === true) {
+      stopRecordingButton.click();
       viewRecordLogsButton.style.display = "block";
       recordStatus.textContent = `No Test Cases Recorded`;
       recordedTestCasesDiv.style.display = "none";
