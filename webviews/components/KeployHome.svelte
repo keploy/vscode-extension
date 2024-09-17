@@ -14,7 +14,8 @@
   let selectedIconButton = 1;
   let settingsIcon = document.querySelector(".settings-icon");
   let currentStep = 1;
-
+  let backConfigButton;
+  
   function goToNextStep(step) {
     currentStep = step;
   }
@@ -44,12 +45,10 @@
     }
   };
   function navigateToConfig() {
-    if (selectedIconButton !== 1) {
       selectedIconButton = 1;
-      console.log("in button config");
-    } else {
-    }
+      console.log("In the main screen");
   }
+
   const clearLastTestResults = () => {
     const testSuiteName = document.getElementById("testSuiteName");
     const totalTestCases = document.getElementById("totalTestCases");
@@ -141,6 +140,12 @@
     if (stopTestingButton) {
       stopTestingButton.style.display = isTesting ? "inline" : "none";
     }
+
+    if (backConfigButton) {
+    // Perform any operations on backConfigButton, such as adding event listeners or styling.
+    backConfigButton.style.display = selectedIconButton != 2 && selectedIconButton != 3 ? "block" : "none";
+  }
+
     const statusdiv = document.getElementById("statusdiv");
     if (statusdiv) {
       statusdiv.style.display = selectedIconButton === 1 ? "block" : "none";
@@ -166,7 +171,9 @@
 
 <div class="container">
   <h1 class="main-heading">Running integration tests</h1>
-  <button class="back-button" id="backConfig" on:click={navigateToConfig}>
+  <div>
+  <h1 id="selectedIconNumber">{selectedIconButton}</h1> 
+  <button class="back-button"  id="backConfig" >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="32"
@@ -181,6 +188,8 @@
       />
     </svg></button
   >
+
+</div>
   <div class="container-card">
     <div class="icon-buttons">
       <!-- <button

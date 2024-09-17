@@ -40,6 +40,7 @@ const backConfigbutton = document.getElementById('backConfig');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
 const navigateToConfigButton = document.getElementById('backtoHome');
 const backtoHome = document.getElementById('backArrow');
+const selectedIconButton = document.getElementById('selectedIconNumber');
 let FilePath = "";
 
 //cleanup required
@@ -129,12 +130,22 @@ if (rerunTestSuiteButton) {
 
 if(backConfigbutton){
   backConfigbutton.addEventListener('click',async () =>{
-    console.log("backconfig button clicked")
-    vscode.postMessage({
-      type:"navigate",
-      value:"Config"
-    })
+    if(selectedIconButton.textContent == '1'){
+      console.log("selectedIconButton: " , selectedIconButton.textContent );
+      console.log("backconfig button clicked")
+      vscode.postMessage({
+        type:"navigate",
+        value:"Config"
+      })
+    }else{
+      vscode.postMessage({
+        type:"navigate",
+        value:"IntegrationTest"
+      })
+    }
   })
+}else{
+  console.log("no back butoon");
 }
 
 if (navigateToConfigButton) {
