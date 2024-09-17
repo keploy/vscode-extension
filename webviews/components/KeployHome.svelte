@@ -308,8 +308,8 @@
         <button id="viewCompleteSummaryButton"
           >View Complete Test Summary</button
         >
-        <button id="viewTestLogsButton">View Logs</button>
-        <button id="viewRecordLogsButton">View Logs</button>
+        <button id="viewTestLogsButton">View Test Logs</button>
+        <button id="viewRecordLogsButton">View Record Logs</button>
         <hr id="completeSummaryHr" />
       </div>
     </div>
