@@ -121,7 +121,7 @@ export async function startRecording( wslscriptPath: string, wsllogfilePath: str
                     if (currentShell.includes('zsh')) {
                         // Use a Zsh-specific script if needed
                         //replace bashScriptPath with zshScriptPath for zsh
-                        recordCmd = `"${bashScriptPath}" "${logfilePath}" `;
+                        recordCmd = `"${bashScriptPath}" "${logfilePath}" ;exit 0`;
                     } else {
                         // Default to Bash script
                         recordCmd = `"${bashScriptPath}" "${logfilePath}" ;exit 0`;
