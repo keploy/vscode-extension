@@ -132,10 +132,32 @@ export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri , context);
     context.subscriptions.push(
         vscode.window.registerUriHandler({
-            handleUri(uri: vscode.Uri): vscode.ProviderResult<void> {
-              vscode.window.showInformationMessage(`URI handler called: ${uri.toString()}`);
+            async handleUri(uri) {
+                // Extract the token and state from the URI query parameters
+                const token = uri.query.split('token=')[1]?.split('&')[0];
+                const state = uri.query.split('state=')[1];
+        
+                if (token) {
+                    vscode.window.showInformationMessage(`You are now logged in!`);
+        
+                    await context.globalState.update('JwtToken', token);
+                    await context.globalState.update('SignedOthers', true);
+        
+                    const serverUrl = "https://api.keploy.io/";
+                    const response = await ValidateSignInWithOthers(token, serverUrl);
+        
+                    if (response) {
+                        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                        vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                    } else {
+                        vscode.window.showInformationMessage('Token validation failed!');
+                    }
+                } else {
+                    vscode.window.showInformationMessage('Login failed');
+                }
             }
-          }),
+        }),
+        
         vscode.window.registerWebviewViewProvider(
             "Keploy-Sidebar",
             sidebarProvider
