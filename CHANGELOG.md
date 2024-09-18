@@ -47,3 +47,7 @@ First Release for Vs Code Extension.
 ## [1.0.10]
 
 - Resolved sign-up bug for cross browser callbacks.
+
+## [1.0.11]
+
+- Maintaining user session
