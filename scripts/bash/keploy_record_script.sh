@@ -79,6 +79,7 @@ dummy_pid=$!
 kill_all() {
   kill $dummy_pid
   rm -f "$fifo"
+  sleep 3
 }
 
 # Execute the keploy command with the trap, redirecting output to the named pipe
