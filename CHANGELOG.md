@@ -51,3 +51,7 @@ First Release for Vs Code Extension.
 ## [1.0.11]
 
 - Maintaining user session
+
+## [1.0.12]
+
+- Fixing wrong file test generation in express mongoose
