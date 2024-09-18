@@ -5,26 +5,84 @@ on:
     branches:
       - main
 jobs:
-  build:
+  package:
+    name: Package
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x] # Specify the Node.js version
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        arch: [x64, arm64] # Define the architectures
+    outputs:
+      packageName: ${{ steps.setup.outputs.packageName }}
+      tag: ${{ steps.setup-tag.outputs.tag }}
+      version: ${{ steps.setup-tag.outputs.version }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 18.x
 
-    - name: Install dependencies with forced architecture
+    # Step to install npm dependencies based on architecture
+    - name: Install dependencies
       run: |
-        npm_config_arch=x64 npm_config_platform=linux npm install --build-from-source
+        if [ "${{ matrix.arch }}" == "arm64" ]; then
+          npm_config_arch=arm64 npm install --build-from-source
+        else
+          npm_config_arch=x64 npm install --build-from-source
+        fi
 
-    - name: Run compile
-      run: npm run compile
-
-    - name: Run rollup
+    # Run Rollup for compilation (adjust as necessary for your project)
+    - name: Run Rollup
       run: npm run rollupci
+
+    # List files for debugging purposes
+    - name: List contents of out/compiled directory
+      run: ls -R out/compiled
+
+    # Install vsce tool for packaging
+    - name: Install vsce
+      run: npm install -g @vscode/vsce
+
+    # Generate the VSIX package with architecture-specific naming
+    - name: Setup package path
+      id: setup
+      run: echo "::set-output name=packageName::$(node -e \"console.log(require('./package.json').name + '-' + require('./package.json').version + '-${{ matrix.os }}-${{ matrix.arch }}.vsix')\")"
+
+    - name: Package Extension
+      env:
+        VSIX_PACKAGE_PATH: ${{ steps.setup.outputs.packageName }}
+      run: |
+        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+          if [ "${{ matrix.arch }}" == "arm64" ]; then
+            vsce package --target linux-arm64 --out ${{ steps.setup.outputs.packageName }}
+          else
+            vsce package --target linux-x64 --out ${{ steps.setup.outputs.packageName }}
+          fi
+        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+          if [ "${{ matrix.arch }}" == "arm64" ]; then
+            vsce package --target darwin-arm64 --out ${{ steps.setup.outputs.packageName }}
+          else
+            vsce package --target darwin-x64 --out ${{ steps.setup.outputs.packageName }}
+          fi
+        elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+          if [ "${{ matrix.arch }}" == "arm64" ]; then
+            vsce package --target win32-arm64 --out ${{ steps.setup.outputs.packageName }}
+          else
+            vsce package --target win32-x64 --out ${{ steps.setup.outputs.packageName }}
+          fi
+        fi
+    # Log details about the packaged VSIX file (optional)
+    - name: List packaged VSIX
+      run: ls -lh ${{ steps.setup.outputs.packageName }}
+
+    # Use vsce to show package details
+    - name: Show vsce package details
+      run: vsce show ${{ steps.setup.outputs.packageName }}
+
+    # List the contents of the package (optional debugging)
+    - name: Inspect VSIX package
+      run: unzip -l ${{ steps.setup.outputs.packageName }}
+
