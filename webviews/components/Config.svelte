@@ -38,7 +38,7 @@ let showSettings = false;
       if(userSignedIn){
         vscode.postMessage({
       type: "navigate",
-      value: testType === "IntegrationTest",
+      value: "IntegrationTest",
     });
       }else{
         navigateToKeploy();
@@ -46,7 +46,7 @@ let showSettings = false;
     }else{
       vscode.postMessage({
       type: "navigate",
-      value: testType === "UtgDocs"
+      value: "UtgDocs"
     });
     }
 
