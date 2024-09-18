@@ -66,10 +66,9 @@ jobs:
     - name: List packaged VSIX
       run: ls -lh $VSIX_PACKAGE_PATH
 
-    # Use vsce to show package details
-    - name: Show vsce package details
-      run: vsce show $VSIX_PACKAGE_PATH
-
     # Inspect the contents of the VSIX package
     - name: Inspect VSIX package
       run: unzip -l $VSIX_PACKAGE_PATH
+
+    - run: xvfb-run -a npm test
+      if: runner.os == 'Linux'
