@@ -143,8 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
                     await context.globalState.update('JwtToken', token);
                     await context.globalState.update('SignedOthers', true);
         
-                    const serverUrl = "https://api.keploy.io/";
-                    const response = await ValidateSignInWithOthers(token, serverUrl);
+                    const response = await ValidateSignInWithOthers(token);
         
                     if (response) {
                         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
@@ -254,24 +253,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
     let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
         try {
-            const result = await SignInWithOthers();
-            // console.log("result from the Sign in with other , ",result);
-            const accessToken = result as string; // Assert that result is a string
-            // console.log('Jwt token:', accessToken);
-            await context.globalState.update('JwtToken', accessToken);
-            await context.globalState.update('SignedOthers', true);
-            const reponse = await ValidateSignInWithOthers(accessToken);
-        
-
-
-        if (Boolean(accessToken)) {
-            vscode.window.showInformationMessage('You are now signed in!');
-            vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-            vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-        } else {
-            console.log('Validation failed for the user !');
-            vscode.window.showInformationMessage('Failed to sign in Keploy!');
-        }
+            await SignInWithOthers(); // The result will now be handled in the URI handler
         } catch (error) {
             // console.error('Error during sign-in:', error);
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
