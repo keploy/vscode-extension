@@ -8,8 +8,7 @@ let showSettings = false;
 
   function navigateToKeploy() {
     vscode.postMessage({
-      type: "openLink",
-      url: "https://app.keploy.io/signin", // Replace this with the URL you want to navigate to
+      type: "signinwithstate",
     });
   }
 
