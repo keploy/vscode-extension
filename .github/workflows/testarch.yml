@@ -4,28 +4,24 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
   package:
     name: Package
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x64, arm64] # Define the architectures
-    outputs:
-      packageName: ${{ steps.setup.outputs.packageName }}
-      tag: ${{ steps.setup-tag.outputs.tag }}
-      version: ${{ steps.setup-tag.outputs.version }}
-
+        arch: [x64, arm64]  # Define the architectures
     steps:
     - uses: actions/checkout@v3
 
+    # Set up Node.js environment for the appropriate Node.js version
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: 18.x
 
-    # Step to install npm dependencies based on architecture
+    # Install npm dependencies based on the architecture
     - name: Install dependencies
       run: |
         if [ "${{ matrix.arch }}" == "arm64" ]; then
@@ -34,55 +30,46 @@ jobs:
           npm_config_arch=x64 npm install --build-from-source
         fi
 
-    # Run Rollup for compilation (adjust as necessary for your project)
+    # Run Rollup for compilation (adjust this as necessary for your project)
     - name: Run Rollup
       run: npm run rollupci
 
-    # List files for debugging purposes
+    # List contents of the compiled directory for debugging
     - name: List contents of out/compiled directory
       run: ls -R out/compiled
 
-    # Install vsce tool for packaging
+    # Install vsce for packaging the extension
     - name: Install vsce
       run: npm install -g @vscode/vsce
 
-    # Generate the VSIX package with architecture-specific naming
+    # Set up the package path using environment variables
     - name: Setup package path
       id: setup
-      run: echo "::set-output name=packageName::$(node -e \"console.log(require('./package.json').name + '-' + require('./package.json').version + '-${{ matrix.os }}-${{ matrix.arch }}.vsix')\")"
+      run: |
+        packageName=$(node -e "console.log(require('./package.json').name + '-' + require('./package.json').version + '-${{ matrix.arch }}.vsix')")
+        echo "PACKAGE_NAME=$packageName" >> $GITHUB_ENV
 
+    # Package the extension for all platforms using a single vsce package command
     - name: Package Extension
       env:
-        VSIX_PACKAGE_PATH: ${{ steps.setup.outputs.packageName }}
+        VSIX_PACKAGE_PATH: ${{ env.PACKAGE_NAME }}
       run: |
-        if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-          if [ "${{ matrix.arch }}" == "arm64" ]; then
-            vsce package --target linux-arm64 --out ${{ steps.setup.outputs.packageName }}
-          else
-            vsce package --target linux-x64 --out ${{ steps.setup.outputs.packageName }}
-          fi
-        elif [ "${{ matrix.os }}" == "macos-latest" ]; then
-          if [ "${{ matrix.arch }}" == "arm64" ]; then
-            vsce package --target darwin-arm64 --out ${{ steps.setup.outputs.packageName }}
-          else
-            vsce package --target darwin-x64 --out ${{ steps.setup.outputs.packageName }}
-          fi
-        elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-          if [ "${{ matrix.arch }}" == "arm64" ]; then
-            vsce package --target win32-arm64 --out ${{ steps.setup.outputs.packageName }}
-          else
-            vsce package --target win32-x64 --out ${{ steps.setup.outputs.packageName }}
-          fi
+        if [ "${{ matrix.arch }}" == "arm64" ]; then
+          # Package for all arm64 targets at once
+          vsce package --target linux-arm64 --target darwin-arm64 --target win32-arm64 --out $VSIX_PACKAGE_PATH
+        else
+          # Package for all x64 targets at once
+          vsce package --target linux-x64 --target darwin-x64 --target win32-x64 --out $VSIX_PACKAGE_PATH
         fi
-    # Log details about the packaged VSIX file (optional)
+
+    # List the generated VSIX file for debugging purposes
     - name: List packaged VSIX
-      run: ls -lh ${{ steps.setup.outputs.packageName }}
+      run: ls -lh $VSIX_PACKAGE_PATH
 
     # Use vsce to show package details
     - name: Show vsce package details
-      run: vsce show ${{ steps.setup.outputs.packageName }}
+      run: vsce show $VSIX_PACKAGE_PATH
 
-    # List the contents of the package (optional debugging)
+    # Inspect the contents of the VSIX package
     - name: Inspect VSIX package
-      run: unzip -l ${{ steps.setup.outputs.packageName }}
-
+      run: unzip -l $VSIX_PACKAGE_PATH
