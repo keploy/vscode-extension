@@ -1,10 +1,9 @@
 name: Node.js Build
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,4 +27,4 @@ jobs:
       run: npm run compile
 
     - name: Run rollup
-      run: npm run rollupci
+      run: npm run ro
