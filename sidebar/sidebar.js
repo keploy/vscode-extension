@@ -133,11 +133,26 @@ if(backConfigbutton){
     if(selectedIconButton.textContent == '1'){
       console.log("selectedIconButton: " , selectedIconButton.textContent );
       console.log("backconfig button clicked")
+
+      vscode.postMessage({
+        type: "stopRecordingCommand",
+        value: `Stop Recording`
+      });
+  
+  
+      vscode.postMessage({
+        type: "stopTestingCommand",
+        value: `Stop Testing`
+      });
+
       vscode.postMessage({
         type:"navigate",
         value:"Config"
       })
+
     }else{
+     
+
       vscode.postMessage({
         type:"navigate",
         value:"IntegrationTest"

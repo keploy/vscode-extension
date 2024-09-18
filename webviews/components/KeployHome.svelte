@@ -246,7 +246,7 @@
       </button>
     </div>
     <div class="header">
-      <div class="heading">
+      <div class="heading"> 
         {#if selectedIconButton === 3}
           <h1>Make changes to keploy config</h1>
         {:else if selectedIconButton === 2}
