@@ -49,18 +49,10 @@ jobs:
         packageName=$(node -e "console.log(require('./package.json').name + '-' + require('./package.json').version + '-${{ matrix.arch }}.vsix')")
         echo "PACKAGE_NAME=$packageName" >> $GITHUB_ENV
 
-    # Package the extension for all platforms using a single vsce package command
+    # Package the extension with dynamic targets based on architecture
     - name: Package Extension
-      env:
-        VSIX_PACKAGE_PATH: ${{ env.PACKAGE_NAME }}
       run: |
-        if [ "${{ matrix.arch }}" == "arm64" ]; then
-          # Package for all arm64 targets at once
-          vsce package --target linux-arm64 --target darwin-arm64 --target win32-arm64 --out $VSIX_PACKAGE_PATH
-        else
-          # Package for all x64 targets at once
-          vsce package --target linux-x64 --target darwin-x64 --target win32-x64 --out $VSIX_PACKAGE_PATH
-        fi
+        vsce package --target ${{ matrix.arch == 'arm64' && 'linux-arm64 --target darwin-arm64 --target win32-arm64' || 'linux-x64 --target darwin-x64 --target win32-x64' }} --out out/compiled/extension-${{ matrix.arch }}.vsix
 
     # List the generated VSIX file for debugging purposes
     - name: List packaged VSIX
