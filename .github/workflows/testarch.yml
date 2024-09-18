@@ -1,98 +1,31 @@
-name: Build and Test VSCode Extension
+name: Node.js Build
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run Rollup
-        run: npm run rollupci
-
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: extension-build
-          path: out/compiled
-
-  test:
-    needs: build
     strategy:
       matrix:
-        include:
-          # Ubuntu x64
-          - os: ubuntu-latest
-            arch: x64
-            runs-on: ubuntu-latest
-          # Ubuntu ARM64
-          - os: ubuntu-latest
-            arch: arm64
-            runs-on: ubuntu-latest
-          # macOS x64
-          - os: macos-latest
-            arch: x64
-            runs-on: macos-latest
-    runs-on: ${{ matrix.runs-on }}
+        node-version: [18.x] # Specify the Node.js version
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
 
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: extension-build
-          path: out/compiled
+    - name: Install dependencies with forced architecture
+      run: |
+        npm_config_arch=x64 npm_config_platform=linux npm install --build-from-source
 
-      - name: Install dependencies
-        run: npm install
+    - name: Run compile
+      run: npm run compile
 
-      # Install Xvfb on Linux (both x64 and ARM64)
-      - name: Install Xvfb (Linux only)
-        if: runner.os == 'Linux'
-        run: sudo apt-get install -y xvfb
-
-      - name: Run VSCode Extension Tests
-        env:
-          DISPLAY: ':99.0'
-        run: |
-          # Start Xvfb if on Linux
-          if [ "${{ runner.os }}" == "Linux" ]; then
-            Xvfb :99 -ac -screen 0 1920x1080x24 &
-            sleep 3
-          fi
-          # Create a directory for logs
-          mkdir -p logs
-          # Run the tests and capture logs
-          npx vscode-test \
-            --extensionDevelopmentPath=. \
-            --extensionTestsPath=./out/test \
-            --logsDirectory=logs \
-            --verbose
-
-      - name: Upload Test Logs
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: test-logs-${{ matrix.os }}-${{ matrix.arch }}
-          path: logs/
+    - name: Run rollup
+      run: npm run rollupci
