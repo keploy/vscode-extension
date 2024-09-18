@@ -27,7 +27,7 @@ if [ "$extension" = "js" ] || [ "$extension" = "ts" ]; then
   echo "Checking if Jest is installed..."
   if ! npm list -g jest > /dev/null 2>&1; then
     echo "Jest is not installed. Installing Jest..."
-    npm install jest --save-dev
+    npm install --global jest 
   else
     echo "Jest is already installed."
   fi
