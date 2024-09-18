@@ -35,6 +35,9 @@
       console.log("setting display none");
       startRecordingButton.style.display = "none";
       startTestingButton.style.display = "none";
+      isRecording = false;
+      isTesting = false;
+      showSteps = false;
     }
     if (buttonNumber === 1) {
       startRecordingButton.style.display = "flex";
@@ -172,7 +175,7 @@
 <div class="container">
   <h1 class="main-heading">Running integration tests</h1>
   <div>
-  <h1 id="selectedIconNumber">{selectedIconButton}</h1> 
+  <h1 id="selectedIconNumber" class="selectedIconClass">{selectedIconButton}</h1> 
   <button class="back-button"  id="backConfig" >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -469,6 +472,10 @@
     font-family: "Montserrat", sans-serif; /* Use Montserrat here */
 
     /* font-family: 'Arial', sans-serif; */
+  }
+
+  .selectedIconClass{
+    display: none;
   }
 
   .header {

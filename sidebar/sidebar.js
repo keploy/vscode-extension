@@ -308,6 +308,18 @@ if (initialiseConfigButton) {
 if (displayPreviousTestResults) {
   displayPreviousTestResults.addEventListener('click', async () => {
     console.log("displayPreviousTestResults clicked");
+    console.log("stopping the recording and testing")
+    vscode.postMessage({
+      type: "stopRecordingCommand",
+      value: `Stop Recording`
+    });
+
+
+    vscode.postMessage({
+      type: "stopTestingCommand",
+      value: `Stop Testing`
+    });
+
     vscode.postMessage({
       type: "viewPreviousTestResults",
       value: `viewPreviousTestResults`
@@ -319,6 +331,18 @@ if (displayPreviousTestResults) {
 if (openConfigButton) {
   openConfigButton.addEventListener('click', async () => {
     console.log("openConfigButton clicked");
+    console.log("stopping the recording and testing")
+    
+    vscode.postMessage({
+      type: "stopRecordingCommand",
+      value: `Stop Recording`
+    });
+
+
+    vscode.postMessage({
+      type: "stopTestingCommand",
+      value: `Stop Testing`
+    });
     vscode.postMessage({
       type: "openConfigFile",
       value: `/keploy.yml`
