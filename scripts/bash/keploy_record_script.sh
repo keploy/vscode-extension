@@ -75,15 +75,18 @@ cat_pid=$!
 (while true; do sleep 1; done) &
 dummy_pid=$!
 
-# Execute the keploy command, redirecting output to the named pipe
-sudo -E $keploycmd record  > "$fifo" 2>&1
+# Function to Terminate the dummy process and the logging process
+kill_all() {
+  kill $dummy_pid
+  rm -f "$fifo"
+}
+
+# Execute the keploy command with the trap, redirecting output to the named pipe
+(
+  trap 'kill_all' SIGINT SIGTERM EXIT
+  sudo -E $keploycmd record > "$fifo" 2>&1
+)
 
 # Clean up: Wait for keploy command to finish
 wait $!
 touch ./log_file.txt
- 
-
-# Terminate the dummy process and the logging process
-kill $dummy_pid
-wait $cat_pid
-rm "$fifo"
