@@ -27,4 +27,4 @@ jobs:
       run: npm run compile
 
     - name: Run rollup
-      run: npm run ro
+      run: npm run rollupci
