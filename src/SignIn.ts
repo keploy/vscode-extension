@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as http from 'http';
-import * as fs from 'fs'
+import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
@@ -300,13 +300,10 @@ export async function getInstallationID(): Promise<string> {
 }
 
 
-export async function ValidateSignInWithOthers(jwtToken: string, serverURL: string): Promise<{}> {
-    console.log("serverurl " , serverURL);
-    const url = `${serverURL}/user/connect`;
-    console.log("url" , url);
+export async function ValidateSignInWithOthers(jwtToken: string): Promise<{}> {
     try {
         // Assuming getInstallationID returns a promise that resolves to a string
-        console.log("token in the validate other " , jwtToken);
+        // console.log("token in the validate other " , jwtToken);
         const installationID: string = await getInstallationID();
 
         const requestBody = {
