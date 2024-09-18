@@ -60,7 +60,8 @@ async function Utg(context: vscode.ExtensionContext) {
                 let testFileContent:string;
                 
                 if (extension === '.js' || extension === '.ts') {
-                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));                    if (!fs.existsSync(testFilePath)) {
+                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));                   
+                    if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                     }
