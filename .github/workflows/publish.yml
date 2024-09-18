@@ -2,13 +2,16 @@ name: Publish Extension
 
 on:
   workflow_run:
-    workflows: ["Test and Build VSCode"]
+    workflows: ["Publish VSCode"]
     types:
       - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x64, arm64]  # Define the architectures
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -18,9 +21,16 @@ jobs:
         with:
           node-version: '18'
 
+      # Install npm dependencies based on the architecture
       - name: Install dependencies
-        run: npm install
+        run: |
+          if [ "${{ matrix.arch }}" == "arm64" ]; then
+            npm_config_arch=arm64 npm install --build-from-source
+          else
+            npm_config_arch=x64 npm install --build-from-source
+          fi
 
+      # Run Rollup for compilation
       - name: Run Rollup
         run: npm run rollupci
 
@@ -31,5 +41,7 @@ jobs:
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          target: |
+            ${{ matrix.arch == 'arm64' && 'linux-arm64,darwin-arm64,win32-arm64' || 'linux-x64,darwin-x64,win32-x64' }}
           registryUrl: https://marketplace.visualstudio.com
           skipDuplicate: true
