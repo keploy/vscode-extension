@@ -35,6 +35,7 @@ const viewTestLogsButton = document.getElementById('viewTestLogsButton');
 const viewRecordLogsButton = document.getElementById('viewRecordLogsButton');
 const apiResponseElement = document.getElementById('apiResponseDisplay');
 const backConfigbutton = document.getElementById('backConfig');
+let actionStarted = false;
 // const apiResponseDisplayLog  = document.getElementById('apiResponseDisplay');
 // const selectRecordFolderButton = document.getElementById('selectRecordFolderButton');
 // const selectTestFolderButton = document.getElementById('selectTestFolderButton');
@@ -134,22 +135,28 @@ if(backConfigbutton){
       console.log("selectedIconButton: " , selectedIconButton.textContent );
       console.log("backconfig button clicked")
 
-      vscode.postMessage({
-        type: "stopRecordingCommand",
-        value: `Stop Recording`
-      });
-  
-  
-      vscode.postMessage({
-        type: "stopTestingCommand",
-        value: `Stop Testing`
-      });
+      if(actionStarted == true){
+        vscode.postMessage({
+          type: "stopRecordingCommand",
+          value: `Stop Recording`
+        });
+    
+        vscode.postMessage({
+          type: "stopTestingCommand",
+          value: `Stop Testing`
+        });
 
       vscode.postMessage({
         type:"navigate",
-        value:"Config"
+        value:"IntegrationTest"
       })
 
+      }else{
+        vscode.postMessage({
+          type:"navigate",
+          value:"Config"
+        })
+      }
     }else{
      
 
@@ -228,6 +235,7 @@ if (viewRecordLogsButton) {
 if (startRecordingButton) {
   startRecordingButton.addEventListener('click', async () => {
     console.log("startRecordingButton clicked");
+    actionStarted = true;
     resetUI();
     // let  commandValue = appCommand.value;
 
@@ -250,6 +258,7 @@ if (startRecordingButton) {
 if (stopRecordingButton) {
   stopRecordingButton.addEventListener('click', async () => {
     console.log("stopRecordingButton clicked");
+    actionStarted = false;
     vscode.postMessage({
       type: "stopRecordingCommand",
       value: `Stop Recording`
@@ -259,6 +268,7 @@ if (stopRecordingButton) {
 if (startTestButton) {
   startTestButton.addEventListener('click', async () => {
     console.log("startTestButton clicked");
+    actionStarted = true;
     resetUI();
 
     // const commandValue = appCommand.value;
@@ -280,7 +290,7 @@ if (startTestButton) {
 if (stopTestButton) {
   stopTestButton.addEventListener('click', async () => {
     console.log("stopTestButton clicked");
-
+    actionStarted = false;
     vscode.postMessage({
       type: "stopTestingCommand",
       value: `Stop Testing`
@@ -373,7 +383,6 @@ if (setupConfigButton) {
     });
   });
 }
-
 
 document.addEventListener('ciCdStepClick', function (e) {
   // Logic to handle CI/CD setup click event

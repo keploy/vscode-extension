@@ -306,9 +306,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         }
 
         case "openLink":{
-          if (!data.url) {
-            return;
-          }
+      
           try {
             console.log("Opening external link: " + data.url);
             vscode.env.openExternal(vscode.Uri.parse(data.url));

@@ -48,8 +48,12 @@
     }
   };
   function navigateToConfig() {
-      selectedIconButton = 1;
-      console.log("In the main screen");
+     if(isRecording || isTesting){
+      isRecording = false;
+      isTesting = false;
+      showSteps = false;
+   
+     }
   }
 
   const clearLastTestResults = () => {
@@ -176,7 +180,7 @@
   <h1 class="main-heading">Running integration tests</h1>
   <div>
   <h1 id="selectedIconNumber" class="selectedIconClass">{selectedIconButton}</h1> 
-  <button class="back-button"  id="backConfig" >
+  <button class="back-button"  id="backConfig" on:click={navigateToConfig} >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="32"

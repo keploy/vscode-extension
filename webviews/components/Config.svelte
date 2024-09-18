@@ -1,13 +1,56 @@
 <script>
-  let showSettings = false;
+  import { onMount } from "svelte";
+
+let showSettings = false;
 
   const vscode = acquireVsCodeApi();
+  let userSignedIn = false;
+
+  function navigateToKeploy() {
+    vscode.postMessage({
+      type: "openLink",
+      url: "https://app.keploy.io/signin", // Replace this with the URL you want to navigate to
+    });
+  }
+
+
+  onMount(() => {
+    // Add event listener for messages from the VSCode extension
+    window.addEventListener("message", (event) => {
+      const message = event.data;
+     
+      if(message.type === "signedIn"){
+        const signedInResponse = message.value;
+          if(signedInResponse == "false"){
+              userSignedIn = false;
+              // console.log("Progress Bar is not Visible")
+          }else{
+            // console.log("Progress Bar is  Visible")
+            userSignedIn = true;
+          }
+      }
+    });
+  });
 
   function handleTestSelection(testType) {
-    vscode.postMessage({
+
+    if(testType != "Unit Testing"){
+      if(userSignedIn){
+        vscode.postMessage({
       type: "navigate",
-      value: testType === "Unit Testing" ? "UtgDocs" : "IntegrationTest",
+      value: testType === "IntegrationTest",
     });
+      }else{
+        navigateToKeploy();
+      }
+    }else{
+      vscode.postMessage({
+      type: "navigate",
+      value: testType === "UtgDocs"
+    });
+    }
+
+   
   }
 </script>
 
