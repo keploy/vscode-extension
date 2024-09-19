@@ -2,7 +2,7 @@ name: Publish Extension
 
 on:
   workflow_run:
-    workflows: ["Publish VSCode"]
+    workflows: ["Test and Build VSCode"]
     types:
       - completed
 
