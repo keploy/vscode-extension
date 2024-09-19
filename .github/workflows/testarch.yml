@@ -1,13 +1,13 @@
 name: Nodejs Build Test
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Test and Build VSCode"]
+    types:
+      - completed
 
 jobs:
-  package:
-    name: Package
+  deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
