@@ -58,11 +58,31 @@ else
   keploycmd="sudo -E env PATH=\"$PATH\" keploy"
 fi
 
-# echo "Keploy command: $keploycmd"
+# Create a named pipe
+fifo=$(mktemp -u)
+mkfifo "$fifo"
 
-# cd "$folderpath"
+# Background process to read from the named pipe and write to the log file
+cat "$fifo" | tee -a "$log_file_path" &
+cat_pid=$!
 
-# Execute the keploy command and append the output to the log file
-sudo $keploycmd test | tee -a "$log_file_path"
+# Dummy background process to keep the parent script running
+(while true; do sleep 1; done) &
+dummy_pid=$!
+
+# Function to Terminate the dummy process and the logging process
+kill_all() {
+  kill $dummy_pid
+  rm -f "$fifo"
+}
+
+# Execute the keploy command with the trap, redirecting output to the named pipe
+(
+  trap 'kill_all' SIGINT SIGTERM EXIT
+  sudo -E $keploycmd test > "$fifo" 2>&1
+)
+
+# Clean up: Wait for keploy command to finish
+wait $!
 touch ./log_file.txt
  
