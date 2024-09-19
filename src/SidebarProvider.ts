@@ -305,10 +305,18 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "openLink":{
-          if (!data.url) {
-            return;
+        case "signinwithstate": {
+          try {
+              await vscode.commands.executeCommand('keploy.SignInWithOthers');
+          } catch (error) {
+              console.error('Error while signing in:', error);
+              vscode.window.showErrorMessage('Failed to sign in. Please try again.');
           }
+          break;
+      }
+
+        case "openLink":{
+      
           try {
             console.log("Opening external link: " + data.url);
             vscode.env.openExternal(vscode.Uri.parse(data.url));

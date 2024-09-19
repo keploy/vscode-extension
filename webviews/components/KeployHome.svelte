@@ -14,7 +14,8 @@
   let selectedIconButton = 1;
   let settingsIcon = document.querySelector(".settings-icon");
   let currentStep = 1;
-
+  let backConfigButton;
+  
   function goToNextStep(step) {
     currentStep = step;
   }
@@ -34,6 +35,9 @@
       console.log("setting display none");
       startRecordingButton.style.display = "none";
       startTestingButton.style.display = "none";
+      isRecording = false;
+      isTesting = false;
+      showSteps = false;
     }
     if (buttonNumber === 1) {
       startRecordingButton.style.display = "flex";
@@ -44,12 +48,14 @@
     }
   };
   function navigateToConfig() {
-    if (selectedIconButton !== 1) {
-      selectedIconButton = 1;
-      console.log("in button config");
-    } else {
-    }
+     if(isRecording || isTesting){
+      isRecording = false;
+      isTesting = false;
+      showSteps = false;
+   
+     }
   }
+
   const clearLastTestResults = () => {
     const testSuiteName = document.getElementById("testSuiteName");
     const totalTestCases = document.getElementById("totalTestCases");
@@ -141,6 +147,12 @@
     if (stopTestingButton) {
       stopTestingButton.style.display = isTesting ? "inline" : "none";
     }
+
+    if (backConfigButton) {
+    // Perform any operations on backConfigButton, such as adding event listeners or styling.
+    backConfigButton.style.display = selectedIconButton != 2 && selectedIconButton != 3 ? "block" : "none";
+  }
+
     const statusdiv = document.getElementById("statusdiv");
     if (statusdiv) {
       statusdiv.style.display = selectedIconButton === 1 ? "block" : "none";
@@ -166,7 +178,9 @@
 
 <div class="container">
   <h1 class="main-heading">Running integration tests</h1>
-  <button class="back-button" id="backConfig" on:click={navigateToConfig}>
+  <div>
+  <h1 id="selectedIconNumber" class="selectedIconClass">{selectedIconButton}</h1> 
+  <button class="back-button"  id="backConfig" on:click={navigateToConfig} >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="32"
@@ -181,6 +195,8 @@
       />
     </svg></button
   >
+
+</div>
   <div class="container-card">
     <div class="icon-buttons">
       <!-- <button
@@ -234,7 +250,7 @@
       </button>
     </div>
     <div class="header">
-      <div class="heading">
+      <div class="heading"> 
         {#if selectedIconButton === 3}
           <h1>Make changes to keploy config</h1>
         {:else if selectedIconButton === 2}
@@ -299,8 +315,8 @@
         <button id="viewCompleteSummaryButton"
           >View Complete Test Summary</button
         >
-        <button id="viewTestLogsButton">View Logs</button>
-        <button id="viewRecordLogsButton">View Logs</button>
+        <button id="viewTestLogsButton">View Test Logs</button>
+        <button id="viewRecordLogsButton">View Record Logs</button>
         <hr id="completeSummaryHr" />
       </div>
     </div>
@@ -460,6 +476,10 @@
     font-family: "Montserrat", sans-serif; /* Use Montserrat here */
 
     /* font-family: 'Arial', sans-serif; */
+  }
+
+  .selectedIconClass{
+    display: none;
   }
 
   .header {

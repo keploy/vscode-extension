@@ -11,7 +11,7 @@ async function Utg(context: vscode.ExtensionContext) {
             try {
 
                 const token  = await context.globalState.get<'string'>('JwtToken');
-                console.log("token in the utg" , token);
+                // console.log("token in the utg" , token);
                 let apiResponse:string = '';
                 // vscode.window.showInformationMessage('Attempting to trigger API request...');
                 // if(token){
@@ -52,7 +52,6 @@ async function Utg(context: vscode.ExtensionContext) {
 
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
-                await ensureTestFileExists(sourceFilePath , rootDir);
 
                 const extension = path.extname(sourceFilePath);
                 let testFilePath: string;
@@ -61,7 +60,7 @@ async function Utg(context: vscode.ExtensionContext) {
                 let testFileContent:string;
                 
                 if (extension === '.js' || extension === '.ts') {
-                    testFilePath = sourceFilePath.replace(extension, `.test${extension}`);
+                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));                   
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
@@ -96,7 +95,7 @@ async function Utg(context: vscode.ExtensionContext) {
                     console.log(testFilePath , "in the go block");
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test')
+                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test');
                         testFileContent = `package main\n\nimport "testing"`;
                         fs.writeFileSync(testFilePath, testFileContent);                    }
                     command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
@@ -117,11 +116,11 @@ async function Utg(context: vscode.ExtensionContext) {
 
                  try {
                     if(token){
-                        console.log("token inside the try block in utg.ts" , token);
+                        // console.log("token inside the try block in utg.ts" , token);
                         apiResponse = await makeApiRequest(token) || 'no response';
                         const response = JSON.parse(apiResponse);
                         await context.globalState.update('apiResponse', apiResponse);
-                        if(response.usedCall == response.totalCall ){
+                        if(response.usedCall === response.totalCall ){
                             await context.globalState.update('SubscriptionEnded' , true);
                         }
                     }else{
