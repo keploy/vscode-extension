@@ -59,3 +59,7 @@ First Release for Vs Code Extension.
 ## [1.0.13]
 
 - Separate release for arm and amd user
+
+## [1.0.14]
+
+- Back button refactored for better User Experience
