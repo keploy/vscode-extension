@@ -65,6 +65,6 @@ jobs:
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          target: ${{ matrix.os }}-${{ matrix.arch }}
+          packagePath: ${{ env.VSIX_FILE }}
           registryUrl: https://marketplace.visualstudio.com
           skipDuplicate: true
