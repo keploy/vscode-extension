@@ -63,3 +63,7 @@ First Release for Vs Code Extension.
 ## [1.0.14]
 
 - Back button refactored for better User Experience
+
+## [1.0.15]
+
+- Reverting to universal release
