@@ -55,3 +55,7 @@ First Release for Vs Code Extension.
 ## [1.0.12]
 
 - Fixing wrong file test generation in express mongoose
+
+## [1.0.13]
+
+- Separate release for arm and amd user
