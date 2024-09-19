@@ -61,17 +61,11 @@
 }
 
 
-
   .main-container {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
-  }
-
-  .heading {
-    font-size: 36px;
-    font-weight: bold;
   }
 
   .logo {
@@ -101,25 +95,10 @@
   .code-icon {
     margin-right: 10px;
   }
-
-  .button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .button:hover {
-    background-color: #0056b3;
-  }
   .main {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', sans-serif; /* Use Montserrat here */
+    font-family: 'Montserrat', sans-serif; 
     background-color: #000;
     color: white;
     text-align: center;
@@ -142,9 +121,13 @@
     height: 70px;
     margin-bottom: 20px;
   }
-
+  @media screen and (max-width: 475px) {
+  .logo {
+    display: none;
+  }
+}
   .welcome-heading {
-    font-size: 2.5rem;
+    font-size: 8vw; 
     font-weight: bold;
     padding: 15px 0;
   }
@@ -154,14 +137,15 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 5%;
   }
   .body-text p:first-child {
-    font-size: 2.35rem;
+    font-size: 6vw;
   }
 
   .body-text p:nth-child(2) {
     margin-top: 40px;
-    font-size: 1.5rem;
+    font-size: 5vw;
     line-height: 1.5;
   }
 
@@ -181,24 +165,26 @@
     margin-top: 20px;
   }
 
+
   .btn {
-    width: 300px;
-    padding: 15px;
-    margin: 15px 0;
+    font-family: 'Montserrat', sans-serif; 
+    width: 65vw; 
+    font-size: 4vw; 
+    padding: 3vw;
+    margin: 20px 0;
     text-decoration: none;
     color: white;
-    background-color: #1a1a1a;
-    border: 2px solid #f77b3e;
+    background-color: #000000;
+    border: 1px solid #ff914d;
     border-radius: 5px;
-    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); /* Glowing shadow effect based on #ff914d */
   }
 
   .btn:hover {
-    box-shadow: 0 0 40px rgba(247, 123, 62, 1);
-    transform: scale(1.05);
-  }
+  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  transform: scale(1.1); 
+}
 </style>
