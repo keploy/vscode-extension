@@ -1,10 +1,10 @@
 name: Nodejs Build Test
 
 on:
-  workflow_run:
-    workflows: ["Test and Build VSCode"]
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
+
 
 jobs:
   deploy:
