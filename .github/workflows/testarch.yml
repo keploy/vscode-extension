@@ -1,62 +1,65 @@
-name: Node.js Build
+name: Publish Extension
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Test and Build VSCode"]
+    types:
+      - completed
 
 jobs:
-  package:
-    name: Package
+  deploy:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: [linux, darwin, win32]  # Define the platforms
         arch: [x64, arm64]  # Define the architectures
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    # Set up Node.js environment for the appropriate Node.js version
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
 
-    # Install npm dependencies based on the architecture
-    - name: Install dependencies
-      run: |
-        if [ "${{ matrix.arch }}" == "arm64" ]; then
-          npm_config_arch=arm64 npm install --build-from-source
-        else
-          npm_config_arch=x64 npm install --build-from-source
-        fi
+      # Install npm dependencies based on the architecture
+      - name: Install dependencies
+        run: |
+          if [ "${{ matrix.arch }}" == "arm64" ]; then
+            npm_config_arch=arm64 npm install --build-from-source
+          else
+            npm_config_arch=x64 npm install --build-from-source
+          fi
 
-    # Run Rollup for compilation (adjust this as necessary for your project)
-    - name: Run Rollup
-      run: npm run rollupci
+      # Run Rollup for compilation
+      - name: Run Rollup
+        run: npm run rollupci
 
-    # List contents of the compiled directory for debugging
-    - name: List contents of out/compiled directory
-      run: ls -R out/compiled
+      - name: List contents of out/compiled directory (for debugging)
+        run: ls -R out/compiled
 
-    # Install vsce for packaging the extension
-    - name: Install vsce
-      run: npm install -g @vscode/vsce
+      # Step 1: Package the extension for the appropriate target
+      - name: Package VSIX for the target platform
+        run: |
+          case "${{ matrix.os }}" in
+            linux)  vsce package --target linux-${{ matrix.arch }} ;;
+            darwin) vsce package --target darwin-${{ matrix.arch }} ;;
+            win32)  vsce package --target win32-${{ matrix.arch }} ;;
+          esac
 
-    # Set up the package path using environment variables
-    - name: Setup package path
-      id: setup
-      run: |
-        packageName=$(node -e "console.log(require('./package.json').name + '-' + require('./package.json').version + '-${{ matrix.arch }}.vsix')")
-        echo "PACKAGE_NAME=$packageName" >> $GITHUB_ENV
+      # Step 2: Capture the VSIX filename
+      - name: Capture VSIX filename
+        id: capture_vsix_file
+        run: |
+          VSIX_FILE=$(ls *.vsix)
+          echo "VSIX_FILE=$VSIX_FILE" >> $GITHUB_ENV
+        shell: bash
 
-    # Package the extension with dynamic targets based on architecture
-    - name: Package Extension
-      run: |
-        vsce package --target ${{ matrix.arch == 'arm64' && 'linux-arm64 --target darwin-arm64 --target win32-arm64' || 'linux-x64 --target darwin-x64 --target win32-x64' }} --out out/compiled/extension-${{ matrix.arch }}.vsix
+      - name: Print VSIX filename
+        id: capture_vsix_file
+        run: |
+          echo "Generated package for platform ${{ matrix.os }} and architecture ${{ matrix.arch }}:"
+          ls *.vsix
 
-    # List the generated VSIX file for debugging purposes
-    - name: List packaged VSIX
-      run: ls -lh $VSIX_PACKAGE_PATH
 
-    - run: xvfb-run -a npm test
-      if: runner.os == 'Linux'
+
