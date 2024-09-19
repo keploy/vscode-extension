@@ -3,9 +3,6 @@ import * as vscode from 'vscode';
 import sinon from 'sinon';
 import { SidebarProvider } from './SidebarProvider';
 
-//import KeployHome from '../../webviews/components/KeployHome.svelte';
-
-
 const createMockExtensionContext = (): vscode.ExtensionContext => ({
   subscriptions: [],
   extensionPath: '/mock/path',
@@ -54,26 +51,6 @@ class FakeWebviewView implements vscode.WebviewView {
   public visible = true;
   public dispose() {}
 }
-
-// describe('KeployHome Component', () => {
-// 	test('should click all buttons in KeployHome', async () => {
-// 		// Render the KeployHome component
-// 		const { getAllByRole } = render(KeployHome);
-	
-// 		// Get all button elements from the component
-// 		const buttons = getAllByRole('button');
-	
-// 		// Ensure that at least one button exists
-// 		//expect(buttons.length).toBeGreaterThan(0);
-	
-// 		// Simulate clicking each button
-// 		for (const button of buttons) {
-// 		  await fireEvent.click(button);
-// 		  // Ensure the button is still in the document after being clicked
-// 		  //expect(button).toBeInTheDocument();
-// 		}
-// 	  });
-// 	});
 
 suite('Sidebar Test Suite', () => {
 
@@ -147,7 +124,6 @@ suite('Sidebar Test Suite', () => {
 
     // Clean up
    
-
   });
 
   
