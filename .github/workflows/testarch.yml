@@ -1,4 +1,4 @@
-name: Publish Extension
+name: Nodejs vuild test
 
 on:
   workflow_run:
