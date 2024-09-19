@@ -56,7 +56,6 @@ jobs:
           echo "VSIX_FILE=$VSIX_FILE" >> $GITHUB_ENV
         shell: bash
 
-      # Step 3: Print VSIX filename
       - name: Print VSIX filename
         id: print_vsix_file  # Renamed to be unique
         run: |
