@@ -1,18 +1,18 @@
-name: Publish Extension
+name: Nodejs Build Test
 
 on:
-  workflow_run:
-    workflows: ["Test and Build VSCode"]
-    types:
-      - completed
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  deploy:
+  package:
+    name: Package
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [linux, darwin, win32]    
-        arch: [x64, arm64]     
+        os: [linux, darwin, win32]  # Define the platforms
+        arch: [x64, arm64]  # Define the architectures
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -31,16 +31,17 @@ jobs:
             npm_config_arch=x64 npm install --build-from-source
           fi
 
-      - name: Run Rollup for Compilation
+      # Run Rollup for compilation
+      - name: Run Rollup
         run: npm run rollupci
 
-      - name: List Compiled Files (Debugging)
+      - name: List contents of out/compiled directory (for debugging)
         run: ls -R out/compiled
 
       - name: Install vsce
         run: npm install -g @vscode/vsce
 
-      - name: Package VSIX for Target Platform
+      - name: Package VSIX for the target platform
         run: |
           case "${{ matrix.os }}" in
             linux)  vsce package --target linux-${{ matrix.arch }} ;;
@@ -48,23 +49,15 @@ jobs:
             win32)  vsce package --target win32-${{ matrix.arch }} ;;
           esac
 
-      - name: Capture VSIX Filename
+      - name: Capture VSIX filename
         id: capture_vsix_file
         run: |
           VSIX_FILE=$(ls *.vsix)
           echo "VSIX_FILE=$VSIX_FILE" >> $GITHUB_ENV
         shell: bash
 
-      - name: Print VSIX Filename
-        id: print_vsix_file
+      - name: Print VSIX filename
+        id: print_vsix_file  # Renamed to be unique
         run: |
-          echo "Generated package for OS ${{ matrix.os }} and architecture ${{ matrix.arch }}:"
+          echo "Generated package for platform ${{ matrix.os }} and architecture ${{ matrix.arch }}:"
           ls *.vsix
-
-      - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@v1
-        with:
-          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          packagePath: ${{ env.VSIX_FILE }}
-          registryUrl: https://marketplace.visualstudio.com
-          skipDuplicate: true

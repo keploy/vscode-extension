@@ -47,3 +47,19 @@ First Release for Vs Code Extension.
 ## [1.0.10]
 
 - Resolved sign-up bug for cross browser callbacks.
+
+## [1.0.11]
+
+- Maintaining user session
+
+## [1.0.12]
+
+- Fixing wrong file test generation in express mongoose
+
+## [1.0.13]
+
+- Separate release for arm and amd user
+
+## [1.0.14]
+
+- Back button refactored for better User Experience
