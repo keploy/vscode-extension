@@ -7,7 +7,8 @@ on:
 
 
 jobs:
-  deploy:
+  package:
+    name: Package
     runs-on: ubuntu-latest
     strategy:
       matrix:
