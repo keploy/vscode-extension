@@ -57,7 +57,7 @@ jobs:
 
       # Step 3: Print VSIX filename
       - name: Print VSIX filename
-        id: capture_vsix_file
+        id: print_vsix_file  # Renamed to be unique
         run: |
           echo "Generated package for platform ${{ matrix.os }} and architecture ${{ matrix.arch }}:"
           ls *.vsix
