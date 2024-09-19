@@ -14,8 +14,23 @@ extension="${sourceFilePath##*.}"
 
 # If the file is a Python file, install pytest-cov
 if [ "$extension" = "py" ]; then
-  echo "Installing pytest-cov..."
-  pip3 install pytest-cov --break-system-packages
+  echo "Checking if pytest-cov is installed..."
+  if ! pip3 show pytest-cov > /dev/null 2>&1; then
+    echo "pytest-cov is not installed. Installing pytest-cov..."
+    pip3 install pytest-cov --break-system-packages
+  else
+    echo "pytest-cov is already installed."
+  fi
+fi
+
+if [ "$extension" = "js" ] || [ "$extension" = "ts" ]; then
+  echo "Checking if Jest is installed..."
+  if ! npm list -g jest > /dev/null 2>&1; then
+    echo "Jest is not installed. Installing Jest..."
+    npm install --global jest 
+  else
+    echo "Jest is already installed."
+  fi
 fi
 
 if [ "$extension" = "go" ]; then
