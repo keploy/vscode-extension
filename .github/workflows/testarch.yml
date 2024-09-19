@@ -38,7 +38,9 @@ jobs:
       - name: List contents of out/compiled directory (for debugging)
         run: ls -R out/compiled
 
-      # Step 1: Package the extension for the appropriate target
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
       - name: Package VSIX for the target platform
         run: |
           case "${{ matrix.os }}" in
@@ -47,7 +49,6 @@ jobs:
             win32)  vsce package --target win32-${{ matrix.arch }} ;;
           esac
 
-      # Step 2: Capture the VSIX filename
       - name: Capture VSIX filename
         id: capture_vsix_file
         run: |
@@ -55,7 +56,6 @@ jobs:
           echo "VSIX_FILE=$VSIX_FILE" >> $GITHUB_ENV
         shell: bash
 
-      # Step 3: Print VSIX filename
       - name: Print VSIX filename
         id: print_vsix_file  # Renamed to be unique
         run: |
