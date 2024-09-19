@@ -1,10 +1,9 @@
-name: Nodejs vuild test
+name: Nodejs Build Test
 
 on:
   pull_request:
     branches:
       - main
-
 
 jobs:
   package:
@@ -56,11 +55,9 @@ jobs:
           echo "VSIX_FILE=$VSIX_FILE" >> $GITHUB_ENV
         shell: bash
 
+      # Step 3: Print VSIX filename
       - name: Print VSIX filename
         id: capture_vsix_file
         run: |
           echo "Generated package for platform ${{ matrix.os }} and architecture ${{ matrix.arch }}:"
           ls *.vsix
-
-
-
