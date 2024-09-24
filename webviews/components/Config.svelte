@@ -53,14 +53,16 @@ let showSettings = false;
   }
 </script>
 
-<div class={showSettings ? "container-hide" : "main-container"}>
-  <div class="main">
-    <div class="header">
+<div class={showSettings ? "container-hide" : "main-container"} >
+  <div class="main container-card">
+    <div class="logo-header">
       <img
-        src="https://raw.githubusercontent.com/Sarthak160/goApi/a47fc440a11368062260dcff9828b468bc9b2872/print_transparent.svg"
-        alt="Keploy"
-        class="logo"
-      />
+      src="https://raw.githubusercontent.com/Sarthak160/goApi/a47fc440a11368062260dcff9828b468bc9b2872/print_transparent.svg"
+      alt="Keploy"
+      class="logo"
+    />
+    </div>
+    <div class="header">
       <h1 class="welcome-heading">Welcome to Keploy</h1>
     </div>
 
@@ -109,7 +111,20 @@ let showSettings = false;
     height: 100%;
     width: 100%;
   }
-
+  .container-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    height: 100%;
+    padding: 2rem;
+    background-color: black;
+    border: 1px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0px 4px 36px 1px rgba(255, 145, 77, 0.8),
+              inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
+  }
   .logo {
     height: 40px;
     vertical-align: top;
@@ -147,26 +162,21 @@ let showSettings = false;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding: 10px;
   }
 
   .header {
-    flex: 0 0 20%;
-    padding-top: 40px;
+    flex: 0 0 15%;
     display: flex;
     flex-direction: row;
     justify-content: center;
   }
 
   .logo {
-    height: 70px;
-    margin-bottom: 20px;
+    height: 14vw;
   }
   @media screen and (max-width: 475px) {
-  .logo {
-    display: none;
-  }
+
 }
   .welcome-heading {
     font-size: 8vw; 
@@ -199,7 +209,6 @@ let showSettings = false;
   }
 
   .btn-container {
-    flex: 0 0 60%;
     display: flex;
     flex-direction: column;
     justify-content: initial;
@@ -224,7 +233,12 @@ let showSettings = false;
     transition: all 0.3s ease;
     box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); /* Glowing shadow effect based on #ff914d */
   }
-
+  .logo-header{
+    display: flex;
+    justify-content: flex-start;
+    width: 100vw;
+    margin-left: 9vw;
+  }
   .btn:hover {
   box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
   transform: scale(1.1); 

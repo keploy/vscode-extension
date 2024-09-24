@@ -3,8 +3,6 @@ button {
   /* background-color: black; */
   color: white;
   height: fit-content;
-  padding: 14px 20px;
-  margin: 4px 4px;
   border: none;
   width: 100%;
   cursor: pointer;
@@ -263,7 +261,23 @@ hr {
   width: 20px;
   height: 20px;
   transition: transform 0.3s;
-  background: url("settings.png") no-repeat center center;
+  background: url("settings.svg") no-repeat center center;
+  background-size: contain;
+}
+.docs-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+  background: url("docs.svg") no-repeat center center;
+  background-size: contain;
+}
+.support-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+  background: url("support.svg") no-repeat center center;
   background-size: contain;
 }
 .history-icon {
@@ -291,11 +305,17 @@ hr {
   width: 20px;
   height: 20px;
   transition: transform 0.3s;
-  background: url("replay.png") no-repeat center center;
+  background: url("replay.svg") no-repeat center center;
   background-size: contain;
-  color: tomato;
 }
-
+.record-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+  background: url("record.svg") no-repeat center center;
+  background-size: contain;
+}
 .code-icon {
   background: url("code-icon.png") no-repeat center center;
   background-size: contain;
@@ -320,3 +340,12 @@ hr {
   text-align: left;
   cursor: pointer;
 }
+.cicd-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s;
+  background: url("cicd.svg") no-repeat center center;
+  background-size: contain;
+}
+

@@ -93,8 +93,7 @@
   });
 </script>
 
-<div class="container">
-  <h1 class="heading">Steps to Setup UTG</h1>
+<div class="container ">
 
   <!-- Display usedCall/totalCall above the sidebar -->
   <!-- <div class="session-info">
@@ -141,7 +140,25 @@
       {/if}
     </div>
     {/if}
+    <div class="icon-buttons">
+
+    <a href="https://keploy.io/docs/" target="_blank">
+      <button id="openConfig" class="icon-button">
+        <span class="docs-icon"></span>
+      </button>
+    </a>
+  
+    <a href="https://join.slack.com/t/keploy/shared_invite/zt-2rak7xfq9-KgZDi0qzW350ZO8nzo08VA" target="_blank">
+      <button
+        id="openConfig"
+        class="icon-button"
+      >
+        <span class="support-icon"></span>
+      </button>
+    </a>
+    </div>
   </div>
+  <h1 class="heading">Steps to Setup UTG</h1>
 
   <div class="steps-container">
     <div class="step-first">
@@ -220,12 +237,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 2rem;
     width: 100%;
     height: 100vh;
     box-sizing: border-box;
     overflow-y: auto;
     background-color: #000;
+    border: 1px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0px 4px 36px 1px rgba(255, 145, 77, 0.8),
+                inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
   }
 
   .heading {
@@ -423,7 +445,26 @@
     max-height: 100%;
     border-radius: 10px;
   }
-
+  .icon-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    padding: 5px;
+    justify-content: flex-end; /* Align icons to the left */
+  }
+ .icon-button {
+    display: flex;
+    justify-content: start;
+    border-radius: 5px;
+    color: white;
+    background-color: black;
+    font-size: 24px;
+    height: 40px;
+    padding: 0 10px; /* Add padding inside buttons */
+    cursor: pointer;
+    border: none;
+    width: auto;
+  }
   @media (max-width: 400px) {
     .subTools {
       flex-direction: column;
