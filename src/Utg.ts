@@ -14,6 +14,18 @@ async function Utg(context: vscode.ExtensionContext) {
                 const token  = await context.globalState.get<'string'>('JwtToken');
 
                 let apiResponse: string = '';
+                // vscode.window.showInformationMessage('Attempting to trigger API request...');
+                // if(token){
+                //     apiResponse = (await makeApiRequest(token)) || 'no response';  // Fallback to empty string if null
+                //     if (apiResponse) {
+                //         vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
+
+                //         context.globalState.update('apiResponse', apiResponse);
+                //     }
+                // }else{
+                //     console.log("token no defined");
+                // }
+                // Create a terminal named "Keploy Terminal"
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
                 addBreadcrumb({ message: 'Keploy Terminal Created', level: 'info' });
                 terminal.show();
@@ -33,6 +45,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
                 const sourceFilePath = currentFilePath;
+                // ensureTestFileExists(sourceFilePath);
 
                 if (!vscode.workspace.workspaceFolders) {
                     vscode.window.showErrorMessage('No workspace is opened.');
@@ -139,7 +152,7 @@ async function Utg(context: vscode.ExtensionContext) {
 
 // Separate function for making the API request using axios
 export async function makeApiRequest(token:string): Promise<string | null> {
-    const url = 'https://api.keploy.io/ai/call/count123';
+    const url = 'https://api.keploy.io/ai/call/count';
 
     try {
         const response: AxiosResponse = await axios.get(url, {
