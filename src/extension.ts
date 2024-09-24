@@ -8,12 +8,13 @@ import Utg, { makeApiRequest } from './Utg';
 import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
 import * as acorn from 'acorn';
 import * as walk from 'acorn-walk';
-import { Sentry } from './sentryInit';
+import * as Sentry from './sentryInit';
 import TreeSitter from 'tree-sitter';
 import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
 import TreeSitterGo from 'tree-sitter-go';
+import { addBreadcrumb } from '@sentry/browser';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -135,27 +136,33 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.window.registerUriHandler({
             async handleUri(uri) {
-                // Extract the token and state from the URI query parameters
-                const token = uri.query.split('token=')[1]?.split('&')[0];
-                const state = uri.query.split('state=')[1];
-        
-                if (token) {
-                    vscode.window.showInformationMessage(`You are now logged in!`);
-        
-                    await context.globalState.update('JwtToken', token);
-                    await context.globalState.update('SignedOthers', true);
-        
-                    const response = await ValidateSignInWithOthers(token);
-        
-                    if (response) {
-                        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-                        vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                try{
+                    // Extract the token and state from the URI query parameters
+                    const token = uri.query.split('token=')[1]?.split('&')[0];
+                    const state = uri.query.split('state=')[1];
+            
+                    if (token) {
+                        vscode.window.showInformationMessage(`You are now logged in!`);
+                        addBreadcrumb({ message: 'User logged in with token', level: 'info' });
+                        await context.globalState.update('JwtToken', token);
+                        await context.globalState.update('SignedOthers', true);
+            
+                        const response = await ValidateSignInWithOthers(token);
+            
+                        if (response) {
+                            vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                            vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                        } else {
+                            vscode.window.showInformationMessage('Token validation failed!');
+                            Sentry?.default?.captureMessage('Token validation failed', 'warning');
+                        }
                     } else {
-                        vscode.window.showInformationMessage('Token validation failed!');
+                        vscode.window.showInformationMessage('Login failed');
+                        Sentry?.default?.captureMessage('Login failed: no token found', 'error');
                     }
-                } else {
-                    vscode.window.showInformationMessage('Login failed');
-                }
+                }catch(error){
+                    Sentry?.default?.captureException(error);
+                } 
             }
         }),
         
@@ -210,6 +217,7 @@ export function activate(context: vscode.ExtensionContext) {
         // enable the signout command
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
         context.globalState.update('SignedOthers' , true);
+        addBreadcrumb({ message: 'User already signed in', level: 'info' });
     } else {
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
         // Register the sign-in command if not signed in
@@ -254,6 +262,7 @@ export function activate(context: vscode.ExtensionContext) {
         } catch (error) {
             // console.error('Error during sign-in:', error);
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
+            Sentry?.default?.captureException(error);
         }
     });
 
@@ -269,8 +278,9 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage('You have been signed out.');
             vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
             vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
+            addBreadcrumb({ message: 'User signed out', level: 'info' });
         }catch(error){
-            Sentry?.captureException(error)
+            Sentry?.default?.captureException(error);
         }
     });
 
@@ -281,7 +291,7 @@ export function activate(context: vscode.ExtensionContext) {
             const currentVersion = await getCurrentKeployVersion();
             vscode.window.showInformationMessage(`The current version of Keploy is ${currentVersion}`);
         } catch (error) {
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             vscode.window.showErrorMessage('Failed to get Keploy version');
         }
     });
@@ -293,7 +303,7 @@ export function activate(context: vscode.ExtensionContext) {
             const changeLogUrl = 'https://marketplace.visualstudio.com/items?itemName=Keploy.keployio';
             vscode.env.openExternal(vscode.Uri.parse(changeLogUrl));
         } catch (error) {
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             vscode.window.showErrorMessage('Failed to open change log');
         }
     });
@@ -305,7 +315,7 @@ export function activate(context: vscode.ExtensionContext) {
             const docsUrl = 'https://keploy.io/docs/';
             vscode.env.openExternal(vscode.Uri.parse(docsUrl));
         } catch (error) {
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             vscode.window.showErrorMessage('Failed to open documentation');
         }
     });
@@ -317,7 +327,7 @@ export function activate(context: vscode.ExtensionContext) {
             const latestVersion = await getKeployVersion();
             vscode.window.showInformationMessage(`The latest version of Keploy is ${latestVersion}`);
         } catch (error) {
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             vscode.window.showErrorMessage('Failed to get latest version of Keploy');
         }
     });
@@ -343,7 +353,7 @@ export function activate(context: vscode.ExtensionContext) {
                             vscode.window.showInformationMessage('Keploy Docker updated!');
                         } catch (error) {
                             vscode.window.showErrorMessage(`Failed to update Keploy Docker: ${error}`);
-                            Sentry?.captureException(error);
+                            Sentry?.default?.captureException(error);
                         }
                     } else if (selection.label === "Keploy Binary") {
                         try {
@@ -351,13 +361,13 @@ export function activate(context: vscode.ExtensionContext) {
                             // this._view?.webview.postMessage({ type: 'success', value: 'Keploy binary updated!' });
                         } catch (error) {
                             vscode.window.showErrorMessage(`Failed to update Keploy binary: ${error}`);
-                            Sentry?.captureException(error);
+                            Sentry?.default?.captureException(error);
                         }
                     }
                 }
             });
         } catch (error) {
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             vscode.window.showErrorMessage('Failed to update Keploy');
         }
     });
@@ -414,7 +424,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
         }
         catch(error){
-            Sentry?.captureException(error)
+            Sentry?.default?.captureException(error);
         }
     });
     
@@ -425,5 +435,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 export function deactivate() { 
-    Sentry?.close(2000);
+    Sentry?.default?.close(2000);
 }

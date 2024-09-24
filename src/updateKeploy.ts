@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import {getKeployVersion , getCurrentKeployVersion} from './version';
-import { Sentry } from './sentryInit';
+import * as Sentry from './sentryInit';
 
 export async function downloadAndUpdate(): Promise<void> {
     try {
@@ -45,7 +45,7 @@ export async function downloadAndUpdate(): Promise<void> {
         }else{
         console.error('Error occurred during download and update:', error);
         vscode.window.showErrorMessage('Error occurred during updating binary: ' + error);
-        Sentry?.captureException(error);
+        Sentry?.default?.captureException(error);
         throw error;
         }
     }
@@ -84,7 +84,7 @@ export async function downloadAndUpdateDocker(): Promise<void> {
             });
     
         }   catch (error) {
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             throw error;
             // reject(error); // Reject the promise if an error occurs during execution
             
@@ -129,7 +129,7 @@ export async function downloadAndInstallKeployBinary(): Promise<void> {
             });
         } catch (error) {
             reject(error); // Reject the promise if an error occurs during execution
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
         }
     });
 }

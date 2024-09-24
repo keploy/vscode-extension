@@ -1,6 +1,5 @@
-
 import { execShell } from './execShell';
-import { Sentry } from './sentryInit';
+import * as Sentry from './sentryInit';
 export async function getKeployVersion() {
     // GitHub repository details
     const repoOwner = "keploy";
@@ -25,7 +24,7 @@ export async function getCurrentKeployVersion() {
             output = await execShell('/usr/local/bin/keploybin --version');
         }catch(error){
             console.log("Error Fetching version With Absolute path " + error);
-            Sentry?.captureException(error);
+            Sentry?.default?.captureException(error);
             throw error;
         }
     }

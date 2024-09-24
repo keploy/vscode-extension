@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
 import axios, { AxiosResponse } from 'axios';
-import { Sentry } from './sentryInit';
+import * as Sentry from './sentryInit';
 
 
 async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
@@ -26,7 +26,7 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
 
         return primaryEmail ? primaryEmail.email : null;
     } catch (error) {
-        Sentry?.captureException(error);
+        Sentry?.default?.captureException(error);
         vscode.window.showErrorMessage(`Failed to fetch email: ${error}`);
         return null;
     }
@@ -48,7 +48,7 @@ export async function getGitHubAccessToken() {
             vscode.window.showErrorMessage('Failed to get GitHub session.');
         }
     } catch (error) {
-        Sentry?.captureException(error);
+        Sentry?.default?.captureException(error);
         vscode.window.showErrorMessage(`Error: ${error}`);
     }
 }
@@ -65,7 +65,7 @@ export async function getMicrosoftAccessToken() {
             vscode.window.showErrorMessage('Failed to get Microsoft session.');
         }
     } catch (error) {
-        Sentry?.captureException(error);    
+        Sentry?.default?.captureException(error);    
         vscode.window.showErrorMessage(`Error: ${error}`);
     }
 }
@@ -123,7 +123,7 @@ export default async function SignInWithGitHub() {
             }   
         }).listen(3000); // Change the port if needed
     }catch(error){
-        Sentry?.captureException(error)
+        Sentry?.default?.captureException(error);
     }
 }
 
@@ -178,7 +178,7 @@ export async function loginAPI(url = "", provider = "", code = "") {
         }
     } catch (err) {
         console.log("ERROR at login", err);
-        Sentry?.captureException(err);
+        Sentry?.default?.captureException(err);
     }
 }
 
@@ -243,7 +243,7 @@ export async function getInstallationID(): Promise<string> {
         return id;
     } catch (err) {
         console.error("Failed to get installation ID:", err);
-        Sentry?.captureException(err);
+        Sentry?.default?.captureException(err);
         throw new Error("Failed to get installation ID");
     }
 }
@@ -335,7 +335,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
-        Sentry?.captureException(err);
+        Sentry?.default?.captureException(err);
         throw new Error(`Failed to authenticate: ${err.message}`);
     }
 }

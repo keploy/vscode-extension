@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { existsSync, readFileSync } from 'fs';
-import { Sentry } from './sentryInit';
+import * as Sentry from './sentryInit';
 
 export async function handleOpenKeployConfigFile(webview: any) {
   try {
@@ -51,7 +51,7 @@ export async function handleOpenKeployConfigFile(webview: any) {
 
   } catch (error) {
     // Log the error to Sentry
-    Sentry?.captureException(error);
+    Sentry?.default?.captureException(error);
     vscode.window.showErrorMessage('An error occurred while handling the Keploy config file.');
   }
 }
@@ -125,7 +125,7 @@ fallbackOnMiss: false
 
   } catch (error) {
     // Log the error to Sentry
-    Sentry?.captureException(error);
+    Sentry?.default?.captureException(error);
     vscode.window.showErrorMessage('An error occurred while initializing the Keploy config file.');
   }
 }
