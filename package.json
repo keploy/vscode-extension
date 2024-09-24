@@ -55,8 +55,20 @@
         }
       ]
     },
+    "submenus": [
+      {
+        "icon": "$(account)",  
+        "label": "Sign In Options",
+        "id": "sign_in_submenu"
+      }
+    ],
     "menus": {
       "view/title": [
+        {
+          "submenu": "sign_in_submenu",
+          "when": "view == Keploy-Sidebar && keploy.signedIn != true",
+          "group": "navigation"
+        },
         {
           "command": "keploy.updateKeploy",
           "when": "view == Keploy-Sidebar"
@@ -78,22 +90,39 @@
           "when": "view == Keploy-Sidebar"
         },
         {
-          "command": "keploy.SignInWithOthers",
-          "group": "navigation",
-          "when": "keploy.signedIn != true && view == Keploy-Sidebar"
-        },
-        {
           "command": "keploy.SignOut",
           "group": "navigation",
           "when": "keploy.signedOut != true && view == Keploy-Sidebar"
+        }
+      ],
+      "sign_in_submenu": [
+        {
+          "command": "keploy.SignInWithOthers",
+          "title": "Sign In with Google"
+        },
+        {
+          "command": "keploy.SignInWithGithub",
+          "title": "Sign In with Github"
+        },
+        {
+          "command": "keploy.SignInWithMicrosoft",
+          "title": "Sign In with Microsoft"
+    
         }
       ]
     },
     "commands": [
       {
         "command": "keploy.SignInWithOthers",
-        "title": "Sign In",
-        "when": "keploy.signedIn != true && view == Keploy-Sidebar"
+        "title": "Sign In with Google"
+      },
+      {
+        "command": "keploy.SignInWithGithub",
+        "title": "Sign In with GitHub"
+      },
+      {
+        "command": "keploy.SignInWithMicrosoft",
+        "title": "Sign In with Microsoft"
       },
       {
         "command": "keploy.SignOut",
@@ -128,39 +157,6 @@
         "command": "keploy.viewDocumentation",
         "title": "View Docs",
         "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.generateTests",
-        "title": "Do Something"
-      },
-      {
-        "command": "keploy.updateKeploy",
-        "title": "Update your Keploy",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.KeployVersion",
-        "title": "View Your Keploy Version",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.getLatestVersion",
-        "title": "Get Latest Version",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.viewChangeLog",
-        "title": "View Change Log",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.viewDocumentation",
-        "title": "View Docs",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.generateTests",
-        "title": "Do Something"
       }
     ]
   },
