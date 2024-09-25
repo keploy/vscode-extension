@@ -33,9 +33,40 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   constructor(private readonly _extensionUri: vscode.Uri ,   private readonly _context: vscode.ExtensionContext) {
   }
 
-  public postMessage(type: any, value: any) {
-    console.log('postMessage');
-    this._view?.webview.postMessage({ type: type, value: value });
+  public postMessage(value: any) {
+    if (!this._view) {
+      vscode.window.showErrorMessage('Webview is not available');
+      return;
+    }
+  
+    let webviewView = this._view;
+
+    try {
+      console.log('Navigate to ' + value);
+      let sveltePageJs: vscode.Uri;
+      let sveltePageCss: vscode.Uri;
+         if(value = "KeployChatBot"){
+        sveltePageJs = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
+        );
+        sveltePageCss = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
+        );
+
+      }
+      else {
+        throw new Error("Unsupported navigation value");
+      }
+
+      // Save the language state
+      // vscode.getState().then(() => {
+      //   vscode.setState({ language: data.language });
+      // });
+
+      webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, sveltePageCss, sveltePageJs);
+    } catch (error) {
+      this._view?.webview.postMessage({ type: 'error', value: `Failed to open page ${error}` });
+    }
   }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -289,7 +320,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               sveltePageCss = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.css")
               );
-            } else {
+            }else if(data.value = "KeployChatBot"){
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
+              );
+    
+            }
+            else {
               throw new Error("Unsupported navigation value");
             }
 
@@ -314,6 +354,24 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
       }
+      //cannot make it a case of generate unit test as we will taking the input from the user and keploy gen with additional prompts will from a cta hence making a new case for it.
+        case "keployGenWithAdditionalPrompts":{
+          try{
+            const additional_prompts = data.prompt;
+            const editor = vscode.window.activeTextEditor;
+            if (!editor) {
+              vscode.window.showErrorMessage("No file is currently open.");
+              return;
+            }
+      
+            const fileUri = editor.document.uri;      
+            console.log("additional prompts and uri: ", additional_prompts , fileUri);
+            await vscode.commands.executeCommand('keploy.utg' , fileUri , additional_prompts );
+          }catch(error){
+            console.error("Error executing keploy.utg command:", error);
+          }
+          break;
+        }
 
         case "openLink":{
       

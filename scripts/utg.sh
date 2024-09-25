@@ -2,12 +2,11 @@
 
 export API_KEY="1234"
 
-
 sourceFilePath=$1
 testFilePath=$2
 coverageReportPath=$3
 command=$4
-
+additional_prompts=$5
 
 # Get the file extension
 extension="${sourceFilePath##*.}"
@@ -40,26 +39,32 @@ if [ "$extension" = "go" ]; then
   export PATH=$PATH:$(go env GOPATH)/bin
 fi
 
-# Add env variables to the npm test command
-# utgEnv=" -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage"
-
 # Construct the keploy gen command
 if [ "$extension" = "java" ]; then
-  keploy gen --source-file-path="$sourceFilePath" \
-    --test-file-path="$testFilePath" \
-    --test-command="$command" \
-    --coverage-report-path="$coverageReportPath" \
-    --llmApiVersion "2024-02-01" \
-    --llmBaseUrl "https://api.keploy.io" \
-    --max-iterations "5" \
-    --coverageFormat jacoco
+  keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
+    --test-file-path=\"$testFilePath\" \
+    --test-command=\"$command\" \
+    --coverage-report-path=\"$coverageReportPath\" \
+    --llmApiVersion \"2024-02-01\" \
+    --llmBaseUrl \"https://api.keploy.io\" \
+    --max-iterations \"5\" \
+    --coverageFormat jacoco"
 else
-  keploy gen --source-file-path="$sourceFilePath" \
-    --test-file-path="$testFilePath" \
-    --test-command="$command" \
-    --coverage-report-path="$coverageReportPath" \
-    --llmApiVersion "2024-02-01" \
-    --llmBaseUrl "https://api.keploy.io" \
-    --max-iterations "5" \
-    --coverageFormat cobertura
+  keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
+    --test-file-path=\"$testFilePath\" \
+    --test-command=\"$command\" \
+    --coverage-report-path=\"$coverageReportPath\" \
+    --llmApiVersion \"2024-02-01\" \
+    --llmBaseUrl \"https://api.keploy.io\" \
+    --max-iterations \"5\" \
+    --coverageFormat cobertura"
 fi
+
+# Add the additional prompt if it's provided and not an empty string
+if [ -n "$additional_prompts" ] && [ "$additional_prompts" != " " ]; then
+  keployCommand="$keployCommand --additional-prompt \"$additional_prompts\""
+fi
+
+# Run the keploy command
+echo "Running: $keployCommand"
+eval $keployCommand

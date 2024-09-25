@@ -67,6 +67,11 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'keploy.utg',
                         arguments: [document.uri.fsPath]
                     }));
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Additional Prompts',
+                        command: 'keploy.showSidebar',
+                        arguments: [document.uri.fsPath]
+                    }));
                 } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
                     if (node.type === 'arrow_function') {
                         const parent = ancestors[ancestors.length - 1];
@@ -76,6 +81,12 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                             codeLenses.push(new vscode.CodeLens(range, {
                                 title: '🐰 Generate unit tests',
                                 command: 'keploy.utg',
+                                arguments: [document.uri.fsPath]
+                            }));
+
+                            codeLenses.push(new vscode.CodeLens(range, {
+                                title: '🐰 Additional Prompts',
+                                command: 'keploy.showSidebar',
                                 arguments: [document.uri.fsPath]
                             }));
                         }
@@ -340,8 +351,18 @@ export function activate(context: vscode.ExtensionContext) {
     
     context.subscriptions.push(updateKeployDisposable);
 
+    let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async () => {
+        // Show the sidebar when this command is executed
+        vscode.commands.executeCommand('workbench.view.extension.Keploy-Sidebar');
+        sidebarProvider.postMessage("KeployChatBot")
+        vscode.window.showInformationMessage('Sidebar opened for additional prompts.');
+    });
+    
+    context.subscriptions.push(showSidebarDisposable);
+    
+
     // Register the command
-    let disposable = vscode.commands.registerCommand('keploy.utg', async (uri: vscode.Uri) => {
+    let disposable = vscode.commands.registerCommand('keploy.utg', async (uri: vscode.Uri , additional_prompts?:string) => {
         // Check if the user is already signed in
         const signedIn = await context.globalState.get('accessToken');
         const signedInOthers = await context.globalState.get('SignedOthers');
@@ -383,7 +404,7 @@ export function activate(context: vscode.ExtensionContext) {
             if (updatedSubscriptionEnded === false) {
                 // If SubscriptionEnded is false or undefined, continue running Utg
                 vscode.window.showInformationMessage('Welcome to Keploy!');
-                await Utg(context);
+                await Utg(context , additional_prompts);
             }
         }
     });
