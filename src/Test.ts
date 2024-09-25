@@ -319,7 +319,7 @@ export async function startTesting(wslscriptPath: string, wsllogfilePath: string
 
                     console.log(`Current default shell: ${currentShell}`);
                     //uncomment the below line if you want to use the default shell (for zsh test)
-                    // terminalPath = currentShell;
+                    terminalPath = currentShell;
                 }
                 console.log(`Terminal path: ${terminalPath}`);
                 const terminal = vscode.window.createTerminal({
@@ -338,7 +338,7 @@ export async function startTesting(wslscriptPath: string, wsllogfilePath: string
                         // Use a Zsh-specific script if needed
                         console.log('Using Zsh script');
                         //replace bashScriptPath with zshScriptPath for zsh
-                        testCmd = `"${bashScriptPath}" "${logfilePath}"; exit 0`;
+                        testCmd = `"${zshScriptPath}" "${logfilePath}"; exit 0`;
                     } else {
                         // Default to Bash script
                          testCmd = `"${bashScriptPath}" "${logfilePath}" ; exit 0`;
