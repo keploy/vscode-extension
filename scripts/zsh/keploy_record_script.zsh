@@ -10,7 +10,6 @@ if [[ ! -f "$keploy_config" ]]; then
 fi
 
 command=$(awk '/command:/ { $1=""; sub(/^ /, ""); print }' "$keploy_config")
-# echo "Command in yml file: $command"
 
 # Check if command is empty
 if [[ -z "$command" ]]; then
@@ -30,22 +29,14 @@ if [[ "$command" =~ .*"go".* ]]; then
   go build -o application
 
 elif [[ "$command" =~ .*"python3".* ]]; then
-  # echo "Python3 command found"
   python3 -m venv venv
-  # echo "venv created"
   source venv/bin/activate
-  # echo "venv activated"
   pip install -r requirements.txt
-  # echo "requirements installed"
 
 elif [[ "$command" =~ .*"python".* ]] ; then
-# echo "Python command found"
   python -m venv venv
-  # echo "venv created"
   source venv/bin/activate
-  # echo "venv activated"
   pip install -r requirements.txt
-  # echo "requirements installed"
   
 elif [[ "$command" =~ .*"node".* ]]; then
   npm install
@@ -75,9 +66,7 @@ else
 fi
 
 # Clean up: Wait for keploy command to finish
-wait $!
-touch ./log_file.txt
- 
+wait $! 
 
 # Terminate the dummy process and the logging process
 kill $dummy_pid
