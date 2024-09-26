@@ -1,4 +1,4 @@
-#!/bin/zsh -i
+#!/bin/zsh
 
 log_file_path="$1"
 
@@ -62,7 +62,7 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
   sudo -E env "PATH=$PATH" keploy record  > "$fifo" 2>&1
 else
   keploycmd="sudo -E env PATH=\"$PATH\" keploy"
-  $keploycmd record > "$fifo" 2>&1
+  eval $keploycmd record > "$fifo" 2>&1
 fi
 
 # Clean up: Wait for keploy command to finish

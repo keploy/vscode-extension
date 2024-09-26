@@ -1,4 +1,4 @@
-#!/bin/zsh -i
+#!/bin/zsh
 
 log_file_path="$1"
 
@@ -39,5 +39,5 @@ if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
   sudo -E env "PATH=$PATH" keploy test | tee -a "$log_file_path"
 else
   keploycmd="sudo -E env PATH=\"$PATH\" keploy"
-  sudo $keploycmd test | tee -a "$log_file_path"
+  eval sudo $keploycmd test | tee -a "$log_file_path"
 fi
