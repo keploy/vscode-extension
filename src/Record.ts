@@ -71,16 +71,23 @@ export async function displayRecordedTestCases(logfilePath: string, webview: any
 export async function stopRecording() {
 
         try {
-            const pid = await vscode.window.activeTerminal?.processId;
-            if(pid){
-                vscode.window.activeTerminal?.sendText('\x03', true);
-            }
-            setTimeout(async () => {
-                const currentPid = await vscode.window.activeTerminal?.processId;
-                if(pid && pid === currentPid){
-                    vscode.window.activeTerminal?.dispose();
+            let pid: number | undefined;
+            await Promise.all(vscode.window.terminals.map(async (terminal) => {
+                if (terminal.name === 'Keploy Terminal') {
+                    pid = await terminal.processId;
+                    terminal.sendText('\x03', true);
                 }
-            },5000)
+            }));
+            setTimeout(async () => {
+                await Promise.all(vscode.window.terminals.map(async (terminal) => {
+                    if (terminal.name === 'Keploy Terminal') {
+                        const currentPid = await terminal.processId;
+                        if (pid && currentPid && pid === currentPid) {
+                            vscode.window.activeTerminal?.dispose();
+                        }
+                    }
+                }));
+            }, 5000);
             return;
         }
         catch (error) {
