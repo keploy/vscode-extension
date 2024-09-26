@@ -1,10 +1,10 @@
-#!/bin/bash -i
+#!/bin/zsh
 
 log_file_path="$1"
 
 # Create log file if it doesn't exist
 touch "$log_file_path"
-> "$log_file_path" # Clear the log file
+: > "$log_file_path" # Clear the log file
 
 # Set permissions of the log file
 chmod 666 "$log_file_path"
@@ -31,15 +31,13 @@ elif [[ "$command" =~ .*"node".* ]]; then
 
 elif [[ "$command" =~ .*"java".* ]]  || [[ "$command" =~ .*"mvn".* ]]; then
   mvn clean install
+
 fi 
 
 # Check if running on WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
-  export PATH=$(echo "$PATH" | tr ' ' '\n' | grep -v " " | tr '\n' ':')
-  keploycmd="sudo -E env PATH=\"$PATH\" keploy"
+  sudo -E env "PATH=$PATH" keploy test | tee -a "$log_file_path"
 else
   keploycmd="sudo -E env PATH=\"$PATH\" keploy"
+  eval $keploycmd test | tee -a "$log_file_path"
 fi
-
-# Execute the keploy command and append the output to the log file
-sudo $keploycmd test | tee -a "$log_file_path"
