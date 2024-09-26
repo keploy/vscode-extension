@@ -58,13 +58,13 @@ kill_all() {
 # Check if running on WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
   (
-    trap 'kill_all' SIGINT SIGTERM
+    trap 'kill_all' SIGINT SIGTERM EXIT
     sudo -E env "PATH=$PATH" keploy test  > "$fifo" 2>&1
   )
 else
   keploycmd="sudo -E env PATH=\"$PATH\" keploy"
   (
-    trap 'kill_all' SIGINT SIGTERM
+    trap 'kill_all' SIGINT SIGTERM EXIT
     eval $keploycmd test > "$fifo" 2>&1
   )
 fi
