@@ -1,4 +1,4 @@
-#!/bin/bash -i
+#!/bin/zsh
 
 log_file_path="$1"
 
@@ -11,6 +11,7 @@ fi
 
 command=$(awk '/command:/ { $1=""; sub(/^ /, ""); print }' "$keploy_config")
 
+# Check if command is empty
 if [[ -z "$command" ]]; then
     echo "Command is not specified in keploy.yml."
     exit 1
@@ -18,7 +19,7 @@ fi
 
 # Create log file if it doesn't exist
 touch "$log_file_path"
-> "$log_file_path" # Clear the log file
+: > "$log_file_path" # Clear the log file
 
 # Set permissions of the log file
 chmod 666 "$log_file_path"
@@ -44,14 +45,6 @@ elif [[ "$command" =~ .*"java".* ]]  || [[ "$command" =~ .*"mvn".* ]]; then
   mvn clean install
 fi 
 
-# Check if running on WSL
-if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
-  export PATH=$(echo "$PATH" | tr ' ' '\n' | grep -v " " | tr '\n' ':')
-  keploycmd="sudo -E env PATH=\"$PATH\" keploy"
-else
-  keploycmd="sudo -E env PATH=\"$PATH\" keploy"
-fi
-
 # Create a named pipe
 fifo=$(mktemp -u)
 mkfifo "$fifo"
@@ -64,17 +57,18 @@ cat_pid=$!
 (while true; do sleep 1; done) &
 dummy_pid=$!
 
-# Function to Terminate the dummy process and the logging process
-kill_all() {
-  kill $dummy_pid
-  rm -f "$fifo"
-}
-
-# Execute the keploy command with the trap, redirecting output to the named pipe
-(
-  trap 'kill_all' SIGINT SIGTERM EXIT
-  $keploycmd record > "$fifo" 2>&1
-)
+# Check if running on WSL
+if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+  sudo -E env "PATH=$PATH" keploy record  > "$fifo" 2>&1
+else
+  keploycmd="sudo -E env PATH=\"$PATH\" keploy"
+  eval $keploycmd record > "$fifo" 2>&1
+fi
 
 # Clean up: Wait for keploy command to finish
-wait $!
+wait $! 
+
+# Terminate the dummy process and the logging process
+kill $dummy_pid
+wait $cat_pid
+rm "$fifo"
