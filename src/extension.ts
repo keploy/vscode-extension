@@ -14,6 +14,95 @@ import TreeSitterGo from 'tree-sitter-go';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
+    private treeCache: { [filePath: string]: TreeSitter.Tree } = {};
+    private invalidateCache(fileName: string) {
+        delete this.treeCache[fileName];  // Remove the cached tree
+    }
+    constructor() {
+        // Listen for document changes and invalidates cache
+        vscode.workspace.onDidChangeTextDocument(this.onDocumentChange.bind(this));
+
+        // Listen for document save events and invalidates cache
+        vscode.workspace.onDidSaveTextDocument(this.onDocumentSave.bind(this));
+    }
+
+ // Triggered when the document is saved
+    private onDocumentSave(document: vscode.TextDocument) {
+        console.log('Document saved:', document.uri.fsPath);
+        const fileName = document.uri.fsPath;
+        this.invalidateCache(fileName);  // Invalidate the cache on save
+    }
+
+    private onDocumentChange(event: vscode.TextDocumentChangeEvent) {
+        console.log('Document changed:', event.document.uri.fsPath);
+        const fileName = event.document.uri.fsPath;
+        this.invalidateCache(fileName);  // Invalidate the cache on change
+    }
+
+    private getTreeFromCache(fileName: string, text: string): TreeSitter.Tree {
+        if (this.treeCache[fileName]) {
+            console.log(`Cache hit for: ${fileName}`);
+            this.logCacheSize();  // Log the cache size
+            return this.treeCache[fileName];  // Return cached tree if available
+        }
+        const parser = new TreeSitter();
+
+        // Set the language based on file extension
+        if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
+            parser.setLanguage(TreeSitterJavaScript);
+        } else if (fileName.endsWith('.py')) {
+            parser.setLanguage(TreeSitterPython);
+        } else if (fileName.endsWith('.java')) {
+            parser.setLanguage(TreeSitterJava);
+        } else if (fileName.endsWith('.go')) {
+            parser.setLanguage(TreeSitterGo);
+        } else {
+            throw new Error("Unsupported file type");
+        }
+
+        const tree = parser.parse(text);  // Parse the document text
+        this.treeCache[fileName] = tree;  // Cache the parsed tree
+        console.log(`Cache miss for: ${fileName}`);
+        this.logCacheSize();  // Log the cache size after adding a new entry
+    
+        return tree;
+    }
+
+    private logCacheSize() {
+        let totalSize = 0;
+    
+        // Iterate over each key-value pair in the cache
+        for (const [key, value] of Object.entries(this.treeCache)) {
+            // Add the size of the key (file name)
+            totalSize += this.getSizeInBytes(key);
+            
+            // Add the estimated size of the parsed tree (value)
+            totalSize += this.getSizeInBytes(value);
+        }
+    
+        // Convert total size from bytes to kilobytes
+        const totalSizeKB = totalSize / 1024;
+        
+        console.log(`Current cache size: ${totalSize} bytes (${totalSizeKB.toFixed(2)} KB)`);
+    }
+
+    private getSizeInBytes(obj: any): number {
+        if (typeof obj === 'string') {
+            // If the object is a string, calculate the size based on UTF-16 encoding (2 bytes per character)
+            return obj.length * 2;
+        } else if (typeof obj === 'object') {
+            // If the object is an object, recursively calculate the size of its properties
+            let objectSize = 0;
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    objectSize += this.getSizeInBytes(key);  // Size of key
+                    objectSize += this.getSizeInBytes(obj[key]);  // Size of value
+                }
+            }
+            return objectSize;
+        }
+        return 0;  // For other types like numbers, you can return a fixed size if needed
+    }
 
     provideCodeLenses(
         document: vscode.TextDocument,
@@ -36,21 +125,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         const codeLenses: vscode.CodeLens[] = [];
 
         try {
-            const parser = new TreeSitter();
-
-            if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
-                parser.setLanguage(TreeSitterJavaScript);
-            } else if (fileName.endsWith('.py')) {
-                parser.setLanguage(TreeSitterPython);
-            } else if (fileName.endsWith('.java')) {
-                parser.setLanguage(TreeSitterJava);
-            } else if (fileName.endsWith('.go')) {
-                parser.setLanguage(TreeSitterGo);
-            } else {
-                return codeLenses; // Return if file type is unsupported
-            }
-
-            const tree = parser.parse(text);
+            const tree = this.getTreeFromCache(fileName, text);
             const cursor = tree.walk();
 
             const traverseTree = (cursor: TreeSitter.TreeCursor, ancestors: TreeSitter.SyntaxNode[] = []) => {
@@ -72,6 +147,9 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'keploy.showSidebar',
                         arguments: [document.uri.fsPath]
                     }));
+                    console.log('🐰 Found arrow function:', node.firstChild?.text);
+                    const functionName = node.firstChild?.text || '';  // Default to an empty string if undefined
+                    this.findTestCasesForFunction(functionName, document, codeLenses);
                 } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
                     if (node.type === 'arrow_function') {
                         const parent = ancestors[ancestors.length - 1];
@@ -89,6 +167,9 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                                 command: 'keploy.showSidebar',
                                 arguments: [document.uri.fsPath]
                             }));
+                            console.log('🐰 Found arrow function:', node.firstChild?.text);
+                            const functionName = node.firstChild?.text || '';  // Default to an empty string if undefined
+                            this.findTestCasesForFunction(functionName, document, codeLenses);
                         }
                     }
                 } else if (fileName.endsWith('.py') && node.type === 'function_definition') {
@@ -151,6 +232,99 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
 
         return codeLenses;
     }
+
+    private findTestCasesForFunction(functionName: string, document: vscode.TextDocument, codeLenses: vscode.CodeLens[]) {
+        console.log(`🐰 Searching for test cases for function: ${functionName}`);
+        // Look for related test files (.test.js or .spec.js for JS/TS)
+        const excludePattern = '**/node_modules/**';  // Exclude node_modules from the search
+        const maxResults = 100;  // Limit the number of files returned
+        console.log('🐰 Searching for test files...');
+        const testFiles = vscode.workspace.findFiles('**/*.{test,spec}.{js,ts}', excludePattern, maxResults);
+    
+        testFiles.then((files) => {
+            console.log('🐰 Found test files:', files);
+            files.forEach(async (fileUri) => {
+                console.log('🐰 Opening test file:', fileUri.fsPath);
+                const fileDocument = await vscode.workspace.openTextDocument(fileUri);
+                console.log('🐰 Reading test file:', fileUri.fsPath);
+                const text = fileDocument.getText();
+    
+                try {
+                    const tree = this.getTreeFromCache(fileUri.fsPath, text);
+                    const cursor = tree.walk();
+                    let found = false;
+
+                    console.log('🐰 Walking test file:', fileUri.fsPath);
+                    // Traverse the test file to find related test functions
+                    const traverseTestTree = (cursor: TreeSitter.TreeCursor, ancestors: TreeSitter.SyntaxNode[] = []) => {
+                        const node = cursor.currentNode;
+    
+                        // Check for require statement: const <functionName> = require('<path>')
+                        if (node.type === 'call_expression') {
+                            const callNode = node.firstChild;
+                            if (callNode?.text === 'require') {
+                                const requiredModule = node.lastChild?.text;
+                                if (requiredModule && requiredModule.includes(functionName)) {
+                                    found = true;
+                                    console.log(`🐰 Found function ${functionName} used in require statement in file: ${fileUri.fsPath}`);
+                                }
+                            }
+                        }
+    
+                        // Check for ES6 import statements: import <functionName> from '<path>'
+                        if (node.type === 'import_statement') {
+                            const importNode = node.childForFieldName('source');
+                            if (importNode && importNode.text.includes(functionName)) {
+                                found = true;
+                                console.log(`🐰 Found function ${functionName} used in import statement in file: ${fileUri.fsPath}`);
+                            }
+                        }
+    
+                        if (found) {
+                            return; // Stop traversal once we find the function usage
+                        }
+    
+                        if (cursor.gotoFirstChild()) {
+                            traverseTestTree(cursor, ancestors.concat(node));
+                            cursor.gotoParent();
+                        }
+                        if (cursor.gotoNextSibling()) {
+                            traverseTestTree(cursor, ancestors);
+                        }
+                    };
+    
+    
+                    traverseTestTree(cursor);
+                    if (!found) {
+                        const searchFunctionUsageInTests = (cursor: TreeSitter.TreeCursor) => {
+                            const node = cursor.currentNode;
+                            if (node.type === 'call_expression' && node.text.includes(functionName)) {
+                                console.log(`🐰 Function ${functionName} used in test case in file: ${fileUri.fsPath}`);
+                                found = true;
+                            }
+                            if (cursor.gotoFirstChild()) {
+                                searchFunctionUsageInTests(cursor);
+                                cursor.gotoParent();
+                            }
+                            if (cursor.gotoNextSibling()) {
+                                searchFunctionUsageInTests(cursor);
+                            }
+                        };
+                        searchFunctionUsageInTests(cursor);
+                    }
+    
+                    if (!found) {
+                        console.log(`❌ No usage of function ${functionName} found in file: ${fileUri.fsPath}`);
+                    }
+    
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+        });
+    }
+    
+
 }
 
 
