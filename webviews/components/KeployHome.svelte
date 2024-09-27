@@ -625,9 +625,23 @@
   color: white;
   border: 1px solid #f77b3e;
   border-radius: 5px;
-  box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 145, 77, 0.8);
   cursor: pointer;
   font-size: 13px;
+}
+
+#viewTestLogsButton:not(:disabled):hover,
+#viewRecordLogsButton:not(:disabled):hover {
+  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  transform: scale(1.1); 
+}
+
+/* Disabled state styling (optional) */
+#viewTestLogsButton:disabled,
+#viewRecordLogsButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
   #recordStatus {
     display: none;
@@ -669,12 +683,16 @@
     margin-bottom: 24px;
     background-color: black;
     color: white;
-    border: 1px solid #f77b3e;
+    border: 1px solid #ff914d;
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    box-shadow: 0 0 20px rgba(255, 145, 77, 0.8);
     cursor: pointer;
   }
+  .card:hover {
+  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  transform: scale(1.1); 
+}
 
   .card-icon {
     display: flex;
@@ -875,6 +893,14 @@
     top: 0;
     left: 100%;
   }
+  .text {
+    display: inline; /* Show text */
+  }
+
+  .timeline-icon {
+    display: none; /* Hide icon */
+  }
+
 
 @media screen and (max-width: 480px) {
   /* Main container responsiveness for mobile devices */
@@ -928,17 +954,6 @@
     width: 3vw; /* Inner circle size */
     height: 3vw;
   }
-}
-.text {
-  display: inline; /* Show text */
-}
-
-.timeline-icon {
-  display: none; /* Hide icon */
-}
-
-/* When screen width is less than or equal to 480px */
-@media screen and (max-width: 480px) {
   .text {
     display: none; /* Hide text */
   }
@@ -947,14 +962,14 @@
   width: 20px;
   height: 20px;
   transition: color 0.3s ease;
-}
+  }
   .activeStep .timeline-icon {
   color: white; /* Set to white when active */
-}
+  }
 
-.InactiveStep .timeline-icon {
+  .InactiveStep .timeline-icon {
   color: grey; /* Set to grey when inactive */
+  }
 }
 
-}
 </style>
