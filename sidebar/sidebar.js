@@ -442,6 +442,9 @@ window.addEventListener('message', event => {
   }
   else if (message.type === 'testcaserecorded') {
     console.log("message.textContent", message.textContent);
+    if(stopRecordingButton){
+      stopRecordingButton.click();
+    }
     recordStatus.style.display = "block";
     recordedTestCasesDiv.style.display = "grid";
 
