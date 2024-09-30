@@ -9,12 +9,34 @@
   let initialiseConfigButton;
   const vscode = acquireVsCodeApi();
 
+  let isPrecheckDone = false;
+  let projectType = "";
+  function handleProjectTypeDetection(event) {
+    if (event.data && event.data.type === 'projectDetected') {
+      projectType = event.data.projectType;
+      console.log("Project type detected:", projectType);
+      isPrecheckDone = true;
+    }
+  }
+
   onMount(() => {
+    vscode.postMessage({
+      type: 'detectProjectType', 
+    });
     vscode.postMessage({
       type: "openConfigFile",
       value: `/keploy.yml`,
     });
-
+    if (!window.hasProjectTypeListener) {
+      window.addEventListener('message', handleProjectTypeDetection);
+      window.hasProjectTypeListener = true; // Mark that the listener has been added
+    }
+    return () => {
+      if (window.hasProjectTypeListener) {
+        window.removeEventListener('message', handleProjectTypeDetection);
+        window.hasProjectTypeListener = false;
+      }
+    };
   });
 
  
@@ -74,27 +96,39 @@
             id="configCommand"
           />
           <div class="language-icons">
-            <div class="language-icons-row">
-              <div class="icon-info">
-                <span class="golang-icon"></span>
-                <p>go run main.go</p>
+              <div class="language-icons-row">
+                {#if projectType === 'go'}
+                <div class="icon-info">
+                  <span class="golang-icon"></span>
+                  <p>go run main.go</p>
+                </div>
+                {/if}
+
+                {#if projectType === 'javascript'}
+                <div class="icon-info">
+                  <span class="node-icon"></span>
+                  <p>npm run start</p>
+                </div>
+                {/if}
               </div>
-              <div class="icon-info">
-                <span class="node-icon"></span>
-                <p>npm run start</p>
+
+              <div class="language-icons-row">
+                {#if projectType === 'python'}
+                <div class="icon-info">
+                  <span class="python-icon"></span>
+                  <p>Python3 main.py</p>
+                </div>
+                {/if}
+
+                {#if projectType === 'java'}
+                <div class="icon-info">
+                  <span class="java-icon"></span>
+                  <p>java xyz.jar</p>
+                </div>
+                {/if}
               </div>
-            </div>
-            <div class="language-icons-row">
-              <div class="icon-info">
-                <span class="python-icon"></span>
-                <p>Python3 main.py</p>
-              </div>
-              <div class="icon-info">
-                <span class="java-icon"></span>
-                <p>java xyz.jar</p>
-              </div>
-            </div>
           </div>
+
         </div>
       </div>
       <button class="buttonBlack" id="setupConfig" on:click={handleConfig}
