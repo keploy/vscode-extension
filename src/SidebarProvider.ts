@@ -6,9 +6,41 @@ import { startRecording, stopRecording } from "./Record";
 import { startTesting, stopTesting, displayTestCases, displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";
 import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
-import SignIn from "./SignIn";
 import SignInWithGitHub from "./SignIn";
 import oneClickInstall from './OneClickInstall';
+import * as path from 'path';
+import * as fs from 'fs';
+import { workspace } from 'vscode';
+
+function precheckFunction(): Promise<string> {
+  const workspacePath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
+
+  return new Promise((resolve, reject) => {
+    try {
+      if (!workspacePath) {
+        return reject('Workspace path not found.');
+      }
+
+      const pomFilePath = path.join(workspacePath, 'pom.xml');
+      const goModFilePath = path.join(workspacePath, 'go.mod');
+      const packageJsonFilePath = path.join(workspacePath, 'package.json');
+
+      let projectType: string = 'python'; // Default project type is python
+      if (fs.existsSync(pomFilePath)) {
+        projectType = 'java';
+      } else if (fs.existsSync(goModFilePath)) {
+        projectType = 'go';
+      } else if (fs.existsSync(packageJsonFilePath)) {
+        projectType = 'javascript';
+      }
+      resolve(projectType);
+    } catch (error) {
+      reject(`Error checking project files: ${(error as Error).message}`);
+    }
+  });
+}
+
+
 
 const recordOptions: vscode.OpenDialogOptions = {
   canSelectFolders: true,
@@ -30,7 +62,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument;
   _interval?: NodeJS.Timeout; // Store the interval reference
 
-  constructor(private readonly _extensionUri: vscode.Uri ,   private readonly _context: vscode.ExtensionContext) {
+  constructor(private readonly _extensionUri: vscode.Uri, private readonly _context: vscode.ExtensionContext) {
   }
 
   public postMessage(type: any, value: any) {
@@ -58,7 +90,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
     const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
 
-    console.log("signedIn others  value" , signedIn);
+    console.log("signedIn others  value", signedIn);
 
 
     let scriptUri = webviewView.webview.asWebviewUri(
@@ -70,13 +102,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
- 
-    this._sendApiResponseToWebview(apiResponse,signedIn);
+
+    this._sendApiResponseToWebview(apiResponse, signedIn);
 
 
     // Start sending the updated `apiResponse` to the webview every 3 seconds
     this._startApiResponseUpdates();
-;
+    ;
 
 
 
@@ -141,7 +173,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log('Start Recording button clicked');
 
             const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_record_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.zsh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.sh");
             const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "record_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
@@ -190,7 +222,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           try {
             console.log('Start Testing button clicked');
             const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_test_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_test_script.zsh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_test_script.sh");
             const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
@@ -305,10 +337,18 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           break;
         }
 
-        case "openLink":{
-          if (!data.url) {
-            return;
+        case "signinwithstate": {
+          try {
+            await vscode.commands.executeCommand('keploy.SignInWithOthers');
+          } catch (error) {
+            console.error('Error while signing in:', error);
+            vscode.window.showErrorMessage('Failed to sign in. Please try again.');
           }
+          break;
+        }
+
+        case "openLink": {
+
           try {
             console.log("Opening external link: " + data.url);
             vscode.env.openExternal(vscode.Uri.parse(data.url));
@@ -419,30 +459,33 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
-        // case "signIn": {
-        //   if (!data.value) {
-        //     return;
-        //   }
-        //   try {
-        //     console.log('Signing in...');
-        //     const response: any = await SignIn();
-        //     console.log('Response from SignIn', response);
-        //   } catch (error) {
-        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to sign in ${error}` });
-        //   }
-        //   break;
-        // }
+        case "detectProjectType": {
+          try {
+            console.log('Detecting Project Type...');
+            precheckFunction()
+              .then(projectType => {
+                console.log("Project type detected:", projectType);
+                this._view?.webview.postMessage({ type: 'projectDetected', projectType: projectType });
+              })
+              .catch(error => {
+                console.error("Error detecting project type:", error);
+              });
+          } catch (error) {
+            console.log('Error in detecting project type', error);
+          }
+          break;
+        }
 
       }
 
     });
   }
-   private _startApiResponseUpdates() {
+  private _startApiResponseUpdates() {
     this._interval = setInterval(() => {
       const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
       const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
 
-      this._sendApiResponseToWebview(apiResponse , signedIn);
+      this._sendApiResponseToWebview(apiResponse, signedIn);
     }, 3000); // 3 seconds
   }
 
@@ -454,7 +497,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   }
 
   // Helper function to send `apiResponse` to the webview
-  private _sendApiResponseToWebview(apiResponse: string , signedIn:string) {
+  private _sendApiResponseToWebview(apiResponse: string, signedIn: string) {
     if (this._view) {
       // console.log("api response withing 3 seconds" , apiResponse);
       this._view.webview.postMessage({
