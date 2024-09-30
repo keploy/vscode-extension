@@ -580,7 +580,7 @@
     border: 1px solid #f77b3e;
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: inset 0px 4px 36px 1px rgba(255, 145, 77, 0.8),
+    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
               inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
   }
   .text {
