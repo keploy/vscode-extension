@@ -536,7 +536,7 @@
    display: flex;
    flex-direction: row;
    align-items: start;
-   padding: 5vw;
+   padding: 4vw 5vw;
    width: 100%; /* Full width of the container */
    justify-content: flex-end; /* Align icons to the left */
  }
