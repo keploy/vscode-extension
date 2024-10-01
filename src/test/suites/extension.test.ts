@@ -1,7 +1,9 @@
 import assert = require('assert');
 import * as vscode from 'vscode';
 import sinon from 'sinon';
-import { SidebarProvider } from './SidebarProvider';
+import { SidebarProvider } from '../../SidebarProvider';
+import { suite, test, setup } from "mocha"
+import { activate } from '../../extension';
 
 const createMockExtensionContext = (): vscode.ExtensionContext => ({
   subscriptions: [],
@@ -37,19 +39,19 @@ class FakeWebview implements vscode.Webview {
 }
 
 class FakeWebviewView implements vscode.WebviewView {
-  constructor(public webview: vscode.Webview) {}
-	viewType: any;
-	badge?: vscode.ViewBadge | undefined;
-	show(preserveFocus?: boolean): void {
-		throw new Error('Method not implemented.');
-	}
+  constructor(public webview: vscode.Webview) { }
+  viewType: any;
+  badge?: vscode.ViewBadge | undefined;
+  show(preserveFocus?: boolean): void {
+    throw new Error('Method not implemented.');
+  }
   public title = '';
   public description = '';
   public onDidDispose = sinon.spy();
   public onDidChangeVisibility = sinon.spy();
   public onDidChangeViewState = sinon.spy();
   public visible = true;
-  public dispose() {}
+  public dispose() { }
 }
 
 suite('Sidebar Test Suite', () => {
@@ -79,7 +81,7 @@ suite('Sidebar Test Suite', () => {
 
     registerWebviewViewProviderSpy.restore();
   });
-  
+
 
   test('Sidebar Content Rendering', async () => {
     const sidebarProvider = new SidebarProvider(extensionUri, mockContext);
@@ -92,7 +94,7 @@ suite('Sidebar Test Suite', () => {
       webview.html.includes('<link href="http://www.example.com/some/path/media/vscode.css" rel="stylesheet">'),
       true
     );
-	// Clean up
+    // Clean up
 
   });
 
@@ -123,12 +125,35 @@ suite('Sidebar Test Suite', () => {
     assert.strictEqual(webview.html.includes('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap'), true, 'Baloo 2 font is missing');
 
     // Clean up
-   
+
   });
 
-  
+  test("All the commands are registered in activate function", async () => {
+
+    let registerCommandStub = sinon.stub(vscode.commands, "registerCommand")
+
+    activate(mockContext)
+
+    assert(registerCommandStub.called);
+
+    const commands = [
+      'keploy.SignInWithOthers',
+      'keploy.SignOut',
+      'keploy.KeployVersion',
+      'keploy.viewChangeLog',
+      'keploy.viewDocumentation',
+      'keploy.getLatestVersion',
+      'keploy.updateKeploy',
+      'keploy.utg'
+    ];
+
+    commands.forEach((value: string) => {
+      sinon.assert.calledWith(registerCommandStub, value)
+    })
+  })
+
 });
 function expect(count: any) {
-	throw new Error('Function not implemented.');
+  throw new Error('Function not implemented.');
 }
 
