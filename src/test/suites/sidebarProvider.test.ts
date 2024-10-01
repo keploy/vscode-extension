@@ -140,6 +140,8 @@ suite('Checking Sidebar Post Messages', () => {
         const webview = new FakeWebview({ type: "startRecordingCommand", value: `Recording Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
 
+        process.env.SHELL = '/bin/bash';
+
         const command = `"/scripts/bash/keploy_record_script.sh" "/scripts/logs/record_mode.log" ;exit 0`
 
         await sidebarProvider.resolveWebviewView(view);
@@ -156,6 +158,8 @@ suite('Checking Sidebar Post Messages', () => {
         const sidebarProvider = new SidebarProvider(extensionUri, mockContext);
         const webview = new FakeWebview({ type: "startTestingCommand", value: `Testing Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
+
+        process.env.SHELL = '/bin/bash';
 
         const command = `"/scripts/bash/keploy_test_script.sh" "/scripts/logs/test_mode.log" ; exit 0`
 
@@ -174,7 +178,7 @@ suite('Checking Sidebar Post Messages', () => {
         const webview = new FakeWebview({ type: "startRecordingCommand", value: `Recording Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
 
-        const currentShellStub = sandbox.stub(process.env, 'SHELL').value('/bin/zsh');
+        process.env.SHELL = '/bin/zsh';
 
         const command = `"/scripts/zsh/keploy_record_script.sh" "/scripts/logs/record_mode.log" ;exit 0`
 
@@ -193,7 +197,7 @@ suite('Checking Sidebar Post Messages', () => {
         const webview = new FakeWebview({ type: "startTestingCommand", value: `Testing Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
 
-        const currentShellStub = sandbox.stub(process.env, 'SHELL').value('/bin/zsh');
+        process.env.SHELL = '/bin/zsh';
 
         const command = `"/scripts/zsh/keploy_test_script.sh" "/scripts/logs/test_mode.log"; exit 0`
 
