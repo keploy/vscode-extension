@@ -1,10 +1,11 @@
 <script>
   import { onMount } from "svelte";
 
-let showSettings = false;
-
+  let showSettings = false;
+  let isLoading = true; // Loading state
   const vscode = acquireVsCodeApi();
   let userSignedIn = false;
+  const loader = document.getElementById("loader");
 
   function navigateToKeploy() {
     vscode.postMessage({
@@ -12,26 +13,34 @@ let showSettings = false;
     });
   }
 
-
   onMount(() => {
     // Add event listener for messages from the VSCode extension
     window.addEventListener("message", (event) => {
       const message = event.data;
-     
-      if(message.type === "signedIn"){
+
+      if (message.type === "signedIn") {
         const signedInResponse = message.value;
-          if(signedInResponse == "false"){
-              userSignedIn = false;
-              // console.log("Progress Bar is not Visible")
-          }else{
-            // console.log("Progress Bar is  Visible")
-            userSignedIn = true;
-          }
+        if (signedInResponse === "false") {
+          userSignedIn = false;
+        } else {
+          userSignedIn = true;
+        }
+        isLoading = false; // Set loading to false after receiving message
       }
     });
+
+    setTimeout(() => {
+      if (isLoading) {
+        isLoading = false; 
+      }
+    }, 3000); 
   });
 
   function handleTestSelection(testType) {
+    if (isLoading) {
+      // Prevent action when still loading
+      return;
+    }
 
     if(testType != "Unit Testing"){
       if(userSignedIn){
@@ -82,6 +91,9 @@ let showSettings = false;
         on:click={() => handleTestSelection("Integration Testing")}
         >Generate Integration tests</button
       >
+      {#if isLoading}
+      <div class="loader" id="loader"></div>
+    {/if}
     </div>
   </div>
 </div>
@@ -209,7 +221,7 @@ let showSettings = false;
     flex-direction: column;
     justify-content: initial;
     align-items: center;
-    margin-top: 20px;
+    margin: 20px 0px;
   }
 
 
