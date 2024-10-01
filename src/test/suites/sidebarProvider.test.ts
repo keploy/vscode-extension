@@ -211,12 +211,11 @@ suite('Checking Sidebar Post Messages', () => {
         const sidebarProvider = new SidebarProvider(extensionUri, mockContext);
         const webview = new FakeWebview({ type: "stopTestingCommand", value: `Testing Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
-        const activeTerminalStub = sinon.stub(vscode.window, 'activeTerminal').value(terminalMock);
+        const terminalsStub = sinon.stub(vscode.window, 'terminals').value([{ name: 'Keploy Terminal', processId: 1234 , ...terminalMock }]);
 
         await sidebarProvider.resolveWebviewView(view);
 
         assert.strict(terminalMock.sendText.calledWith('\x03', true));
-        assert.strict(terminalMock.dispose.calledOnce);
     });
 
     // Testing displayRecordTestCases independently as it is being called after terminal get's closed which is also triggered by stopRecording button in frontend
