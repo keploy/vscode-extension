@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/zsh -i
 
 log_file_path="$1"
 
@@ -49,6 +49,9 @@ fi
 fifo=$(mktemp -u)
 mkfifo "$fifo"
 
+# Disable job control messages
+set +m
+
 # Background process to read from the named pipe and write to the log file
 cat "$fifo" | tee -a "$log_file_path" &
 cat_pid=$!
@@ -57,18 +60,24 @@ cat_pid=$!
 (while true; do sleep 1; done) &
 dummy_pid=$!
 
+kill_all() {
+  kill $dummy_pid 2>/dev/null
+  rm -f "$fifo"
+}
+
 # Check if running on WSL
 if grep -qEi "(Microsoft|WSL)" /proc/version &> /dev/null ; then
+  (
+  trap 'kill_all' SIGINT SIGTERM EXIT
   sudo -E env "PATH=$PATH" keploy record  > "$fifo" 2>&1
+  )
 else
   keploycmd="sudo -E env PATH=\"$PATH\" keploy"
-  eval $keploycmd record > "$fifo" 2>&1
+  (
+  trap 'kill_all' SIGINT SIGTERM EXIT
+  eval $keploycmd record  > "$fifo" 2>&1
+  )
 fi
 
 # Clean up: Wait for keploy command to finish
-wait $! 
-
-# Terminate the dummy process and the logging process
-kill $dummy_pid
-wait $cat_pid
-rm "$fifo"
+wait $!

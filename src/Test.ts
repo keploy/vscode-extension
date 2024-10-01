@@ -374,8 +374,23 @@ export async function startTesting(wslscriptPath: string, wsllogfilePath: string
 
 export async function stopTesting(): Promise<void> {
     try {
-        vscode.window.activeTerminal?.sendText('\x03', true);
-        vscode.window.activeTerminal?.dispose();
+        let pid: number | undefined;
+            await Promise.all(vscode.window.terminals.map(async (terminal) => {
+                if (terminal.name === 'Keploy Terminal') {
+                    pid = await terminal.processId;
+                    terminal.sendText('\x03', true);
+                }
+            }));
+            setTimeout(async () => {
+                await Promise.all(vscode.window.terminals.map(async (terminal) => {
+                    if (terminal.name === 'Keploy Terminal') {
+                        const currentPid = await terminal.processId;
+                        if (pid && currentPid && pid === currentPid) {
+                            vscode.window.activeTerminal?.dispose();
+                        }
+                    }
+                }));
+            }, 5000);
         return ;
     }
     catch (error) {

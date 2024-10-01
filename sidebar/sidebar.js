@@ -442,6 +442,9 @@ window.addEventListener('message', event => {
   }
   else if (message.type === 'testcaserecorded') {
     console.log("message.textContent", message.textContent);
+    if(stopRecordingButton){
+      stopRecordingButton.click();
+    }
     recordStatus.style.display = "block";
     recordedTestCasesDiv.style.display = "grid";
 
@@ -453,11 +456,17 @@ window.addEventListener('message', event => {
       errorMessage.classList.add("error");
       recordedTestCasesDiv.appendChild(errorMessage);
       viewRecordLogsButton.style.display = "block";
+      viewTestLogsButton.style.display = "block";
+      viewTestLogsButton.disabled = true;
+      viewTestLogsButton.style.cursor = "not-allowed";
       return;
     }
 
     if (message.noTestCases === true) {
       viewRecordLogsButton.style.display = "block";
+      viewTestLogsButton.style.display = "block";
+      viewTestLogsButton.disabled = true;
+      viewTestLogsButton.style.cursor = "not-allowed";
       recordStatus.textContent = `No Test Cases Recorded`;
       recordedTestCasesDiv.style.display = "none";
       recordStatus.classList.add("info");
@@ -545,6 +554,10 @@ window.addEventListener('message', event => {
       const numErrors = message.textSummary.split(":")[1];
       if (numErrors !== " 0") {
         viewTestLogsButton.style.display = "block";
+        viewTestLogsButton.disabled = false;
+        viewTestLogsButton.style.cursor = "pointer";
+        viewRecordLogsButton.style.display = "block";
+
       }
       testCaseElement.classList.add("error");
     }
@@ -578,6 +591,9 @@ window.addEventListener('message', event => {
     if (message.error === true) {
       viewCompleteSummaryButton.style.display = "none";
       viewTestLogsButton.style.display = "block";
+      viewTestLogsButton.disabled = false;
+      viewTestLogsButton.style.cursor = "pointer";
+      viewRecordLogsButton.style.display = "block";
     }
     else {
       viewCompleteSummaryButton.style.display = "block";
@@ -585,6 +601,9 @@ window.addEventListener('message', event => {
     }
     if (message.error === true) {
       viewTestLogsButton.style.display = "block";
+      viewTestLogsButton.disabled = false;
+      viewTestLogsButton.style.cursor = "pointer";
+      viewRecordLogsButton.style.display = "block";
       if (testStatus) {
         testStatus.textContent = message.value;
         testStatus.classList.add("error");
