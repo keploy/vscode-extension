@@ -140,6 +140,8 @@ suite('Checking Sidebar Post Messages', () => {
         const webview = new FakeWebview({ type: "startRecordingCommand", value: `Recording Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
 
+        const processStub = sinon.stub(process, 'platform').value('linux');
+
         process.env.SHELL = '/bin/bash';
 
         const command = `"/scripts/bash/keploy_record_script.sh" "/scripts/logs/record_mode.log" ;exit 0`
@@ -158,6 +160,8 @@ suite('Checking Sidebar Post Messages', () => {
         const sidebarProvider = new SidebarProvider(extensionUri, mockContext);
         const webview = new FakeWebview({ type: "startTestingCommand", value: `Testing Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
+
+        const processStub = sinon.stub(process, 'platform').value('linux');
 
         process.env.SHELL = '/bin/bash';
 
@@ -178,6 +182,8 @@ suite('Checking Sidebar Post Messages', () => {
         const webview = new FakeWebview({ type: "startRecordingCommand", value: `Recording Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
 
+        const processStub = sinon.stub(process, 'platform').value('linux');
+
         process.env.SHELL = '/bin/zsh';
 
         const command = `"/scripts/zsh/keploy_record_script.sh" "/scripts/logs/record_mode.log" ;exit 0`
@@ -197,6 +203,8 @@ suite('Checking Sidebar Post Messages', () => {
         const webview = new FakeWebview({ type: "startTestingCommand", value: `Testing Command...` }) as vscode.Webview;
         const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
 
+        const processStub = sinon.stub(process, 'platform').value('linux');
+
         process.env.SHELL = '/bin/zsh';
 
         const command = `"/scripts/zsh/keploy_test_script.sh" "/scripts/logs/test_mode.log"; exit 0`
@@ -208,6 +216,48 @@ suite('Checking Sidebar Post Messages', () => {
         assert.strict(createTerminalStub.firstCall.args[0].shellPath, '/bin/zsh');
         assert.strict(terminalMock.show.calledOnce);
         assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.dispose.notCalled);
+    });
+
+    test("startRecording for windows", async () => {
+        const sidebarProvider = new SidebarProvider(extensionUri, mockContext);
+        const webview = new FakeWebview({ type: "startRecordingCommand", value: `Recording Command...` }) as vscode.Webview;
+        const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
+
+        const processStub = sinon.stub(process, 'platform').value('win32');
+
+        process.env.SHELL = '/bin/bash';
+
+        const command = `/mnt//scripts/bash/keploy_record_script.sh "/mnt//scripts/logs/record_mode.log" ;exit 0`
+
+        await sidebarProvider.resolveWebviewView(view);
+
+        assert.strict(createTerminalStub.calledOnce);
+        assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
+        assert.strict(createTerminalStub.firstCall.args[0].shellPath, 'wsl.exe');
+        assert.strict(terminalMock.show.calledOnce);
+        assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.dispose.notCalled);
+    });
+
+    test("startTesting for windows", async () => {
+        const sidebarProvider = new SidebarProvider(extensionUri, mockContext);
+        const webview = new FakeWebview({ type: "startTestingCommand", value: `Testing Command...` }) as vscode.Webview;
+        const view = new FakeWebviewView(webview) as unknown as vscode.WebviewView;
+
+        const processStub = sinon.stub(process, 'platform').value('win32');
+
+        process.env.SHELL = '/bin/bash';
+
+        const command = `/mnt//scripts/bash/keploy_test_script.sh  "/mnt//scripts/logs/test_mode.log" ;exit 0 `
+
+        await sidebarProvider.resolveWebviewView(view);
+
+        assert.strict(createTerminalStub.calledOnce);
+        assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
+        assert.strict(createTerminalStub.firstCall.args[0].shellPath, 'wsl.exe');
+        assert.strict(terminalMock.show.calledOnce);
+        assert.strict(terminalMock.sendText.args[0][0].trim(), command.trim());
         assert.strict(terminalMock.dispose.notCalled);
     });
 
