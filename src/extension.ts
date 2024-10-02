@@ -99,6 +99,11 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'keploy.utg',
                         arguments: [document.uri.fsPath]
                     }));
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Additional Prompts',
+                        command: 'keploy.showSidebar',
+                        arguments: [document.uri.fsPath]
+                    }));
                 } else if (fileName.endsWith('.java') && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
@@ -107,12 +112,22 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'keploy.utg',
                         arguments: [document.uri.fsPath]
                     }));
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Additional Prompts',
+                        command: 'keploy.showSidebar',
+                        arguments: [document.uri.fsPath]
+                    }));
                 } else if (fileName.endsWith('.go') && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
+                        arguments: [document.uri.fsPath]
+                    }));
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Additional Prompts',
+                        command: 'keploy.showSidebar',
                         arguments: [document.uri.fsPath]
                     }));
                 }

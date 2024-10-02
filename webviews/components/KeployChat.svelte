@@ -4,17 +4,23 @@
 
   // Define functions or handlers for the buttons
   function generateReport() {
-    // Logic to generate a report
+    vscode.postMessage({
+      type: "keployGenWithAdditionalPrompts",
+      prompt: "Do not use moped library generating test cases for this project",
+    });
   }
 
   function visualizeSummary() {
-    // Logic to visualize summary
+    vscode.postMessage({
+      type: "keployGenWithAdditionalPrompts",
+      prompt: "Skip writing test cases for 400 status code responses.",
+    });
   }
 
   function openDocumentation() {
     vscode.postMessage({
-      type: "openLink",
-      url: "https://keploy.io/docs",
+      type: "keployGenWithAdditionalPrompts",
+      prompt: "Focus on creating test cases specifically for this endpoint.",
     });
   }
 
@@ -56,11 +62,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #000000;
     color: white;
     font-family: "Montserrat", sans-serif;
     position: relative;
+    padding: 20px;
   }
 
   .header {
@@ -76,6 +83,26 @@
     right: 0;
   }
 
+  .header h1 {
+    font-size: 1.25rem;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    width: auto;
+  }
+
+  .close-btn:focus {
+    outline: none;
+  }
+
   .content-screen {
     display: flex;
     flex-direction: column;
@@ -85,6 +112,8 @@
     color: white;
     gap: 10px;
     font-family: "Montserrat", sans-serif;
+    margin-top: 80px; /* To avoid overlap with the fixed header */
+    width: 100%;
   }
 
   .image-heading-container {
@@ -92,60 +121,44 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
   }
 
   .image-heading-container h1 {
     margin-top: 10px;
   }
 
-  .header h1 {
-    font-size: 20px;
-    width: 100%;
-    margin: auto;
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
-    cursor: pointer;
-    width: 10%;
-    scale: 100%;
-  }
-
-  .close-btn:focus {
-    outline: none;
-  }
-
   .logo {
-    width: 200px;
-    height: 200px;
+    width: 50%;
+    max-width: 200px;
+    height: auto;
     border-radius: 50%;
     margin-bottom: 10px;
     margin-top: 20px;
     background-color: #1a1a1a;
     border: #333;
-    margin: auto;
   }
 
   h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
     margin-bottom: 5px;
     font-family: "Montserrat", sans-serif;
+    text-align: center;
   }
 
   p {
-    font-size: 16px;
+    font-size: 1rem;
     margin-bottom: 20px;
     font-family: "Montserrat", sans-serif;
+    text-align: center;
   }
 
   .button-container {
     margin: auto;
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     border: 1px solid #444;
     border-radius: 5px;
   }
@@ -153,9 +166,11 @@
   .button-container button {
     width: 100%;
     border-bottom: 1px solid #444;
-    color: #c2c2c2;
+    color: white;
     background-color: inherit;
     font-family: "Montserrat", sans-serif;
+    padding: 10px;
+    font-size: 1rem;
   }
 
   .button-container button:focus {
@@ -170,7 +185,7 @@
   button {
     background-color: #333;
     color: orange;
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     border-radius: 5px;
     text-align: left;
@@ -178,6 +193,10 @@
 
   .heading1 {
     color: #be6c39;
+  }
+
+  #heroheading1{
+    text-align: start;
   }
 
   .subheading1 {
@@ -193,7 +212,8 @@
     border-radius: 5px;
     position: relative;
     padding: 10px;
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
   }
 
   .chat-input {
@@ -201,10 +221,10 @@
     background-color: transparent;
     color: white;
     border: none;
-    font-size: 16px;
+    font-size: 1rem;
     outline: none;
-    margin-left: 10px; /* To add space between input and first SVG */
-    margin-right: 10px; /* To add space between input and second SVG */
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   .chat-input::placeholder {
@@ -216,7 +236,7 @@
     border: none;
     cursor: pointer;
     color: white;
-    font-size: 18px;
+    font-size: 1.125rem;
   }
 
   .submit-svg:hover {
@@ -227,25 +247,60 @@
   .svg-right {
     position: relative;
     z-index: 1;
-  }
-
-  /* SVG Responsiveness */
-  .svg-left, 
-  .svg-right {
-    width: 10%; /* Relative width */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 50px; /* Maximum size */
-    min-width: 25px; /* Minimum size */
+    width: 10%;
+    height: auto;
+    max-width: 40px;
+    min-width: 25px;
   }
 
   .svg-right {
-    margin-left: 10px; /* Space between the input and the submit button */
+    margin-left: 10px;
+  }
+
+  /* Media Queries for responsiveness */
+  @media (max-width: 600px) {
+    .header h1 {
+      font-size: 1rem;
+    }
+
+    .close-btn {
+      font-size: 1rem;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.875rem;
+    }
+
+    .logo {
+      width: 70%;
+      max-width: 150px;
+    }
+
+    .button-container {
+      max-width: 250px;
+    }
+
+    .chat-input-container {
+      max-width: 250px;
+    }
+
+    .chat-input {
+      font-size: 0.875rem;
+    }
+
+    .button-container button {
+      font-size: 0.875rem;
+    }
   }
 </style>
 
 <div class="container">
   <div class="header">
-    <h1>Keploy Chatbot</h1>
+    <h1 id="heroheading1">Keploy Chatbot</h1>
     <button class="close-btn" on:click={() => closeWindow()}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -278,9 +333,9 @@
     </div>
 
     <div class="button-container">
-      <button on:click={generateReport}>Generate Report for this file</button>
-      <button on:click={visualizeSummary}>Visualize summary of tests generated...</button>
-      <button on:click={openDocumentation}>Visit Documentation</button>
+      <button on:click={generateReport}>Do not use moped library generating test cases for this project</button>
+      <button on:click={visualizeSummary}>Skip writing test cases for 400 status code responses.</button>
+      <button on:click={openDocumentation}>Focus on creating test cases specifically for this endpoint.</button>
     </div>
 
     <!-- Chat Input with Icon -->

@@ -66,5 +66,5 @@ if [ -n "$additional_prompts" ] && [ "$additional_prompts" != " " ]; then
 fi
 
 # Run the keploy command
-echo "Running: $keployCommand"
+# echo "Running: $keployCommand"
 eval $keployCommand
