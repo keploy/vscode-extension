@@ -1,10 +1,11 @@
 <script>
   import { onMount } from "svelte";
 
-let showSettings = false;
-
+  let showSettings = false;
+  let isLoading = true; // Loading state
   const vscode = acquireVsCodeApi();
   let userSignedIn = false;
+  const loader = document.getElementById("loader");
 
   function navigateToKeploy() {
     vscode.postMessage({
@@ -12,26 +13,34 @@ let showSettings = false;
     });
   }
 
-
   onMount(() => {
     // Add event listener for messages from the VSCode extension
     window.addEventListener("message", (event) => {
       const message = event.data;
-     
-      if(message.type === "signedIn"){
+
+      if (message.type === "signedIn") {
         const signedInResponse = message.value;
-          if(signedInResponse == "false"){
-              userSignedIn = false;
-              // console.log("Progress Bar is not Visible")
-          }else{
-            // console.log("Progress Bar is  Visible")
-            userSignedIn = true;
-          }
+        if (signedInResponse === "false") {
+          userSignedIn = false;
+        } else {
+          userSignedIn = true;
+        }
+        isLoading = false; // Set loading to false after receiving message
       }
     });
+
+    setTimeout(() => {
+      if (isLoading) {
+        isLoading = false; 
+      }
+    }, 3000); 
   });
 
   function handleTestSelection(testType) {
+    if (isLoading) {
+      // Prevent action when still loading
+      return;
+    }
 
     if(testType != "Unit Testing"){
       if(userSignedIn){
@@ -53,14 +62,16 @@ let showSettings = false;
   }
 </script>
 
-<div class={showSettings ? "container-hide" : "main-container"}>
-  <div class="main">
-    <div class="header">
+<div class={showSettings ? "container-hide" : "main-container"} >
+  <div class="main container-card">
+    <div class="logo-header">
       <img
-        src="https://raw.githubusercontent.com/Sarthak160/goApi/a47fc440a11368062260dcff9828b468bc9b2872/print_transparent.svg"
-        alt="Keploy"
-        class="logo"
-      />
+      src="https://raw.githubusercontent.com/Sarthak160/goApi/a47fc440a11368062260dcff9828b468bc9b2872/print_transparent.svg"
+      alt="Keploy"
+      class="logo"
+    />
+    </div>
+    <div class="header">
       <h1 class="welcome-heading">Welcome to Keploy</h1>
     </div>
 
@@ -80,6 +91,9 @@ let showSettings = false;
         on:click={() => handleTestSelection("Integration Testing")}
         >Generate Integration tests</button
       >
+      {#if isLoading}
+      <div class="loader" id="loader"></div>
+    {/if}
     </div>
   </div>
 </div>
@@ -103,21 +117,28 @@ let showSettings = false;
 }
 
 
-
   .main-container {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
   }
-
-  .heading {
-    font-size: 36px;
-    font-weight: bold;
+  .container-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    height: 100%;
+    padding: 2rem;
+    background-color: black;
+    border: 1px solid #f77b3e;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
+              inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
   }
-
   .logo {
-    height: 40px;
+    height: 65px;
     vertical-align: top;
   }
 
@@ -143,70 +164,51 @@ let showSettings = false;
   .code-icon {
     margin-right: 10px;
   }
-
-  .button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .button:hover {
-    background-color: #0056b3;
-  }
   .main {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', sans-serif; /* Use Montserrat here */
+    font-family: 'Montserrat', sans-serif; 
     background-color: #000;
     color: white;
     text-align: center;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 10px;
+    padding: 20px;
   }
 
   .header {
-    flex: 0 0 20%;
-    padding-top: 40px;
+    flex: 0 0 15%;
     display: flex;
     flex-direction: row;
     justify-content: center;
   }
 
-  .logo {
-    height: 70px;
-    margin-bottom: 20px;
-  }
-
   .welcome-heading {
-    font-size: 2.5rem;
+    font-size: 40px; 
     font-weight: bold;
     padding: 15px 0;
   }
 
   .body-text {
-    flex: 0 0 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .body-text p:first-child {
-    font-size: 2.35rem;
-  }
+  flex: 0 0 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 5%;
+}
 
-  .body-text p:nth-child(2) {
-    margin-top: 40px;
-    font-size: 1.5rem;
-    line-height: 1.5;
-  }
+.body-text p:first-child {
+  font-size: 28px;
+  font-weight: bold; /* Make the first line bold for contrast */
+}
 
+.body-text p:nth-child(2) {
+  margin-top: 40px;
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 300 !important; /* Lighter font weight for the second line */
+}
   .highlight {
     background: linear-gradient(90deg, #ffb388 0%, #ff5c00 50%, #f76b1c 100%);
     -webkit-background-clip: text;
@@ -215,32 +217,62 @@ let showSettings = false;
   }
 
   .btn-container {
-    flex: 0 0 60%;
     display: flex;
     flex-direction: column;
     justify-content: initial;
     align-items: center;
-    margin-top: 20px;
+    margin: 20px 0px;
   }
 
+
   .btn {
-    width: 300px;
+    font-family: 'Montserrat', sans-serif; 
+    width: 300px; 
+    font-size: 20px; 
     padding: 15px;
-    margin: 15px 0;
+    margin: 20px 0;
     text-decoration: none;
     color: white;
-    background-color: #1a1a1a;
-    border: 2px solid #f77b3e;
+    background-color: #000000;
+    border: 1px solid #ff914d;
     border-radius: 5px;
-    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); /* Glowing shadow effect based on #ff914d */
   }
-
+  .logo-header{
+    display: flex;
+    justify-content: flex-start;
+    width: 100vw;
+    margin-left: 9vw;
+  }
   .btn:hover {
-    box-shadow: 0 0 40px rgba(247, 123, 62, 1);
-    transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  transform: scale(1.1); 
+}
+@media screen and (max-width: 480px) {
+  .welcome-heading {
+    font-size: 8vw; 
+  }
+  .logo-header{
+    width: 100vw;
+    margin-left: 9vw;
+  }
+  .btn {
+    width: 65vw; 
+    font-size: 4vw; 
+    padding: 3vw;
+  }
+  .body-text p:first-child {
+  font-size: 6vw;
+}
+
+.body-text p:nth-child(2) {
+  font-size: 4.5vw;
+}
+.logo {
+    height: 14vw;
+  }
   }
 </style>
