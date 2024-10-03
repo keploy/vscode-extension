@@ -1,8 +1,37 @@
 <script>
   import { fly } from "svelte/transition";
-  // import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
   // import lottie from 'lottie-web';
   // let navigateToConfig = false;
+  onMount(() => {
+    // Acquire the VS Code API on mount
+    if (!vscodeApi) {
+      vscodeApi = window.acquireVsCodeApi();
+    }
+    
+    // Request the Keploy config from the extension
+    vscodeApi.postMessage({
+      type: 'getKeployConfig',
+    });
+
+    // Listen for the response from the extension
+    window.addEventListener('message', event => {
+      const message = event.data;
+      
+      if (message.type === 'keployConfig') {
+        const config = message.config;
+        
+        // Set the form fields with the values from the config
+        appName = config.appName || '';
+        command = config.command || '';
+        containerName = config.containerName || '';
+        networkName = config.networkName || 'default';
+        delay = config.test?.delay || 5;
+        apiTimeout = config.test?.apiTimeout || 5;
+        mongoPassword = config.test?.mongoPassword || '';
+      }
+    });
+  });
   let startRecordingButton;
   let startTestingButton;
   let buttonsSection = document.getElementById("buttonsSection");
@@ -15,7 +44,48 @@
   let settingsIcon = document.querySelector(".settings-icon");
   let currentStep = 1;
   let backConfigButton;
-  
+  let vscodeApi = null; // Store the VS Code API reference
+
+  // let delay = 5;
+  // let apiTimeout = 5;
+  let appName = '';
+  let command = '';
+  let containerName = ''
+  let networkName = 'default';
+  let delay = 5;
+  let apiTimeout = 5;
+  let mongoPassword = '';
+
+  if (!vscodeApi) {
+    vscodeApi = window.acquireVsCodeApi();
+  }
+  function validateInput(event) {
+  let value = event.target.value;
+
+  // Check if the input contains anything other than digits
+  if (/\D/.test(value) || value < 0 || isNaN(value)) {
+    // Remove any non-digit characters and ensure the value is non-negative
+    event.target.value = value.replace(/\D/g, '') || 0;
+  }
+}
+
+function saveSettings() {
+    // Post the updated config values to the VS Code extension
+    vscodeApi.postMessage({
+      type: "updateKeployConfig",
+      config: {
+        appName,
+        command,
+        containerName,
+        networkName,
+        test: {
+          delay,
+          apiTimeout,
+          mongoPassword,
+        },
+      },
+    });
+  }
   function goToNextStep(step) {
     currentStep = step;
   }
@@ -47,13 +117,23 @@
       settingsIcon.classList.toggle("open"); // Update icon based on dropdown state
     }
   };
+
   function navigateToConfig() {
+    if (selectedIconButton === 3) {
+    selectedIconButton = 1; // Set to the default view
+    return;
+  }
+
      if(isRecording || isTesting){
       isRecording = false;
       isTesting = false;
       showSteps = false;
-   
+      return
      }
+    //  vscode.postMessage({
+    //   type: "navigate",
+    //   value: "Config",
+    // });
   }
 
   const clearLastTestResults = () => {
@@ -227,7 +307,61 @@
     <div class="header">
       <div class="heading"> 
         {#if selectedIconButton === 3}
-          <h1>Make changes to keploy config</h1>
+ <div class="settings-form">
+  <!-- <h1>Make changes to Keploy config</h1> -->
+
+  <!-- App Name -->
+  <div class="form-group">
+    <label for="appName">App Name:</label>
+    <input id="appName" type="text" bind:value={appName} />
+  </div>
+
+  <!-- Command -->
+  <div class="form-group">
+    <label for="command">Command:</label>
+    <input id="command" type="text" bind:value={command} />
+  </div>
+
+  <!-- Container Name -->
+  <div class="form-group">
+    <label for="containerName">Container Name:</label>
+    <input id="containerName" type="text" bind:value={containerName} />
+  </div>
+
+  <!-- Network Name -->
+  <div class="form-group">
+    <label for="networkName">Network Name:</label>
+    <input id="networkName" type="text" bind:value={networkName} />
+  </div>
+
+  <!-- Delay -->
+  <div class="form-group">
+    <label for="delay">Test Delay (seconds):</label>
+    <input id="delay" type="number" bind:value={delay} min="0" on:input={validateInput} />
+  </div>
+
+  <!-- API Timeout -->
+  <div class="form-group">
+    <label for="apiTimeout">API Timeout (seconds):</label>
+    <input id="apiTimeout" type="number" bind:value={apiTimeout} min="0" on:input={validateInput} />
+  </div>
+
+  <!-- Mongo Password -->
+  <div class="form-group">
+    <label for="mongoPassword">Mongo Password:</label>
+    <input id="mongoPassword" type="text" bind:value={mongoPassword} />
+  </div>
+
+  <!-- Save button -->
+  <div
+  class="card"
+  on:click={saveSettings}
+>
+  <div class="card-text">Save Config</div>
+</div>
+
+</div>
+
         {:else if selectedIconButton === 2}
           <h1>View Previous Test Results</h1>
         {:else}
@@ -536,7 +670,7 @@
    display: flex;
    flex-direction: row;
    align-items: start;
-   padding: 4vw 5vw;
+   padding: 2.5vw 5vw;
    width: 100%; /* Full width of the container */
    justify-content: flex-end; /* Align icons to the left */
  }
@@ -680,7 +814,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px;
-    margin-bottom: 24px;
+    margin-top: 24px;
     background-color: black;
     color: white;
     border: 1px solid #ff914d;
@@ -900,10 +1034,66 @@
   .timeline-icon {
     display: none; /* Hide icon */
   }
+  .settings-form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: black;
 
+}
+
+.form-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 16px;
+  width: 100%; /* Ensure full width */
+  gap:4px;
+}
+
+
+label {
+  color: white;
+  font-size: 15px;
+  display: block;
+  width: 40%;
+  text-align: left; /* Left align the labels */
+
+}
+
+input {
+  width: 60%; /* Ensure all input boxes have equal width */
+  padding: 8px;
+  border: 1px solid #ff914d;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+input:focus {
+  box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+}
 
 @media screen and (max-width: 480px) {
   /* Main container responsiveness for mobile devices */
+  .settings-form {
+    padding: 10px;
+  }
+
+  label {
+    font-size: 3vw;
+  }
+
+  input {
+    font-size: 3vw;
+    padding: 1.5vw;
+  }
+
+  .form-group {
+    margin-bottom: 5vw;
+  }
 
   .header h1 {
     font-size: 6vw; /* Responsive font size for heading */
@@ -917,7 +1107,7 @@
   /* Card text and button responsiveness for mobile */
   .card {
     padding: 3vw;
-    width: 65vw; 
+    width: 100%; 
     }
   .log-buttons-container {
     width: 65vw; 
