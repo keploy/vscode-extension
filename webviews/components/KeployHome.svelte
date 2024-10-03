@@ -15,9 +15,10 @@
   let settingsIcon = document.querySelector(".settings-icon");
   let currentStep = 1;
   let backConfigButton;
-  
+  let progressBarHide;
   function goToNextStep(step) {
     currentStep = step;
+  
   }
 
   function resetCurrentStep() {
@@ -83,6 +84,7 @@
         detail: { step: 'add-users' },
       });
       document.dispatchEvent(event);
+
     }
   }
   const toggleRecording = () => {
@@ -382,7 +384,7 @@
       </div>
     {/if}
     <div class="loader" id="loader"></div>
-    <div class="stepper-container">
+    <div class="stepper-container" id="progress-stepper">
       <div class="step-line"></div>
       <div class="step">
         <span
