@@ -144,7 +144,7 @@ suite('Checking Sidebar Post Messages', () => {
 
         process.env.SHELL = '/bin/bash';
 
-        const command = `"/scripts/bash/keploy_record_script.sh" "/scripts/logs/record_mode.log" ;exit 0`
+        const command = vscode.Uri.joinPath(extensionUri,"scripts","bash","keploy_record_script.sh") + ' ' + vscode.Uri.joinPath(extensionUri,"scripts","logs","record_mode.log") + ' ;exit 0';
 
         await sidebarProvider.resolveWebviewView(view);
 
@@ -152,7 +152,7 @@ suite('Checking Sidebar Post Messages', () => {
         assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
         assert.strict(createTerminalStub.firstCall.args[0].shellPath, '/bin/bash');
         assert.strict(terminalMock.show.calledOnce);
-        assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.sendText.args[0][0].trim(), command.trim());
         assert.strict(terminalMock.dispose.notCalled);
     });
 
@@ -165,7 +165,7 @@ suite('Checking Sidebar Post Messages', () => {
 
         process.env.SHELL = '/bin/bash';
 
-        const command = `"/scripts/bash/keploy_test_script.sh" "/scripts/logs/test_mode.log" ; exit 0`
+        const command = vscode.Uri.joinPath(extensionUri,"scripts","bash","keploy_test_script.sh") + ' ' + vscode.Uri.joinPath(extensionUri,"scripts","logs","test_mode.log") + ' ;exit 0';
 
         await sidebarProvider.resolveWebviewView(view);
 
@@ -173,7 +173,7 @@ suite('Checking Sidebar Post Messages', () => {
         assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
         assert.strict(createTerminalStub.firstCall.args[0].shellPath, '/bin/bash');
         assert.strict(terminalMock.show.calledOnce);
-        assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.sendText.args[0][0].trim(), command.trim());
         assert.strict(terminalMock.dispose.notCalled);
     });
 
@@ -186,7 +186,7 @@ suite('Checking Sidebar Post Messages', () => {
 
         process.env.SHELL = '/bin/zsh';
 
-        const command = `"/scripts/zsh/keploy_record_script.sh" "/scripts/logs/record_mode.log" ;exit 0`
+        const command = vscode.Uri.joinPath(extensionUri,"scripts","zsh","keploy_record_script.sh") + ' ' + vscode.Uri.joinPath(extensionUri,"scripts","logs","record_mode.log") + ' ;exit 0';
 
         await sidebarProvider.resolveWebviewView(view);
 
@@ -194,7 +194,7 @@ suite('Checking Sidebar Post Messages', () => {
         assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
         assert.strict(createTerminalStub.firstCall.args[0].shellPath, '/bin/zsh');
         assert.strict(terminalMock.show.calledOnce);
-        assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.sendText.args[0][0].trim(), command.trim());
         assert.strict(terminalMock.dispose.notCalled);
     });
 
@@ -207,7 +207,7 @@ suite('Checking Sidebar Post Messages', () => {
 
         process.env.SHELL = '/bin/zsh';
 
-        const command = `"/scripts/zsh/keploy_test_script.sh" "/scripts/logs/test_mode.log"; exit 0`
+        const command = vscode.Uri.joinPath(extensionUri,"scripts","zsh","keploy_test_script.sh") + ' ' + vscode.Uri.joinPath(extensionUri,"scripts","logs","test_mode.log") + ' ;exit 0';
 
         await sidebarProvider.resolveWebviewView(view);
 
@@ -215,7 +215,7 @@ suite('Checking Sidebar Post Messages', () => {
         assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
         assert.strict(createTerminalStub.firstCall.args[0].shellPath, '/bin/zsh');
         assert.strict(terminalMock.show.calledOnce);
-        assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.sendText.args[0][0].trim(), command.trim());
         assert.strict(terminalMock.dispose.notCalled);
     });
 
@@ -236,7 +236,7 @@ suite('Checking Sidebar Post Messages', () => {
         assert(createTerminalStub.firstCall.args[0].name, 'Keploy Terminal')
         assert.strict(createTerminalStub.firstCall.args[0].shellPath, 'wsl.exe');
         assert.strict(terminalMock.show.calledOnce);
-        assert.strict(terminalMock.sendText.calledWith(command));
+        assert.strict(terminalMock.sendText.args[0][0].trim(), command.trim());
         assert.strict(terminalMock.dispose.notCalled);
     });
 
