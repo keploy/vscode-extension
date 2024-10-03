@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import {getKeployVersion , getCurrentKeployVersion} from './version';
+import * as child_process from 'child_process';
 
 export async function downloadAndUpdate(): Promise<void> {
     try {
@@ -95,24 +96,31 @@ export async function downloadAndInstallKeployBinary(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
 
         try {
-            let bashPath: string;
+            let terminalPath: string;
             if (process.platform === 'win32') {
                 // If on Windows, use the correct path to WSL's Bash shell
-                bashPath = 'wsl.exe';
+                terminalPath = 'wsl.exe';
             } else {
-                // Otherwise, assume Bash is available at the standard location
-                bashPath = '/bin/bash';
+                terminalPath = '/bin/bash';
+
+                let currentShell = process.env.SHELL || '';
+
+                if (!currentShell) {
+                    currentShell = child_process.execSync('echo $SHELL', { encoding: 'utf8' }).trim();
+                }
+
+                terminalPath = currentShell;
             }
             // Create a new terminal instance with the Bash shell
             const terminal = vscode.window.createTerminal({
                 name: 'Keploy Terminal',
-                shellPath: bashPath
+                shellPath: terminalPath,
             });
 
             // Show the terminal
             terminal.show();
 
-            const curlCmd = " curl --silent -O -L https://keploy.io/install.sh && source install.sh;exit 0";
+            const curlCmd = `curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh -noRoot`;
             terminal.sendText(curlCmd);
             
             vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
