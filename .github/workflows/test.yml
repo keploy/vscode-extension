@@ -26,5 +26,5 @@ jobs:
       - run: xvfb-run -a npm run coverage
         if: runner.os == 'Linux'
 
-      - run: npm test
+      - run: npm run coverage
         if: runner.os != 'Linux'
