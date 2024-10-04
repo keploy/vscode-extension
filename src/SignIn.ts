@@ -29,17 +29,40 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
         return null;
     }
 }
+async function starGitHubRepo(accessToken: string, owner: string, repo: string): Promise<void> {
+    console.log('Starring the repository:', owner, repo, accessToken);
+    try {
+        const response = await axios.put(`https://api.github.com/user/starred/${owner}/${repo}`, null, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Length': '0',
+            },
+        });
+
+        if (response.status === 204) {
+            console.log(`Successfully starred the repository`);
+        } else {
+            throw new Error(`Failed to star repository. GitHub API responded with status ${response.status}`);
+        }
+    } catch (error) {
+        vscode.window.showErrorMessage(`Failed to star repository: ${error}`);
+    }
+}
 
 export async function getGitHubAccessToken() {
     try {
-        const session = await vscode.authentication.getSession('github', ['user:email'], { createIfNone: true });
+        const session = await vscode.authentication.getSession('github', ['user:email', 'public_repo'], { createIfNone: true });
+        
         if (session) {
             const accessToken = session.accessToken;
             console.log('Access Token:', accessToken);
 
             // Fetch the user's email
             const email = await fetchGitHubEmail(accessToken);
-            console.log('Email:', email);
+            const owner = 'keploy';
+            const repo = 'keploy';   
+            await starGitHubRepo(accessToken, owner, repo);
 
             return { accessToken, email };
         } else {
@@ -91,7 +114,7 @@ export default async function SignInWithGitHub() {
             console.log("Received code", code);
             if (receivedState === state) {
                 // Make a POST request to the backend server to exchange the code for an access token
-                const backendUrl = `http://localhost:8083/auth/login`;
+                const backendUrl = `http://api.keploy.io/auth/login`;
                 // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
                 try {
                     // Await the response from the backend
