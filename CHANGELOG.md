@@ -67,3 +67,10 @@ First Release for Vs Code Extension.
 ## [1.0.15]
 
 - Reverting to universal release
+
+## [1.0.16]
+- Enhanced UI for updating the config file.
+- Added support for a chatbot to provide additional prompts.
+- Improved Keploy binary update experience.
+- Enhanced signup/sign-in experience for users.
+- Added support for new imports and installations of new libraries.

@@ -1,7 +1,7 @@
 <script>
   const vscode = acquireVsCodeApi();
   let aiQuestion = ""; // This will hold the user input for the AI question.
-
+  
   // Define functions or handlers for the buttons
   function generateReport() {
     vscode.postMessage({
@@ -230,6 +230,12 @@
   .chat-input::placeholder {
     color: #c2c2c2;
   }
+
+  /* Add this new CSS */
+.chat-input-container:hover,
+.chat-input-container:focus-within {
+  background-color: #0f0f0f; /* A slightly darker shade */
+}
 
   .chat-submit {
     background-color: transparent;
