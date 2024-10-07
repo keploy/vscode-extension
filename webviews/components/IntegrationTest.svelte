@@ -599,7 +599,7 @@
    display: flex;
    flex-direction: row;
    align-items: start;
-   padding: 4vw 5vw;
+   padding: 2.5vw 5vw;
    width: 100%; /* Full width of the container */
    justify-content: flex-end; /* Align icons to the left */
  }

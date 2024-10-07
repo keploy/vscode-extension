@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import {getKeployVersion , getCurrentKeployVersion} from './version';
 import * as Sentry from './sentryInit';
+import * as child_process from 'child_process';
 
 export async function downloadAndUpdate(): Promise<void> {
     try {
@@ -98,40 +99,23 @@ export async function downloadAndInstallKeployBinary(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
 
         try {
-            let bashPath: string;
-            if (process.platform === 'win32') {
-                // If on Windows, use the correct path to WSL's Bash shell
-                bashPath = 'wsl.exe';
-            } else {
-                // Otherwise, assume Bash is available at the standard location
-                bashPath = '/bin/bash';
-            }
-            // Create a new terminal instance with the Bash shell
-            const terminal = vscode.window.createTerminal({
-                name: 'Keploy Terminal',
-                shellPath: bashPath
-            });
+            const curlCmd = `curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh -noRoot`;
 
-            // Show the terminal
-            terminal.show();
-
-            const curlCmd = " curl --silent -O -L https://keploy.io/install.sh && source install.sh;exit 0";
-            terminal.sendText(curlCmd);
-            
-            vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
-            // Listen for terminal close event
-            const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
-                console.log('Terminal closed');
-                if (eventTerminal === terminal) {
-                    disposable.dispose(); // Dispose the listener
-                    resolve(); 
+            child_process.exec(curlCmd, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error during installation: ${error.message}`);
+                    reject(error);
+                    vscode.window.showErrorMessage('Failed to update Keploy binary: ' + error);
+                    return;
                 }
+                resolve();
+                vscode.window.showInformationMessage('Updated Keploy binary successfully!');
             });
+
+            vscode.window.showInformationMessage('Downloading and updating Keploy binary...');
         } catch (error) {
             reject(error); // Reject the promise if an error occurs during execution
             Sentry?.default?.captureException(error);
         }
     });
 }
-
-        

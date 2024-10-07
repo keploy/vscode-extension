@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
 import axios, { AxiosResponse } from 'axios';
-import * as Sentry from './sentryInit';
+import * as Sentry from "./sentryInit"
 
 
 async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
@@ -26,30 +26,54 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
 
         return primaryEmail ? primaryEmail.email : null;
     } catch (error) {
-        Sentry?.default?.captureException(error);
         vscode.window.showErrorMessage(`Failed to fetch email: ${error}`);
+        Sentry?.default?.captureException(error);
         return null;
+    }
+}
+async function starGitHubRepo(accessToken: string, owner: string, repo: string): Promise<void> {
+    console.log('Starring the repository:', owner, repo, accessToken);
+    try {
+        const response = await axios.put(`https://api.github.com/user/starred/${owner}/${repo}`, null, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Accept': 'application/vnd.github+json',
+                'Content-Length': '0',
+            },
+        });
+
+        if (response.status === 204) {
+            console.log(`Successfully starred the repository`);
+        } else {
+            throw new Error(`Failed to star repository. GitHub API responded with status ${response.status}`);
+        }
+    } catch (error) {
+        vscode.window.showErrorMessage(`Failed to star repository: ${error}`);
+        Sentry?.default?.captureException(error);
     }
 }
 
 export async function getGitHubAccessToken() {
     try {
-        const session = await vscode.authentication.getSession('github', ['user:email'], { createIfNone: true });
+        const session = await vscode.authentication.getSession('github', ['user:email', 'public_repo'], { createIfNone: true });
+        
         if (session) {
             const accessToken = session.accessToken;
             console.log('Access Token:', accessToken);
 
             // Fetch the user's email
             const email = await fetchGitHubEmail(accessToken);
-            console.log('Email:', email);
+            const owner = 'keploy';
+            const repo = 'keploy';   
+            await starGitHubRepo(accessToken, owner, repo);
 
             return { accessToken, email };
         } else {
             vscode.window.showErrorMessage('Failed to get GitHub session.');
         }
     } catch (error) {
-        Sentry?.default?.captureException(error);
         vscode.window.showErrorMessage(`Error: ${error}`);
+        Sentry?.default?.captureException(error);
     }
 }
 
@@ -65,8 +89,8 @@ export async function getMicrosoftAccessToken() {
             vscode.window.showErrorMessage('Failed to get Microsoft session.');
         }
     } catch (error) {
-        Sentry?.default?.captureException(error);    
         vscode.window.showErrorMessage(`Error: ${error}`);
+        Sentry?.default?.captureException(error);
     }
 }
 
@@ -77,55 +101,52 @@ function generateRandomState() {
 
 
 export default async function SignInWithGitHub() {
-    try{
+    const state = uuidv4(); // Generate a unique state parameter for security
+    const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
+    const clientId = 'Ov23liNPnpLFCh1lYJkB';
+    const scope = 'user:email';
+    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
 
-        const state = uuidv4(); // Generate a unique state parameter for security
-        const redirectUri = `https://app.keploy.io/login/github/callback`; // Change the port if needed
-        const clientId = 'Ov23liNPnpLFCh1lYJkB';
-        const scope = 'user:email';
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
-    
-        // Open the authentication URL in the default web browser
-        vscode.env.openExternal(vscode.Uri.parse(authUrl));
-    
-        // Create a local server to handle the callback
-        const server = http.createServer(async (req: any, res: any) => {
-            if (req.url.startsWith('/login/github/callback')) {
-                const url = new URL(req.url, `http://${req.headers.host}`);
-                const receivedState = url.searchParams.get('state');
-                const code = url.searchParams.get('code');
-                console.log("Received code", code);
-                if (receivedState === state) {
-                    // Make a POST request to the backend server to exchange the code for an access token
-                    const backendUrl = `http://localhost:8083/auth/login`;
-                    // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
-                    try {
-                        // Await the response from the backend
-                        const response = await loginAPI(backendUrl, 'github', code?.toString());
-    
-                        if (response.error) {
-                            res.writeHead(400, { 'Content-Type': 'application/json' });
-                            res.end(JSON.stringify({ error: response.error }));
-                        } else {
-                            res.writeHead(200, { 'Content-Type': 'application/json' });
-                            const resp = JSON.stringify(response);
-                            res.end(resp);  // Send the JSON response back
-                        }
-                    } catch (err) {
-                        res.writeHead(500, { 'Content-Type': 'application/json' });
-                        res.end(JSON.stringify({ error: 'Internal Server Error' }));
+    // Open the authentication URL in the default web browser
+    vscode.env.openExternal(vscode.Uri.parse(authUrl));
+
+    // Create a local server to handle the callback
+    const server = http.createServer(async (req: any, res: any) => {
+        if (req.url.startsWith('/login/github/callback')) {
+            const url = new URL(req.url, `http://${req.headers.host}`);
+            const receivedState = url.searchParams.get('state');
+            const code = url.searchParams.get('code');
+            console.log("Received code", code);
+            if (receivedState === state) {
+                // Make a POST request to the backend server to exchange the code for an access token
+                const backendUrl = `http://api.keploy.io/auth/login`;
+                // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
+                try {
+                    // Await the response from the backend
+                    const response = await loginAPI(backendUrl, 'github', code?.toString());
+
+                    if (response.error) {
+                        res.writeHead(400, { 'Content-Type': 'application/json' });
+                        res.end(JSON.stringify({ error: response.error }));
+                    } else {
+                        res.writeHead(200, { 'Content-Type': 'application/json' });
+                        const resp = JSON.stringify(response);
+                        res.end(resp);  // Send the JSON response back
                     }
-                } else {
-                    res.writeHead(400, { 'Content-Type': 'text/html' });
-                    res.end('<h1>State mismatch. Authentication failed.</h1>');
+                } catch (err) {
+                    res.writeHead(500, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                    Sentry?.default?.captureException(err);
                 }
-                server.close();
-            }   
-        }).listen(3000); // Change the port if needed
-    }catch(error){
-        Sentry?.default?.captureException(error);
-    }
+            } else {
+                res.writeHead(400, { 'Content-Type': 'text/html' });
+                res.end('<h1>State mismatch. Authentication failed.</h1>');
+            }
+            server.close();
+        }   
+    }).listen(3000); // Change the port if needed
 }
+
 
 export async function SignInWithOthers() {
     const state = generateRandomState();  // Generate a secure random state
@@ -178,7 +199,6 @@ export async function loginAPI(url = "", provider = "", code = "") {
         }
     } catch (err) {
         console.log("ERROR at login", err);
-        Sentry?.default?.captureException(err);
     }
 }
 
@@ -243,7 +263,6 @@ export async function getInstallationID(): Promise<string> {
         return id;
     } catch (err) {
         console.error("Failed to get installation ID:", err);
-        Sentry?.default?.captureException(err);
         throw new Error("Failed to get installation ID");
     }
 }
@@ -274,6 +293,7 @@ export async function ValidateSignInWithOthers(jwtToken: string): Promise<{}> {
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
         throw new Error(`Failed to authenticate: ${err.message}`);
+        Sentry?.default?.captureException(err);
     }
 }
 
@@ -335,7 +355,6 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
         };
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
-        Sentry?.default?.captureException(err);
         throw new Error(`Failed to authenticate: ${err.message}`);
     }
 }

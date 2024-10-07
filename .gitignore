@@ -6,3 +6,5 @@ intellijpublish.yml
 out
 # Sentry Config File
 .env.sentry-build-plugin
+coverage
+keploy-logs.txt
