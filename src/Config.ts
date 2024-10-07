@@ -54,60 +54,6 @@ export async function updateKeployYaml(newConfig: PartialKeployConfig) {
 }
 
 export async function handleOpenKeployConfigFile(webview: any) {
-  const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
-  const configFilePath = folderPath + '/keploy.yml';
-
-  // Function to check if the config file exists
-  const checkConfigExists = () => {
-    return existsSync(configFilePath);
-  };
-
-  // Function to open the config file in the editor
-  const openConfigFile = () => {
-    vscode.workspace.openTextDocument(configFilePath).then(doc => {
-      vscode.window.showTextDocument(doc, { preview: false });
-    });
-  };
-}
-
-// Function to update keploy.yaml
-export async function updateKeployYaml(newConfig: PartialKeployConfig) {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders) {
-      vscode.window.showErrorMessage('No workspace folder found');
-      return;
-  }
-
-  const keployFilePath = path.join(workspaceFolders[0].uri.fsPath, 'keploy.yml');
-
-  if (!existsSync(keployFilePath)) {
-      vscode.window.showErrorMessage('keploy.yaml file not found');
-      return;
-  }
-
-  try {
-      const fileContents = readFileSync(keployFilePath, 'utf8');
-      const config = yaml.load(fileContents) as any;  // Load the YAML content into an object
-      console.log('config', config);
-      config.appName = newConfig.appName;
-      config.command = newConfig.command;
-      config.containerName = newConfig.containerName;
-      config.networkName = newConfig.networkName;
-      config.test.delay = newConfig.test.delay;
-      config.test.apiTimeout = newConfig.test.apiTimeout;
-      config.test.mongoPassword = newConfig.test.mongoPassword;
-
-      // Convert the updated config object back to YAML format
-      const newYamlContent = yaml.dump(config);
-      writeFileSync(keployFilePath, newYamlContent, 'utf8');
-
-      vscode.window.showInformationMessage('Keploy config updated successfully!');
-  } catch (error) {
-      vscode.window.showErrorMessage(`Failed to update keploy.yaml: ${error}`);
-  }
-}
-
-export async function handleOpenKeployConfigFile(webview: any) {
   try {
     const folderPath = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
     const configFilePath = folderPath + '/keploy.yml';
