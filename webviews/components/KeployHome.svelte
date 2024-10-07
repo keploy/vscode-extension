@@ -44,6 +44,7 @@
   let settingsIcon = document.querySelector(".settings-icon");
   let currentStep = 1;
   let backConfigButton;
+
   let vscodeApi = null; // Store the VS Code API reference
 
   // let delay = 5;
@@ -86,8 +87,10 @@ function saveSettings() {
       },
     });
   }
+  let progressBarHide;
   function goToNextStep(step) {
     currentStep = step;
+  
   }
 
   function resetCurrentStep() {
@@ -163,6 +166,7 @@ function saveSettings() {
         detail: { step: 'add-users' },
       });
       document.dispatchEvent(event);
+
     }
   }
   const toggleRecording = () => {
@@ -479,7 +483,7 @@ function saveSettings() {
       </div>
     {/if}
     <div class="loader" id="loader"></div>
-    <div class="stepper-container">
+    <div class="stepper-container" id="progress-stepper">
       <div class="step-line"></div>
       <div class="step">
         <span
