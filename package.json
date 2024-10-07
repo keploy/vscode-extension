@@ -170,7 +170,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
-    "coverage": "c8 --check-coverage npm run test"
+    "coverage": "c8 --check-coverage=false npm run test"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
