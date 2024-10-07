@@ -132,6 +132,7 @@ if (rerunTestSuiteButton) {
 
 if(backConfigbutton){
   backConfigbutton.addEventListener('click',async () =>{
+    console.log("back button clicked man." , selectedIconButton.textContent);
     if(selectedIconButton.textContent == '1'){
       console.log("selectedIconButton: " , selectedIconButton.textContent );
       console.log("backconfig button clicked")
@@ -417,6 +418,22 @@ document.addEventListener('addUsersClick', function (e) {
     })
   }
 });
+
+// Listen for custom events from the Svelte component
+document.addEventListener('getKeployConfig', () => {
+  vscode.postMessage({
+    type: 'getKeployConfig',
+  });
+});
+
+document.addEventListener('updateKeployConfig', (e) => {
+  const config = e.detail.config;
+  vscode.postMessage({
+    type: 'updateKeployConfig',
+    config: config,
+  });
+});
+
 
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
