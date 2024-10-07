@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
+import * as path from 'path';  // Import path module
 import { SidebarProvider } from './SidebarProvider';
-import SignIn, { validateFirst,SignInWithOthers, ValidateSignInWithOthers } from './SignIn';
+import SignIn, { validateFirst, SignInWithOthers, ValidateSignInWithOthers } from './SignIn';
 import oneClickInstall from './OneClickInstall';
 import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
@@ -14,43 +15,125 @@ import TreeSitterGo from 'tree-sitter-go';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
+    private treeCache: { [filePath: string]: TreeSitter.Tree } = {};
+
+    private invalidateCache(fileName: string) {
+        delete this.treeCache[fileName];  // Remove the cached tree
+    }
+
+    constructor() {
+        // Listen for document changes and invalidates cache
+        vscode.workspace.onDidChangeTextDocument(this.onDocumentChange.bind(this));
+
+        // Listen for document save events and invalidates cache
+        vscode.workspace.onDidSaveTextDocument(this.onDocumentSave.bind(this));
+    }
+
+    // Triggered when the document is saved
+    private onDocumentSave(document: vscode.TextDocument) {
+        console.log('Document saved:', document.uri.fsPath);
+        const fileName = document.uri.fsPath;
+        this.invalidateCache(fileName);  // Invalidate the cache on save
+    }
+
+    private onDocumentChange(event: vscode.TextDocumentChangeEvent) {
+        console.log('Document changed:', event.document.uri.fsPath);
+        const fileName = event.document.uri.fsPath;
+        this.invalidateCache(fileName);  // Invalidate the cache on change
+    }
+
+    private getTreeFromCache(fileName: string, text: string): TreeSitter.Tree {
+        if (this.treeCache[fileName]) {
+            console.log(`Cache hit for: ${fileName}`);
+            this.logCacheSize();  // Log the cache size
+            return this.treeCache[fileName];  // Return cached tree if available
+        }
+        const parser = new TreeSitter();
+
+        // Set the language based on file extension
+        if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
+            parser.setLanguage(TreeSitterJavaScript);
+        } else if (fileName.endsWith('.py')) {
+            parser.setLanguage(TreeSitterPython);
+        } else if (fileName.endsWith('.java')) {
+            parser.setLanguage(TreeSitterJava);
+        } else if (fileName.endsWith('.go')) {
+            parser.setLanguage(TreeSitterGo);
+        } else {
+            console.log('Unsupported file type:', fileName);
+            throw new Error("Unsupported file type");
+        }
+
+        const tree = parser.parse(text);  // Parse the document text
+        this.treeCache[fileName] = tree;  // Cache the parsed tree
+        console.log(`Cache miss for: ${fileName}`);
+        this.logCacheSize();  // Log the cache size after adding a new entry
+
+        return tree;
+    }
+
+    private logCacheSize() {
+        let totalSize = 0;
+
+        // Iterate over each key-value pair in the cache
+        for (const [key, value] of Object.entries(this.treeCache)) {
+            // Add the size of the key (file name)
+            totalSize += this.getSizeInBytes(key);
+
+            // Add the estimated size of the parsed tree (value)
+            totalSize += this.getSizeInBytes(value);
+        }
+
+        // Convert total size from bytes to kilobytes
+        const totalSizeKB = totalSize / 1024;
+
+        console.log(`Current cache size: ${totalSize} bytes (${totalSizeKB.toFixed(2)} KB)`);
+    }
+
+    private getSizeInBytes(obj: any): number {
+        if (typeof obj === 'string') {
+            // If the object is a string, calculate the size based on UTF-16 encoding (2 bytes per character)
+            return obj.length * 2;
+        } else if (typeof obj === 'object') {
+            // If the object is an object, recursively calculate the size of its properties
+            let objectSize = 0;
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    objectSize += this.getSizeInBytes(key);  // Size of key
+                    objectSize += this.getSizeInBytes(obj[key]);  // Size of value
+                }
+            }
+            return objectSize;
+        }
+        return 0;  // For other types like numbers, you can return a fixed size if needed
+    }
 
     provideCodeLenses(
         document: vscode.TextDocument,
         token: vscode.CancellationToken
     ): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const fileName = document.uri.fsPath;
+
+        // Skip test files
         if (
-            fileName.endsWith('.test.js') || 
-            fileName.endsWith('.test.ts') || 
+            fileName.endsWith('.test.js') ||
+            fileName.endsWith('.test.ts') ||
             fileName.endsWith('Test.java') ||  // Check for Java test file ending
-            fileName.includes('/Test')   ||      // Check for Java test file prefix in the path
+            fileName.includes('/Test') ||      // Check for Java test file prefix in the path
             fileName.includes('/test/') ||    // Skip files in a "tests" directory
             fileName.endsWith('_test.go') ||
             fileName.includes('test_')
         ) {
             return [];
         }
+        const baseName = path.basename(fileName);
+        const fileExtension = path.extname(fileName);
 
         const text = document.getText();
         const codeLenses: vscode.CodeLens[] = [];
 
         try {
-            const parser = new TreeSitter();
-
-            if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
-                parser.setLanguage(TreeSitterJavaScript);
-            } else if (fileName.endsWith('.py')) {
-                parser.setLanguage(TreeSitterPython);
-            } else if (fileName.endsWith('.java')) {
-                parser.setLanguage(TreeSitterJava);
-            } else if (fileName.endsWith('.go')) {
-                parser.setLanguage(TreeSitterGo);
-            } else {
-                return codeLenses; // Return if file type is unsupported
-            }
-
-            const tree = parser.parse(text);
+            const tree = this.getTreeFromCache(fileName, text);
             const cursor = tree.walk();
 
             const traverseTree = (cursor: TreeSitter.TreeCursor, ancestors: TreeSitter.SyntaxNode[] = []) => {
@@ -62,26 +145,31 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                 ) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
+                    console.log('🐰 Found function:', node.firstChild?.text);
+                    const functionName = node.firstChild?.text || '';
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
                         arguments: [document.uri.fsPath]
                     }));
+                    console.log('🐰 Found arrow function:', node.firstChild?.text);
                 } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
                     if (node.type === 'arrow_function') {
                         const parent = ancestors[ancestors.length - 1];
+                        console.log('🐰 Found arrow function:', node.firstChild?.text);
+                        const functionName = node.firstChild?.text || '';
                         if (parent?.type !== 'CallExpression') {
                             const line = document.positionAt(node.startIndex).line;
                             const range = new vscode.Range(line, 0, line, 0);
                             codeLenses.push(new vscode.CodeLens(range, {
                                 title: '🐰 Generate unit tests',
                                 command: 'keploy.utg',
-                                arguments: [document.uri.fsPath]
+                                arguments: [document.uri.fsPath, functionName, fileExtension]
                             }));
 
                             codeLenses.push(new vscode.CodeLens(range, {
@@ -89,15 +177,18 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                                 command: 'keploy.showSidebar',
                                 arguments: [document.uri.fsPath]
                             }));
+                            console.log('🐰 Found arrow function:', node.firstChild?.text);
                         }
                     }
                 } else if (fileName.endsWith('.py') && node.type === 'function_definition') {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
+                    const functionNameNode = node.childForFieldName('name');
+                    const functionName = functionNameNode?.text || '';
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
@@ -107,10 +198,13 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                 } else if (fileName.endsWith('.java') && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
+                    const functionNameNode = node.childForFieldName('name');
+                    const functionName = functionNameNode?.text || '';
+                    //just adding it for the sake of testing will change it later.
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
@@ -120,10 +214,14 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                 } else if (fileName.endsWith('.go') && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
+                    //just adding it for the sake of testing will change it later.
+                    const functionNameNode = node.childForFieldName('name');
+                    const functionName = functionNameNode?.text || '';
+
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
@@ -151,26 +249,165 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
 
         return codeLenses;
     }
+
+}
+async function findTestCasesForFunction(functionName: string, fileExtension: string): Promise<vscode.Uri[] | undefined> {
+    console.log(`🐰 Searching for test cases for function: ${functionName}`);
+    // Exclude certain directories from the search
+    const excludePattern = '**/{node_modules,venv,__pycache__}/**';  // Exclude common directories
+    const maxResults = 100;  // Limit the number of files returned
+    console.log('🐰 Searching for test files...');
+    let testFilePattern = '';
+    if (fileExtension === '.js' || fileExtension === '.ts') {
+        testFilePattern = '**/*.{test,spec}.{js,ts}';
+    } else if (fileExtension === '.py') {
+        testFilePattern = '**/{test_*,*_test}.py';
+    } else {
+        // Unsupported language for now
+        return;
+    }
+
+    // Use await to get the list of test files
+    const testFiles = await vscode.workspace.findFiles(testFilePattern, excludePattern, maxResults);
+    console.log('🐰 Found test files:', testFiles);
+
+    // Array to collect found test files
+    const foundTestFiles: vscode.Uri[] = [];
+
+    for (const fileUri of testFiles) {
+        console.log('🐰 Opening test file:', fileUri.fsPath);
+        const fileDocument = await vscode.workspace.openTextDocument(fileUri);
+        console.log('🐰 Reading test file:', fileUri.fsPath);
+        const text = fileDocument.getText();
+
+        try {
+            const testFileExtension = fileUri.fsPath.split('.').pop();
+            const parser = new TreeSitter();
+            if (testFileExtension === 'js' || testFileExtension === 'ts') {
+                parser.setLanguage(TreeSitterJavaScript);
+            } else if (testFileExtension === 'py') {
+                parser.setLanguage(TreeSitterPython);
+            } else {
+                console.log('Unsupported test file language:', testFileExtension);
+                continue;
+            }
+
+            const tree = parser.parse(text);
+            const cursor = tree.walk();
+            let found = false;
+
+            console.log('🐰 Walking test file:', fileUri.fsPath);
+            // Traverse the test file to find related test functions
+            const traverseTestTree = (cursor: TreeSitter.TreeCursor) => {
+                const node = cursor.currentNode;
+
+                if (testFileExtension === 'js' || testFileExtension === 'ts') {
+                    // Check for require statements
+                    if (node.type === 'call_expression') {
+                        const callNode = node.firstChild;
+                        if (callNode?.text === 'require') {
+                            const requiredModule = node.lastChild?.text;
+                            if (requiredModule && requiredModule.includes(functionName)) {
+                                found = true;
+                                console.log(`🐰 Found function ${functionName} used in require statement in file: ${fileUri.fsPath}`);
+                            }
+                        }
+                    }
+
+                    // Check for ES6 import statements
+                    if (node.type === 'import_statement') {
+                        const importNode = node.childForFieldName('source');
+                        if (importNode && importNode.text.includes(functionName)) {
+                            found = true;
+                            console.log(`🐰 Found function ${functionName} used in import statement in file: ${fileUri.fsPath}`);
+                        }
+                    }
+
+                    // Check for function calls
+                    if (!found && node.type === 'call_expression' && node.text.includes(functionName)) {
+                        console.log(`🐰 Function ${functionName} used in test case in file: ${fileUri.fsPath}`);
+                        found = true;
+                    }
+
+                } else if (testFileExtension === 'py') {
+                    // Check for function calls
+                    if (node.type === 'call') {
+                        const functionNode = node.childForFieldName('function');
+                        if (functionNode && functionNode.text === functionName) {
+                            found = true;
+                            console.log(`🐰 Function ${functionName} used in test case in file: ${fileUri.fsPath}`);
+                        }
+                    }
+
+                    // Check for import statements
+                    if (node.type === 'import_statement' || node.type === 'import_from_statement') {
+                        const moduleNode = node.childForFieldName('module');
+                        if (moduleNode && moduleNode.text.includes(functionName)) {
+                            found = true;
+                            console.log(`🐰 Found function ${functionName} used in import statement in file: ${fileUri.fsPath}`);
+                        }
+                    }
+
+                    // Check for function definitions
+                    if (node.type === 'function_definition') {
+                        const functionNode = node.childForFieldName('name');
+                        if (functionNode && functionNode.text.includes(functionName)) {
+                            found = true;
+                            console.log(`🐰 Test function for ${functionName} found in file: ${fileUri.fsPath}`);
+                        }
+                    }
+                }
+
+                if (found) {
+                    return; // Stop traversal once we find the function usage
+                }
+
+                // Recursively traverse the tree
+                if (cursor.gotoFirstChild()) {
+                    traverseTestTree(cursor);
+                    cursor.gotoParent();
+                }
+                if (cursor.gotoNextSibling()) {
+                    traverseTestTree(cursor);
+                }
+            };
+
+            traverseTestTree(cursor);
+
+            if (found) {
+                // Add the file URI to the array of found test files
+                foundTestFiles.push(fileUri);
+            } else {
+                console.log(`❌ No usage of function ${functionName} found in file: ${fileUri.fsPath}`);
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Return the array of found test files
+    return foundTestFiles.length > 0 ? foundTestFiles : undefined;
 }
 
 
 export function activate(context: vscode.ExtensionContext) {
-    const sidebarProvider = new SidebarProvider(context.extensionUri , context);
+    const sidebarProvider = new SidebarProvider(context.extensionUri, context);
     context.subscriptions.push(
         vscode.window.registerUriHandler({
             async handleUri(uri) {
                 // Extract the token and state from the URI query parameters
                 const token = uri.query.split('token=')[1]?.split('&')[0];
                 const state = uri.query.split('state=')[1];
-        
+
                 if (token) {
                     vscode.window.showInformationMessage(`You are now logged in!`);
-        
+
                     await context.globalState.update('JwtToken', token);
                     await context.globalState.update('SignedOthers', true);
-        
+
                     const response = await ValidateSignInWithOthers(token);
-        
+
                     if (response) {
                         vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
                         vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
@@ -182,7 +419,7 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             }
         }),
-        
+
         vscode.window.registerWebviewViewProvider(
             "Keploy-Sidebar",
             sidebarProvider
@@ -214,8 +451,8 @@ export function activate(context: vscode.ExtensionContext) {
     oneClickInstall();
 
     // let signedIn = context.globalState.get('ourToken');
-    context.globalState.update('SignedOthers' , undefined);
-    context.globalState.update('SubscriptionEnded' , undefined);
+    context.globalState.update('SignedOthers', undefined);
+    context.globalState.update('SubscriptionEnded', undefined);
     console.log(context.globalState);
     // if (signedIn) {
     //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
@@ -235,7 +472,7 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('You are already signed in!');
         // enable the signout command
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-        context.globalState.update('SignedOthers' , true);
+        context.globalState.update('SignedOthers', true);
 
 
     } else {
@@ -253,9 +490,9 @@ export function activate(context: vscode.ExtensionContext) {
                     // Store the access token in global state
                     await context.globalState.update('accessToken', accessToken);
 
-                    const { emailID, isValid, error , JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
+                    const { emailID, isValid, error, JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
 
-                    console.log({emailID , isValid , error , JwtToken});
+                    console.log({ emailID, isValid, error, JwtToken });
 
                     await context.globalState.update('JwtToken', JwtToken);
 
@@ -277,7 +514,7 @@ export function activate(context: vscode.ExtensionContext) {
             }
         });
 
-        
+
     }
     let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
         try {
@@ -293,7 +530,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(signInWithOthersCommand);
 
     //defining another function for microsoft to redirect because  functions with same command name cannot be added in package.json
-    
+
     let signInWithMicrosoft = vscode.commands.registerCommand('keploy.SignInWithMicrosoft', async () => {
         try {
             await SignInWithOthers(); // The result will now be handled in the URI handler
@@ -380,7 +617,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     });
 
-    
+
     context.subscriptions.push(updateKeployDisposable);
 
     let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async () => {
@@ -389,58 +626,66 @@ export function activate(context: vscode.ExtensionContext) {
         sidebarProvider.postMessage("KeployChatBot")
         vscode.window.showInformationMessage('Sidebar opened for additional prompts.');
     });
-    
+
     context.subscriptions.push(showSidebarDisposable);
-    
+
 
     // Register the command
-    let disposable = vscode.commands.registerCommand('keploy.utg', async (uri: vscode.Uri , additional_prompts?:string) => {
+    let disposable = vscode.commands.registerCommand('keploy.utg',  async (filePath: string, functionName: string, fileExtension: string, additional_prompts?: string) => {
         // Check if the user is already signed in
         const signedIn = await context.globalState.get('accessToken');
         const signedInOthers = await context.globalState.get('SignedOthers');
         const SubscriptionEnded = await context.globalState.get('SubscriptionEnded') !== undefined ? context.globalState.get('SubscriptionEnded') : true;
-        const token  = await context.globalState.get<'string'>('JwtToken');
+        const token = await context.globalState.get<'string'>('JwtToken');
         console.log("SubscriptionEnded Value: ", SubscriptionEnded);
-        
         if (!signedIn && !signedInOthers) {
             // Redirect to the website if signed in
             await vscode.commands.executeCommand('keploy.SignInWithOthers');
-            return; 
+            return;
         } else {
+
             if (SubscriptionEnded === true) {
                 try {
                     // Call the API inside the try block
-                    if(token){
+                    if (token) {
                         const apiResponse = await makeApiRequest(token) || 'no response';
-                            const response = JSON.parse(apiResponse);
-                            await context.globalState.update('apiResponse', apiResponse);
-                            console.log(response);
-                            if(response.usedCall < response.totalCall ){
-                                await context.globalState.update('SubscriptionEnded' , false);
-                            }else{
-                                const redirectUrl = 'https://app.keploy.io/signin?take_to_pricing=true';
-                                vscode.env.openExternal(vscode.Uri.parse(redirectUrl));                    
-                            }
-        
+                        const response = JSON.parse(apiResponse);
+                        await context.globalState.update('apiResponse', apiResponse);
+                        console.log(response);
+                        if (response.usedCall < response.totalCall) {
+                            await context.globalState.update('SubscriptionEnded', false);
+                        } else {
+                            const redirectUrl = 'https://app.keploy.io/signin?take_to_pricing=true';
+                            vscode.env.openExternal(vscode.Uri.parse(redirectUrl));
+                        }
+
                         // console.log('Subscription renewal response:', response.data);
-                    }else{
+                    } else {
                         console.log("Token not defined in the Extension.ts");
                     }
                 } catch (error) {
                     vscode.window.showErrorMessage('Failed to renew subscription.');
                     console.error('Subscription renewal error:', error);
                 }
-            } 
+            }
             const updatedSubscriptionEnded = await context.globalState.get('SubscriptionEnded');
 
             if (updatedSubscriptionEnded === false) {
+
                 // If SubscriptionEnded is false or undefined, continue running Utg
+                const testFilesPath = await findTestCasesForFunction(functionName, fileExtension); // Call the function here
+                if (testFilesPath) {
+                    console.log("testFiles path: ", testFilesPath);
+                } else {
+                    console.log("no path found")
+                }
+
                 vscode.window.showInformationMessage('Welcome to Keploy!');
-                await Utg(context , additional_prompts);
+                await Utg(context, additional_prompts, testFilesPath);
             }
         }
     });
-    
+
 
     context.subscriptions.push(disposable);
 }
