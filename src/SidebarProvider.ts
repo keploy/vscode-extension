@@ -120,6 +120,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
     const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
+    const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true; 
+
 
     console.log("signedIn others  value", signedIn);
 
@@ -404,7 +406,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+        case "progressStatus":{
+          if(progressBarVisible == true && data.value == "false"){
+            console.log("progressbarVisible and data value: ",progressBarVisible,data.value);
+            await this._context.globalState.update("progressVisible", false);
+          }
 
+          break;
+        }
         case "openLink": {
 
           try {
@@ -549,7 +558,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
   // Stop the interval when the webview is no longer active
   public dispose() {
-    if (this._interval) {
+    if (this._interval) { 
       clearInterval(this._interval);
     }
   }
@@ -567,6 +576,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         type: 'signedIn',
         value: signedIn,
       });
+
+      const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true;
+
+
+      this._view.webview.postMessage({
+        type: 'progressBarStatus',
+        value: progressBarVisible,
+      });
+
     }
   }
   public revive(panel: vscode.WebviewView) {

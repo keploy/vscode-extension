@@ -42,6 +42,7 @@ let actionStarted = false;
 const navigateToConfigButton = document.getElementById('backtoHome');
 const backtoHome = document.getElementById('backArrow');
 const selectedIconButton = document.getElementById('selectedIconNumber');
+const ProgressStepperContainer = document.getElementById('progress-stepper');
 let FilePath = "";
 
 //cleanup required
@@ -394,6 +395,8 @@ document.addEventListener('ciCdStepClick', function (e) {
       type: "openLink",
       url: "https://keploy.io/docs", // Replace this with the URL you want to navigate to
     });// Example of opening a link
+
+    
   }
 });
 
@@ -407,13 +410,25 @@ document.addEventListener('addUsersClick', function (e) {
       type: "openLink",
       url: "https://app.keploy.io", // Replace this with the URL you want to navigate to
     });// Example of opening a link
+
+    vscode.postMessage({
+      type:"progressStatus", 
+      value:"false"
+    })
   }
 });
 
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
   const message = event.data;
-  // console.log("message", message);
+  console.log("message", message);
+
+  if(message.type === "progressBarStatus"){
+    if(message.value == false){
+      ProgressStepperContainer.style.display = "none";
+    }
+  }
+
 
   if (message.type === 'navigateToHome') {
     vscode.postMessage({
