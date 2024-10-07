@@ -4,7 +4,7 @@ import * as path from 'path';
 import axios, { AxiosResponse } from 'axios';
 
 
-async function Utg(context: vscode.ExtensionContext) {
+async function Utg(context: vscode.ExtensionContext , additional_prompts?:string) {
     
     try {
         return new Promise<void>(async (resolve, reject) => {
@@ -106,7 +106,12 @@ async function Utg(context: vscode.ExtensionContext) {
                     return;
                 }
 
-                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}";`);
+                if(!additional_prompts){
+                    additional_prompts = "";
+                }
+
+                
+                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
 
                  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
