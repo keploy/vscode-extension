@@ -108,6 +108,8 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                 if(!additional_prompts){
                     additional_prompts = "";
                 }
+                
+                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
 
                 
                  terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
