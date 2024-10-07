@@ -101,6 +101,8 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
                     return;
                 }
+
+                console.log("additional_prompts" , additional_prompts);
                 if(!additional_prompts){
                     additional_prompts = "";
                 }

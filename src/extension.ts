@@ -155,7 +155,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath,functionName,fileExtension]
                     }));
                     console.log('🐰 Found arrow function:', node.firstChild?.text);
                 } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
@@ -175,7 +175,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                             codeLenses.push(new vscode.CodeLens(range, {
                                 title: '🐰 Additional Prompts',
                                 command: 'keploy.showSidebar',
-                                arguments: [document.uri.fsPath]
+                                arguments: [document.uri.fsPath,functionName,fileExtension]
                             }));
                             console.log('🐰 Found arrow function:', node.firstChild?.text);
                         }
@@ -193,7 +193,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath,functionName,fileExtension]
                     }));
                 } else if (fileName.endsWith('.java') && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
@@ -209,7 +209,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath,functionName,fileExtension]
                     }));
                 } else if (fileName.endsWith('.go') && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
@@ -226,7 +226,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath]
+                        arguments: [document.uri.fsPath,functionName,fileExtension]
                     }));
                 }
 
@@ -458,7 +458,9 @@ export function activate(context: vscode.ExtensionContext) {
     //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
     //     sidebarProvider.postMessage('navigateToHome', 'KeployHome');
     // }
-
+    let functionName="";
+    let ExtentionName="";
+    let FunctionFilePath = "";
     let accessToken = context.globalState.get<string>('JwtToken');
 
     // Check if the access token is already present in the global state
@@ -513,7 +515,7 @@ export function activate(context: vscode.ExtensionContext) {
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
         });
-
+        context.subscriptions.push(signInCommand);
 
     }
     let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
@@ -620,15 +622,23 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(updateKeployDisposable);
 
-    let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async () => {
+    let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async (filePath:string,FunctionName:string,FileExtentionName:string) => {
         // Show the sidebar when this command is executed
+        functionName=FunctionName;
+        ExtentionName=FileExtentionName;
+        FunctionFilePath = filePath;
         vscode.commands.executeCommand('workbench.view.extension.Keploy-Sidebar');
         sidebarProvider.postMessage("KeployChatBot")
-        vscode.window.showInformationMessage('Sidebar opened for additional prompts.');
     });
 
     context.subscriptions.push(showSidebarDisposable);
 
+    let runAdditionalPrompts = vscode.commands.registerCommand('keploy.runAdditionalPrompts',async(additionalPrompts:string)=>{
+        console.log("value inside the function: ",functionName,ExtentionName,additionalPrompts);
+        await vscode.commands.executeCommand('keploy.utg' , FunctionFilePath,functionName, ExtentionName , additionalPrompts);
+    })
+
+    context.subscriptions.push(runAdditionalPrompts);
 
     // Register the command
     let disposable = vscode.commands.registerCommand('keploy.utg',  async (filePath: string, functionName: string, fileExtension: string, additional_prompts?: string) => {
@@ -673,13 +683,16 @@ export function activate(context: vscode.ExtensionContext) {
             if (updatedSubscriptionEnded === false) {
 
                 // If SubscriptionEnded is false or undefined, continue running Utg
+                if(additional_prompts){
+                    console.log("additional_prompts are present: ",additional_prompts);
+                }
                 const testFilesPath = await findTestCasesForFunction(functionName, fileExtension); // Call the function here
                 if (testFilesPath) {
                     console.log("testFiles path: ", testFilesPath);
                 } else {
                     console.log("no path found")
                 }
-
+                console.log("additional prompts inside the keploy.utg " , additional_prompts);
                 vscode.window.showInformationMessage('Welcome to Keploy!');
                 await Utg(context, additional_prompts, testFilesPath);
             }
