@@ -5,12 +5,13 @@ import { getNonce } from "./Utils";
 import { startRecording, stopRecording } from "./Record";
 import { startTesting, stopTesting, displayTestCases, displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";
-import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
+import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile,updateKeployYaml,PartialKeployConfig } from "./Config";
 import SignInWithGitHub from "./SignIn";
 import oneClickInstall from './OneClickInstall';
 import * as path from 'path';
 import * as fs from 'fs';
 import { workspace } from 'vscode';
+const yaml = require('js-yaml');
 
 function precheckFunction(): Promise<string> {
   const workspacePath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
@@ -152,6 +153,34 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     });
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
+        case "getKeployConfig":{
+          // Load the keploy.yml config file
+          const workspaceFolders = vscode.workspace.workspaceFolders;
+          if (!workspaceFolders) {
+            vscode.window.showErrorMessage('No workspace folder found');
+            return;
+          }
+    
+          const keployFilePath = path.join(workspaceFolders[0].uri.fsPath, 'keploy.yml');
+          
+          if (!fs.existsSync(keployFilePath)) {
+            vscode.window.showErrorMessage('keploy.yml file not found');
+            return;
+          }
+    
+          try {
+            const fileContents = fs.readFileSync(keployFilePath, 'utf8');
+            const config = yaml.load(fileContents); // Parse YAML into JS object
+            
+            // Send the config data back to the webview
+            webviewView.webview.postMessage({
+              type: 'keployConfig',
+              config: config,
+            });
+          } catch (err) {
+            vscode.window.showErrorMessage(`Error reading keploy.yml: ${err}`);
+          }
+        }
         case "onInfo": {
           if (!data.value) {
             return;
@@ -542,10 +571,30 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+        
+        case "updateKeployConfig": {
+          // Collect the updated data from the UI
+          const newConfig: PartialKeployConfig = {
+            appName: data.config.appName,
+            command: data.config.command,
+            containerName: data.config.containerName,
+            networkName: data.config.networkName,
+            test: {
+              delay: data.config.test?.delay,
+              apiTimeout: data.config.test?.apiTimeout,
+              mongoPassword: data.config.test?.mongoPassword,
+            },
+          };
+
+          // Call the function to update the YAML config
+          await updateKeployYaml(newConfig);
+          break;
+        }
 
       }
 
     });
+    
   }
   private _startApiResponseUpdates() {
     this._interval = setInterval(() => {
