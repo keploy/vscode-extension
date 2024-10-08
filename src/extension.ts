@@ -145,8 +145,8 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                 ) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
-                    console.log('🐰 Found function:', node.firstChild?.text);
-                    const functionName = node.firstChild?.text || '';
+                    console.log('🐰 Found function:', node.childForFieldName('name')?.text);
+                    const functionName = node.childForFieldName('name')?.text || '';
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
@@ -177,7 +177,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                                 command: 'keploy.showSidebar',
                                 arguments: [document.uri.fsPath,functionName,fileExtension]
                             }));
-                            console.log('🐰 Found arrow function:', node.firstChild?.text);
+                            console.log('🐰 Found arrow function:', node?.text);
                         }
                     }
                 } else if (fileName.endsWith('.py') && node.type === 'function_definition') {
