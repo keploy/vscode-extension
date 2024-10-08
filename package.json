@@ -57,7 +57,7 @@
     },
     "submenus": [
       {
-        "icon": "$(account)",  
+        "icon": "$(account)",
         "label": "Sign In Options",
         "id": "sign_in_submenu"
       }
@@ -107,7 +107,6 @@
         {
           "command": "keploy.SignInWithMicrosoft",
           "title": "Sign In with Microsoft"
-    
         }
       ]
     },
@@ -185,7 +184,7 @@
     "@types/node": "18.x",
     "@types/sinon": "^17.0.3",
     "@types/uuid": "^10.0.0",
-    "@types/vscode": "^1.93.0",
+    "@types/vscode": "^1.86.0",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
     "@vscode/test-cli": "^0.0.4",
