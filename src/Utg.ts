@@ -45,11 +45,29 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                         // Use only the first path from testFilesPath
                         testFilePaths = [testFilesPath[0].fsPath];
                     } else {
-                        const defaultTestFilePath = path.join(rootDir, 'test', path.basename(sourceFilePath).replace(extension, `.test${extension}`));
+                        const testDir = path.join(rootDir, 'test');
+                
+                        // Check if the test directory exists, if not, create it
+                        if (!fs.existsSync(testDir)) {
+                            fs.mkdirSync(testDir, { recursive: true });
+                        }
+                      
+                        const defaultTestFilePath = path.join(
+                            rootDir, 
+                            'test', 
+                            path.basename(sourceFilePath).replace(extension, `.test${extension}`)
+                        );
                         testFilePaths.push(defaultTestFilePath);
                         if (!fs.existsSync(defaultTestFilePath)) {
                             vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
-                            fs.writeFileSync(defaultTestFilePath, `// Test file for ${defaultTestFilePath}`);
+                            fs.writeFileSync(
+                                defaultTestFilePath, 
+                                `describe('Dummy test', () => {\n` +
+                                `    it('dummy test', async () => {\n` +
+                                `        expect(true);\n` +
+                                `    });\n` +
+                                `});\n`
+                            );
                         }
                     }
                     command = `npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage`;
@@ -61,11 +79,25 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                         testFilePaths = [testFilesPath[0].fsPath];
                     } else {
                         const testDir = path.join(rootDir, 'test');
+                
+                        // Check if the test directory exists, if not, create it
+                        if (!fs.existsSync(testDir)) {
+                            fs.mkdirSync(testDir, { recursive: true });
+                        }
+                        
                         const defaultTestFilePath = path.join(testDir, 'test_' + path.basename(sourceFilePath));
                         testFilePaths.push(defaultTestFilePath);
+                        
                         if (!fs.existsSync(defaultTestFilePath)) {
                             vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
-                            fs.writeFileSync(defaultTestFilePath, `# Test file for ${defaultTestFilePath}`);
+                            
+                            const testContent = `import sys\n` +
+                                `import os\n\n` +
+                                `sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))\n\n` +
+                                `def test_dummy():\n` +
+                                `    assert True\n`;
+                            
+                            fs.writeFileSync(defaultTestFilePath, testContent);
                         }
                     }
                     command = `pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${testFilePaths[0]}`;
@@ -87,12 +119,13 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
     
                 } else if (extension === '.go') {
                     // Proceed as before for Go
+                    //todo: have to detect the package name and instead of package main that should go there.
                     const defaultTestFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
                     testFilePaths.push(defaultTestFilePath);
                     if (!fs.existsSync(defaultTestFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
-                        testFileContent = `package main\n\nimport "testing"`;
-                        fs.writeFileSync(defaultTestFilePath, testFileContent);
+                        testFileContent = `package main`;
+                        fs.writeFileSync(defaultTestFilePath, testFileContent);  
                     }
                     command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
                     coverageReportPath = "./coverage.xml";
