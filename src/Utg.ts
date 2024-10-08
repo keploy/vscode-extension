@@ -6,30 +6,17 @@ import axios, { AxiosResponse } from 'axios';
 import { addBreadcrumb } from '@sentry/browser';
 
 
-async function Utg(context: vscode.ExtensionContext , additional_prompts?:string) {
+async function Utg(context: vscode.ExtensionContext , additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined) {
     
     try {
         return new Promise<void>(async (resolve, reject) => {
             try {
-                const token  = await context.globalState.get<'string'>('JwtToken');
-
+                const token = await context.globalState.get<'string'>('JwtToken');
                 let apiResponse: string = '';
-                // vscode.window.showInformationMessage('Attempting to trigger API request...');
-                // if(token){
-                //     apiResponse = (await makeApiRequest(token)) || 'no response';  // Fallback to empty string if null
-                //     if (apiResponse) {
-                //         vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
-
-                //         context.globalState.update('apiResponse', apiResponse);
-                //     }
-                // }else{
-                //     console.log("token no defined");
-                // }
-                // Create a terminal named "Keploy Terminal"
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
                 addBreadcrumb({ message: 'Keploy Terminal Created', level: 'info' });
                 terminal.show();
-
+    
                 const editor = vscode.window.activeTextEditor;
                 let currentFilePath = "";
 
@@ -42,61 +29,75 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     vscode.window.showInformationMessage('No file is currently opened.');
                     return;
                 }
-
+    
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
                 const sourceFilePath = currentFilePath;
-                // ensureTestFileExists(sourceFilePath);
-
+    
                 if (!vscode.workspace.workspaceFolders) {
                     vscode.window.showErrorMessage('No workspace is opened.');
                     return;
                 }
-
+    
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
                 const extension = path.extname(sourceFilePath);
-                let testFilePath: string;
+                let testFilePaths: string[] = [];
                 let command: string;
                 let coverageReportPath: string;
                 let testFileContent: string;
-
-                // Detect the file type and execute respective test
                 if (extension === '.js' || extension === '.ts') {
-                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));                   
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    if (testFilesPath && testFilesPath.length > 0) {
+                        // Use only the first path from testFilesPath
+                        testFilePaths = [testFilesPath[0].fsPath];
+                    } else {
+                        const defaultTestFilePath = path.join(rootDir, 'test', path.basename(sourceFilePath).replace(extension, `.test${extension}`));
+                        testFilePaths.push(defaultTestFilePath);
+                        if (!fs.existsSync(defaultTestFilePath)) {
+                            vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
+                            fs.writeFileSync(defaultTestFilePath, `// Test file for ${defaultTestFilePath}`);
+                        }
                     }
                     command = `npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage`;
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
+
                 } else if (extension === '.py') {
-                    const testDir = path.join(rootDir,'test');
-                    testFilePath = path.join(testDir,'test_'+ path.basename(sourceFilePath));
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    if (testFilesPath && testFilesPath.length > 0) {
+                        // Use only the first path from testFilesPath
+                        testFilePaths = [testFilesPath[0].fsPath];
+                    } else {
+                        const testDir = path.join(rootDir, 'test');
+                        const defaultTestFilePath = path.join(testDir, 'test_' + path.basename(sourceFilePath));
+                        testFilePaths.push(defaultTestFilePath);
+                        if (!fs.existsSync(defaultTestFilePath)) {
+                            vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
+                            fs.writeFileSync(defaultTestFilePath, `# Test file for ${defaultTestFilePath}`);
+                        }
                     }
-                    console.log(sourceFilePath , testFilePath , "python wala");
-                    command = `pytest --cov=${path.basename(sourceFilePath,'.py')} --cov-report=xml:coverage.xml ${testFilePath}`;
+                    command = `pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${testFilePaths[0]}`;
                     coverageReportPath = "./coverage.xml";
+    
                 } else if (extension === '.java') {
+                    // Proceed as before for Java
                     const testDir = path.join(rootDir, 'src', 'test', 'java');
                     const testFileName = path.basename(sourceFilePath).replace('.java', 'Test.java');
-                    testFilePath = path.join(testDir, testFileName);
-
+                    const testFilePath = path.join(testDir, testFileName);
+    
                     if (!fs.existsSync(testFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
                         fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
                     }
+                    testFilePaths.push(testFilePath);
                     command = `mvn clean test jacoco:report`;
                     coverageReportPath = "./target/site/jacoco/jacoco.xml";
+    
                 } else if (extension === '.go') {
-                    testFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
-                    console.log(testFilePath , "in the go block");
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test');
+                    // Proceed as before for Go
+                    const defaultTestFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
+                    testFilePaths.push(defaultTestFilePath);
+                    if (!fs.existsSync(defaultTestFilePath)) {
+                        vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
                         testFileContent = `package main\n\nimport "testing"`;
-                        fs.writeFileSync(testFilePath, testFileContent);                    }
+                        fs.writeFileSync(defaultTestFilePath, testFileContent);
+                    }
                     command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
                     coverageReportPath = "./coverage.xml";
                 } else {
@@ -105,16 +106,17 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     return;
                 }
 
+                console.log("additional_prompts" , additional_prompts);
                 if(!additional_prompts){
                     additional_prompts = "";
                 }
-                
-                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
-
-                
-                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
-
+    
+                // Adjust the terminal command to include the test file path
+                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePaths[0]}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
+    
                 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+                // Add a 5-second delay before calling the API
                 await delay(5000);
 
                 try {
@@ -126,13 +128,13 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                             await context.globalState.update('SubscriptionEnded', true);
                         }
                     } else {
-                        console.log("Token not found");
+                        console.log("token not found");
                     }
                 } catch (apiError) {
                     vscode.window.showErrorMessage('Error during API request: ' + apiError);
                     Sentry?.default?.captureException(apiError);
                 }
-
+    
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                     if (eventTerminal === terminal) {
                         addBreadcrumb({ message: 'Keploy Terminal closed', level: 'info' });
@@ -155,6 +157,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
         throw error;
     }
 }
+
 
 // Separate function for making the API request using axios
 export async function makeApiRequest(token:string): Promise<string | null> {

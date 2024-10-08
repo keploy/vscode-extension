@@ -1,37 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
   import { onMount } from 'svelte';
-  // import lottie from 'lottie-web';
-  // let navigateToConfig = false;
-  onMount(() => {
-    // Acquire the VS Code API on mount
-    if (!vscodeApi) {
-      vscodeApi = window.acquireVsCodeApi();
-    }
-    
-    // Request the Keploy config from the extension
-    vscodeApi.postMessage({
-      type: 'getKeployConfig',
-    });
-
-    // Listen for the response from the extension
-    window.addEventListener('message', event => {
-      const message = event.data;
-      
-      if (message.type === 'keployConfig') {
-        const config = message.config;
-        
-        // Set the form fields with the values from the config
-        appName = config.appName || '';
-        command = config.command || '';
-        containerName = config.containerName || '';
-        networkName = config.networkName || 'default';
-        delay = config.test?.delay || 5;
-        apiTimeout = config.test?.apiTimeout || 5;
-        mongoPassword = config.test?.mongoPassword || '';
-      }
-    });
-  });
   let startRecordingButton;
   let startTestingButton;
   let buttonsSection = document.getElementById("buttonsSection");
@@ -44,10 +13,7 @@
   let settingsIcon = document.querySelector(".settings-icon");
   let currentStep = 1;
   let backConfigButton;
-
-  let vscodeApi = null; // Store the VS Code API reference
-
-  // let delay = 5;
+   // let delay = 5;
   // let apiTimeout = 5;
   let appName = '';
   let command = '';
@@ -56,37 +22,69 @@
   let delay = 5;
   let apiTimeout = 5;
   let mongoPassword = '';
+  
+  // import lottie from 'lottie-web';
+  // let navigateToConfig = false;
+   // On mount, request config and set up listeners
+   onMount(() => {
+    // Dispatch a custom event to request the Keploy config
+    const getConfigEvent = new CustomEvent('getKeployConfig');
+    document.dispatchEvent(getConfigEvent);
 
-  if (!vscodeApi) {
-    vscodeApi = window.acquireVsCodeApi();
-  }
+    // Listen for the response from sidebar.js
+    document.addEventListener('keployConfig', event => {
+      const config = event.detail.config;
+
+      // Set the form fields with the values from the config
+      appName = config.appName || '';
+      command = config.command || '';
+      containerName = config.containerName || '';
+      networkName = config.networkName || 'default';
+      delay = config.test?.delay || 5;
+      apiTimeout = config.test?.apiTimeout || 5;
+      mongoPassword = config.test?.mongoPassword || '';
+    });
+
+    // Initialize DOM elements
+    
+    // Listen for custom events from sidebar.js
+    
+
+    // ... listen for other custom events as needed
+  });
+
   function validateInput(event) {
-  let value = event.target.value;
+    let value = event.target.value;
 
-  // Check if the input contains anything other than digits
-  if (/\D/.test(value) || value < 0 || isNaN(value)) {
-    // Remove any non-digit characters and ensure the value is non-negative
-    event.target.value = value.replace(/\D/g, '') || 0;
+    // Check if the input contains anything other than digits
+    if (/\D/.test(value) || value < 0 || isNaN(value)) {
+      // Remove any non-digit characters and ensure the value is non-negative
+      event.target.value = value.replace(/\D/g, '') || 0;
+    }
   }
-}
 
-function saveSettings() {
-    // Post the updated config values to the VS Code extension
-    vscodeApi.postMessage({
-      type: "updateKeployConfig",
-      config: {
-        appName,
-        command,
-        containerName,
-        networkName,
-        test: {
-          delay,
-          apiTimeout,
-          mongoPassword,
+  function saveSettings() {
+    // Dispatch a custom event with the updated config
+    const updateConfigEvent = new CustomEvent('updateKeployConfig', {
+      detail: {
+        config: {
+          appName,
+          command,
+          containerName,
+          networkName,
+          test: {
+            delay,
+            apiTimeout,
+            mongoPassword,
+          },
         },
       },
     });
+    document.dispatchEvent(updateConfigEvent);
   }
+
+
+
   let progressBarHide;
   function goToNextStep(step) {
     currentStep = step;
@@ -122,10 +120,11 @@ function saveSettings() {
   };
 
   function navigateToConfig() {
-    if (selectedIconButton === 3) {
-    selectedIconButton = 1; // Set to the default view
-    return;
-  }
+    //below code's logic already written in sidebar.js
+  //   if (selectedIconButton === 3) {
+  //   selectedIconButton = 1; // Set to the default view
+  //   return;
+  // }
 
      if(isRecording || isTesting){
       isRecording = false;

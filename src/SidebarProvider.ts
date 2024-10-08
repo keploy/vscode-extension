@@ -122,7 +122,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
     const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
     const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true; 
-
+    
 
     console.log("signedIn others  value", signedIn);
 
@@ -421,19 +421,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         case "keployGenWithAdditionalPrompts":{
           try{
             const additional_prompts = data.prompt;
-            const editor = vscode.window.activeTextEditor;
-            if (!editor) {
-              vscode.window.showErrorMessage("No file is currently open.");
-              return;
-            }
-      
-            const fileUri = editor.document.uri;      
-            console.log("additional prompts and uri: ", additional_prompts , fileUri);
-            await vscode.commands.executeCommand('keploy.utg' , fileUri , additional_prompts );
+            // const editor = vscode.window.activeTextEditor;
+         
+            console.log("additional prompts and uri: ", additional_prompts );
+            await vscode.commands.executeCommand('keploy.runAdditionalPrompts',additional_prompts);
           }catch(error){
             console.error("Error executing keploy.utg command:", error);
           }
-          break;
         }
         case "progressStatus":{
           if(progressBarVisible == true && data.value == "false"){
