@@ -120,7 +120,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                 } else if (extension === '.go') {
                     // Proceed as before for Go
                     //todo: have to detect the package name and instead of package main that should go there.
-                    const defaultTestFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
+                    const defaultTestFilePath = path.join(currentFilePath, path.basename(sourceFilePath).replace('.go', '_test.go'));
                     testFilePaths.push(defaultTestFilePath);
                     if (!fs.existsSync(defaultTestFilePath)) {
                         vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
