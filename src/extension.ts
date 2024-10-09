@@ -6,6 +6,7 @@ import oneClickInstall from './OneClickInstall';
 import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
 import Utg, { makeApiRequest } from './Utg';
+import { TreeCursor } from 'tree-sitter';
 import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
 import TreeSitter from 'tree-sitter';
 import TreeSitterJavaScript from 'tree-sitter-javascript';
@@ -390,6 +391,78 @@ async function findTestCasesForFunction(functionName: string, fileExtension: str
     return foundTestFiles.length > 0 ? foundTestFiles : undefined;
 }
 
+async function getAllFunctionsInFile(
+    filePath: string,
+    fileExtension: string
+): Promise<string[]> {
+    const document = await vscode.workspace.openTextDocument(filePath);
+    const text = document.getText();
+    const parser = new TreeSitter();
+
+    if (fileExtension === '.js' || fileExtension === '.ts') {
+        parser.setLanguage(TreeSitterJavaScript);
+    } else if (fileExtension === '.py') {
+        parser.setLanguage(TreeSitterPython);
+    } else if (fileExtension === '.java') {
+        parser.setLanguage(TreeSitterJava);
+    } else if (fileExtension === '.go') {
+        parser.setLanguage(TreeSitterGo);
+    } else {
+        console.log('🐰 Unsupported file type:', filePath);
+        throw new Error("Unsupported file type");
+    }
+
+    const tree = parser.parse(text);
+    const cursor = tree.walk();
+    const functionNames: string[] = [];
+
+    const traverseFunctionTree = (cursor: TreeCursor) => {
+        const node = cursor.currentNode;
+
+        if (
+            (fileExtension === '.js' || fileExtension === '.ts') &&
+            (node.type === 'function_declaration' || node.type === 'function_expression' || node.type === 'arrow_function')
+        ) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        } else if (fileExtension === '.py' && node.type === 'function_definition') {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        } else if (fileExtension === '.java' && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        } else if (fileExtension === '.go' && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        }
+
+        // Recursively traverse the tree
+        if (cursor.gotoFirstChild()) {
+            traverseFunctionTree(cursor);
+            cursor.gotoParent();
+        }
+        if (cursor.gotoNextSibling()) {
+            traverseFunctionTree(cursor);
+        }
+    };
+
+    traverseFunctionTree(cursor);
+
+    return functionNames;
+}
+
 
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri, context);
@@ -686,18 +759,44 @@ export function activate(context: vscode.ExtensionContext) {
                 if(additional_prompts){
                     console.log("additional_prompts are present: ",additional_prompts);
                 }
-                const testFilesPath = await findTestCasesForFunction(functionName, fileExtension); // Call the function here
-                if (testFilesPath) {
-                    console.log("testFiles path: ", testFilesPath);
-                } else {
-                    console.log("no path found")
+                 // Attempt to find test files for the specified function
+            let testFilesPath = await findTestCasesForFunction(functionName, fileExtension);
+
+            if (testFilesPath) {
+                console.log("testFiles path:", testFilesPath);
+            } else {
+                console.log("No path found for that particular function.");
+
+                // Retrieve all function names from the file
+                const allFunctionNames = await getAllFunctionsInFile(filePath, fileExtension);
+
+                // Iterate over each function name to find test files
+                for (const funcName of allFunctionNames) {
+                    const functionTestFilePath = await findTestCasesForFunction(funcName, fileExtension);
+                    if (functionTestFilePath) {
+                        testFilesPath = functionTestFilePath;
+                        console.log(`Found test files for function "${funcName}":`, testFilesPath);
+                        break; // Exit the loop once a test file path is found
+                    }
                 }
-                console.log("additional prompts inside the keploy.utg " , additional_prompts);
-                vscode.window.showInformationMessage('Welcome to Keploy!');
-                await Utg(context, additional_prompts, testFilesPath);
+
+                // After the loop, check if testFilesPath was found
+                if (!testFilesPath) {
+                    console.log("No test files found for any functions in the file.");
+                }
             }
-        }
-    });
+
+            console.log("Additional prompts inside the keploy.utg:", additional_prompts);
+            vscode.window.showInformationMessage('Welcome to Keploy!');
+
+            // Ensure that Utg is called with the correct parameters
+            await Utg(context, additional_prompts, testFilesPath);
+                        console.log("additional prompts inside the keploy.utg " , additional_prompts);
+                        vscode.window.showInformationMessage('Welcome to Keploy!');
+                        await Utg(context, additional_prompts, testFilesPath);
+                    }
+                }
+     });
 
 
     context.subscriptions.push(disposable);
