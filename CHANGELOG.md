@@ -74,3 +74,7 @@ First Release for Vs Code Extension.
 - Improved Keploy binary update experience.
 - Enhanced signup/sign-in experience for users.
 - Added support for new imports and installations of new libraries.
+
+## [1.0.17]
+- Enhanced path detection of test in Javascript, Python and Go.
+- Increase file size limit to 1MB.

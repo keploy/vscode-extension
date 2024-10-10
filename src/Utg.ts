@@ -97,7 +97,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                                 `import os\n\n` +
                                 `parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '${ParentDir}'))\n\n` +
                                 `sys.path.insert(0, parent_dir)\n\n`+
-                                `import ${MainFileName}\n\n`+
+                                `import ${MainFileName} # checking coverage for file - do not remove\n\n`+
                                 `def test_dummy():\n` +
                                 `    assert True\n`;
                             
