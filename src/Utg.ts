@@ -40,6 +40,8 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
     
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
                 const extension = path.extname(sourceFilePath);
+                const MainFileName = path.basename(sourceFilePath,extension);
+                const ParentDir = path.dirname(sourceFilePath);
                 let testFilePaths: string[] = [];
                 let command: string;
                 let coverageReportPath: string;
@@ -49,11 +51,29 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                         // Use only the first path from testFilesPath
                         testFilePaths = [testFilesPath[0].fsPath];
                     } else {
-                        const defaultTestFilePath = path.join(rootDir, 'test', path.basename(sourceFilePath).replace(extension, `.test${extension}`));
+                        const testDir = path.join(rootDir, 'test');
+                
+                        // Check if the test directory exists, if not, create it
+                        if (!fs.existsSync(testDir)) {
+                            fs.mkdirSync(testDir, { recursive: true });
+                        }
+                      
+                        const defaultTestFilePath = path.join(
+                            rootDir, 
+                            'test', 
+                            path.basename(sourceFilePath).replace(extension, `.test${extension}`)
+                        );
                         testFilePaths.push(defaultTestFilePath);
                         if (!fs.existsSync(defaultTestFilePath)) {
                             vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
-                            fs.writeFileSync(defaultTestFilePath, `// Test file for ${defaultTestFilePath}`);
+                            fs.writeFileSync(
+                                defaultTestFilePath, 
+                                `describe('Dummy test', () => {\n` +
+                                `    it('dummy test', async () => {\n` +
+                                `        expect(true);\n` +
+                                `    });\n` +
+                                `});\n`
+                            );
                         }
                     }
                     command = `npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage`;
@@ -65,41 +85,133 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                         testFilePaths = [testFilesPath[0].fsPath];
                     } else {
                         const testDir = path.join(rootDir, 'test');
+                
+                        // Check if the test directory exists, if not, create it
+                        if (!fs.existsSync(testDir)) {
+                            fs.mkdirSync(testDir, { recursive: true });
+                        }
+                        
                         const defaultTestFilePath = path.join(testDir, 'test_' + path.basename(sourceFilePath));
                         testFilePaths.push(defaultTestFilePath);
+                        
                         if (!fs.existsSync(defaultTestFilePath)) {
                             vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
-                            fs.writeFileSync(defaultTestFilePath, `# Test file for ${defaultTestFilePath}`);
+                            
+                            const testContent = `import sys\n` +
+                                `import os\n\n` +
+                                `parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '${ParentDir}'))\n\n` +
+                                `sys.path.insert(0, parent_dir)\n\n`+
+                                `import ${MainFileName}\n\n`+
+                                `def test_dummy():\n` +
+                                `    assert True\n`;
+                            
+                            fs.writeFileSync(defaultTestFilePath, testContent);
                         }
                     }
                     command = `pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${testFilePaths[0]}`;
                     coverageReportPath = "./coverage.xml";
     
                 } else if (extension === '.java') {
-                    // Proceed as before for Java
-                    const testDir = path.join(rootDir, 'src', 'test', 'java');
-                    const testFileName = path.basename(sourceFilePath).replace('.java', 'Test.java');
-                    const testFilePath = path.join(testDir, testFileName);
-    
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                      // **Java (.java) File Handling with Package Name Extraction**
+
+    // Define the root test directory for Java tests
+                const testDir = path.join(rootDir, 'src', 'test', 'java');
+
+                // Read the source Java file to extract the package name
+                let packageName = 'default'; // Default package name if not found
+                try {
+                 const javaFileContent = fs.readFileSync(sourceFilePath, 'utf-8');
+                const packageLine = javaFileContent.split('\n').find(line => line.trim().startsWith('package '));
+                if (packageLine) {
+                    const parts = packageLine.trim().split(' ');
+                    if (parts.length >= 2) {
+                        packageName = parts[1].replace(';', '').trim(); // Remove trailing semicolon if present
+                        console.log(`🐰 Extracted package name: ${packageName}`);
+                    } else {
+                        console.log('❌ Unable to parse package name. Using default "default".');
                     }
-                    testFilePaths.push(testFilePath);
-                    command = `mvn clean test jacoco:report`;
-                    coverageReportPath = "./target/site/jacoco/jacoco.xml";
+                } else {
+                    console.log('❌ No package declaration found. Using default "default".');
+                }
+            } catch (readError) {
+                console.log('❌ Error reading Java source file:', readError);
+            }
+
+            // Convert package name to directory path (e.g., com.example -> com/example)
+            const packagePath = packageName.split('.').join(path.sep);
+            const fullTestDir = path.join(testDir, packagePath);
+
+            // Ensure the test directory exists
+            if (!fs.existsSync(fullTestDir)) {
+                fs.mkdirSync(fullTestDir, { recursive: true });
+                console.log(`🐰 Created test directory: ${fullTestDir}`);
+            }
+
+            // Define the test file name by appending 'Test' to the original class name
+            const originalClassName = path.basename(sourceFilePath, '.java');
+            const testFileName = `${originalClassName}Test.java`;
+            const testFilePath = path.join(fullTestDir, testFileName);
+
+            testFilePaths.push(testFilePath);
+
+            if (!fs.existsSync(testFilePath)) {
+                vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+
+                // **Create Test File Content with Proper Package and JUnit Imports**
+                const testFileContent = `package ${packageName};`;
+                fs.writeFileSync(testFilePath, testFileContent);
+                vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
+                console.log(`🐰 Created test file with package name: ${testFilePath}`);
+            } else {
+                console.log(`✅ Test file already exists: ${testFilePath}`);
+            }
+
+            // **Set Command and Coverage Report Path for Java**
+            command = `mvn clean test jacoco:report`;
+            coverageReportPath = "./target/site/jacoco/jacoco.xml";
     
                 } else if (extension === '.go') {
                     // Proceed as before for Go
-                    const defaultTestFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
-                    testFilePaths.push(defaultTestFilePath);
-                    if (!fs.existsSync(defaultTestFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
-                        testFileContent = `package main\n\nimport "testing"`;
-                        fs.writeFileSync(defaultTestFilePath, testFileContent);
-                    }
-                    command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
-                    coverageReportPath = "./coverage.xml";
+                    //todo: have to detect the package name and instead of package main that should go there.
+                   // **Go (.go) File Handling with Package Name Extraction**
+                    
+                   const TestFilePath = path.dirname(currentFilePath);
+                   console.log("TestFilePath is : ", TestFilePath);
+                   const defaultTestFilePath = path.join( TestFilePath,path.basename(sourceFilePath).replace('.go', '_test.go'));
+                   testFilePaths.push(defaultTestFilePath);
+
+                   if (!fs.existsSync(defaultTestFilePath)) {
+                    //    vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
+                       
+                       // **Extract Package Name from Source File**
+                       let packageName = 'main'; // Default package name if not found
+                       try {
+                           const goFileContent = fs.readFileSync(sourceFilePath, 'utf-8');
+                           const packageLine = goFileContent.split('\n').find(line => line.trim().startsWith('package '));
+                           if (packageLine) {
+                               const parts = packageLine.trim().split(' ');
+                               if (parts.length >= 2) {
+                                   packageName = parts[1].trim();
+                                   console.log(`🐰 Extracted package name: ${packageName}`);
+                               } else {
+                                   console.log('❌ Unable to parse package name. Using default "main".');
+                               }
+                           } else {
+                               console.log('❌ No package declaration found. Using default "main".');
+                           }
+                       } catch (readError) {
+                           console.log('❌ Error reading Go source file:', readError);
+                       }
+
+                       // **Create Test File Content with Extracted Package Name**
+                       testFileContent = `package ${packageName}`;
+                       fs.writeFileSync(defaultTestFilePath, testFileContent);
+                       vscode.window.showInformationMessage(`Created test file with package name: ${defaultTestFilePath}`);
+                   }
+
+                   // **Set Command and Coverage Report Path for Go**
+                   command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
+                   coverageReportPath = "./coverage.xml";
                 } else {
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
                     Sentry?.default?.captureMessage(`Unsupported file type: ${extension}`, 'error');
