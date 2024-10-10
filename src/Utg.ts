@@ -35,6 +35,8 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
     
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
                 const extension = path.extname(sourceFilePath);
+                const MainFileName = path.basename(sourceFilePath,extension);
+                const ParentDir = path.dirname(sourceFilePath);
                 let testFilePaths: string[] = [];
                 let command: string;
                 let coverageReportPath: string;
@@ -93,7 +95,9 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                             
                             const testContent = `import sys\n` +
                                 `import os\n\n` +
-                                `sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))\n\n` +
+                                `parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '${ParentDir}'))\n\n` +
+                                `sys.path.insert(0, parent_dir)\n\n`+
+                                `import ${MainFileName}\n\n`+
                                 `def test_dummy():\n` +
                                 `    assert True\n`;
                             
