@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
 import axios, { AxiosResponse } from 'axios';
+import * as Sentry from "./sentryInit"
 
 
 async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
@@ -26,6 +27,7 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
         return primaryEmail ? primaryEmail.email : null;
     } catch (error) {
         vscode.window.showErrorMessage(`Failed to fetch email: ${error}`);
+        Sentry?.default?.captureException(error);
         return null;
     }
 }
@@ -47,6 +49,7 @@ async function starGitHubRepo(accessToken: string, owner: string, repo: string):
         }
     } catch (error) {
         vscode.window.showErrorMessage(`Failed to star repository: ${error}`);
+        Sentry?.default?.captureException(error);
     }
 }
 
@@ -70,6 +73,7 @@ export async function getGitHubAccessToken() {
         }
     } catch (error) {
         vscode.window.showErrorMessage(`Error: ${error}`);
+        Sentry?.default?.captureException(error);
     }
 }
 
@@ -86,6 +90,7 @@ export async function getMicrosoftAccessToken() {
         }
     } catch (error) {
         vscode.window.showErrorMessage(`Error: ${error}`);
+        Sentry?.default?.captureException(error);
     }
 }
 
@@ -131,6 +136,7 @@ export default async function SignInWithGitHub() {
                 } catch (err) {
                     res.writeHead(500, { 'Content-Type': 'application/json' });
                     res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                    Sentry?.default?.captureException(err);
                 }
             } else {
                 res.writeHead(400, { 'Content-Type': 'text/html' });
@@ -287,6 +293,7 @@ export async function ValidateSignInWithOthers(jwtToken: string): Promise<{}> {
     } catch (err: any) {
         console.error("Failed to authenticate:", err.message);
         throw new Error(`Failed to authenticate: ${err.message}`);
+        Sentry?.default?.captureException(err);
     }
 }
 

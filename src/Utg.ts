@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as Sentry from './sentryInit';
 import axios, { AxiosResponse } from 'axios';
+import { addBreadcrumb } from '@sentry/browser';
 
 
 async function Utg(context: vscode.ExtensionContext , additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined) {
@@ -12,14 +14,17 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                 const token = await context.globalState.get<'string'>('JwtToken');
                 let apiResponse: string = '';
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
+                addBreadcrumb({ message: 'Keploy Terminal Created', level: 'info' });
                 terminal.show();
     
                 const editor = vscode.window.activeTextEditor;
                 let currentFilePath = "";
+
                 if (editor) {
                     const document = editor.document;
                     currentFilePath = document.uri.fsPath;
                     vscode.window.showInformationMessage(`Current opened file: ${currentFilePath}`);
+                    addBreadcrumb({ message: `Opened file: ${currentFilePath}`, level: 'info' });
                 } else {
                     vscode.window.showInformationMessage('No file is currently opened.');
                     return;
@@ -41,7 +46,6 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                 let command: string;
                 let coverageReportPath: string;
                 let testFileContent: string;
-    
                 if (extension === '.js' || extension === '.ts') {
                     if (testFilesPath && testFilesPath.length > 0) {
                         // Use only the first path from testFilesPath
@@ -74,7 +78,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     }
                     command = `npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage`;
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
-    
+
                 } else if (extension === '.py') {
                     if (testFilesPath && testFilesPath.length > 0) {
                         // Use only the first path from testFilesPath
@@ -210,6 +214,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                    coverageReportPath = "./coverage.xml";
                 } else {
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
+                    Sentry?.default?.captureMessage(`Unsupported file type: ${extension}`, 'error');
                     return;
                 }
 
@@ -225,7 +230,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
     
                 // Add a 5-second delay before calling the API
                 await delay(5000);
-    
+
                 try {
                     if (token) {
                         apiResponse = await makeApiRequest(token) || 'no response';
@@ -239,23 +244,28 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     }
                 } catch (apiError) {
                     vscode.window.showErrorMessage('Error during API request: ' + apiError);
+                    Sentry?.default?.captureException(apiError);
                 }
     
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                     if (eventTerminal === terminal) {
+                        addBreadcrumb({ message: 'Keploy Terminal closed', level: 'info' });
                         disposable.dispose();
                         resolve();
                     }
                 });
+
             } catch (error) {
                 console.log(error);
-                vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
+                vscode.window.showErrorMessage('Error occurred Keploy UTG: ' + error);
+                Sentry?.default?.captureException(error);
                 reject(error);
             }
         });
     } catch (error) {
         console.log(error);
-        vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
+        vscode.window.showErrorMessage('Error occurred Keploy UTG: ' + error);
+        Sentry?.default?.captureException(error);
         throw error;
     }
 }
@@ -263,7 +273,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
 
 // Separate function for making the API request using axios
 export async function makeApiRequest(token:string): Promise<string | null> {
-    const url = 'https://api.keploy.io/ai/call/count ';
+    const url = 'https://api.keploy.io/ai/call/count';
 
     try {
         const response: AxiosResponse = await axios.get(url, {
@@ -275,9 +285,11 @@ export async function makeApiRequest(token:string): Promise<string | null> {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             // Handle axios-specific error
+            Sentry?.default?.captureException(error);
             console.log(`API call failed: ${error.message}`);
         } else {
             // Handle oth   er errors (in case they are not Axios errors)
+            Sentry?.default?.captureException(error);
             console.log('An unknown error occurred.');
         }
 

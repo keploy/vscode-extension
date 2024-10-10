@@ -1,5 +1,5 @@
-
 import { execShell } from './execShell';
+import * as Sentry from './sentryInit';
 export async function getKeployVersion() {
     // GitHub repository details
     const repoOwner = "keploy";
@@ -17,13 +17,14 @@ export async function getKeployVersion() {
 export async function getCurrentKeployVersion() {
     let output = '';
     try{
-    output = await execShell('keploy  --version');
+        output = await execShell('keploy  --version');
     }catch(error){
         console.log("Error Fetching version with Alias " + error);
         try{
-    output = await execShell('/usr/local/bin/keploybin --version');
+            output = await execShell('/usr/local/bin/keploybin --version');
         }catch(error){
             console.log("Error Fetching version With Absolute path " + error);
+            Sentry?.default?.captureException(error);
             throw error;
         }
     }

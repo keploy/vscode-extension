@@ -7,7 +7,7 @@ import typescript from "@rollup/plugin-typescript";
 import path from "path";
 import fs from "fs";
 import url from '@rollup/plugin-url';
-
+import { sentryRollupPlugin } from "@sentry/rollup-plugin";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -54,6 +54,12 @@ export default fs
         url({
           include: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.gif'],
           limit: 0, // or set a size limit to inline the files
+        }),
+
+        sentryRollupPlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          org: "keploy-inc-zp",
+          project: "keploy-vscode-extension-6d",
         }),
         // In dev mode, call `npm run start` once
         // the bundle has been generated
