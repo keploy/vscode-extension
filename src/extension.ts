@@ -6,6 +6,7 @@ import oneClickInstall from './OneClickInstall';
 import { getKeployVersion, getCurrentKeployVersion } from './version';
 import { downloadAndUpdate, downloadAndUpdateDocker } from './updateKeploy';
 import Utg, { makeApiRequest } from './Utg';
+import { TreeCursor } from 'tree-sitter';
 import { getGitHubAccessToken, getMicrosoftAccessToken, getInstallationID } from './SignIn';
 import TreeSitter from 'tree-sitter';
 import TreeSitterJavaScript from 'tree-sitter-javascript';
@@ -63,8 +64,11 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
             console.log('Unsupported file type:', fileName);
             throw new Error("Unsupported file type");
         }
+        const options: TreeSitter.Options = {
+            bufferSize: 1024 * 1024,
+        };
 
-        const tree = parser.parse(text);  // Parse the document text
+        const tree = parser.parse(text, undefined, options);  // Parse the document text
         this.treeCache[fileName] = tree;  // Cache the parsed tree
         console.log(`Cache miss for: ${fileName}`);
         this.logCacheSize();  // Log the cache size after adding a new entry
@@ -145,8 +149,8 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                 ) {
                     const line = document.positionAt(node.startIndex).line;
                     const range = new vscode.Range(line, 0, line, 0);
-                    console.log('🐰 Found function:', node.firstChild?.text);
-                    const functionName = node.firstChild?.text || '';
+                    console.log('🐰 Found function:', node.childForFieldName('name')?.text);
+                    const functionName = node.childForFieldName('name')?.text || '';
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Generate unit tests',
                         command: 'keploy.utg',
@@ -155,7 +159,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath,functionName,fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                     console.log('🐰 Found arrow function:', node.firstChild?.text);
                 } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
@@ -175,9 +179,9 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                             codeLenses.push(new vscode.CodeLens(range, {
                                 title: '🐰 Additional Prompts',
                                 command: 'keploy.showSidebar',
-                                arguments: [document.uri.fsPath,functionName,fileExtension]
+                                arguments: [document.uri.fsPath, functionName, fileExtension]
                             }));
-                            console.log('🐰 Found arrow function:', node.firstChild?.text);
+                            console.log('🐰 Found arrow function:', node?.text);
                         }
                     }
                 } else if (fileName.endsWith('.py') && node.type === 'function_definition') {
@@ -193,7 +197,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath,functionName,fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                 } else if (fileName.endsWith('.java') && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
@@ -209,7 +213,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath,functionName,fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                 } else if (fileName.endsWith('.go') && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
                     const line = document.positionAt(node.startIndex).line;
@@ -226,7 +230,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
-                        arguments: [document.uri.fsPath,functionName,fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
                 }
 
@@ -390,6 +394,78 @@ async function findTestCasesForFunction(functionName: string, fileExtension: str
     return foundTestFiles.length > 0 ? foundTestFiles : undefined;
 }
 
+async function getAllFunctionsInFile(
+    filePath: string,
+    fileExtension: string
+): Promise<string[]> {
+    const document = await vscode.workspace.openTextDocument(filePath);
+    const text = document.getText();
+    const parser = new TreeSitter();
+
+    if (fileExtension === '.js' || fileExtension === '.ts') {
+        parser.setLanguage(TreeSitterJavaScript);
+    } else if (fileExtension === '.py') {
+        parser.setLanguage(TreeSitterPython);
+    } else if (fileExtension === '.java') {
+        parser.setLanguage(TreeSitterJava);
+    } else if (fileExtension === '.go') {
+        parser.setLanguage(TreeSitterGo);
+    } else {
+        console.log('🐰 Unsupported file type:', filePath);
+        throw new Error("Unsupported file type");
+    }
+
+    const tree = parser.parse(text);
+    const cursor = tree.walk();
+    const functionNames: string[] = [];
+
+    const traverseFunctionTree = (cursor: TreeCursor) => {
+        const node = cursor.currentNode;
+
+        if (
+            (fileExtension === '.js' || fileExtension === '.ts') &&
+            (node.type === 'function_declaration' || node.type === 'function_expression' || node.type === 'arrow_function')
+        ) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        } else if (fileExtension === '.py' && node.type === 'function_definition') {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        } else if (fileExtension === '.java' && (node.type === 'method_declaration' || node.type === 'constructor_declaration')) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        } else if (fileExtension === '.go' && (node.type === 'function_declaration' || node.type === 'method_declaration')) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        }
+
+        // Recursively traverse the tree
+        if (cursor.gotoFirstChild()) {
+            traverseFunctionTree(cursor);
+            cursor.gotoParent();
+        }
+        if (cursor.gotoNextSibling()) {
+            traverseFunctionTree(cursor);
+        }
+    };
+
+    traverseFunctionTree(cursor);
+
+    return functionNames;
+}
+
 
 export function activate(context: vscode.ExtensionContext) {
     const sidebarProvider = new SidebarProvider(context.extensionUri, context);
@@ -458,8 +534,8 @@ export function activate(context: vscode.ExtensionContext) {
     //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
     //     sidebarProvider.postMessage('navigateToHome', 'KeployHome');
     // }
-    let functionName="";
-    let ExtentionName="";
+    let functionName = "";
+    let ExtentionName = "";
     let FunctionFilePath = "";
     let accessToken = context.globalState.get<string>('JwtToken');
 
@@ -622,10 +698,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(updateKeployDisposable);
 
-    let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async (filePath:string,FunctionName:string,FileExtentionName:string) => {
+    let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async (filePath: string, FunctionName: string, FileExtentionName: string) => {
         // Show the sidebar when this command is executed
-        functionName=FunctionName;
-        ExtentionName=FileExtentionName;
+        functionName = FunctionName;
+        ExtentionName = FileExtentionName;
         FunctionFilePath = filePath;
         vscode.commands.executeCommand('workbench.view.extension.Keploy-Sidebar');
         sidebarProvider.postMessage("KeployChatBot")
@@ -633,15 +709,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(showSidebarDisposable);
 
-    let runAdditionalPrompts = vscode.commands.registerCommand('keploy.runAdditionalPrompts',async(additionalPrompts:string)=>{
-        console.log("value inside the function: ",functionName,ExtentionName,additionalPrompts);
-        await vscode.commands.executeCommand('keploy.utg' , FunctionFilePath,functionName, ExtentionName , additionalPrompts);
+    let runAdditionalPrompts = vscode.commands.registerCommand('keploy.runAdditionalPrompts', async (additionalPrompts: string) => {
+        console.log("value inside the function: ", functionName, ExtentionName, additionalPrompts);
+        await vscode.commands.executeCommand('keploy.utg', FunctionFilePath, functionName, ExtentionName, additionalPrompts);
     })
 
     context.subscriptions.push(runAdditionalPrompts);
 
     // Register the command
-    let disposable = vscode.commands.registerCommand('keploy.utg',  async (filePath: string, functionName: string, fileExtension: string, additional_prompts?: string) => {
+    let disposable = vscode.commands.registerCommand('keploy.utg', async (filePath: string, functionName: string, fileExtension: string, additional_prompts?: string) => {
         // Check if the user is already signed in
         const signedIn = await context.globalState.get('accessToken');
         const signedInOthers = await context.globalState.get('SignedOthers');
@@ -683,16 +759,42 @@ export function activate(context: vscode.ExtensionContext) {
             if (updatedSubscriptionEnded === false) {
 
                 // If SubscriptionEnded is false or undefined, continue running Utg
-                if(additional_prompts){
-                    console.log("additional_prompts are present: ",additional_prompts);
+                if (additional_prompts) {
+                    console.log("additional_prompts are present: ", additional_prompts);
                 }
-                const testFilesPath = await findTestCasesForFunction(functionName, fileExtension); // Call the function here
+                // Attempt to find test files for the specified function
+                let testFilesPath = await findTestCasesForFunction(functionName, fileExtension);
+
                 if (testFilesPath) {
-                    console.log("testFiles path: ", testFilesPath);
+                    console.log("testFiles path:", testFilesPath);
                 } else {
-                    console.log("no path found")
+                    console.log("No path found for that particular function.");
+
+                    // Retrieve all function names from the file
+                    const allFunctionNames = await getAllFunctionsInFile(filePath, fileExtension);
+
+                    // Iterate over each function name to find test files
+                    for (const funcName of allFunctionNames) {
+                        const functionTestFilePath = await findTestCasesForFunction(funcName, fileExtension);
+                        if (functionTestFilePath) {
+                            testFilesPath = functionTestFilePath;
+                            console.log(`Found test files for function "${funcName}":`, testFilesPath);
+                            break; // Exit the loop once a test file path is found
+                        }
+                    }
+
+                    // After the loop, check if testFilesPath was found
+                    if (!testFilesPath) {
+                        console.log("No test files found for any functions in the file.");
+                    }
                 }
-                console.log("additional prompts inside the keploy.utg " , additional_prompts);
+
+                console.log("Additional prompts inside the keploy.utg:", additional_prompts);
+                vscode.window.showInformationMessage('Welcome to Keploy!');
+
+                // Ensure that Utg is called with the correct parameters
+                await Utg(context, additional_prompts, testFilesPath);
+                console.log("additional prompts inside the keploy.utg ", additional_prompts);
                 vscode.window.showInformationMessage('Welcome to Keploy!');
                 await Utg(context, additional_prompts, testFilesPath);
             }
