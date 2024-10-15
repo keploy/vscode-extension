@@ -798,11 +798,7 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                 }
 
-                console.log("Additional prompts inside the keploy.utg:", additional_prompts);
-                vscode.window.showInformationMessage('Welcome to Keploy!');
-
                 // Ensure that Utg is called with the correct parameters
-                await Utg(context, additional_prompts, testFilesPath);
                 console.log("additional prompts inside the keploy.utg ", additional_prompts);
                 vscode.window.showInformationMessage('Welcome to Keploy!');
                 await Utg(context, additional_prompts, testFilesPath);
