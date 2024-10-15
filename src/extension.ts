@@ -122,6 +122,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
         if (
             fileName.endsWith('.test.js') ||
             fileName.endsWith('.test.ts') ||
+            fileName.endsWith('Tests.java') ||  // Check for Java test file ending
             fileName.endsWith('Test.java') ||  // Check for Java test file ending
             fileName.includes('/Test') ||      // Check for Java test file prefix in the path
             fileName.includes('/test/') ||    // Skip files in a "tests" directory
@@ -296,7 +297,11 @@ async function findTestCasesForFunction(functionName: string, fileExtension: str
                 continue;
             }
 
-            const tree = parser.parse(text);
+            const options: TreeSitter.Options = {
+                bufferSize: 1024 * 1024,
+            };
+
+            const tree = parser.parse(text, undefined, options);  // Parse the document text
             const cursor = tree.walk();
             let found = false;
 
@@ -414,8 +419,12 @@ async function getAllFunctionsInFile(
         console.log('🐰 Unsupported file type:', filePath);
         throw new Error("Unsupported file type");
     }
+    const options: TreeSitter.Options = {
+        bufferSize: 1024 * 1024,
+    };
 
-    const tree = parser.parse(text);
+    const tree = parser.parse(text, undefined, options);  // Parse the document text
+
     const cursor = tree.walk();
     const functionNames: string[] = [];
 

@@ -145,8 +145,9 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
 
             // Define the test file name by appending 'Test' to the original class name
             const originalClassName = path.basename(sourceFilePath, '.java');
-            const testFileName = `${originalClassName}Test.java`;
+            const testFileName = `${originalClassName}Tests.java`;
             const testFilePath = path.join(fullTestDir, testFileName);
+            const JavaClassName = `${originalClassName}Tests`
 
             testFilePaths.push(testFilePath);
 
@@ -154,7 +155,10 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                 vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
 
                 // **Create Test File Content with Proper Package and JUnit Imports**
-                const testFileContent = `package ${packageName};`;
+                const testFileContent = `package ${packageName};\n\n
+                    class ${JavaClassName} {\n
+                }\n`;
+
                 fs.writeFileSync(testFilePath, testFileContent);
                 vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
                 console.log(`🐰 Created test file with package name: ${testFilePath}`);
