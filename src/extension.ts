@@ -13,6 +13,7 @@ import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
 import TreeSitterGo from 'tree-sitter-go';
+import * as Sentry from "./sentryInit"
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -249,6 +250,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
             traverseTree(cursor);
 
         } catch (error) {
+            Sentry?.default?.captureException(error);
             console.error(error);
         }
 
@@ -597,6 +599,7 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             } catch (error) {
                 // console.error('Error during sign-in:', error);
+                Sentry?.default?.captureException(error);
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
         });
@@ -608,6 +611,7 @@ export function activate(context: vscode.ExtensionContext) {
             await SignInWithOthers(); // The result will now be handled in the URI handler
         } catch (error) {
             // console.error('Error during sign-in:', error);
+            Sentry?.default?.captureException(error);
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
         }
     });
@@ -623,6 +627,7 @@ export function activate(context: vscode.ExtensionContext) {
             await SignInWithOthers(); // The result will now be handled in the URI handler
         } catch (error) {
             // console.error('Error during sign-in:', error);
+            Sentry?.default?.captureException(error);
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
         }
     });
@@ -761,6 +766,7 @@ export function activate(context: vscode.ExtensionContext) {
                 } catch (error) {
                     vscode.window.showErrorMessage('Failed to renew subscription.');
                     console.error('Subscription renewal error:', error);
+                    Sentry?.default?.captureException(error);
                 }
             }
             const updatedSubscriptionEnded = await context.globalState.get('SubscriptionEnded');
