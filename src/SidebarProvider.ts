@@ -78,13 +78,22 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       console.log('Navigate to ' + value);
       let sveltePageJs: vscode.Uri;
       let sveltePageCss: vscode.Uri;
-         if(value = "KeployChatBot"){
+         if(value == "KeployChatBot"){
         sveltePageJs = webviewView.webview.asWebviewUri(
           vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
         );
         sveltePageCss = webviewView.webview.asWebviewUri(
           vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
         );
+      }
+        else if (value === 'Config') {
+
+          sveltePageJs = webviewView.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.js")
+          );
+          sveltePageCss = webviewView.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.css")
+          );
 
       }
       else {
