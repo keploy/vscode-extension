@@ -556,44 +556,45 @@ export function activate(context: vscode.ExtensionContext) {
     } else {
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
         // Register the sign-in command if not signed in
-        let signInCommand = vscode.commands.registerCommand('keploy.SignInWithGithub', async () => {
-            try {
-                const result = await getGitHubAccessToken();
+      }
+      let signInCommand = vscode.commands.registerCommand('keploy.SignInWithGithub', async () => {
+        try {
+            const result = await getGitHubAccessToken();
 
-                if (result) {
-                    const { accessToken, email } = result;
+            if (result) {
+                const { accessToken, email } = result;
 
-                    getInstallationID();
+                getInstallationID();
 
-                    // Store the access token in global state
-                    await context.globalState.update('accessToken', accessToken);
+                // Store the access token in global state
+                await context.globalState.update('accessToken', accessToken);
 
-                    const { emailID, isValid, error, JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
+                const { emailID, isValid, error, JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
 
-                    console.log({ emailID, isValid, error, JwtToken });
+                console.log({ emailID, isValid, error, JwtToken });
 
-                    await context.globalState.update('JwtToken', JwtToken);
+                await context.globalState.update('JwtToken', JwtToken);
 
-                    // if (isValid) {
-                    vscode.window.showInformationMessage('You are now signed in!');
-                    vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-                    vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-                    // } else {
-                    //     console.log('Validation failed for the user !');
-                    // }
+                // if (isValid) {
+                vscode.window.showInformationMessage('You are now signed in!');
+                vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                // } else {
+                //     console.log('Validation failed for the user !');
+                // }
 
-                } else {
-                    console.log('Failed to get the session or email.');
-                    vscode.window.showInformationMessage('Failed to sign in Keploy!');
-                }
-            } catch (error) {
-                // console.error('Error during sign-in:', error);
+            } else {
+                console.log('Failed to get the session or email.');
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
-        });
-        context.subscriptions.push(signInCommand);
+        } catch (error) {
+            // console.error('Error during sign-in:', error);
+            vscode.window.showInformationMessage('Failed to sign in Keploy!');
+        }
+    });
+    context.subscriptions.push(signInCommand);
 
-    }
+
     let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
         try {
             await SignInWithOthers(); // The result will now be handled in the URI handler

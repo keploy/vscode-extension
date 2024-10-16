@@ -13,7 +13,19 @@ extension="${sourceFilePath##*.}"
 
 # If the file is a Python file, install pytest-cov
 if [ "$extension" = "py" ]; then
+  echo "Checking if pytest is installed..."
+  
+  # Check if pytest is installed
+  if ! pip3 show pytest > /dev/null 2>&1; then
+    echo "pytest is not installed. Installing pytest..."
+    pip3 install pytest --break-system-packages
+  else
+    echo "pytest is already installed."
+  fi
+
   echo "Checking if pytest-cov is installed..."
+  
+  # Check if pytest-cov is installed
   if ! pip3 show pytest-cov > /dev/null 2>&1; then
     echo "pytest-cov is not installed. Installing pytest-cov..."
     pip3 install pytest-cov --break-system-packages
