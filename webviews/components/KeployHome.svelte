@@ -28,21 +28,30 @@
    // On mount, request config and set up listeners
    onMount(() => {
     // Dispatch a custom event to request the Keploy config
-    const getConfigEvent = new CustomEvent('getKeployConfig');
+    setTimeout(() => {
+    const getConfigEvent = new CustomEvent('getKeployConfigForSvelte');
     document.dispatchEvent(getConfigEvent);
+    console.log("Dispatched getKeployConfigForSvelte event");
+  }, 100); // 100ms delay
+    console.log("starting the onMount for the KeployConfig");
 
     // Listen for the response from sidebar.js
-    document.addEventListener('keployConfig', event => {
-      const config = event.detail.config;
-
-      // Set the form fields with the values from the config
-      appName = config.appName || '';
-      command = config.command || '';
-      containerName = config.containerName || '';
-      networkName = config.networkName || 'default';
-      delay = config.test?.delay || 5;
-      apiTimeout = config.test?.apiTimeout || 5;
-      mongoPassword = config.test?.mongoPassword || '';
+    window.addEventListener('message', event => {
+      const message = event.data;
+      
+      if (message.type === 'keployConfig') {
+        console.log("In the svelete directly taking values ;)" ,message );
+        const config = message.config;
+        
+        // Set the form fields with the values from the config
+        appName = config.appName || '';
+        command = config.command || '';
+        containerName = config.containerName || '';
+        networkName = config.networkName || 'default';
+        delay = config.test?.delay || 5;
+        apiTimeout = config.test?.apiTimeout || 5;
+        mongoPassword = config.test?.mongoPassword || '';
+      }
     });
 
     // Initialize DOM elements
