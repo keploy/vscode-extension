@@ -565,44 +565,46 @@ export function activate(context: vscode.ExtensionContext) {
     } else {
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
         // Register the sign-in command if not signed in
-        let signInCommand = vscode.commands.registerCommand('keploy.SignInWithGithub', async () => {
-            try {
-                const result = await getGitHubAccessToken();
+      }
+      let signInCommand = vscode.commands.registerCommand('keploy.SignInWithGithub', async () => {
+        try {
+            const result = await getGitHubAccessToken();
 
-                if (result) {
-                    const { accessToken, email } = result;
+            if (result) {
+                const { accessToken, email } = result;
 
-                    getInstallationID();
+                getInstallationID();
 
-                    // Store the access token in global state
-                    await context.globalState.update('accessToken', accessToken);
+                // Store the access token in global state
+                await context.globalState.update('accessToken', accessToken);
 
-                    const { emailID, isValid, error, JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
+                const { emailID, isValid, error, JwtToken } = await validateFirst(accessToken, "https://api.keploy.io");
 
-                    console.log({ emailID, isValid, error, JwtToken });
+                console.log({ emailID, isValid, error, JwtToken });
 
-                    await context.globalState.update('JwtToken', JwtToken);
+                await context.globalState.update('JwtToken', JwtToken);
+                await context.globalState.update('SignedOthers', true);
 
-                    // if (isValid) {
-                    vscode.window.showInformationMessage('You are now signed in!');
-                    vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-                    vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-                    // } else {
-                    //     console.log('Validation failed for the user !');
-                    // }
+                // if (isValid) {
+                vscode.window.showInformationMessage('You are now signed in!');
+                vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                // } else {
+                //     console.log('Validation failed for the user !');
+                // }
 
-                } else {
-                    console.log('Failed to get the session or email.');
-                    vscode.window.showInformationMessage('Failed to sign in Keploy!');
-                }
-            } catch (error) {
-                // console.error('Error during sign-in:', error);
+            } else {
+                console.log('Failed to get the session or email.');
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
-        });
-        context.subscriptions.push(signInCommand);
+        } catch (error) {
+            // console.error('Error during sign-in:', error);
+            vscode.window.showInformationMessage('Failed to sign in Keploy!');
+        }
+    });
+    context.subscriptions.push(signInCommand);
 
-    }
+
     let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
         try {
             await SignInWithOthers(); // The result will now be handled in the URI handler
@@ -639,6 +641,8 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage('You have been signed out.');
         vscode.commands.executeCommand('setContext', 'keploy.signedIn', false);
         vscode.commands.executeCommand('setContext', 'keploy.signedOut', true);
+        sidebarProvider.postMessage("Config");
+
     });
 
     context.subscriptions.push(signout);
@@ -712,6 +716,16 @@ export function activate(context: vscode.ExtensionContext) {
         functionName = FunctionName;
         ExtentionName = FileExtentionName;
         FunctionFilePath = filePath;
+        const signedIn = await context.globalState.get('accessToken');
+        const signedInOthers = await context.globalState.get('SignedOthers');
+        const SubscriptionEnded = await context.globalState.get('SubscriptionEnded') !== undefined ? context.globalState.get('SubscriptionEnded') : true;
+        const token = await context.globalState.get<'string'>('JwtToken');
+        console.log("SubscriptionEnded Value: ", SubscriptionEnded);
+        if (!signedIn && !signedInOthers) {
+            // Redirect to the website if signed in
+            await vscode.commands.executeCommand('keploy.SignInWithOthers');
+            return;
+        }
         vscode.commands.executeCommand('workbench.view.extension.Keploy-Sidebar');
         sidebarProvider.postMessage("KeployChatBot")
     });

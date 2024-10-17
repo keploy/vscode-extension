@@ -420,11 +420,12 @@ document.addEventListener('addUsersClick', function (e) {
 });
 
 // Listen for custom events from the Svelte component
-document.addEventListener('getKeployConfig', () => {
+document.addEventListener('getKeployConfigForSvelte', () => {
   vscode.postMessage({
     type: 'getKeployConfig',
   });
 });
+
 
 document.addEventListener('updateKeployConfig', (e) => {
   const config = e.detail.config;

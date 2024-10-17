@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import { exec } from 'child_process';
 import axios, { AxiosResponse } from 'axios';
 
 
@@ -76,6 +77,8 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
     
                 } else if (extension === '.py') {
+                    const pythonCommand = await getPythonVersion(); // Get python version (python or python3)
+           
                     if (testFilesPath && testFilesPath.length > 0) {
                         // Use only the first path from testFilesPath
                         testFilePaths = [testFilesPath[0].fsPath];
@@ -104,7 +107,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                             fs.writeFileSync(defaultTestFilePath, testContent);
                         }
                     }
-                    command = `pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${testFilePaths[0]}`;
+                    command = `${pythonCommand} -m pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${testFilePaths[0]}`;
                     coverageReportPath = "./coverage.xml";
     
                 } else if (extension === '.java') {
@@ -333,6 +336,25 @@ async function ensureTestFileExists(sourceFilePath: string , DirectoryPath:strin
     } else {
         vscode.window.showInformationMessage(`Test file already exists: ${testFilePath}`);
     }
+}
+
+async function getPythonVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        exec('python --version', (error, stdout, stderr) => {
+            if (error) {
+                exec('python3 --version', (error3, stdout3, stderr3) => {
+                    if (error3) {
+                        vscode.window.showErrorMessage('Python is not installed.');
+                        reject('Python not found');
+                    } else {
+                        resolve('python3');
+                    }
+                });
+            } else {
+                resolve('python');
+            }
+        });
+    });
 }
 
 export default Utg;
