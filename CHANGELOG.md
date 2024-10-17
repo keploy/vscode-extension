@@ -78,3 +78,7 @@ First Release for Vs Code Extension.
 ## [1.0.17]
 - Enhanced path detection of test in Javascript, Python and Go.
 - Increase file size limit to 1MB.
+
+## [1.0.18]
+- Enhances path detection for python
+- Optimised keploy config screen
