@@ -57,7 +57,7 @@
     },
     "submenus": [
       {
-        "icon": "$(account)",  
+        "icon": "$(account)",
         "label": "Sign In Options",
         "id": "sign_in_submenu"
       }
@@ -107,7 +107,6 @@
         {
           "command": "keploy.SignInWithMicrosoft",
           "title": "Sign In with Microsoft"
-    
         }
       ]
     },
@@ -208,10 +207,11 @@
     "sinon": "^17.0.1",
     "svelte": "^4.2.12",
     "tree-sitter": "^0.21.1",
-    "tree-sitter-java": "^0.21.0",
     "tree-sitter-go": "^0.23.0",
+    "tree-sitter-java": "^0.21.0",
     "tree-sitter-javascript": "^0.21.4",
     "tree-sitter-python": "^0.21.0",
+    "tree-sitter-rust": "^0.23.0",
     "uuid": "^10.0.0",
     "walk": "^2.3.15",
     "yaml": "^2.4.2"
