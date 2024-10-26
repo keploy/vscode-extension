@@ -267,7 +267,40 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                     return;
                 }
 
-                // ... rest of the existing code ...
+                console.log("additional_prompts" , additional_prompts);
+                if(!additional_prompts){
+                    additional_prompts = "";
+                }
+    
+                // Adjust the terminal command to include the test file path
+                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePaths[0]}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
+    
+                const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+                // Add a 5-second delay before calling the API
+                await delay(5000);
+    
+                try {
+                    if (token) {
+                        apiResponse = await makeApiRequest(token) || 'no response';
+                        const response = JSON.parse(apiResponse);
+                        await context.globalState.update('apiResponse', apiResponse);
+                        if (response.usedCall === response.totalCall) {
+                            await context.globalState.update('SubscriptionEnded', true);
+                        }
+                    } else {
+                        console.log("token not found");
+                    }
+                } catch (apiError) {
+                    vscode.window.showErrorMessage('Error during API request: ' + apiError);
+                }
+    
+                const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
+                    if (eventTerminal === terminal) {
+                        disposable.dispose();
+                        resolve();
+                    }
+                });
             } catch (error) {
                 console.log(error);
                 vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
