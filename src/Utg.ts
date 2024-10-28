@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 import axios, { AxiosResponse } from 'axios';
 
 
-async function Utg(context: vscode.ExtensionContext , additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined) {
+async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName:string, additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined ) {
     
     try {
         return new Promise<void>(async (resolve, reject) => {
@@ -226,7 +226,7 @@ async function Utg(context: vscode.ExtensionContext , additional_prompts?:string
                 }
     
                 // Adjust the terminal command to include the test file path
-                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePaths[0]}" "${coverageReportPath}" "${command}" "${additional_prompts}";`);
+                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePaths[0]}" "${coverageReportPath}" "${command}" "${additional_prompts}" "${CodeLensefunctionName}";`);
     
                 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     

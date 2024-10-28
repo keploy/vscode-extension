@@ -7,7 +7,7 @@ testFilePath=$2
 coverageReportPath=$3
 command=$4
 additional_prompts=$5
-
+CodeLensefunctionName=$6
 # Get the file extension
 extension="${sourceFilePath##*.}"
 
@@ -60,7 +60,8 @@ if [ "$extension" = "java" ]; then
     --llmApiVersion \"2024-02-01\" \
     --llmBaseUrl \"https://api.keploy.io\" \
     --max-iterations \"5\" \
-    --coverageFormat jacoco"
+    --coverageFormat jacoco
+    --functionUnderTest \"$CodeLensefunctionName\""
 else
   keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
     --test-file-path=\"$testFilePath\" \
@@ -69,7 +70,8 @@ else
     --llmApiVersion \"2024-02-01\" \
     --llmBaseUrl \"https://api.keploy.io\" \
     --max-iterations \"5\" \
-    --coverageFormat cobertura"
+    --coverageFormat cobertura
+    --functionUnderTest \"$CodeLensefunctionName\""
 fi
 
 # Add the additional prompt if it's provided and not an empty string
@@ -77,6 +79,7 @@ if [ -n "$additional_prompts" ] && [ "$additional_prompts" != " " ]; then
   keployCommand="$keployCommand --additional-prompt \"$additional_prompts\""
 fi
 
+echo "CodeLensefunctionName: $CodeLensefunctionName"
 # Run the keploy command
 # echo "Running: $keployCommand"
 eval $keployCommand
