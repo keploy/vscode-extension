@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
 import axios, { AxiosResponse } from 'axios';
+import { platform } from 'os';
 
 
 async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
@@ -118,7 +119,7 @@ export default async function SignInWithGitHub() {
                 // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
                 try {
                     // Await the response from the backend
-                    const response = await loginAPI(backendUrl, 'github', code?.toString());
+                    const response = await loginAPI(backendUrl, 'github', code?.toString(),"vscode");
 
                     if (response.error) {
                         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -167,7 +168,7 @@ export async function SignInWithOthers() {
 //     return data;
 // }
 
-export async function loginAPI(url = "", provider = "", code = "") {
+export async function loginAPI(url = "", provider = "", code = "",platform = "") {
     // Default options are marked with *
     // var response : Response
     try {
@@ -182,7 +183,7 @@ export async function loginAPI(url = "", provider = "", code = "") {
             },
             redirect: "follow", // manual, *follow, error
             referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: JSON.stringify({ provider: provider, code: code }) // body data type must match "Content-Type" header
+            body: JSON.stringify({ provider: provider, code: code,platform:platform }) // body data type must match "Content-Type" header
         });
 
         if (response.status === 200) {
