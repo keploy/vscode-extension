@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from 'uuid';
 const os = require('os');
 const { execSync } = require('child_process');
 import axios, { AxiosResponse } from 'axios';
-import { platform } from 'os';
 
 
 async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
