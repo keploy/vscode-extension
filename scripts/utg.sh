@@ -60,8 +60,7 @@ if [ "$extension" = "java" ]; then
     --llmApiVersion \"2024-02-01\" \
     --llmBaseUrl \"https://api.keploy.io\" \
     --max-iterations \"5\" \
-    --coverageFormat jacoco
-    --functionUnderTest \"$CodeLensefunctionName\""
+    --coverageFormat jacoco"
 else
   keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
     --test-file-path=\"$testFilePath\" \
@@ -70,8 +69,7 @@ else
     --llmApiVersion \"2024-02-01\" \
     --llmBaseUrl \"https://api.keploy.io\" \
     --max-iterations \"5\" \
-    --coverageFormat cobertura
-    --functionUnderTest \"$CodeLensefunctionName\""
+    --coverageFormat cobertura"
 fi
 
 # Add the additional prompt if it's provided and not an empty string
