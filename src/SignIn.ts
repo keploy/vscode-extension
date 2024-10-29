@@ -118,7 +118,7 @@ export default async function SignInWithGitHub() {
                 // vscode.env.openExternal(vscode.Uri.parse(backendUrl));
                 try {
                     // Await the response from the backend
-                    const response = await loginAPI(backendUrl, 'github', code?.toString(),"vscode");
+                    const response = await loginAPI(backendUrl, 'github', code?.toString());
 
                     if (response.error) {
                         res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -167,7 +167,7 @@ export async function SignInWithOthers() {
 //     return data;
 // }
 
-export async function loginAPI(url = "", provider = "", code = "",platform = "") {
+export async function loginAPI(url = "", provider = "", code = "") {
     // Default options are marked with *
     // var response : Response
     try {
@@ -182,7 +182,7 @@ export async function loginAPI(url = "", provider = "", code = "",platform = "")
             },
             redirect: "follow", // manual, *follow, error
             referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            body: JSON.stringify({ provider: provider, code: code,platform:platform }) // body data type must match "Content-Type" header
+            body: JSON.stringify({ provider: provider, code: code }) // body data type must match "Content-Type" header
         });
 
         if (response.status === 200) {
@@ -311,6 +311,7 @@ function extractID(output: any) {
 interface AuthReq {
     GitHubToken: string;
     InstallationID: string;
+    platform: string;
 }
 
 interface AuthResp {
@@ -328,6 +329,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
     // extract string from promise
     const requestBody: AuthReq = {
         GitHubToken: token,
+        platform: "vscode",
         InstallationID: installationID,
     };
     console.log("Request Body:", requestBody);
