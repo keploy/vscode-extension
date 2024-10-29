@@ -82,3 +82,6 @@ First Release for Vs Code Extension.
 ## [1.0.18]
 - Enhances path detection for python
 - Optimised keploy config screen
+
+## [1.0.19]
+- Enhanced UT generation
