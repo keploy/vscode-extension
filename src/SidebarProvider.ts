@@ -435,7 +435,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log("additional prompts and uri: ", additional_prompts );
             await vscode.commands.executeCommand('keploy.runAdditionalPrompts',additional_prompts);
           }catch(error){
-            console.error("Error executing keploy.utg command:", error);
+            console.error("Error executing keploy.runAdditionalPrompts command:", error);
           }
         }
         case "progressStatus":{

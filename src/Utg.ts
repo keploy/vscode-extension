@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 import axios, { AxiosResponse } from 'axios';
 
 
-async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName:string, additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined ) {
+async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName?:string, additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined ) {
     
     try {
         return new Promise<void>(async (resolve, reject) => {
@@ -223,6 +223,10 @@ async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName:stri
                 console.log("additional_prompts" , additional_prompts);
                 if(!additional_prompts){
                     additional_prompts = "";
+                }
+
+                if(!CodeLensefunctionName){
+                    CodeLensefunctionName = ""
                 }
     
                 // Adjust the terminal command to include the test file path
