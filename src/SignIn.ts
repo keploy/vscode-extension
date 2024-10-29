@@ -311,6 +311,7 @@ function extractID(output: any) {
 interface AuthReq {
     GitHubToken: string;
     InstallationID: string;
+    Platform: string;
 }
 
 interface AuthResp {
@@ -328,6 +329,7 @@ export async function validateFirst(token: string, serverURL: string): Promise<{
     // extract string from promise
     const requestBody: AuthReq = {
         GitHubToken: token,
+        Platform: "vscode",
         InstallationID: installationID,
     };
     console.log("Request Body:", requestBody);
