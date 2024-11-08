@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import * as path from 'path';  // Import path module
+import * as path from 'path';
 import { SidebarProvider } from './SidebarProvider';
 import SignIn, { validateFirst, SignInWithOthers, ValidateSignInWithOthers } from './SignIn';
 import oneClickInstall from './OneClickInstall';
@@ -13,45 +13,42 @@ import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
 import TreeSitterGo from 'tree-sitter-go';
+import TreeSitterRust from 'tree-sitter-rust';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
     private treeCache: { [filePath: string]: TreeSitter.Tree } = {};
 
     private invalidateCache(fileName: string) {
-        delete this.treeCache[fileName];  // Remove the cached tree
+        delete this.treeCache[fileName];
     }
 
     constructor() {
-        // Listen for document changes and invalidates cache
         vscode.workspace.onDidChangeTextDocument(this.onDocumentChange.bind(this));
-
-        // Listen for document save events and invalidates cache
         vscode.workspace.onDidSaveTextDocument(this.onDocumentSave.bind(this));
     }
 
-    // Triggered when the document is saved
     private onDocumentSave(document: vscode.TextDocument) {
         console.log('Document saved:', document.uri.fsPath);
         const fileName = document.uri.fsPath;
-        this.invalidateCache(fileName);  // Invalidate the cache on save
+        this.invalidateCache(fileName);
     }
 
     private onDocumentChange(event: vscode.TextDocumentChangeEvent) {
         console.log('Document changed:', event.document.uri.fsPath);
         const fileName = event.document.uri.fsPath;
-        this.invalidateCache(fileName);  // Invalidate the cache on change
+        this.invalidateCache(fileName);
     }
 
     private getTreeFromCache(fileName: string, text: string): TreeSitter.Tree {
         if (this.treeCache[fileName]) {
             console.log(`Cache hit for: ${fileName}`);
-            this.logCacheSize();  // Log the cache size
-            return this.treeCache[fileName];  // Return cached tree if available
+            this.logCacheSize();
+            return this.treeCache[fileName];
         }
         const parser = new TreeSitter();
 
-        // Set the language based on file extension
+        // Add Rust support to language selection
         if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
             parser.setLanguage(TreeSitterJavaScript);
         } else if (fileName.endsWith('.py')) {
@@ -60,18 +57,21 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
             parser.setLanguage(TreeSitterJava);
         } else if (fileName.endsWith('.go')) {
             parser.setLanguage(TreeSitterGo);
+        } else if (fileName.endsWith('.rs')) {
+            parser.setLanguage(TreeSitterRust);
         } else {
             console.log('Unsupported file type:', fileName);
             throw new Error("Unsupported file type");
         }
+
         const options: TreeSitter.Options = {
             bufferSize: 1024 * 1024,
         };
 
-        const tree = parser.parse(text, undefined, options);  // Parse the document text
-        this.treeCache[fileName] = tree;  // Cache the parsed tree
+        const tree = parser.parse(text, undefined, options);
+        this.treeCache[fileName] = tree;
         console.log(`Cache miss for: ${fileName}`);
-        this.logCacheSize();  // Log the cache size after adding a new entry
+        this.logCacheSize();
 
         return tree;
     }
@@ -118,24 +118,26 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
     ): vscode.CodeLens[] | Thenable<vscode.CodeLens[]> {
         const fileName = document.uri.fsPath;
 
-        // Skip test files
+        // Add Rust test file pattern
         if (
             fileName.endsWith('.test.js') ||
             fileName.endsWith('.test.ts') ||
-            fileName.endsWith('Tests.java') ||  // Check for Java test file ending
-            fileName.endsWith('Test.java') ||  // Check for Java test file ending
-            fileName.includes('/Test') ||      // Check for Java test file prefix in the path
-            fileName.includes('/test/') ||    // Skip files in a "tests" directory
+            fileName.endsWith('Tests.java') ||
+            fileName.endsWith('Test.java') ||
+            fileName.includes('/Test') ||
+            fileName.includes('/test/') ||
             fileName.endsWith('_test.go') ||
-            fileName.includes('test_')
+            fileName.includes('test_') ||
+            fileName.endsWith('_test.rs')
         ) {
             return [];
         }
+
         const baseName = path.basename(fileName);
         const fileExtension = path.extname(fileName);
-
         const text = document.getText();
         const codeLenses: vscode.CodeLens[] = [];
+
 
         try {
             const tree = this.getTreeFromCache(fileName, text);
@@ -167,6 +169,24 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                         command: 'keploy.showSidebar',
                         arguments: [document.uri.fsPath, functionName, fileExtension]
                     }));
+                    console.log('🐰 Found arrow function:', node.firstChild?.text);
+                }else if (fileName.endsWith('.rs') && node.type === 'function_item') {
+                    const line = document.positionAt(node.startIndex).line;
+                    const range = new vscode.Range(line, 0, line, 0);
+                    const functionName = node.childForFieldName('name')?.text || '';
+                    
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit tests',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
+                    }));
+                    
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Additional Prompts',
+                        command: 'keploy.showSidebar',
+                        arguments: [document.uri.fsPath, functionName, fileExtension]
+                    }));
+
                     console.log('🐰 Found arrow function:', node.firstChild?.text);
                 } else if (fileName.endsWith('.js') || fileName.endsWith('.ts')) {
                     if (node.type === 'arrow_function') {
@@ -289,25 +309,23 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
 }
 async function findTestCasesForFunction(functionName: string, fileExtension: string): Promise<vscode.Uri[] | undefined> {
     console.log(`🐰 Searching for test cases for function: ${functionName}`);
-    // Exclude certain directories from the search
-    const excludePattern = '**/{node_modules,venv,__pycache__}/**';  // Exclude common directories
-    const maxResults = 100;  // Limit the number of files returned
-    console.log('🐰 Searching for test files...');
+    const excludePattern = '**/{node_modules,venv,__pycache__,target}/**';
+    const maxResults = 100;
+    
     let testFilePattern = '';
     if (fileExtension === '.js' || fileExtension === '.ts') {
         testFilePattern = '**/*.{test,spec}.{js,ts}';
     } else if (fileExtension === '.py') {
         testFilePattern = '**/{test_*,*_test}.py';
+    } else if (fileExtension === '.rs') {
+        testFilePattern = '**/*_test.rs';
     } else {
-        // Unsupported language for now
         return;
     }
 
-    // Use await to get the list of test files
     const testFiles = await vscode.workspace.findFiles(testFilePattern, excludePattern, maxResults);
     console.log('🐰 Found test files:', testFiles);
 
-    // Array to collect found test files
     const foundTestFiles: vscode.Uri[] = [];
 
     for (const fileUri of testFiles) {
@@ -319,10 +337,14 @@ async function findTestCasesForFunction(functionName: string, fileExtension: str
         try {
             const testFileExtension = fileUri.fsPath.split('.').pop();
             const parser = new TreeSitter();
+            
+            // Add Rust parser support
             if (testFileExtension === 'js' || testFileExtension === 'ts') {
                 parser.setLanguage(TreeSitterJavaScript);
             } else if (testFileExtension === 'py') {
                 parser.setLanguage(TreeSitterPython);
+            } else if (testFileExtension === 'rs') {
+                parser.setLanguage(TreeSitterRust);
             } else {
                 console.log('Unsupported test file language:', testFileExtension);
                 continue;
@@ -369,6 +391,21 @@ async function findTestCasesForFunction(functionName: string, fileExtension: str
                         found = true;
                     }
 
+                }else if (testFileExtension === 'rs') {
+                    // Check for mod test blocks
+                    if (node.type === 'mod_item' && node.childForFieldName('name')?.text === 'tests') {
+                        found = true;
+                    }
+                    
+                    // Check for test functions
+                    if (node.type === 'function_item' && 
+                        node.previousNamedSibling?.type === 'attribute' && 
+                        node.previousNamedSibling.text.includes('#[test]')) {
+                        if (node.text.includes(functionName)) {
+                            found = true;
+                            console.log(`🐰 Test function for ${functionName} found in file: ${fileUri.fsPath}`);
+                        }
+                    }
                 } else if (testFileExtension === 'py') {
                     // Check for function calls
                     if (node.type === 'call') {
@@ -438,6 +475,7 @@ async function getAllFunctionsInFile(
     const text = document.getText();
     const parser = new TreeSitter();
 
+    // Add Rust parser support
     if (fileExtension === '.js' || fileExtension === '.ts') {
         parser.setLanguage(TreeSitterJavaScript);
     } else if (fileExtension === '.py') {
@@ -446,16 +484,18 @@ async function getAllFunctionsInFile(
         parser.setLanguage(TreeSitterJava);
     } else if (fileExtension === '.go') {
         parser.setLanguage(TreeSitterGo);
+    } else if (fileExtension === '.rs') {
+        parser.setLanguage(TreeSitterRust);
     } else {
         console.log('🐰 Unsupported file type:', filePath);
         throw new Error("Unsupported file type");
     }
+
     const options: TreeSitter.Options = {
         bufferSize: 1024 * 1024,
     };
 
-    const tree = parser.parse(text, undefined, options);  // Parse the document text
-
+    const tree = parser.parse(text, undefined, options);
     const cursor = tree.walk();
     const functionNames: string[] = [];
 
@@ -466,6 +506,12 @@ async function getAllFunctionsInFile(
             (fileExtension === '.js' || fileExtension === '.ts') &&
             (node.type === 'function_declaration' || node.type === 'function_expression' || node.type === 'arrow_function')
         ) {
+            const functionName = node.childForFieldName('name')?.text;
+            if (functionName) {
+                functionNames.push(functionName);
+                console.log(`🐰 Found function: ${functionName}`);
+            }
+        }else if (fileExtension === '.rs' && node.type === 'function_item') {
             const functionName = node.childForFieldName('name')?.text;
             if (functionName) {
                 functionNames.push(functionName);
@@ -539,6 +585,10 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.registerWebviewViewProvider(
             "Keploy-Sidebar",
             sidebarProvider
+        ),
+        vscode.languages.registerCodeLensProvider(
+            { language: 'rust', scheme: 'file' },
+            new KeployCodeLensProvider()
         ),
         vscode.languages.registerCodeLensProvider(
             { language: 'javascript', scheme: 'file' },
