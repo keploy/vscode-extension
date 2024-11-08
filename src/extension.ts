@@ -153,9 +153,14 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     console.log('🐰 Found function:', node.childForFieldName('name')?.text);
                     const functionName = node.childForFieldName('name')?.text || '';
                     codeLenses.push(new vscode.CodeLens(range, {
-                        title: '🐰 Generate unit tests',
+                        title: '🐰 Generate unit test for this function ',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath, functionName, fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,true]
+                    }));
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit test for entire file',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,false]
                     }));
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
@@ -172,9 +177,15 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                             const line = document.positionAt(node.startIndex).line;
                             const range = new vscode.Range(line, 0, line, 0);
                             codeLenses.push(new vscode.CodeLens(range, {
-                                title: '🐰 Generate unit tests',
+                                title: '🐰 Generate unit test for this function ',
                                 command: 'keploy.utg',
-                                arguments: [document.uri.fsPath, functionName, fileExtension]
+                                arguments: [document.uri.fsPath, functionName, fileExtension,undefined,true]
+                            }));
+                       
+                            codeLenses.push(new vscode.CodeLens(range, {
+                                title: '🐰 Generate unit test for entire file',
+                                command: 'keploy.utg',
+                                arguments: [document.uri.fsPath, functionName, fileExtension,undefined,false]
                             }));
 
                             codeLenses.push(new vscode.CodeLens(range, {
@@ -191,9 +202,15 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     const functionNameNode = node.childForFieldName('name');
                     const functionName = functionNameNode?.text || '';
                     codeLenses.push(new vscode.CodeLens(range, {
-                        title: '🐰 Generate unit tests',
+                        title: '🐰 Generate unit test for this function ',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath, functionName, fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,true]
+                    }));
+               
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit test for entire file',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath, functionName, fileExtension, undefined,false]
                     }));
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
@@ -207,10 +224,17 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     const functionName = functionNameNode?.text || '';
                     //just adding it for the sake of testing will change it later.
                     codeLenses.push(new vscode.CodeLens(range, {
-                        title: '🐰 Generate unit tests',
+                        title: '🐰 Generate unit test for this function ',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath, functionName, fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,true]
                     }));
+               
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit test for entire file',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,false]
+                    }));
+                 
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
@@ -224,10 +248,17 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
                     const functionName = functionNameNode?.text || '';
 
                     codeLenses.push(new vscode.CodeLens(range, {
-                        title: '🐰 Generate unit tests',
+                        title: '🐰 Generate unit test for this function ',
                         command: 'keploy.utg',
-                        arguments: [document.uri.fsPath, functionName, fileExtension]
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,true]
                     }));
+               
+                    codeLenses.push(new vscode.CodeLens(range, {
+                        title: '🐰 Generate unit test for entire file',
+                        command: 'keploy.utg',
+                        arguments: [document.uri.fsPath, functionName, fileExtension,undefined,false]
+                    }));
+                 
                     codeLenses.push(new vscode.CodeLens(range, {
                         title: '🐰 Additional Prompts',
                         command: 'keploy.showSidebar',
@@ -734,13 +765,13 @@ export function activate(context: vscode.ExtensionContext) {
 
     let runAdditionalPrompts = vscode.commands.registerCommand('keploy.runAdditionalPrompts', async (additionalPrompts: string) => {
         console.log("value inside the function: ", functionName, ExtentionName, additionalPrompts);
-        await vscode.commands.executeCommand('keploy.utg', FunctionFilePath, functionName, ExtentionName, additionalPrompts);
+        await vscode.commands.executeCommand('keploy.utg', FunctionFilePath, functionName, ExtentionName, additionalPrompts , false);
     })
 
     context.subscriptions.push(runAdditionalPrompts);
 
     // Register the command
-    let disposable = vscode.commands.registerCommand('keploy.utg', async (filePath: string, functionName: string, fileExtension: string, additional_prompts?: string) => {
+    let disposable = vscode.commands.registerCommand('keploy.utg', async (filePath: string, functionName: string, fileExtension: string, additional_prompts?: string , singleUtgTest?:boolean ) => {
         // Check if the user is already signed in
         const signedIn = await context.globalState.get('accessToken');
         const signedInOthers = await context.globalState.get('SignedOthers');
@@ -811,11 +842,25 @@ export function activate(context: vscode.ExtensionContext) {
                         console.log("No test files found for any functions in the file.");
                     }
                 }
-
+                switch(singleUtgTest){
+                    case true:
+                        console.log("Executing for the Single Function");
+                        break;
+                    case false:
+                        console.log("Executing for the Whole Test File");
+                        functionName = "";
+                        break;
+                    case undefined:
+                        console.log("Executing with singleUnitTest parameter as undefined")
+                    default:
+                        console.log("Going the default in generating the Utg");
+                        break;
+                    
+                }
                 // Ensure that Utg is called with the correct parameters
                 console.log("additional prompts inside the keploy.utg ", additional_prompts);
                 vscode.window.showInformationMessage('Welcome to Keploy!');
-                await Utg(context, additional_prompts, testFilesPath);
+                await Utg(context,functionName, additional_prompts, testFilesPath);
             }
         }
     });

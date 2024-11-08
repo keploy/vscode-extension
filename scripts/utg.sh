@@ -7,7 +7,7 @@ testFilePath=$2
 coverageReportPath=$3
 command=$4
 additional_prompts=$5
-
+CodeLensefunctionName=$6
 # Get the file extension
 extension="${sourceFilePath##*.}"
 
@@ -75,6 +75,10 @@ fi
 # Add the additional prompt if it's provided and not an empty string
 if [ -n "$additional_prompts" ] && [ "$additional_prompts" != " " ]; then
   keployCommand="$keployCommand --additional-prompt \"$additional_prompts\""
+fi
+
+if [ -n "$CodeLensefunctionName" ] && [ "$CodeLensefunctionName" != " " ]; then
+  keployCommand="$keployCommand --function-under-test \"$CodeLensefunctionName\""
 fi
 
 # Run the keploy command

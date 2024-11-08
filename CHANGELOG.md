@@ -84,4 +84,4 @@ First Release for Vs Code Extension.
 - Optimised keploy config screen
 
 ## [1.0.19]
-- Enhanced UT generation
+- Added support to create unit tests for individual function. 
