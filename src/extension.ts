@@ -13,6 +13,8 @@ import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
 import TreeSitterGo from 'tree-sitter-go';
+import { Telemetry } from './telemetry';
+import { v4 as uuidv4 } from 'uuid';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -507,7 +509,33 @@ async function getAllFunctionsInFile(
 }
 
 
+// function generateInstallationId(): string {
+//     const id = uuidv4();
+//     context.globalState.update('installationId', id);
+//     return id;
+// }
+
 export function activate(context: vscode.ExtensionContext) {
+   // Initialize telemetry settings
+   const telemetryEnabled = vscode.workspace.getConfiguration('yourExtension').get('enableTelemetry', true);
+   const installationId = context.globalState.get('installationId') || generateInstallationId();
+   const extensionVersion = '1.0.0'; // Replace with your extension's version
+
+   // Create a Telemetry instance
+   const telemetry = new Telemetry({
+       enabled: telemetryEnabled,
+       installationId: installationId as string,
+       extensionVersion: extensionVersion,
+   });
+
+   // Example: Track an event when the extension is activated
+   telemetry.trackEvent('ExtensionActivated');
+
+   // Save the installationId in globalState if it's newly generated
+   if (!context.globalState.get('installationId')) {
+       context.globalState.update('installationId', installationId);
+   }
+
     const sidebarProvider = new SidebarProvider(context.extensionUri, context);
     context.subscriptions.push(
         vscode.window.registerUriHandler({
@@ -665,6 +693,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     let signout = vscode.commands.registerCommand('keploy.SignOut', async () => {
+        telemetry.trackEvent('User is signed out');
         console.log("logging out");
         await context.globalState.update('accessToken', undefined);
         await context.globalState.update('JwtToken', undefined);
@@ -868,7 +897,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(disposable);
 }
-
+function generateInstallationId(): string {
+    return require('crypto').randomBytes(16).toString('hex');
+}
 
 
 export function deactivate() { }
