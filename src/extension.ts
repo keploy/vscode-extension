@@ -288,7 +288,7 @@ class KeployCodeLensProvider implements vscode.CodeLensProvider {
     }
 
 }
-async function findTestCasesForFunction(functionName: string, fileExtension: string): Promise<vscode.Uri[] | undefined> {
+export async function findTestCasesForFunction(functionName: string, fileExtension: string): Promise<vscode.Uri[] | undefined> {
     console.log(`🐰 Searching for test cases for function: ${functionName}`);
     // Exclude certain directories from the search
     const excludePattern = '**/{node_modules,venv,__pycache__}/**';  // Exclude common directories
@@ -675,6 +675,12 @@ export function activate(context: vscode.ExtensionContext) {
     }));
 
 
+    vscode.commands.registerCommand('folderExplorer.Realrefresh', () => {
+        folderTreeProvider.refresh();
+    });
+
+    
+    
 
     vscode.commands.registerCommand('extension.playFunction', async (item: any) => {
         if (!item || !item.fullPath || !item.label) {
@@ -731,6 +737,46 @@ export function activate(context: vscode.ExtensionContext) {
         // Hide Keploy Sidebar
         // vscode.commands.executeCommand('setContext', 'showKeploy', false);
     }));
+
+    vscode.commands.registerCommand('extension.findTestFile', async (item: any) => {
+        if (!item || !item.fullPath || !item.label) {
+            vscode.window.showErrorMessage('Invalid function item selected.');
+            return;
+        }
+    
+        // Log the function details for debugging
+        console.log("this is main info:", {
+            collapsibleState: item.collapsibleState,
+            label: item.label,
+            fullPath: item.fullPath,
+            itemType: item.itemType,
+            tooltip: item.tooltip,
+            iconPath: item.iconPath,
+            contextValue: item.contextValue
+        });
+        
+        const fileExtension = path.extname(item.fullPath); // Extract file extension
+        const functionName = item.label;
+        const filePath = item.fullPath;
+          // Attempt to find test files for the specified function
+        let testFilesPath = await findTestCasesForFunction(functionName, fileExtension);
+          
+        //   try {
+        //     // Open the file at the specified path
+        //     const document = await vscode.workspace.openTextDocument(testFilesPath[0]);
+        //     await vscode.window.showTextDocument(document);
+    
+        //     // Notify the user
+        //     vscode.window.showInformationMessage(`Opened file: ${item.fullPath}`);
+        // } catch (error) {
+        //     vscode.window.showErrorMessage(`Failed to open file: ${item.fullPath}`);
+        //     console.error('Error opening file:', error);
+        //     return;
+        // }
+    
+
+
+    });
 
     //defining another function for microsoft to redirect because  functions with same command name cannot be added in package.json
 

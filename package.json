@@ -117,14 +117,20 @@
         {
           "command": "keploy.SignInWithMicrosoft",
           "title": "Sign In with Microsoft"
+          
         }
       ],
       "view/item/context": [
         {
           "command": "extension.playFunction",
-          "when": "viewItem == functionItem && view == folderExplorer",
+          "when": "viewItem == functionItem  && view == folderExplorer",
           "group": "inline"
-        }
+      },
+      {
+          "command": "extension.findTestFile",
+          "when": "viewItem == testFileAvailableBothItem && view == folderExplorer",
+          "group": "inline"
+      }
       ]
     },
     "commands": [
@@ -187,11 +193,19 @@
         "when": "view == Keploy-Sidebar"
       },
       {
-        "command": "extension.playFunction",
+        "command": "extension.playFunction",  
         "title": "Play Function",
         "icon": {
           "light": "resources/dark.svg",
           "dark": "resources/light.svg"
+        }
+      },
+      {
+        "command": "extension.findTestFile",
+        "title" : "find test file",
+        "icon" : {
+          "light" : "resources/find_folder_dark.svg",
+          "dark": "resources/find_folder_light.svg" 
         }
       }
     ]
