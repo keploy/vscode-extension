@@ -6,3 +6,4 @@ intellijpublish.yml
 out
 coverage
 keploy-logs.txt
+.early.coverage

@@ -13,6 +13,7 @@ import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
 import TreeSitterGo from 'tree-sitter-go';
+import { FolderTreeProvider } from './FolderStructure';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -508,6 +509,12 @@ async function getAllFunctionsInFile(
 
 
 export function activate(context: vscode.ExtensionContext) {
+    vscode.commands.executeCommand('setContext', 'showKeploy', true);
+
+    const workspaceRoot = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : '';
+    const folderTreeProvider = new FolderTreeProvider(workspaceRoot);
+
+
     const sidebarProvider = new SidebarProvider(context.extensionUri, context);
     context.subscriptions.push(
         vscode.window.registerUriHandler({
@@ -540,6 +547,9 @@ export function activate(context: vscode.ExtensionContext) {
             "Keploy-Sidebar",
             sidebarProvider
         ),
+        
+        vscode.window.registerTreeDataProvider('folderExplorer', folderTreeProvider),
+
         vscode.languages.registerCodeLensProvider(
             { language: 'javascript', scheme: 'file' },
             new KeployCodeLensProvider()
@@ -569,6 +579,12 @@ export function activate(context: vscode.ExtensionContext) {
     // let signedIn = context.globalState.get('ourToken');
     context.globalState.update('SignedOthers', undefined);
     context.globalState.update('SubscriptionEnded', undefined);
+     // Set initial values for context keys
+    vscode.commands.executeCommand('setContext', 'showKeploy', true);
+ 
+     console.log("Activating Keploy extension...");
+     console.log("Initial context - showKeploy: true, showFolderExplorer: false");
+ 
     console.log(context.globalState);
     // if (signedIn) {
     //     vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
@@ -648,6 +664,73 @@ export function activate(context: vscode.ExtensionContext) {
 
     // context.subscriptions.push(signInCommand);
     context.subscriptions.push(signInWithOthersCommand);
+    
+
+    // Register the command to show the folder explorer view and hide the Keploy sidebar
+    context.subscriptions.push(vscode.commands.registerCommand('keploy.showFolderExplorer', () => {
+        // Show Folder Explorer
+        vscode.commands.executeCommand('setContext', 'showFolderExplorer', true);
+        // Hide Keploy Sidebar
+        vscode.commands.executeCommand('setContext', 'showKeploy', false);
+    }));
+
+
+
+    vscode.commands.registerCommand('extension.playFunction', async (item: any) => {
+        if (!item || !item.fullPath || !item.label) {
+            vscode.window.showErrorMessage('Invalid function item selected.');
+            return;
+        }
+    
+        // Log the function details for debugging
+        console.log("this is main info:", {
+            collapsibleState: item.collapsibleState,
+            label: item.label,
+            fullPath: item.fullPath,
+            itemType: item.itemType,
+            tooltip: item.tooltip,
+            iconPath: item.iconPath,
+            contextValue: item.contextValue
+        });
+    
+        try {
+            // Open the file at the specified path
+            const document = await vscode.workspace.openTextDocument(item.fullPath);
+            await vscode.window.showTextDocument(document);
+    
+            // Notify the user
+            vscode.window.showInformationMessage(`Opened file: ${item.fullPath}`);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to open file: ${item.fullPath}`);
+            console.error('Error opening file:', error);
+            return;
+        }
+    
+        // Notify the user about the function being played
+        vscode.window.showInformationMessage(`Playing function: ${item.label} from file: ${item.fullPath}`);
+    
+        // Execute the play logic
+        const fileExtension = path.extname(item.fullPath); // Extract file extension
+        const additionalPrompts = ''; // Placeholder for additional prompts
+        const singleUtgTest = true; // Example flag
+    
+        vscode.commands.executeCommand(
+            'keploy.utg', // Command name
+            item.fullPath, // File path
+            item.label, // Function name
+            fileExtension, // File extension
+            additionalPrompts, // Additional prompts
+            singleUtgTest // Single test flag
+        );
+    });
+    
+    
+    context.subscriptions.push(vscode.commands.registerCommand('folderExplorer.refresh', () => {
+        // Show Folder Explorer
+        vscode.commands.executeCommand('setContext', 'showFolderExplorer', false);
+        // Hide Keploy Sidebar
+        // vscode.commands.executeCommand('setContext', 'showKeploy', false);
+    }));
 
     //defining another function for microsoft to redirect because  functions with same command name cannot be added in package.json
 
@@ -744,6 +827,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async (filePath: string, FunctionName: string, FileExtentionName: string) => {
         // Show the sidebar when this command is executed
+    
         functionName = FunctionName;
         ExtentionName = FileExtentionName;
         FunctionFilePath = filePath;

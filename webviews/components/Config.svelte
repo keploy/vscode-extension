@@ -57,8 +57,13 @@
       value: "UtgDocs"
     });
     }
+  }
 
-   
+  function ChangingView(testType){
+    vscode.postMessage({
+      type: "changeView",
+      value: "IntegrationTest",
+    });
   }
 </script>
 
@@ -83,7 +88,7 @@
     </div>
 
     <div class="btn-container">
-      <button class="btn" on:click={() => handleTestSelection("Unit Testing")}
+      <button class="btn" on:click={() => ChangingView("Unit Testing")}
         >Generate Unit tests</button
       >
       <button
@@ -122,21 +127,22 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--vscode-editor-background); 
   }
   .container-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: left;
-    height: 100%;
-    padding: 2rem;
-    background-color: black;
-    border: 1px solid #f77b3e;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
-              inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  height: 100%;
+  padding: 2rem;
+  background-color: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground); /* Optional: matches VSCode text color */
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
   .logo {
     height: 65px;
     vertical-align: top;
@@ -168,14 +174,30 @@
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif; 
-    background-color: #000;
-    color: white;
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground); /* Optional: matches VSCode text color */
     text-align: center;
     height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 20px;
-  }
+    position: relative;
+    overflow: hidden; /* Ensures the overlay stays within the bounds */
+}
+
+.main::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.1); /* Adjust opacity for more or less darkness */
+    pointer-events: none;
+}
+
+
+  
 
   .header {
     flex: 0 0 15%;
@@ -232,15 +254,29 @@
     padding: 15px;
     margin: 20px 0;
     text-decoration: none;
-    color: white;
-    background-color: #000000;
-    border: 1px solid #ff914d;
+    color: var(--vscode-editor-foreground); /* Optional: matches VSCode text color */
+    background-color: var(--vscode-editor-background);
+    border: 1px solid var(--vscode-editor-foreground);
     border-radius: 5px;
     font-weight: bold;
     text-align: center;
+    position: relative;
+    overflow: hidden; /* Ensures the overlay is contained within the button */
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); /* Glowing shadow effect based on #ff914d */
-  }
+}
+
+.btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(20, 19, 19, 0.1); /* Adjust opacity for more/less darkening */
+    border-radius: 5px;
+    pointer-events: none;
+}
+
   .logo-header{
     display: flex;
     justify-content: flex-start;
@@ -248,7 +284,7 @@
     margin-left: 9vw;
   }
   .btn:hover {
-  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  /* box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  Stronger glow on hover */
   transform: scale(1.1); 
 }
 @media screen and (max-width: 480px) {

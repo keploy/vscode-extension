@@ -11,6 +11,7 @@ import oneClickInstall from './OneClickInstall';
 import * as path from 'path';
 import * as fs from 'fs';
 import { workspace } from 'vscode';
+import { FolderTreeProvider } from "./FolderStructure";
 const yaml = require('js-yaml');
 
 function precheckFunction(): Promise<string> {
@@ -62,7 +63,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
   _interval?: NodeJS.Timeout; // Store the interval reference
-
+  
   constructor(private readonly _extensionUri: vscode.Uri, private readonly _context: vscode.ExtensionContext) {
   }
 
@@ -127,14 +128,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
       ],
     };
-
+    
+      // const folderStructure = getFolderStructure(workspaceRoot);    
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
     const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
     const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true; 
-    
 
     console.log("signedIn others  value", signedIn);
-
+    // console.log("Folder structure root:", folderStructure); // Logs the first 5 items
 
     let scriptUri = webviewView.webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "out", "compiled/Config.js")
@@ -146,7 +147,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
 
-    this._sendApiResponseToWebview(apiResponse, signedIn);
+    this._sendApiResponseToWebview(apiResponse, signedIn) ;
+
 
 
     // Start sending the updated `apiResponse` to the webview every 3 seconds
@@ -343,6 +345,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
             if (data.value === 'UtgDocs') {
               sveltePageJs = webviewView.webview.asWebviewUri(
+                //make changes here after testing replace treeView with UtgDocs
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "UtgDocs.js")
               );
               sveltePageCss = webviewView.webview.asWebviewUri(
@@ -425,6 +428,17 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             vscode.window.showErrorMessage('Failed to sign in. Please try again.');
           }
           break;
+      }
+
+      case "changeView":{
+        try{
+          await vscode.commands.executeCommand('keploy.showFolderExplorer'); 
+          console.log("button is clicking")
+        }catch(error){
+          console.error('Error while signing in:', error);
+          vscode.window.showErrorMessage('Failed to sign in. Please try again.');
+        }
+        break;
       }
       //cannot make it a case of generate unit test as we will taking the input from the user and keploy gen with additional prompts will from a cta hence making a new case for it.
         case "keployGenWithAdditionalPrompts":{
@@ -603,7 +617,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     this._interval = setInterval(() => {
       const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
       const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
-
+      
       this._sendApiResponseToWebview(apiResponse, signedIn);
     }, 3000); // 3 seconds
   }
@@ -639,9 +653,12 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     }
   }
+
   public revive(panel: vscode.WebviewView) {
     this._view = panel;
   }
+
+  
   private _getHtmlForWebview(webview: vscode.Webview, compiledCSSUri: vscode.Uri, scriptUri: vscode.Uri) {
     const styleResetUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, "media", "reset.css")

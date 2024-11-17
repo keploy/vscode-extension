@@ -20,6 +20,8 @@
     "Other"
   ],
   "activationEvents": [
+    "onCommand:keploy.showFolderExplorer",
+    "onCommand:folderExplorer.refresh",
     "onCommand:keploy.utg",
     "onLanguage:javascript",
     "onUri:keploy.handleUri"
@@ -36,22 +38,25 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "Keploy-Sidebar",
+          "id": "keploy",
           "title": "Keploy",
           "icon": "media/logo.png"
         }
       ]
     },
     "views": {
-      "Keploy-Sidebar": [
+      "keploy": [
+        {
+          "id": "folderExplorer",
+          "name": "Keploy",
+          "when": "showFolderExplorer == true"
+        },
         {
           "id": "Keploy-Sidebar",
           "name": "Keploy",
           "icon": "media/logo.png",
           "type": "webview",
-          "webviewOptions": {
-            "retainContextWhenHidden": true
-          }
+          "when": "showFolderExplorer != true"
         }
       ]
     },
@@ -64,6 +69,11 @@
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "folderExplorer.refresh",
+          "when": "view == folderExplorer",
+          "group": "navigation"
+        },
         {
           "submenu": "sign_in_submenu",
           "when": "view == Keploy-Sidebar && keploy.signedIn != true",
@@ -107,11 +117,29 @@
         {
           "command": "keploy.SignInWithMicrosoft",
           "title": "Sign In with Microsoft"
-    
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "extension.playFunction",
+          "when": "viewItem == functionItem && view == folderExplorer",
+          "group": "inline"
         }
       ]
     },
     "commands": [
+      {
+        "command": "keploy.showFolderExplorer",
+        "title": "Show Folder Explorer"
+      },
+      {
+        "command": "folderExplorer.refresh",
+        "title": "Back",
+        "icon": {
+          "light": "resources/back_dark.svg",
+          "dark": "resources/back_white.svg"
+        }
+      },
       {
         "command": "keploy.SignInWithOthers",
         "title": "Sign In with Google"
@@ -157,6 +185,14 @@
         "command": "keploy.viewDocumentation",
         "title": "View Docs",
         "when": "view == Keploy-Sidebar"
+      },
+      {
+        "command": "extension.playFunction",
+        "title": "Play Function",
+        "icon": {
+          "light": "resources/dark.svg",
+          "dark": "resources/light.svg"
+        }
       }
     ]
   },
