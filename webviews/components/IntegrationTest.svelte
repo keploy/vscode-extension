@@ -11,6 +11,14 @@
 
   let isPrecheckDone = false;
   let projectType = "";
+
+  function trackEvent(value) {
+    vscode.postMessage({
+      type: 'trackEvent',
+      value,
+    });
+  }
+
   function handleProjectTypeDetection(event) {
     if (event.data && event.data.type === 'projectDetected') {
       projectType = event.data.projectType;
@@ -57,6 +65,7 @@
         command: command,
         path: path
       });
+      trackEvent("initializeConfig");
       handleTestSelection("KeployHome");
     } else {
       console.error("Command is required to initialize the config.");

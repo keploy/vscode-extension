@@ -521,13 +521,15 @@ export function activate(context: vscode.ExtensionContext) {
    const installationId = context.globalState.get('installationId') || generateInstallationId();
    const extensionVersion = '1.0.0'; // Replace with your extension's version
 
-   // Create a Telemetry instance
-   const telemetry = new Telemetry({
-       enabled: telemetryEnabled,
-       installationId: installationId as string,
-       extensionVersion: extensionVersion,
-   });
+    // Initialize the singleton Telemetry instance
+    Telemetry.initialize({
+        enabled: telemetryEnabled,
+        installationId: installationId as string,
+        extensionVersion: extensionVersion,
+    });
 
+    // Example: Track an event when the extension is activated
+    const telemetry = Telemetry.getInstance();
    // Example: Track an event when the extension is activated
    telemetry.trackEvent('ExtensionActivated');
 
@@ -536,8 +538,8 @@ export function activate(context: vscode.ExtensionContext) {
        context.globalState.update('installationId', installationId);
    }
 
-    const sidebarProvider = new SidebarProvider(context.extensionUri, context);
-    context.subscriptions.push(
+   const sidebarProvider = new SidebarProvider(context.extensionUri, context);
+   context.subscriptions.push(
         vscode.window.registerUriHandler({
             async handleUri(uri) {
                 // Extract the token and state from the URI query parameters
@@ -626,10 +628,12 @@ export function activate(context: vscode.ExtensionContext) {
         // Register the sign-in command if not signed in
       }
       let signInCommand = vscode.commands.registerCommand('keploy.SignInWithGithub', async () => {
+        telemetry.trackEvent('SignInWithGithubClicked');
         try {
             const result = await getGitHubAccessToken();
 
             if (result) {
+                telemetry.trackEvent('GitHubAccessTokenRetrieved');
                 const { accessToken, email } = result;
 
                 getInstallationID();
@@ -645,6 +649,7 @@ export function activate(context: vscode.ExtensionContext) {
                 await context.globalState.update('SignedOthers', true);
 
                 // if (isValid) {
+                telemetry.trackEvent('SignInWithGithubSuccess', { emailID });
                 vscode.window.showInformationMessage('You are now signed in!');
                 vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
                 vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
@@ -653,11 +658,13 @@ export function activate(context: vscode.ExtensionContext) {
                 // }
 
             } else {
+                telemetry.trackEvent('SignInWithGithubValidationFailed');
                 console.log('Failed to get the session or email.');
                 vscode.window.showInformationMessage('Failed to sign in Keploy!');
             }
         } catch (error) {
             // console.error('Error during sign-in:', error);
+            telemetry.trackEvent('SignInWithGithubError', { error: error });
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
         }
     });
@@ -665,9 +672,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     let signInWithOthersCommand = vscode.commands.registerCommand('keploy.SignInWithOthers', async () => {
+        telemetry.trackEvent('SignInWithOthersClicked');
         try {
             await SignInWithOthers(); // The result will now be handled in the URI handler
+            telemetry.trackEvent('SignInWithOthersSuccess');
         } catch (error) {
+            telemetry.trackEvent('SignInWithOthersError', { error });
             // console.error('Error during sign-in:', error);
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
         }
@@ -680,9 +690,12 @@ export function activate(context: vscode.ExtensionContext) {
     //defining another function for microsoft to redirect because  functions with same command name cannot be added in package.json
 
     let signInWithMicrosoft = vscode.commands.registerCommand('keploy.SignInWithMicrosoft', async () => {
+        telemetry.trackEvent('SignInWithMicrosoftClicked');
         try {
             await SignInWithOthers(); // The result will now be handled in the URI handler
+            telemetry.trackEvent('SignInWithMicrosoftSuccess');
         } catch (error) {
+            telemetry.trackEvent('SignInWithMicrosoftError', { error });
             // console.error('Error during sign-in:', error);
             vscode.window.showInformationMessage('Failed to sign in Keploy!');
         }
@@ -715,6 +728,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(viewKeployVersionDisposable);
 
     let viewChangeLogDisposable = vscode.commands.registerCommand('keploy.viewChangeLog', () => {
+        telemetry.trackEvent('ViewChangeLogClicked');
         const changeLogUrl = 'https://marketplace.visualstudio.com/items?itemName=Keploy.keployio';
         vscode.env.openExternal(vscode.Uri.parse(changeLogUrl));
     }
@@ -724,6 +738,7 @@ export function activate(context: vscode.ExtensionContext) {
     let viewDocumentationDisposable = vscode.commands.registerCommand('keploy.viewDocumentation', () => {
         const docsUrl = 'https://keploy.io/docs/';
         vscode.env.openExternal(vscode.Uri.parse(docsUrl));
+        
     }
     );
     context.subscriptions.push(viewDocumentationDisposable);
@@ -773,6 +788,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     let showSidebarDisposable = vscode.commands.registerCommand('keploy.showSidebar', async (filePath: string, FunctionName: string, FileExtentionName: string) => {
         // Show the sidebar when this command is executed
+        telemetry.trackEvent('ShowSidebarCommandInvoked', {
+            functionName: FunctionName,
+            fileExtension: FileExtentionName
+        });
         functionName = FunctionName;
         ExtentionName = FileExtentionName;
         FunctionFilePath = filePath;
