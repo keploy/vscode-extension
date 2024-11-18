@@ -131,7 +131,12 @@
           "command": "extension.findTestFile",
           "when": "viewItem == testFileAvailableBothItem  && view == folderExplorer",
           "group": "inline"
-       }
+       },
+       {
+        "command": "extension.playFunctionForAll",
+        "when": "viewItem == fileItem  && view == folderExplorer",
+        "group": "inline"
+     }
       ]
     },
     "commands": [
@@ -208,7 +213,15 @@
           "light" : "resources/find_folder_dark.svg",
           "dark": "resources/find_folder_light.svg" 
         }
-      }
+      },
+      {
+        "command": "extension.playFunctionForAll",
+        "title" : "Make tests for whole file",
+        "icon": {
+          "light": "resources/dark.svg",
+          "dark": "resources/light.svg"
+        }
+     }
     ]
   },
   "scripts": {

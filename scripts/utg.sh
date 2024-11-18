@@ -82,5 +82,5 @@ if [ -n "$CodeLensefunctionName" ] && [ "$CodeLensefunctionName" != " " ]; then
 fi
 
 # Run the keploy command
-# echo "Running: $keployCommand"
+echo "Running: $keployCommand"
 eval $keployCommand

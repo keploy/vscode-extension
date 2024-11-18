@@ -758,6 +758,41 @@ export function activate(context: vscode.ExtensionContext) {
         );
     });
     
+    vscode.commands.registerCommand('extension.playFunctionForAll', async (item: any) => {
+        if (!item || !item.fullPath || !item.label) {
+            vscode.window.showErrorMessage('Invalid function item selected.');
+            return;
+        }
+        try {
+            // Open the file at the specified path
+            const document = await vscode.workspace.openTextDocument(item.fullPath);
+            await vscode.window.showTextDocument(document);
+    
+            // Notify the user
+            vscode.window.showInformationMessage(`Opened file: ${item.fullPath}`);
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to open file: ${item.fullPath}`);
+            console.error('Error opening file:', error);
+            return;
+        }
+    
+        // Notify the user about the function being played
+        vscode.window.showInformationMessage(`Playing function: ${item.label} from file: ${item.fullPath}`);
+    
+        // Execute the play logic
+        const fileExtension = path.extname(item.fullPath); // Extract file extension
+        const additionalPrompts = ''; // Placeholder for additional prompts
+        const singleUtgTest = false; // Example flag
+    
+        vscode.commands.executeCommand(
+            'keploy.utg', // Command name
+            item.fullPath, // File path
+            "", // Function name
+            fileExtension, // File extension
+            additionalPrompts, // Additional prompts
+            singleUtgTest // Single test flag
+        );
+    });
     
 
 
