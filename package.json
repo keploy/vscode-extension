@@ -23,6 +23,7 @@
     "onCommand:keploy.showFolderExplorer",
     "onCommand:folderExplorer.refresh",
     "onCommand:keploy.utg",
+    "onCommand:vscode.open",
     "onLanguage:javascript",
     "onUri:keploy.handleUri"
   ],
@@ -123,12 +124,12 @@
       "view/item/context": [
         {
           "command": "extension.playFunction",
-          "when": "viewItem == functionItem  && view == folderExplorer",
+          "when": "(viewItem != classItem && viewItem!=folderItem && viewItem!=fileItem ) && view == folderExplorer",
           "group": "inline"
       },
       {
           "command": "extension.findTestFile",
-          "when": "viewItem == testFileAvailableBothItem && view == folderExplorer",
+          "when": "viewItem == testFileAvailableBothItem  && view == folderExplorer",
           "group": "inline"
       }
       ]

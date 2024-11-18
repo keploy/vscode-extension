@@ -9,31 +9,36 @@ export class FolderTreeItem extends vscode.TreeItem {
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
         public readonly fullPath: string,
         public readonly itemType: 'folder' | 'file' | 'class' | 'function',
-        public readonly command?: vscode.Command
+        public readonly command?: vscode.Command,
+        public readonly ContextValue ?: string,
     ) {
         super(label, collapsibleState);
         this.tooltip = itemType === 'function' ? 'Click to play this function' : this.fullPath;
 
-        console.log("here deepak ", label);
-
         // Set icon based on itemType
         if (itemType === 'folder') {
+            this.contextValue = 'folderItem';
             this.iconPath = collapsibleState === vscode.TreeItemCollapsibleState.Collapsed
                 ? new vscode.ThemeIcon('folder')
                 : new vscode.ThemeIcon('folder-opened');
+        
         } else if (itemType === 'file') {
             this.iconPath = new vscode.ThemeIcon('file');
+            this.contextValue = 'fileItem';
         } else if (itemType === 'class') {
             this.iconPath = new vscode.ThemeIcon('symbol-class');
+            this.contextValue = 'classItem';
         } else if (itemType === 'function') {
             this.iconPath = new vscode.ThemeIcon('symbol-function');
-            this.contextValue = 'functionItem';
-
+            this.contextValue = ContextValue || "chutiya kat gaya"; // Set a default value initially
         }
 
         console.log(`Created FolderTreeItem: label=${label}, fullPath=${fullPath}, itemType=${itemType}`);
     }
+
+  
 }
+
 
 
 
@@ -67,50 +72,45 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
     }
     
 
-    private extractFunctionsFromFile(filePath: string): FolderTreeItem[] {
+    private async extractFunctionsFromFile(filePath: string): Promise<FolderTreeItem[]> {
         const content = fs.readFileSync(filePath, 'utf-8');
         const extension = path.extname(filePath).toLowerCase(); // Get file extension
-
- 
-
+    
         const functionRegex = /function\s+(\w+)\s*\(/g;
         const arrowFunctionRegex = /const\s+(\w+)\s*=\s*\(/g;
         const classRegex = /class\s+(\w+)\s+/g;
         const goFunctionRegex = /func\s+(\w+)\s*\(/g; // Regex for Go functions
         const pythonFunctionRegex = /def\s+(\w+)\s*\(/g; // Python functions
         const javaMethodRegex = /(public|private|protected)?\s+\w+\s+(\w+)\s*\(/g; // Java methods
-
+    
         const items: FolderTreeItem[] = [];
         let match;
-
+    
         // Extract functions
-
-        if(extension == '.js' || extension == ".ts"){
+        if (extension === '.js' || extension === '.ts') {
             while ((match = functionRegex.exec(content)) !== null) {
                 items.push(
                     new FolderTreeItem(
                         match[1],
                         vscode.TreeItemCollapsibleState.None,
                         filePath,
-                        'function',
+                        'function'
                     )
                 );
             }
     
-            // Extract arrow functions
             while ((match = arrowFunctionRegex.exec(content)) !== null) {
                 items.push(
                     new FolderTreeItem(
                         match[1],
                         vscode.TreeItemCollapsibleState.None,
                         filePath,
-                        'function',
+                        'function'
                     )
                 );
             }
         }
-     
-
+    
         // Extract classes
         while ((match = classRegex.exec(content)) !== null) {
             items.push(
@@ -118,42 +118,38 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
                     match[1],
                     vscode.TreeItemCollapsibleState.None,
                     filePath,
-                    'class',
+                    'class'
                 )
             );
-        }
-
-        if(extension == ".go"){
-                //fofr the go functions
-        while ((match = goFunctionRegex.exec(content)) !== null) {
-            items.push(
-                new FolderTreeItem(
-                    match[1],
-                    vscode.TreeItemCollapsibleState.None,
-                    filePath,
-                    'function',
-                )
-            );
-        }
         }
     
-        if(extension == ".py"){
-                 // Extract Python functions
-        while ((match = pythonFunctionRegex.exec(content)) !== null) {
-            items.push(
-                new FolderTreeItem(
-                    match[1],
-                    vscode.TreeItemCollapsibleState.None,
-                    filePath,
-                    'function',
-                )
-            );
+        if (extension === '.go') {
+            while ((match = goFunctionRegex.exec(content)) !== null) {
+                items.push(
+                    new FolderTreeItem(
+                        match[1],
+                        vscode.TreeItemCollapsibleState.None,
+                        filePath,
+                        'function'
+                    )
+                );
+            }
         }
+    
+        if (extension === '.py') {
+            while ((match = pythonFunctionRegex.exec(content)) !== null) {
+                items.push(
+                    new FolderTreeItem(
+                        match[1],
+                        vscode.TreeItemCollapsibleState.None,
+                        filePath,
+                        'function'
+                    )
+                );
+            }
         }
-     
-
-        //for the java
-        if(extension == ".java"){
+    
+        if (extension === '.java') {
             while ((match = javaMethodRegex.exec(content)) !== null) {
                 const methodName = match[2]; // Capture the method name
                 items.push(
@@ -161,16 +157,48 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
                         methodName,
                         vscode.TreeItemCollapsibleState.None,
                         filePath,
-                        'function',
+                        'function'
                     )
                 );
             }
         }
- 
+    
         console.log(`Extracted items from ${filePath}: ${items.map(item => item.label).join(', ')}`);
+    
+        // Update context values asynchronously
+        await Promise.all(
+            items.map(async (item) => {
+                if (item.itemType === 'function') {
+                    item.contextValue = await this.updateContextValueAsync(item.label, filePath);
+                }
+            })
+        );
+    
         return items;
     }
-
+    
+    private async updateContextValueAsync(label: string, fullPath: string): Promise<string> {
+        try {
+            const FunctionNameTree = label;
+            const fileExtensionTree = path.extname(fullPath); // Extract file extension
+            console.log("FunctionName tree and fileExtensionTree", FunctionNameTree, fileExtensionTree);
+    
+            const testFilesPath = await findTestCasesForFunction(FunctionNameTree, fileExtensionTree);
+            console.log("testFilePaths", testFilesPath);
+            console.log("Test files count", testFilesPath?.length);
+    
+            if (testFilesPath) {
+                return 'testFileAvailableBothItem';
+            } else {
+                console.log("No test files found");
+                return 'functionItem';
+            }
+        } catch (error) {
+            console.error("Error updating context value:", error);
+            return 'functionItem'; // Fallback context value
+        }
+    }
+    
     private getChildrenOfDirectory(dirPath: string): FolderTreeItem[] {
         const items = fs.readdirSync(dirPath);
         return items
@@ -207,7 +235,7 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
             });
     }
 
-    async getChildren(element?: FolderTreeItem): Promise<FolderTreeItem[]> {
+     getChildren(element?: FolderTreeItem): Thenable<FolderTreeItem[]> {
         if (!this.workspaceRoot) {
             vscode.window.showInformationMessage('No directory open');
             return Promise.resolve([]);
@@ -215,45 +243,13 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
 
         if (element && !fs.statSync(element.fullPath).isDirectory()) {
             // File clicked: extract and return functions and classes inside the file
-            const  items = this.extractFunctionsFromFile(element.fullPath);
-
-            items.forEach(async(item) => {
-                if (item.itemType === 'function') {
-                    await this.updateContextValueAsync(item.label , item.fullPath , item);
-                    //call the uodateConTextvalueasync here
-                } 
-            });
-
-            return Promise.resolve(items);
-        }
-
+            return this.extractFunctionsFromFile(element.fullPath);
+        }  
+        
         const dirPath = element ? element.fullPath : this.workspaceRoot;
         const children = this.getChildrenOfDirectory(dirPath);
 
         return Promise.resolve(children);
-    }
-
-     async updateContextValueAsync(label: string, fullPath: string , item:any) {
-        try {
-            const FunctionNameTree = label;
-            const fileExtensionTree = path.extname(fullPath); // Extract file extension
-            console.log("FunctionName tree and fileExtenionTree" , FunctionNameTree , fileExtensionTree);
-            const testFilesPath = await findTestCasesForFunction(FunctionNameTree, fileExtensionTree);
-            console.log("testFilePaths bete" , testFilesPath)
-            console.log("yes hai bhai " , testFilesPath?.length);
-            if (testFilesPath) {
-                // Update context value to indicate test files are available
-                item.contextValue = 'testFileAvailableBothItem';
-            }else{
-                console.log("ye tho fasa kam se jam")
-                item.contextValue = 'functionItem';
-            } 
-            console.log(`Context value set to: ${item.contextValue}`);
-            // Optionally, trigger UI refresh if the TreeView needs to reflect the change
-            // vscode.commands.executeCommand('folderExplorer.Realrefresh');
-        } catch (error) {
-            console.error("Error updating context value:", error);
-        }
     }
 
     getTreeItem(element: FolderTreeItem): vscode.TreeItem {
@@ -261,4 +257,3 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
     }
 }
 
-//only removing the test files is remaining.
