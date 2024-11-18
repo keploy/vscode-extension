@@ -519,7 +519,7 @@ export function activate(context: vscode.ExtensionContext) {
    // Initialize telemetry settings
    const telemetryEnabled = vscode.workspace.getConfiguration('yourExtension').get('enableTelemetry', true);
    const installationId = context.globalState.get('installationId') || generateInstallationId();
-   const extensionVersion = '1.0.0'; // Replace with your extension's version
+   const extensionVersion = '1.0.0';  
 
     // Initialize the singleton Telemetry instance
     Telemetry.initialize({
@@ -528,12 +528,8 @@ export function activate(context: vscode.ExtensionContext) {
         extensionVersion: extensionVersion,
     });
 
-    // Example: Track an event when the extension is activated
     const telemetry = Telemetry.getInstance();
-   // Example: Track an event when the extension is activated
    telemetry.trackEvent('ExtensionActivated');
-
-   // Save the installationId in globalState if it's newly generated
    if (!context.globalState.get('installationId')) {
        context.globalState.update('installationId', installationId);
    }
