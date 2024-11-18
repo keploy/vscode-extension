@@ -130,11 +130,7 @@
       {
           "command": "extension.findTestFile",
           "when": "viewItem == testFileAvailableBothItem  && view == folderExplorer",
-          "group": "navigation",
-          "icon": {
-            "light": "media/find_folder_dark.svg",
-            "dark": "media/find_folder_light.svg"
-          }
+          "group": "inline"
        }
       ]
     },

@@ -514,8 +514,9 @@ export function activate(context: vscode.ExtensionContext) {
     const workspaceRoot = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : '';
     const folderTreeProvider = new FolderTreeProvider(workspaceRoot);
 
-
     const sidebarProvider = new SidebarProvider(context.extensionUri, context);
+
+
     context.subscriptions.push(
         vscode.window.registerUriHandler({
             async handleUri(uri) {
@@ -575,6 +576,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     oneClickInstall();
+
+    //
+    folderTreeProvider.refresh();
+
 
     // let signedIn = context.globalState.get('ourToken');
     context.globalState.update('SignedOthers', undefined);
@@ -680,7 +685,30 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     
-    
+    if (workspaceRoot) {
+        const watcher = vscode.workspace.createFileSystemWatcher('**/*', false, false, false);
+
+        watcher.onDidChange((uri) => {
+            console.log(`File changed: ${uri.fsPath}`);
+            vscode.commands.executeCommand('folderExplorer.Realrefresh');
+
+        });
+
+        watcher.onDidCreate((uri) => {
+            console.log(`File created: ${uri.fsPath}`);
+            vscode.commands.executeCommand('folderExplorer.Realrefresh');
+
+        });
+
+        watcher.onDidDelete((uri) => {
+            console.log(`File deleted: ${uri.fsPath}`);
+            vscode.commands.executeCommand('folderExplorer.Realrefresh');
+
+        });
+
+        // Add to subscriptions for cleanup
+        context.subscriptions.push(watcher);
+    }
 
     vscode.commands.registerCommand('extension.playFunction', async (item: any) => {
         if (!item || !item.fullPath || !item.label) {

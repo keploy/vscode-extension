@@ -36,51 +36,18 @@ export class FolderTreeItem extends vscode.TreeItem {
 
         console.log(`Created FolderTreeItem: label=${label}, fullPath=${fullPath}, itemType=${itemType}`);
     }
-
-  
+ 
 }
-
-
-
 
 export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<FolderTreeItem | undefined | null | void> = new vscode.EventEmitter<FolderTreeItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<FolderTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     constructor(private workspaceRoot: string) {
-        if (workspaceRoot) {
-            // Watch for file changes in the workspace
-            const watcher = vscode.workspace.createFileSystemWatcher('**/*');
-            watcher.onDidChange((uri) => {
-                console.log(`File changed: ${uri.fsPath}`);
-                this.refresh();
-            });
-            watcher.onDidCreate((uri) => {
-                console.log(`File created: ${uri.fsPath}`);
-                this.refresh();
-            });
-            watcher.onDidDelete((uri) => {
-                console.log(`File deleted: ${uri.fsPath}`);
-                this.refresh();
-            });
-    
-            // Listen for content changes in open documents
-            vscode.workspace.onDidChangeTextDocument((event) => {
-                const filePath = event.document.uri.fsPath;
-                console.log(`Content changed in: ${filePath}`);
-                if (filePath.includes('test') || filePath.includes('spec')) { // Adjust the condition to detect test files
-                    this.refresh();
-                }
-            });
-    
-            // Clean up watcher on extension deactivation
-            vscode.workspace.onDidCloseTextDocument(() => {
-                watcher.dispose();
-            });
-        }
     }
     
-
+    
+    
     refresh(): void {
         this._onDidChangeTreeData.fire();
         console.log('Tree refreshed');
