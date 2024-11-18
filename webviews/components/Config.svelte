@@ -47,6 +47,7 @@
         vscode.postMessage({
       type: "navigate",
       value: "IntegrationTest",
+      eventName: "GenerateIntegrationTestButtonClicked"
     });
       }else{
         navigateToKeploy();
@@ -54,7 +55,9 @@
     }else{
       vscode.postMessage({
       type: "navigate",
-      value: "UtgDocs"
+      value: "UtgDocs",
+      eventName: "GenerateUnitTestButtonClicked"
+
     });
     }
 
