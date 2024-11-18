@@ -740,50 +740,25 @@ export function activate(context: vscode.ExtensionContext) {
         // vscode.commands.executeCommand('setContext', 'showKeploy', false);
     }));
 
-    vscode.commands.registerCommand('extension.findFunctionContainingTestFile', async (item: any) => {
+    vscode.commands.registerCommand('extension.findTestFile', async (item: any) => {
         if (!item || !item.fullPath || !item.label) {
             vscode.window.showErrorMessage('Invalid function item selected.');
             return;
         }
-
-        console.log("Aagaye hai hm main mude pe")
-        vscode.commands.executeCommand("vscode.open",vscode.Uri.file(item.fullPath))
-        // Log the function details for debugging
-        console.log("this is main info:", {
-            collapsibleState: item.collapsibleState,
-            label: item.label,
-            fullPath: item.fullPath,
-            itemType: item.itemType,
-            tooltip: item.tooltip,
-            iconPath: item.iconPath,
-            contextValue: item.contextValue
-        });
-
-
-        
-        const fileExtension = path.extname(item.fullPath); // Extract file extension
-        const functionName = item.label;
-        const filePath = item.fullPath;
         try {
-            const FunctionNameTree = functionName;
-            const fileExtensionTree = fileExtension; // Extract file extension
-            console.log("FunctionName tree and fileExtenionTree" , FunctionNameTree , fileExtensionTree);
-            const testFilesPath = await findTestCasesForFunction(FunctionNameTree, fileExtensionTree);
-            console.log("testFilePaths bete" , testFilesPath)
-            if (testFilesPath) {
-                // Update context value to indicate test files are available
-                console.log("ham to isme hai ji")
-                item.contextValue = 'testFileAvailableBothItem';
-            }else{
-                console.log("ye tho fasa kam se jam")
-                item.contextValue = 'functionItem';
-            } 
-            console.log(`Context value set to: ${item.contextValue}`);
-            // Optionally, trigger UI refresh if the TreeView needs to reflect the change
-            // vscode.commands.executeCommand('folderExplorer.Realrefresh');
+            // Open the file at the specified path
+            const document = await vscode.workspace.openTextDocument(item.testFilePath);
+            await vscode.window.showTextDocument(document);
+    
+            // Notify the user
+            vscode.window.showInformationMessage(`Opened file: ${item.testFilePath}`);
         } catch (error) {
-            console.error("Error updating context value:", error);
+            vscode.window.showErrorMessage(`Failed to open file: ${item.testFilePath}`);
+            console.error('Error opening file:', error);
+            return;
         }
+
+
         vscode.commands.executeCommand('folderExplorer.Realrefresh');
 
      

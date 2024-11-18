@@ -11,6 +11,7 @@ export class FolderTreeItem extends vscode.TreeItem {
         public readonly itemType: 'folder' | 'file' | 'class' | 'function',
         public readonly command?: vscode.Command,
         public readonly ContextValue ?: string,
+        public  testFilePath?:string,
     ) {
         super(label, collapsibleState);
         this.tooltip = itemType === 'function' ? 'Click to play this function' : this.fullPath;
@@ -46,7 +47,21 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
     private _onDidChangeTreeData: vscode.EventEmitter<FolderTreeItem | undefined | null | void> = new vscode.EventEmitter<FolderTreeItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<FolderTreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
-    constructor(private workspaceRoot: string) {}
+    constructor(private workspaceRoot: string) {
+        if (workspaceRoot) {
+            // Watch for file changes in the workspace
+            const watcher = vscode.workspace.createFileSystemWatcher('**/*');
+            watcher.onDidChange(() => this.refresh());
+            watcher.onDidCreate(() => this.refresh());
+            watcher.onDidDelete(() => this.refresh());
+
+            // Clean up watcher on extension deactivation
+            vscode.workspace.onDidCloseTextDocument(() => {
+                watcher.dispose();
+            });
+        }
+    }
+
 
     refresh(): void {
         this._onDidChangeTreeData.fire();
@@ -169,33 +184,41 @@ export class FolderTreeProvider implements vscode.TreeDataProvider<FolderTreeIte
         await Promise.all(
             items.map(async (item) => {
                 if (item.itemType === 'function') {
-                    item.contextValue = await this.updateContextValueAsync(item.label, filePath);
+                    const result = await this.updateContextValueAsync(item.label, filePath);
+                    item.contextValue = result.contextValue;
+                    if (result.testFilesPath) {
+                        item.testFilePath = result.testFilesPath[0];
+                        console.log(`Test files for ${item.label}: ${result.testFilesPath[0]}`);
+                    }
                 }
             })
         );
+        
     
         return items;
     }
     
-    private async updateContextValueAsync(label: string, fullPath: string): Promise<string> {
+    private async updateContextValueAsync(label: string, fullPath: string): Promise<{ contextValue: string; testFilesPath?: string[] }> {
         try {
             const FunctionNameTree = label;
             const fileExtensionTree = path.extname(fullPath); // Extract file extension
             console.log("FunctionName tree and fileExtensionTree", FunctionNameTree, fileExtensionTree);
     
-            const testFilesPath = await findTestCasesForFunction(FunctionNameTree, fileExtensionTree);
-            console.log("testFilePaths", testFilesPath);
-            console.log("Test files count", testFilesPath?.length);
+            const testFilesUri = await findTestCasesForFunction(FunctionNameTree, fileExtensionTree);
+            
+            // console.log("testFilePaths", testFilesPath);
+            // console.log("Test files count", testFilesPath?.length);
     
-            if (testFilesPath) {
-                return 'testFileAvailableBothItem';
+            if (testFilesUri) {
+                const testFilesPath = testFilesUri.map(uri => uri.fsPath); // Convert Uri[] to string[]
+                return { contextValue: 'testFileAvailableBothItem', testFilesPath };
             } else {
                 console.log("No test files found");
-                return 'functionItem';
+                return { contextValue: 'functionItem' };
             }
         } catch (error) {
             console.error("Error updating context value:", error);
-            return 'functionItem'; // Fallback context value
+            return { contextValue: 'functionItem' }; // Fallback context value
         }
     }
     
