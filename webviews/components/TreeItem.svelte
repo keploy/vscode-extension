@@ -32,7 +32,7 @@
         case 'folder':
             return '<span class="Folder_icon_light"></span>';
         case 'file':
-            return '<span class="File_icon_light"></span>';
+            return '<span class="file_icon_light"></span>';
         case 'class':
             return '<span class="Class_icon_light"></span>';
         case 'function':
@@ -49,14 +49,21 @@
     <div class="icon_name">
       <div class="name-icons">
         <button class="icon-button" on:click={toggleCollapse}>
+          {#if (item.itemType !== "file" || (item.itemType === "file" && item.children.length > 0)) }
           {#if item.collapsed}
           <span class="right_icon_light"></span>
           {/if}
           {#if !item.collapsed}
           <span class="down_icon_light"></span>
           {/if}
+          {/if}
         </button>
-        {@html getIcon(item.itemType)} {item.label}
+        <div class="icons_and_names">
+          {@html getIcon(item.itemType)}
+          <div class="name">
+            {item.label}
+          </div>
+        </div>
       </div>
       <div class="function_icons">
         {#if item.itemType == "function"}
@@ -94,9 +101,6 @@
   width: "full";
 }
 
-.list-items:hover{
-  background-color: var(--vscode-list-hoverBackground);
-}
 .name-icons{
   display: flex;
   flex-direction: row;
@@ -117,13 +121,13 @@
   box-shadow: none; /* Remove any shadow */
 }
 
-.icon-button:hover {
-  background-color: var(--vscode-list-hoverBackground);
-}
 
 .function_icons{
   display: flex;
 
+}
+.name{
+  margin-right: 2px;
 }
 
 button:focus {
@@ -141,6 +145,12 @@ button:focus {
   width: 100%;
 }
 
+
+.icons_and_names{
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}
 /* Icon and name alignment */
 .icon_name {
   display: flex;
@@ -148,7 +158,7 @@ button:focus {
   align-items: center; /* Keep the icon and name vertically aligned */
   border-radius: 5px; /* Optional: Add rounded corners for better aesthetics */
   transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
-  width: 80%;
+  width: 90%;
 }
 
 .icon_name:hover {

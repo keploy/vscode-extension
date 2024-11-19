@@ -387,11 +387,26 @@ hr {
   height: 20px;
 }
 
-.Folder_icon_dark{
+.Folder_icon_light{
   background: url("folder_light.svg") no-repeat center center;
   background-size: contain;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
+}
+
+
+.file_icon_light{
+  background: url("file_light.svg") no-repeat center center;
+  background-size: contain;
+  width: 15px;
+  height: 15px;
+}
+
+.file_icon_dark{
+  background: url("file_dark.svg") no-repeat center center;
+  background-size: contain;
+  width: 15px;
+  height: 15px;
 }
 /*icons ends here*/
 .replay-icon.open {
