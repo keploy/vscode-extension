@@ -13,7 +13,7 @@ import TreeSitterJavaScript from 'tree-sitter-javascript';
 import TreeSitterPython from 'tree-sitter-python';
 import TreeSitterJava from 'tree-sitter-java';
 import TreeSitterGo from 'tree-sitter-go';
-import { FolderTreeProvider } from './FolderStructure';
+import  getFolderStructure  from './FolderStructure';
 
 class KeployCodeLensProvider implements vscode.CodeLensProvider {
     onDidChangeCodeLenses?: vscode.Event<void> | undefined;
@@ -512,8 +512,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.executeCommand('setContext', 'showKeploy', true);
 
     const workspaceRoot = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath : '';
-    const folderTreeProvider = new FolderTreeProvider(workspaceRoot);
-
     const sidebarProvider = new SidebarProvider(context.extensionUri, context);
 
 
@@ -548,9 +546,7 @@ export function activate(context: vscode.ExtensionContext) {
             "Keploy-Sidebar",
             sidebarProvider
         ),
-        
-        vscode.window.registerTreeDataProvider('folderExplorer', folderTreeProvider),
-
+    
         vscode.languages.registerCodeLensProvider(
             { language: 'javascript', scheme: 'file' },
             new KeployCodeLensProvider()
@@ -576,10 +572,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     oneClickInstall();
-
-    //
-    folderTreeProvider.refresh();
-
 
     // let signedIn = context.globalState.get('ourToken');
     context.globalState.update('SignedOthers', undefined);
@@ -678,12 +670,6 @@ export function activate(context: vscode.ExtensionContext) {
         // Hide Keploy Sidebar
         vscode.commands.executeCommand('setContext', 'showKeploy', false);
     }));
-
-
-    vscode.commands.registerCommand('folderExplorer.Realrefresh', () => {
-        folderTreeProvider.refresh();
-    });
-
     
     if (workspaceRoot) {
         const watcher = vscode.workspace.createFileSystemWatcher('**/*', false, false, false);
@@ -710,7 +696,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(watcher);
     }
 
-    vscode.commands.registerCommand('extension.playFunction', async (item: any) => {
+    vscode.commands.registerCommand('keploy.playFunction', async (item: any) => {
         if (!item || !item.fullPath || !item.label) {
             vscode.window.showErrorMessage('Invalid function item selected.');
             return;
@@ -758,7 +744,7 @@ export function activate(context: vscode.ExtensionContext) {
         );
     });
     
-    vscode.commands.registerCommand('extension.playFunctionForAll', async (item: any) => {
+    vscode.commands.registerCommand('keploy.playFunctionForAll', async (item: any) => {
         if (!item || !item.fullPath || !item.label) {
             vscode.window.showErrorMessage('Invalid function item selected.');
             return;
@@ -796,14 +782,14 @@ export function activate(context: vscode.ExtensionContext) {
     
 
 
-    context.subscriptions.push(vscode.commands.registerCommand('folderExplorer.refresh', () => {
-        // Show Folder Explorer
-        vscode.commands.executeCommand('setContext', 'showFolderExplorer', false);
-        // Hide Keploy Sidebar
-        // vscode.commands.executeCommand('setContext', 'showKeploy', false);
-    }));
+    // context.subscriptions.push(vscode.commands.registerCommand('folderExplorer.refresh', () => {
+    //     // Show Folder Explorer
+    //     vscode.commands.executeCommand('setContext', 'showFolderExplorer', false);
+    //     // Hide Keploy Sidebar
+    //     // vscode.commands.executeCommand('setContext', 'showKeploy', false);
+    // }));
 
-    vscode.commands.registerCommand('extension.findTestFile', async (item: any) => {
+    vscode.commands.registerCommand('keploy.findTestFile', async (item: any) => {
         if (!item || !item.fullPath || !item.label) {
             vscode.window.showErrorMessage('Invalid function item selected.');
             return;

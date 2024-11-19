@@ -20,8 +20,6 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:keploy.showFolderExplorer",
-    "onCommand:folderExplorer.refresh",
     "onCommand:keploy.utg",
     "onCommand:vscode.open",
     "onLanguage:javascript",
@@ -48,16 +46,10 @@
     "views": {
       "keploy": [
         {
-          "id": "folderExplorer",
-          "name": "Keploy",
-          "when": "showFolderExplorer == true"
-        },
-        {
           "id": "Keploy-Sidebar",
           "name": "Keploy",
           "icon": "media/logo.png",
-          "type": "webview",
-          "when": "showFolderExplorer != true"
+          "type": "webview"
         }
       ]
     },
@@ -70,11 +62,6 @@
     ],
     "menus": {
       "view/title": [
-        {
-          "command": "folderExplorer.refresh",
-          "when": "view == folderExplorer",
-          "group": "navigation"
-        },
         {
           "submenu": "sign_in_submenu",
           "when": "view == Keploy-Sidebar && keploy.signedIn != true",
@@ -120,38 +107,9 @@
           "title": "Sign In with Microsoft"
           
         }
-      ],
-      "view/item/context": [
-        {
-          "command": "extension.playFunction",
-          "when": "(viewItem != classItem && viewItem!=folderItem && viewItem!=fileItem ) && view == folderExplorer",
-          "group": "inline"
-      },
-      {
-          "command": "extension.findTestFile",
-          "when": "viewItem == testFileAvailableBothItem  && view == folderExplorer",
-          "group": "inline"
-       },
-       {
-        "command": "extension.playFunctionForAll",
-        "when": "viewItem == fileItem  && view == folderExplorer",
-        "group": "inline"
-     }
       ]
     },
     "commands": [
-      {
-        "command": "keploy.showFolderExplorer",
-        "title": "Show Folder Explorer"
-      },
-      {
-        "command": "folderExplorer.refresh",
-        "title": "Back",
-        "icon": {
-          "light": "resources/back_dark.svg",
-          "dark": "resources/back_white.svg"
-        }
-      },
       {
         "command": "keploy.SignInWithOthers",
         "title": "Sign In with Google"
@@ -197,31 +155,7 @@
         "command": "keploy.viewDocumentation",
         "title": "View Docs",
         "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "extension.playFunction",  
-        "title": "Play Function",
-        "icon": {
-          "light": "resources/dark.svg",
-          "dark": "resources/light.svg"
-        }
-      },
-      {
-        "command": "extension.findTestFile",
-        "title" : "find test file",
-        "icon" : {
-          "light" : "resources/find_folder_dark.svg",
-          "dark": "resources/find_folder_light.svg" 
-        }
-      },
-      {
-        "command": "extension.playFunctionForAll",
-        "title" : "Make tests for whole file",
-        "icon": {
-          "light": "resources/dark.svg",
-          "dark": "resources/light.svg"
-        }
-     }
+      }
     ]
   },
   "scripts": {

@@ -54,16 +54,9 @@
     }else{
       vscode.postMessage({
       type: "navigate",
-      value: "UtgDocs"
+      value: "KeployTreeView"
     });
     }
-  }
-
-  function ChangingView(testType){
-    vscode.postMessage({
-      type: "changeView",
-      value: "IntegrationTest",
-    });
   }
 </script>
 
@@ -88,7 +81,7 @@
     </div>
 
     <div class="btn-container">
-      <button class="btn" on:click={() => ChangingView("Unit Testing")}
+      <button class="btn" on:click={() => handleTestSelection("Unit Testing")}
         >Generate Unit tests</button
       >
       <button
@@ -173,8 +166,8 @@
   .main {
     margin: 0;
     padding: 0;
-    font-family: 'Montserrat', sans-serif; 
-    background-color: var(--vscode-editor-background);
+   font-family: 'Montserrat', sans-serif; 
+     background-color: var(--vscode-editor-background);
     color: var(--vscode-editor-foreground); /* Optional: matches VSCode text color */
     text-align: center;
     height: 100vh;

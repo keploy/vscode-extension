@@ -98,7 +98,7 @@
   }
   
   button:focus {
-    outline-color: var(--vscode-focusBorder);
+    /* outline-color: var(--vscode-focusBorder); */
   }
   
   button.secondary {

@@ -11,7 +11,7 @@ import oneClickInstall from './OneClickInstall';
 import * as path from 'path';
 import * as fs from 'fs';
 import { workspace } from 'vscode';
-import { FolderTreeProvider } from "./FolderStructure";
+import getFolderStructure from "./FolderStructure";
 const yaml = require('js-yaml');
 
 function precheckFunction(): Promise<string> {
@@ -133,6 +133,8 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
     const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
     const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true; 
+    
+
 
     console.log("signedIn others  value", signedIn);
     // console.log("Folder structure root:", folderStructure); // Logs the first 5 items
@@ -395,14 +397,20 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               sveltePageCss = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.css")
               );
-            }else if(data.value = "KeployChatBot"){
+            }else if(data.value === "KeployChatBot"){
               sveltePageJs = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
               );
               sveltePageCss = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
               );
-    
+            }else if(data.value === 'KeployTreeView'){
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "TreeView.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "TreeView.css")
+              );
             }
             else {
               throw new Error("Unsupported navigation value");
@@ -419,7 +427,54 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+        case "fetchData":{
+          const workspaceRoot =
+            vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]
+              ? vscode.workspace.workspaceFolders[0].uri.fsPath
+              : null;
 
+          console.log("here is the worspace root: ", workspaceRoot);
+
+          if (!workspaceRoot) {
+            vscode.window.showErrorMessage('No workspace folder is open.');
+            return;
+          }
+          try {
+            // Fetch folder structure
+            const folderStructure = await getFolderStructure(workspaceRoot);
+            console.log('Folder Structure Root:', folderStructure); // Logs the first 5 items
+
+            // Send data back to webview
+            this._view?.webview.postMessage({
+              command: 'updateData',
+              data: {
+                signedIn,
+                progressBarVisible,
+                apiResponse,
+                folderStructure,
+              },
+            });
+          } catch (error:any) {
+            vscode.window.showErrorMessage('Error fetching folder structure: ' , error);
+          }
+          break
+      }
+        case "playFunction":{
+          try{
+            vscode.commands.executeCommand("keploy.playFunction",data.value);
+          }catch(err){
+            console.log("Err in running playFunction Command " , err);
+          }
+          break;
+        }
+        case "findTestFile":{
+          try{
+            vscode.commands.executeCommand("keploy.findTestFile" , data.value);
+          }catch(err){
+            console.log("Err in the finding testFile" , err);
+          }
+          break;
+        }
         case "signinwithstate": {
           try {
             await vscode.commands.executeCommand('keploy.SignInWithOthers');
@@ -428,17 +483,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             vscode.window.showErrorMessage('Failed to sign in. Please try again.');
           }
           break;
-      }
-
-      case "changeView":{
-        try{
-          await vscode.commands.executeCommand('keploy.showFolderExplorer'); 
-          console.log("button is clicking")
-        }catch(error){
-          console.error('Error while signing in:', error);
-          vscode.window.showErrorMessage('Failed to sign in. Please try again.');
-        }
-        break;
       }
       //cannot make it a case of generate unit test as we will taking the input from the user and keploy gen with additional prompts will from a cta hence making a new case for it.
         case "keployGenWithAdditionalPrompts":{

@@ -59,8 +59,8 @@
     padding: var(--input-padding-vertical) var(--input-padding-horizontal);
     width: 100%;
     text-align: center;
-    outline: 1px solid transparent;
-    outline-offset: 2px !important;
+    /* outline: 1px solid transparent; */
+    /* outline-offset: 2px !important; */
     color: var(--vscode-button-foreground);
     /* background: var(--vscode-button-background); */
     background: #00163D;
@@ -98,7 +98,7 @@
   }
   
   button:focus {
-    outline-color: var(--vscode-focusBorder);
+    /* outline-color: var(--vscode-focusBorder); */
   }
   
   button.secondary {

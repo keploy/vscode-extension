@@ -324,6 +324,76 @@ hr {
   margin-right: 20px;
 }
 
+/* icons for the treeview */
+.play-icon-dark {
+  background: url("dark.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.play-icon-light {
+  background: url("light.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.down_icon_light{
+  background: url("down_light.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.down_icon_dark{
+  background: url("down_dark.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.right_icon_dark{
+  background: url("right_dark.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.right_icon_light{
+  background: url("right_light.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+.findFolder_icon_light{
+  background: url("find_folder_light.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.findFolder_icon_dark{
+  background: url("find_folder_dark.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.Folder_icon_dark{
+  background: url("folder_dark.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+
+.Folder_icon_dark{
+  background: url("folder_light.svg") no-repeat center center;
+  background-size: contain;
+  width: 20px;
+  height: 20px;
+}
+/*icons ends here*/
 .replay-icon.open {
   transform: rotate(180deg);
 }
