@@ -24,7 +24,25 @@
     } else {
         console.warn("VSCode API is not available. Cannot send message.");
     }
+  }
 
+  function openFile (item){
+    if(vscode){
+      vscode.postMessage({type:"findFile", value:item});
+    }else{
+      console.warn("VSCode API is not available. Cannot send message.");
+  
+    }
+  }
+
+  function findFunction(item){
+    console.log("button is being clicked")
+    if(vscode){
+      vscode.postMessage({type:"findFunction", value:item});
+    }else{
+      console.warn("VSCode API is not available. Cannot send message.");
+  
+    }
   }
 
   const getIcon = (itemType) => {
@@ -36,7 +54,7 @@
         case 'class':
             return '<span class="Class_icon_light"></span>';
         case 'function':
-            return '<span class="Function_icon_light"></span>';
+          return '<span class="function_icon"></span>';
         default:
             return '<span class="findDefault_icon_light"></span>';
     }
@@ -60,9 +78,20 @@
         </button>
         <div class="icons_and_names">
           {@html getIcon(item.itemType)}
-          <div class="name">
-            {item.label}
-          </div>
+          {#if item.itemType == "file"}
+            <div class="name_with_cursor" on:click={() => openFile(item)}>
+              {item.label}
+            </div>
+          {:else if item.itemType == "function"}
+            <div class="name_with_cursor" on:click={() => findFunction(item)}>
+              {item.label} 
+            </div>
+          {:else}
+            <div class="name">
+              {item.label} 
+            </div>
+          {/if}
+          
         </div>
       </div>
       <div class="function_icons">
@@ -128,6 +157,12 @@
 }
 .name{
   margin-right: 2px;
+}
+.name_with_cursor{
+  margin-right: 2px;
+}
+.name_with_cursor:hover{
+  cursor: pointer;
 }
 
 button:focus {

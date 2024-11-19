@@ -67,51 +67,86 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   constructor(private readonly _extensionUri: vscode.Uri, private readonly _context: vscode.ExtensionContext) {
   }
 
-  public postMessage(value: any) {
+  public async postMessage(value: any) {
     if (!this._view) {
       vscode.window.showErrorMessage('Webview is not available');
       return;
     }
   
     let webviewView = this._view;
-
+  
     try {
       console.log('Navigate to ' + value);
-      let sveltePageJs: vscode.Uri;
-      let sveltePageCss: vscode.Uri;
-         if(value == "KeployChatBot"){
+      let sveltePageJs: vscode.Uri | null = null;
+      let sveltePageCss: vscode.Uri | null = null;
+  
+      if (value == "KeployChatBot") {
         sveltePageJs = webviewView.webview.asWebviewUri(
           vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
         );
         sveltePageCss = webviewView.webview.asWebviewUri(
           vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
         );
-      }
-        else if (value === 'Config') {
-
-          sveltePageJs = webviewView.webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.js")
-          );
-          sveltePageCss = webviewView.webview.asWebviewUri(
-            vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.css")
-          );
-
-      }
-      else {
+      } else if (value === 'Config') {
+        sveltePageJs = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.js")
+        );
+        sveltePageCss = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.css")
+        );
+      }else if(value == "UtgDocs"){
+        sveltePageJs = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "UtgDocs.js")
+        );
+        sveltePageCss = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "UtgDocs.css")
+        );
+      } 
+      else if (value === "UpdateTreeStructure") {
+        const workspaceRoot =
+          vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]
+            ? vscode.workspace.workspaceFolders[0].uri.fsPath
+            : null;
+  
+        console.log("here is the workspace root: ", workspaceRoot);
+  
+        if (!workspaceRoot) {
+          vscode.window.showErrorMessage('No workspace folder is open.');
+          return;
+        }
+        try {
+          // Fetch folder structure
+          const folderStructure = await getFolderStructure(workspaceRoot);
+          console.log('Folder Structure Root:', folderStructure); // Logs the first 5 items
+  
+          // Send data back to webview
+          this._view?.webview.postMessage({
+            command: 'updateData',
+            data: {
+              folderStructure,
+            },
+          });
+          return; // Exit early since no HTML update is needed
+        } catch (error: any) {
+          vscode.window.showErrorMessage('Error fetching folder structure: ' + error);
+          return;
+        }
+      } else {
         throw new Error("Unsupported navigation value");
       }
-
-      // Save the language state
-      // vscode.getState().then(() => {
-      //   vscode.setState({ language: data.language });
-      // });
-
-      webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, sveltePageCss, sveltePageJs);
+  
+      if (sveltePageJs && sveltePageCss) {
+        // Set webview HTML
+        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, sveltePageCss, sveltePageJs);
+      } else {
+        throw new Error("Page resources not properly assigned.");
+      }
     } catch (error) {
       this._view?.webview.postMessage({ type: 'error', value: `Failed to open page ${error}` });
     }
   }
-
+  
+  
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
 
@@ -457,7 +492,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           } catch (error:any) {
             vscode.window.showErrorMessage('Error fetching folder structure: ' , error);
           }
-          break
+          break;
       }
         case "playFunction":{
           try{
@@ -475,6 +510,50 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+        case "findFile": {
+          try {
+              const filePath = data.value.fullPath; // Ensure `message.value` contains the full file path
+              if (!filePath) {
+                  console.error("File path is not provided");
+                  return;
+              }
+      
+              const document = await vscode.workspace.openTextDocument(filePath); // Open the file
+              await vscode.window.showTextDocument(document, { preview: false }); // Show the file in the editor
+          } catch (err) {
+              console.error("Error opening file:", err);
+          }
+          break;
+        }
+        case "findFunction": {
+          try {
+            const filePath = data.value.fullPath; // Ensure `message.value` contains the full file path
+            const functionName = data.value.label; // Ensure `message.value` contains the full file path
+              if (!filePath || !functionName) {
+                  console.error("File path or function name is not provided");
+                  return;
+              }
+      
+              const document = await vscode.workspace.openTextDocument(filePath); // Open the file
+              const editor = await vscode.window.showTextDocument(document, { preview: false }); // Show the file in the editor
+      
+              const text = document.getText();
+              const functionPosition = text.indexOf(functionName);
+      
+              if (functionPosition !== -1) {
+                  const position = document.positionAt(functionPosition);
+                  editor.selection = new vscode.Selection(position, position); // Move the cursor to the function's position
+                  editor.revealRange(new vscode.Range(position, position), vscode.TextEditorRevealType.InCenter);
+              } else {
+                  console.warn(`Function ${functionName} not found in the file.`);
+              }
+          } catch (err) {
+              console.error("Error finding function:", err);
+          }
+          break;
+      }
+
+
         case "signinwithstate": {
           try {
             await vscode.commands.executeCommand('keploy.SignInWithOthers');
@@ -483,7 +562,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             vscode.window.showErrorMessage('Failed to sign in. Please try again.');
           }
           break;
-      }
+        }
       //cannot make it a case of generate unit test as we will taking the input from the user and keploy gen with additional prompts will from a cta hence making a new case for it.
         case "keployGenWithAdditionalPrompts":{
           try{

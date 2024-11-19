@@ -408,6 +408,13 @@ hr {
   width: 15px;
   height: 15px;
 }
+
+.function_icon{
+  background: url("function.svg") no-repeat center center;
+  background-size: contain;
+  width: 15px;
+  height: 15px;
+}
 /*icons ends here*/
 .replay-icon.open {
   transform: rotate(180deg);

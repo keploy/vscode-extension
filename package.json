@@ -58,7 +58,7 @@
         "icon": "$(account)",  
         "label": "Sign In Options",
         "id": "sign_in_submenu"
-      }
+      }  
     ],
     "menus": {
       "view/title": [
@@ -89,6 +89,11 @@
         },
         {
           "command": "keploy.SignOut",
+          "group": "navigation",
+          "when": "keploy.signedOut != true && view == Keploy-Sidebar"
+        },
+        {
+          "command": "keploy.helpGettingStarted",
           "group": "navigation",
           "when": "keploy.signedOut != true && view == Keploy-Sidebar"
         }
@@ -122,10 +127,16 @@
         "command": "keploy.SignInWithMicrosoft",
         "title": "Sign In with Microsoft"
       },
+
       {
         "command": "keploy.SignOut",
         "title": "Sign Out",
         "when": "keploy.signedOut != true && view == Keploy-Sidebar"
+      },
+      {
+        "command": "keploy.helpGettingStarted",
+        "title": "Help",
+        "icon": "$(question)"
       },
       {
         "command": "keploy.utg",

@@ -658,9 +658,15 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    let helpGettingStarted = vscode.commands.registerCommand('keploy.helpGettingStarted', async () => {
+        sidebarProvider.postMessage("UtgDocs");
+    });
+
+
 
     // context.subscriptions.push(signInCommand);
     context.subscriptions.push(signInWithOthersCommand);
+    context.subscriptions.push(helpGettingStarted);
     
 
     // Register the command to show the folder explorer view and hide the Keploy sidebar
@@ -676,18 +682,21 @@ export function activate(context: vscode.ExtensionContext) {
 
         watcher.onDidChange((uri) => {
             console.log(`File changed: ${uri.fsPath}`);
+            sidebarProvider.postMessage("UpdateTreeStructure");
             vscode.commands.executeCommand('folderExplorer.Realrefresh');
 
         });
 
         watcher.onDidCreate((uri) => {
             console.log(`File created: ${uri.fsPath}`);
+            sidebarProvider.postMessage("UpdateTreeStructure");
             vscode.commands.executeCommand('folderExplorer.Realrefresh');
 
         });
 
         watcher.onDidDelete((uri) => {
             console.log(`File deleted: ${uri.fsPath}`);
+            sidebarProvider.postMessage("UpdateTreeStructure");
             vscode.commands.executeCommand('folderExplorer.Realrefresh');
 
         });
