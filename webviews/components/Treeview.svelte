@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte";
-  import TreeItem from './TreeItem.svelte'; // Import the `recursive component`
+  import TreeItem from './TreeItem.svelte';
 
   const vscode = acquireVsCodeApi();
   let folderStructure = [];
@@ -12,9 +12,10 @@
     const messageListener = (event) => {
       const message = event.data;
       if (message.command === 'updateData') {
-        folderStructure = message.data.folderStructure.map(addCollapsedState);
+        folderStructure = mergeFolderStructure(folderStructure, message.data.folderStructure);
         isDataUpdated = true;
       }
+      console.log("new folder strucuture , ", folderStructure);
     };
 
     window.addEventListener('message', messageListener);
@@ -33,22 +34,42 @@
     };
   });
 
-  const addCollapsedState = (item) => ({
-    ...item,
-    collapsed: true,
-    children: item.children?.map(addCollapsedState) || [],
+  const mergeFolderStructure = (existing, incoming) => {
+  const existingMap = new Map(existing.map((item) => [item.id, item]));
+
+  return incoming.map((incomingItem) => {
+    const existingItem = existingMap.get(incomingItem.id);
+
+    if (existingItem) {
+      // Merge children recursively and preserve the collapsed state
+      return {
+        ...incomingItem,
+        collapsed: existingItem.collapsed ?? true, // Preserve existing item's state
+        children: mergeFolderStructure(existingItem.children || [], incomingItem.children || []),
+      };
+    } else {
+      // New item: set default collapsed state to `false` for new children
+      return addCollapsedState(incomingItem, false);
+    }
   });
+};
+
+const addCollapsedState = (item, defaultState = true) => ({
+  ...item,
+  collapsed: item.collapsed ?? defaultState,
+  children: item.children?.map((child) => addCollapsedState(child, defaultState)) || [],
+});
 
 
-  function backtoConfig(){
-    console.log("back button clicked")
-    vscode.postMessage({type:"navigate",value:"Config"})
+  function backtoConfig() {
+    console.log("Back button clicked");
+    vscode.postMessage({ type: "navigate", value: "Config" });
   }
 </script>
 
 <body>
   <div class="columns">
-    <button class="icon-button"  on:click={()=>backtoConfig()}>
+    <button class="icon-button" on:click={() => backtoConfig()}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="32"
@@ -65,10 +86,9 @@
     </button>
     <div
       class="column {selectedColumn === 'Column 1' ? 'selected' : ''}"
-      on:click={() => selectColumn('Column 1')}
+      on:click={() => (selectedColumn = 'Column 1')}
     >
-    <strong>FOLDER STRUCTURE</strong>
-      
+      <strong>FOLDER STRUCTURE</strong>
     </div>
   </div>
 
@@ -86,29 +106,27 @@
 </body>
 
 <style>
-
-body {
-    height: "screen";
-    width: 100%; /* Default width, dynamically updated */
-    margin: 0 0; /* Center the body horizontally */
-    padding: 0; /* Remove default padding */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-    background-color: var(--vscode-sideBarSectionHeader-background); /* Matches VSCode's editor background */
-    font-family: var(--vscode-font-family, 'Segoe UI', sans-serif); /* Use VSCode's font */
+  body {
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--vscode-sideBarSectionHeader-background);
+    font-family: var(--vscode-font-family, 'Segoe UI', sans-serif);
   }
+
   ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
   }
 
-
   .main-container {
     height: 100vh;
-    background-color: var(--vscode-titleBar-activeBackground); /* Matches VSCode's title bar background */
+    background-color: var(--vscode-titleBar-activeBackground);
     max-width: 100%;
     padding-top: 10px;
-  
   }
 
   .columns {
@@ -118,41 +136,40 @@ body {
     max-width: 300px;
     align-items: center;
     background-color: var(--vscode-sideBarSectionHeader-background);
-   
   }
 
   .column {
     text-align: center;
     padding: 5px;
-     color: var(--vscode-foreground); /* Use VSCode's foreground color */
+    color: var(--vscode-foreground);
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, border-bottom 0.3s ease;
   }
 
   .column:hover {
-    background-color: var(--vscode-list-hoverBackground); /* Use hover background color */
-    color: var(--vscode-hoverForeground); /* Use hover text color */
+    background-color: var(--vscode-list-hoverBackground);
+    color: var(--vscode-hoverForeground);
   }
-
 
   .icon-button {
-  display: flex;  
-  align-items: center; /* Vertically align icon and text */
-  justify-content: center;
-  border: none;
-  background-color: transparent;
-  color: var(--vscode-foreground);
-  font-size: 20px;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
-  box-shadow: none; /* Remove any shadow */
-}
-button:focus {
-    outline: none; /* Remove the blue border on focus for all buttons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    color: var(--vscode-foreground);
+    font-size: 20px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    box-shadow: none;
   }
+
+  button:focus {
+    outline: none;
+  }
+
   button {
-    
-    outline: none; /* Remove the blue border on focus for all buttons */
+    outline: none;
   }
 </style>

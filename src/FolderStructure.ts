@@ -1,7 +1,10 @@
 import { promises as fs } from 'fs';
 import * as path from 'path';
 import { findTestCasesForFunction } from './extension';
+import { v4 as uuidv4 } from 'uuid'; // Use UUID for generating unique IDs
+
 interface FolderItem {
+  id: string; // Unique ID for each item
   label: string;
   fullPath: string;
   itemType: 'folder' | 'file' | 'class' | 'function';
@@ -24,10 +27,10 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
   const items: FolderItem[] = [];
   let match;
 
-  // For JavaScript and TypeScript files
   if (extension === '.js' || extension === '.ts') {
     while ((match = functionRegex.exec(content)) !== null) {
       items.push({
+        id: uuidv4(),
         label: match[1],
         fullPath: filePath,
         itemType: 'function',
@@ -36,6 +39,7 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
     }
     while ((match = arrowFunctionRegex.exec(content)) !== null) {
       items.push({
+        id: uuidv4(),
         label: match[1],
         fullPath: filePath,
         itemType: 'function',
@@ -44,10 +48,10 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
     }
   }
 
-  // For JavaScript, TypeScript, and Java files
   if (extension === '.js' || extension === '.ts' || extension === '.java') {
     while ((match = classRegex.exec(content)) !== null) {
       items.push({
+        id: uuidv4(),
         label: match[1],
         fullPath: filePath,
         itemType: 'class',
@@ -56,10 +60,10 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
     }
   }
 
-  // For Go files
   if (extension === '.go') {
     while ((match = goFunctionRegex.exec(content)) !== null) {
       items.push({
+        id: uuidv4(),
         label: match[1],
         fullPath: filePath,
         itemType: 'function',
@@ -68,10 +72,10 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
     }
   }
 
-  // For Python files
   if (extension === '.py') {
     while ((match = pythonFunctionRegex.exec(content)) !== null) {
       items.push({
+        id: uuidv4(),
         label: match[1],
         fullPath: filePath,
         itemType: 'function',
@@ -80,11 +84,11 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
     }
   }
 
-  // For Java files
   if (extension === '.java') {
     while ((match = javaMethodRegex.exec(content)) !== null) {
-      const methodName = match[2]; // Capture the method name
+      const methodName = match[2];
       items.push({
+        id: uuidv4(),
         label: methodName,
         fullPath: filePath,
         itemType: 'function',
@@ -101,7 +105,6 @@ async function extractFunctionsFromFile(filePath: string): Promise<FolderItem[]>
           item.contextValue = result.contextValue;
           if (result.testFilesPath) {
             item.testFilePath = result.testFilesPath[0];
-            console.log(`Test files for ${item.label}: ${result.testFilesPath[0]}`);
           }
         } catch (error) {
           console.error(`Error updating context value for ${item.label}:`, error);
@@ -141,39 +144,39 @@ async function scanDirectory(dirPath: string): Promise<FolderItem[]> {
 
   const directoryContent = await Promise.all(
     itemNames
-      .filter((itemName) => itemName !== 'node_modules') // Exclude node_modules
-      .filter((itemName) => !isTestFile(itemName)) // Exclude test files and folders
+      .filter((itemName) => itemName !== 'node_modules')
+      .filter((itemName) => !isTestFile(itemName))
       .map(async (itemName): Promise<FolderItem | null> => {
         const fullPath = path.join(dirPath, itemName);
         const stat = await fs.stat(fullPath);
         const isDirectory = stat.isDirectory();
 
         if (isDirectory) {
-          const children = await scanDirectory(fullPath); // Recursively scan the subdirectory
+          const children = await scanDirectory(fullPath);
           if (children.length > 0) {
-            // Include the folder only if it has valid children
             return {
+              id: uuidv4(),
               label: itemName,
               fullPath,
               itemType: 'folder',
               children,
             };
           }
-          return null; // Exclude empty or invalid folders
+          return null;
         } else if (isValidFile(itemName)) {
-          const children = await extractFunctionsFromFile(fullPath); // Add functions as children
+          const children = await extractFunctionsFromFile(fullPath);
           return {
+            id: uuidv4(),
             label: itemName,
             fullPath,
             itemType: 'file',
             children,
           };
         }
-        return null; // Skip invalid files
+        return null;
       })
   );
 
-  // Filter out null values after resolving all promises
   return directoryContent.filter((item): item is FolderItem => item !== null);
 }
 

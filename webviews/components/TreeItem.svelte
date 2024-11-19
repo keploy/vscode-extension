@@ -110,7 +110,7 @@ on:mouseout={() => hovered = false}
               {/if}
             </div>
         
-          {#if item.itemType == "file"}
+          {#if item.itemType == "file" && item.children.length > 0}
           <button class="icon-button" on:click={()=>playFunctionForAll(item)} 
             style="opacity: {hovered ? 1 : 0}; pointer-events: {hovered ? 'auto' : 'none'};"
       
