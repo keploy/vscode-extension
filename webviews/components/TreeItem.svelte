@@ -7,6 +7,8 @@
       item.collapsed = !item.collapsed;
   };
 
+  let hovered = false;
+
   function playFunction (item){
     // console.log(item);
     if (vscode) {
@@ -45,6 +47,16 @@
     }
   }
 
+  function playFunctionForAll(item){
+    console.log("button is being clicked")
+    if(vscode){
+      vscode.postMessage({type:"playFunctionForAll", value:item});
+    }else{
+      console.warn("VSCode API is not available. Cannot send message.");
+  
+    }
+  }
+
   const getIcon = (itemType) => {
     switch (itemType) {
         case 'folder':
@@ -62,7 +74,11 @@
 
 </script>
 
-<li class="list-items">
+<li class="list-items"
+on:mouseover={() => hovered = true} 
+on:mouseout={() => hovered = false}
+>
+
   <div class="parent_children">
     <div class="icon_name">
       <div class="name-icons">
@@ -77,32 +93,44 @@
           {/if}
         </button>
         <div class="icons_and_names">
-          {@html getIcon(item.itemType)}
+            <div class="getIcon_lable">
+              {@html getIcon(item.itemType)}
+              {#if item.itemType == "file"}
+              <div class="name_with_cursor" on:click={() => openFile(item)}>
+                {item.label}
+              </div>
+              {:else if item.itemType == "function"}
+              <div class="name_with_cursor" on:click={() => findFunction(item)}>
+                {item.label} 
+              </div>
+              {:else}
+              <div class="name">
+                {item.label} 
+              </div>
+              {/if}
+            </div>
+        
           {#if item.itemType == "file"}
-            <div class="name_with_cursor" on:click={() => openFile(item)}>
-              {item.label}
-            </div>
-          {:else if item.itemType == "function"}
-            <div class="name_with_cursor" on:click={() => findFunction(item)}>
-              {item.label} 
-            </div>
-          {:else}
-            <div class="name">
-              {item.label} 
-            </div>
+          <button class="icon-button" on:click={()=>playFunctionForAll(item)} 
+            style="opacity: {hovered ? 1 : 0}; pointer-events: {hovered ? 'auto' : 'none'};"
+      
+            >
+            <span class="play-icon-light"></span>
+          </button>
           {/if}
           
         </div>
       </div>
       <div class="function_icons">
-        {#if item.itemType == "function"}
+        {#if item.itemType == "function" } 
         {#if item.contextValue === 'testFileAvailableBothItem'}
         <button class="icon-button" on:click={()=>findTestFile(item)}>
           <span class="findFolder_icon_light"></span>
         </button>
         {/if}
-        
-      <button class="icon-button" on:click={()=>playFunction(item)}>
+      <button class="icon-button" on:click={()=>playFunction(item)}    
+        style="opacity: {hovered ? 1 : 0}; pointer-events: {hovered ? 'auto' : 'none'};"
+        >
         <span class="play-icon-light"></span>
       </button>
       {/if}
@@ -151,7 +179,11 @@
   min-width: 20px; /* Ensure a minimum width */
 }
 
-
+.getIcon_lable{
+  display: flex;
+  justify-content: space-between;
+  gap:4px;
+}
 .function_icons {
   display: flex;
   flex-shrink: 0; /* Prevent the icons from shrinking */
@@ -198,6 +230,7 @@ button:focus {
   flex-shrink: 0; /* Prevent shrinking of the icons and names */
   min-width: 0; /* Allow proper wrapping */
   justify-content: space-between; /* Keep the content properly spaced */
+  width: 95%;
 }
 
 /* Icon and name alignment */ 

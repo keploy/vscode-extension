@@ -502,6 +502,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
+        case "playFunctionForAll":{
+          try{
+            vscode.commands.executeCommand("keploy.playFunctionForAll",data.value);
+          }catch(err){
+            console.log("Err in running playFunction Command " , err);
+          }
+          break;
+        }
         case "findTestFile":{
           try{
             vscode.commands.executeCommand("keploy.findTestFile" , data.value);
