@@ -92,7 +92,6 @@ body {
     width: 100%; /* Default width, dynamically updated */
     margin: 0 0; /* Center the body horizontally */
     padding: 0; /* Remove default padding */
-    border: 2px solid whitesmoke; 
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
     background-color: var(--vscode-sideBarSectionHeader-background); /* Matches VSCode's editor background */
     font-family: var(--vscode-font-family, 'Segoe UI', sans-serif); /* Use VSCode's font */
@@ -109,7 +108,6 @@ body {
     background-color: var(--vscode-titleBar-activeBackground); /* Matches VSCode's title bar background */
     max-width: 100%;
     padding-top: 10px;
-    border: 2px solid whitesmoke;
   
   }
 
@@ -120,8 +118,7 @@ body {
     max-width: 300px;
     align-items: center;
     background-color: var(--vscode-sideBarSectionHeader-background);
-    border: 2px solid whitesmoke;
-  
+   
   }
 
   .column {
