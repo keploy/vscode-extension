@@ -230,7 +230,7 @@
     font-family: "Montserrat", sans-serif;
     font-size: var(--vscode-font-size);
     color: var(--vscode-foreground);
-    background-color: #000;
+    background-color: var(--vscode-editor-background);
   }
 
   .container {
@@ -242,23 +242,23 @@
     height: 100vh;
     box-sizing: border-box;
     overflow-y: auto;
-    background-color: #000;
-    border: 1px solid #f77b3e;
+    background-color: var(--vscode-editor-background);
+    border: 1px solid var(--vscode-editor-foreground);
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
-                inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
+    /* box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
+                inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8); */
   }
 
   .heading {
     font-size: 32px;
     margin-bottom: 20px;
-    color: #ffffff;
+    color: var(--vscode-editor-foreground);
     text-align: center;
   }
 
   .session-info {
-    color: #ffffff;
+    color: var(--vscode-editor-foreground);
     font-size: 18px;
     margin-bottom: 10px;
   }
@@ -283,12 +283,12 @@
 
   .progress-container {
     width: 100%; /* Full width of the parent */
-    background-color: #000000; /* Black background */
+    background-color: var(--vscode-editor-background); /* Black background */
     border-radius: 5px;
     overflow: hidden;
-    border: 2px solid #f77b3e;
+    border: 2px solid var(--vscode-editor-foreground);
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    /* box-shadow: 0 0 20px rgba(247, 123, 62, 0.7); */
   }
 
   .progress-bar {
@@ -354,17 +354,17 @@
     max-width: 45%;
     text-align: center;
     color: #e0e0e0;
-    border: 2px solid #f77b3e;
+    border: 2px solid var(--vscode-editor-foreground);
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    /* box-shadow: 0 0 20px rgba(247, 123, 62, 0.7); */
   }
 
   .step-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #ffffff;
+    color: var(--vscode-editor-foreground);
   }
 
   .FileName {
@@ -377,15 +377,15 @@
     padding: 15px;
     margin: 15px 0;
     text-decoration: none;
-    color: white;
+    color: var(--vscode-editor-foreground);
     background-color: #1a1a1a;
-    border: 2px solid #f77b3e;
+    border: 2px solid var(--vscode-editor-foreground);
     border-radius: 5px;
     font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(247, 123, 62, 0.7);
+    /* box-shadow: 0 0 20px rgba(247, 123, 62, 0.7); */
   }
 
   .complete-button:hover {
@@ -407,7 +407,7 @@
   }
 
   .back-button {
-    color: #ffffff;
+    color: var(--vscode-editor-foreground);
     border: none;
     border-radius: 5px;
     background-color: inherit;
@@ -456,8 +456,8 @@
     display: flex;
     justify-content: start;
     border-radius: 5px;
-    color: white;
-    background-color: black;
+    color: var(--vscode-editor-foreground);
+    background-color: var(--vscode-editor-background);
     font-size: 24px;
     height: 40px;
     padding: 0 10px; /* Add padding inside buttons */

@@ -1144,7 +1144,7 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
-    background-color: black;
+    background-color: var(--vscode-editor-background);
   }
 
   .form-group {

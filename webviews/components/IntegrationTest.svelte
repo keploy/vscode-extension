@@ -330,13 +330,13 @@
     margin-bottom: auto;
     text-align: center;
     color: #e0e0e0;
-    border: 1px solid #ff914d;
+    border: 1px solid var(--vscode-editor-foreground);
     font-weight: bold;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); /* Glowing shadow effect based on #ff914d */
+    /* box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); Glowing shadow effect based on #ff914d */
   }
   .buttonBlack:hover {
-  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  /* box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  Stronger glow on hover */
   transform: scale(1.1); 
 }
 
@@ -610,12 +610,12 @@
     text-align: left;
     height: 100%;
     padding: 2rem;
-    background-color: black;
-    border: 1px solid #f77b3e;
+    background-color: var(--vscode-editor-background);
+    border: 1px solid var(--vscode-editor-foreground);
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
-              inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
+    /* box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
+              inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8); */
   }
   .text {
   display: inline; /* Show text */
