@@ -39,27 +39,35 @@
     children: item.children?.map(addCollapsedState) || [],
   });
 
-  const selectColumn = (column) => {
-    selectedColumn = column; // Update the selected column state
-    vscode.postMessage({ type: 'navigate', value: "UtgDocs" });
-  };
+
+  function backtoConfig(){
+    console.log("back button clicked")
+    vscode.postMessage({type:"navigate",value:"Config"})
+  }
 </script>
 
 <body>
   <div class="columns">
-    <!-- First Column -->
+    <button class="icon-button"  on:click={()=>backtoConfig()}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        fill="currentColor"
+        class="bi bi-arrow-left"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M15 8a.5.5 0 0 1-.5.5H4.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708.708L4.707 7.5H14.5A.5.5 0 0 1 15 8z"
+        />
+      </svg>
+    </button>
     <div
       class="column {selectedColumn === 'Column 1' ? 'selected' : ''}"
       on:click={() => selectColumn('Column 1')}
     >
       <p>Folder Structure</p>
-    </div>
-    <!-- Second Column -->
-    <div
-      class="column {selectedColumn === 'Column 2' ? 'selected' : ''}"
-      on:click={() => selectColumn('Column 2')}
-    >
-      <p>Help Getting Started</p>
     </div>
   </div>
 
@@ -79,13 +87,13 @@
 <style>
 
 body {
-  height: 100%;
-    width: 100%;
+    height: 100%;
+    width: full;
     overflow: hidden;
- margin: 0 auto; /* Center the body horizontally */
+    margin: 0 0; /* Center the body horizontally */
     padding: 0; /* Remove default padding */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */
-    background-color: var(--vscode-editor-background); /* Matches VSCode's editor background */
+    background-color: var(--vscode-sideBarSectionHeader-background); /* Matches VSCode's editor background */
     font-family: var(--vscode-font-family, 'Segoe UI', sans-serif); /* Use VSCode's font */
   }
   ul {
@@ -130,19 +138,20 @@ body {
     height: 100vh;
     background-color: var(--vscode-titleBar-activeBackground); /* Matches VSCode's title bar background */
     max-width: 100%;
+    padding-top: 10px;
+    padding-right: 20%;
   }
 
   .columns {
     display: flex;
-    justify-content: space-between;
     gap: 4px;
     width: 100%;
-    margin: 0px 10px;
     max-width: 300px;
+    align-items: center;
+    background-color: var(--vscode-sideBarSectionHeader-background);
   }
 
   .column {
-    flex: 1;
     text-align: center;
     padding: 5px;
     border-bottom: 1px solid transparent; /* Default no border */
@@ -158,5 +167,26 @@ body {
 
   .column.selected {
     border-bottom: 1px solid var(--vscode-foreground); /* Add bottom border for the selected column */
+  }
+
+  .icon-button {
+  display: flex;
+  align-items: center; /* Vertically align icon and text */
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  color: var(--vscode-foreground);
+  font-size: 20px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  box-shadow: none; /* Remove any shadow */
+}
+button:focus {
+    outline: none; /* Remove the blue border on focus for all buttons */
+  }
+  button {
+    
+    outline: none; /* Remove the blue border on focus for all buttons */
   }
 </style>

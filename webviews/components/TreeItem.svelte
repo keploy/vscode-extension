@@ -135,32 +135,42 @@
   flex-direction: row;
   width: 100%;
 }
-/* Icon button for collapse/expand */
+/* Ensure icons don't disappear */
 .icon-button {
   display: flex;
-  align-items: center; /* Vertically align icon and text */
+  align-items: center;
   justify-content: center;
   border: none;
   background-color: transparent;
   color: var(--vscode-foreground);
   font-size: 20px;
   cursor: pointer;
+  box-shadow: none;
   width: 20px;
   height: 20px;
-  box-shadow: none; /* Remove any shadow */
+  flex-shrink: 0; /* Prevent shrinking */
+  min-width: 20px; /* Ensure a minimum width */
 }
 
 
-.function_icons{
+.function_icons {
   display: flex;
-
+  flex-shrink: 0; /* Prevent the icons from shrinking */
+  justify-content:center; /* Align icons to the right */
+  gap: 8px; /* Optional: Add spacing between icons */
 }
+
 .name{
   margin-right: 2px;
 }
-.name_with_cursor{
-  margin-right: 2px;
+.name_with_cursor {
+  flex-grow: 1; /* Allow the name to grow and take up remaining space */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  white-space: nowrap; /* Prevent text wrapping */
+  margin-right: 8px; /* Optional: Add spacing from icons */
 }
+
 .name_with_cursor:hover{
   cursor: pointer;
 }
@@ -181,20 +191,26 @@ button:focus {
 }
 
 
-.icons_and_names{
+.icons_and_names {
   display: flex;
   gap: 5px;
-  width: 100%;
+  align-items: center;
+  flex-shrink: 0; /* Prevent shrinking of the icons and names */
+  min-width: 0; /* Allow proper wrapping */
+  justify-content: space-between; /* Keep the content properly spaced */
 }
+
 /* Icon and name alignment */
 .icon_name {
   display: flex;
-  justify-content: space-between;
-  align-items: center; /* Keep the icon and name vertically aligned */
-  border-radius: 5px; /* Optional: Add rounded corners for better aesthetics */
-  transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
-  width: 90%;
+  justify-content: space-between; /* Ensures the name and icons are spaced properly */
+  align-items: center;
+  width: 100%; /* Make it take full width of the parent container */
+  min-width: 0; /* Prevent content overflow */
+  gap: 8px; /* Optional: Adjust spacing between elements */
+  overflow: hidden; /* Prevent overflowing content */
 }
+
 
 .icon_name:hover {
   background-color: var(--vscode-list-hoverBackground); /* Use a lighter background color */
@@ -203,11 +219,13 @@ button:focus {
 }
 
 /* Styling for child lists */
+/* Child list items */
 .children-list {
-  margin-left: 20px; /* Indent children to the right */
+  margin-left: 20px;
   padding: 0;
   list-style: none;
   width: 100%;
+  overflow: visible; /* Ensure children remain visible */
 }
 
 /* Styling for individual child items */
