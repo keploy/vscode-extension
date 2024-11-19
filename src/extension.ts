@@ -524,20 +524,24 @@ export function activate(context: vscode.ExtensionContext) {
 
                 if (token) {
                     vscode.window.showInformationMessage(`You are now logged in!`);
+                    try {
+                        await context.globalState.update('JwtToken', token);
+                        await context.globalState.update('SignedOthers', true);
 
-                    await context.globalState.update('JwtToken', token);
-                    await context.globalState.update('SignedOthers', true);
+                        const response = await ValidateSignInWithOthers(token);
 
-                    const response = await ValidateSignInWithOthers(token);
-
-                    if (response) {
-                        vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
-                        vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
-                    } else {
-                        vscode.window.showInformationMessage('Token validation failed!');
+                        if (response) {
+                            vscode.commands.executeCommand('setContext', 'keploy.signedIn', true);
+                            vscode.commands.executeCommand('setContext', 'keploy.signedOut', false);
+                        } else {
+                            vscode.window.showInformationMessage('Token validation failed!');
+                        }
+                    } catch (error) {
+                        vscode.window.showErrorMessage(`Error during login ${error}`);
                     }
                 } else {
-                    vscode.window.showInformationMessage('Login failed');
+                    // Redirection flow (No token provided)
+                    vscode.window.showInformationMessage('Redirected successfully to VS Code!');
                 }
             }
         }),
