@@ -117,8 +117,6 @@
     </ul>
     {/if}
   </div>
-  
-
 </li>
 
 <style>
@@ -126,9 +124,10 @@
 .list-items {
   display: flex;
   flex-direction: column; /* Ensure children stack vertically */
-  margin: 2px 0;
-  width: "full";
+  padding: 2px 0;
+  width: 100%;
 }
+
 
 .name-icons{
   display: flex;
@@ -157,7 +156,8 @@
   display: flex;
   flex-shrink: 0; /* Prevent the icons from shrinking */
   justify-content:center; /* Align icons to the right */
-  gap: 8px; /* Optional: Add spacing between icons */
+  gap: 3px; /* Optional: Add spacing between icons */
+  margin-right: 10px;
 }
 
 .name{
@@ -200,7 +200,7 @@ button:focus {
   justify-content: space-between; /* Keep the content properly spaced */
 }
 
-/* Icon and name alignment */
+/* Icon and name alignment */ 
 .icon_name {
   display: flex;
   justify-content: space-between; /* Ensures the name and icons are spaced properly */
@@ -214,24 +214,16 @@ button:focus {
 
 .icon_name:hover {
   background-color: var(--vscode-list-hoverBackground); /* Use a lighter background color */
-  color: var(--vscode-hoverForeground); /* Optional: Change text color on hover */
-  opacity: 0.9; /* Slightly reduce opacity for a "light" effect */
 }
 
 /* Styling for child lists */
 /* Child list items */
 .children-list {
-  margin-left: 20px;
-  padding: 0;
   list-style: none;
-  width: 100%;
+  width:100%;
   overflow: visible; /* Ensure children remain visible */
 }
 
-/* Styling for individual child items */
-.children-list > li {
-  padding: 5px 0;
-}
 
 /* Additional spacing for file and folder icons */
 .icon {
