@@ -514,7 +514,7 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    background-color: black;
+    background-color: var(--vscode-background);
     position: relative;
     z-index: 3;
   }
@@ -546,7 +546,7 @@
     left: 50%;
     width: 1rem;
     height: 1rem;
-    background-color: #969390;
+    background-color: var(--vscode-background);
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
