@@ -687,22 +687,19 @@ export function activate(context: vscode.ExtensionContext) {
         watcher.onDidChange((uri) => {
             console.log(`File changed: ${uri.fsPath}`);
             sidebarProvider.postMessage("UpdateTreeStructure");
-            vscode.commands.executeCommand('folderExplorer.Realrefresh');
-
+    
         });
 
         watcher.onDidCreate((uri) => {
             console.log(`File created: ${uri.fsPath}`);
             sidebarProvider.postMessage("UpdateTreeStructure");
-            vscode.commands.executeCommand('folderExplorer.Realrefresh');
-
+    
         });
 
         watcher.onDidDelete((uri) => {
             console.log(`File deleted: ${uri.fsPath}`);
             sidebarProvider.postMessage("UpdateTreeStructure");
-            vscode.commands.executeCommand('folderExplorer.Realrefresh');
-
+    
         });
 
         // Add to subscriptions for cleanup
@@ -732,7 +729,6 @@ export function activate(context: vscode.ExtensionContext) {
             await vscode.window.showTextDocument(document);
     
             // Notify the user
-            vscode.window.showInformationMessage(`Opened file: ${item.fullPath}`);
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to open file: ${item.fullPath}`);
             console.error('Error opening file:', error);
@@ -740,8 +736,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
     
         // Notify the user about the function being played
-        vscode.window.showInformationMessage(`Playing function: ${item.label} from file: ${item.fullPath}`);
-    
+     
         // Execute the play logic
         const fileExtension = path.extname(item.fullPath); // Extract file extension
         const additionalPrompts = ''; // Placeholder for additional prompts
@@ -768,7 +763,6 @@ export function activate(context: vscode.ExtensionContext) {
             await vscode.window.showTextDocument(document);
     
             // Notify the user
-            vscode.window.showInformationMessage(`Opened file: ${item.fullPath}`);
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to open file: ${item.fullPath}`);
             console.error('Error opening file:', error);
@@ -776,7 +770,6 @@ export function activate(context: vscode.ExtensionContext) {
         }
     
         // Notify the user about the function being played
-        vscode.window.showInformationMessage(`Playing function: ${item.label} from file: ${item.fullPath}`);
     
         // Execute the play logic
         const fileExtension = path.extname(item.fullPath); // Extract file extension
@@ -813,17 +806,11 @@ export function activate(context: vscode.ExtensionContext) {
             await vscode.window.showTextDocument(document);
     
             // Notify the user
-            vscode.window.showInformationMessage(`Opened file: ${item.testFilePath}`);
         } catch (error) {
             vscode.window.showErrorMessage(`Failed to open file: ${item.testFilePath}`);
             console.error('Error opening file:', error);
             return;
-        }
-
-
-        vscode.commands.executeCommand('folderExplorer.Realrefresh');
-
-     
+        }  
     });
 
     //defining another function for microsoft to redirect because  functions with same command name cannot be added in package.json

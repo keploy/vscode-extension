@@ -115,7 +115,7 @@ on:mouseout={() => hovered = false}
             style="opacity: {hovered ? 1 : 0}; pointer-events: {hovered ? 'auto' : 'none'};"
       
             >
-            <span class="play-icon-light"></span>
+            <span class="play-icon-light" title="Generate Test File for this File"></span>
           </button>
           {/if}
           
@@ -125,13 +125,13 @@ on:mouseout={() => hovered = false}
         {#if item.itemType == "function" } 
         {#if item.contextValue === 'testFileAvailableBothItem'}
         <button class="icon-button" on:click={()=>findTestFile(item)}>
-          <span class="findFolder_icon_light"></span>
+          <span class="findFolder_icon_light" title="Find Test File for this Function"></span>
         </button>
         {/if}
       <button class="icon-button" on:click={()=>playFunction(item)}    
         style="opacity: {hovered ? 1 : 0}; pointer-events: {hovered ? 'auto' : 'none'};"
         >
-        <span class="play-icon-light"></span>
+        <span class="play-icon-light" title="Generate Tests for this function"></span>
       </button>
       {/if}
       </div>

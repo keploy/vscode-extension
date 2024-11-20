@@ -20,9 +20,9 @@ async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName?:str
                 if (editor) {
                     const document = editor.document;
                     currentFilePath = document.uri.fsPath;
-                    vscode.window.showInformationMessage(`Current opened file: ${currentFilePath}`);
+                    console.log(`Current opened file: ${currentFilePath}`);
                 } else {
-                    vscode.window.showInformationMessage('No file is currently opened.');
+                    console.warn('No file is currently opened.');
                     return;
                 }
     
