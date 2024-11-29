@@ -2,7 +2,7 @@
   "name": "keployio",
   "displayName": "Keploy",
   "description": "Streamline testing with the power of Keploy, directly in your favorite IDE.",
-  "version": "1.0.20",
+  "version": "1.0.25",
   "publisher": "Keploy",
   "icon": "media/logo.png",
   "pricing": "Free",
@@ -57,7 +57,7 @@
     },
     "submenus": [
       {
-        "icon": "$(account)",  
+        "icon": "$(account)",
         "label": "Sign In Options",
         "id": "sign_in_submenu"
       }
@@ -107,7 +107,6 @@
         {
           "command": "keploy.SignInWithMicrosoft",
           "title": "Sign In with Microsoft"
-    
         }
       ]
     },
