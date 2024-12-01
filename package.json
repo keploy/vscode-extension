@@ -70,14 +70,6 @@
           "group": "navigation"
         },
         {
-          "command": "keploy.updateKeploy",
-          "when": "view == Keploy-Sidebar"
-        },
-        {
-          "command": "keploy.getLatestVersion",
-          "when": "view == Keploy-Sidebar"
-        },
-        {
           "command": "keploy.KeployVersion",
           "when": "view == Keploy-Sidebar"
         },
