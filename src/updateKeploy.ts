@@ -93,10 +93,12 @@ export async function downloadAndUpdateDocker(): Promise<void> {
     
 export async function downloadAndInstallKeployBinary(): Promise<void> {
     console.log('Downloading and installing Keploy binary...');
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
 
         try {
-            const curlCmd = `curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh -noRoot`;
+            const keployVersion = await getKeployVersion();
+
+            const curlCmd = `curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh -v ${keployVersion} -noRoot`;
 
             child_process.exec(curlCmd, (error, stdout, stderr) => {
                 if (error) {
