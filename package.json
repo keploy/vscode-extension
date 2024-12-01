@@ -133,18 +133,8 @@
         "title": "Keploy: Unit Test Generation"
       },
       {
-        "command": "keploy.updateKeploy",
-        "title": "Update your Keploy",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
         "command": "keploy.KeployVersion",
         "title": "View Your Keploy Version",
-        "when": "view == Keploy-Sidebar"
-      },
-      {
-        "command": "keploy.getLatestVersion",
-        "title": "Get Latest Version",
         "when": "view == Keploy-Sidebar"
       },
       {
