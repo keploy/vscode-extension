@@ -1,34 +1,20 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
+import { exec } from 'child_process';
 import axios, { AxiosResponse } from 'axios';
 
 
-async function Utg(context: vscode.ExtensionContext) {
+async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName?:string, additional_prompts?:string,testFilesPath?: vscode.Uri[] | undefined ) {
     
     try {
         return new Promise<void>(async (resolve, reject) => {
             try {
-
-                const token  = await context.globalState.get<'string'>('JwtToken');
-                // console.log("token in the utg" , token);
-                let apiResponse:string = '';
-                // vscode.window.showInformationMessage('Attempting to trigger API request...');
-                // if(token){
-                //     apiResponse = (await makeApiRequest(token)) || 'no response';  // Fallback to empty string if null
-                //     if (apiResponse) {
-                //         vscode.window.showInformationMessage(`Received API Response: ${apiResponse}`);
-
-                //         context.globalState.update('apiResponse', apiResponse);
-                //     }
-                // }else{
-                //     console.log("token no defined");
-                // }
-                // Create a terminal named "Keploy Terminal"
-
+                const token = await context.globalState.get<'string'>('JwtToken');
+                let apiResponse: string = '';
                 const terminal = vscode.window.createTerminal("Keploy Terminal");
                 terminal.show();
-
+    
                 const editor = vscode.window.activeTextEditor;
                 let currentFilePath = "";
                 if (editor) {
@@ -39,107 +25,240 @@ async function Utg(context: vscode.ExtensionContext) {
                     vscode.window.showInformationMessage('No file is currently opened.');
                     return;
                 }
-
+    
                 const scriptPath = path.join(context.extensionPath, 'scripts', 'utg.sh');
-
                 const sourceFilePath = currentFilePath;
-                // ensureTestFileExists(sourceFilePath);
-
+    
                 if (!vscode.workspace.workspaceFolders) {
                     vscode.window.showErrorMessage('No workspace is opened.');
                     return;
                 }
-
+    
                 const rootDir = vscode.workspace.workspaceFolders[0].uri.fsPath;
-
-
                 const extension = path.extname(sourceFilePath);
-                let testFilePath: string;
+                const MainFileName = path.basename(sourceFilePath,extension);
+                const ParentDir = path.dirname(sourceFilePath);
+                let testFilePaths: string[] = [];
                 let command: string;
                 let coverageReportPath: string;
-                let testFileContent:string;
-                
+                let testFileContent: string;
+    
                 if (extension === '.js' || extension === '.ts') {
-                    testFilePath = path.join(path.join(rootDir, 'test'), path.basename(sourceFilePath).replace(extension, `.test${extension}`));                   
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    if (testFilesPath && testFilesPath.length > 0) {
+                        // Use only the first path from testFilesPath
+                        testFilePaths = [testFilesPath[0].fsPath];
+                    } else {
+                        const testDir = path.join(rootDir, 'test');
+                
+                        // Check if the test directory exists, if not, create it
+                        if (!fs.existsSync(testDir)) {
+                            fs.mkdirSync(testDir, { recursive: true });
+                        }
+                      
+                        const defaultTestFilePath = path.join(
+                            rootDir, 
+                            'test', 
+                            path.basename(sourceFilePath).replace(extension, `.test${extension}`)
+                        );
+                        testFilePaths.push(defaultTestFilePath);
+                        if (!fs.existsSync(defaultTestFilePath)) {
+                            vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
+                            fs.writeFileSync(
+                                defaultTestFilePath, 
+                                `describe('Dummy test', () => {\n` +
+                                `    it('dummy test', async () => {\n` +
+                                `        expect(true);\n` +
+                                `    });\n` +
+                                `});\n`
+                            );
+                        }
                     }
                     command = `npm test -- --coverage --coverageReporters=text --coverageReporters=cobertura --coverageDirectory=./coverage`;
                     coverageReportPath = "./coverage/cobertura-coverage.xml";
-
+    
                 } else if (extension === '.py') {
-                    const testDir = path.join(rootDir,'test');
-                    testFilePath = path.join(testDir,'test_'+ path.basename(sourceFilePath));
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                    const pythonCommand = await getPythonVersion(); // Get python version (python or python3)
+           
+                    if (testFilesPath && testFilesPath.length > 0) {
+                        // Use only the first path from testFilesPath
+                        testFilePaths = [testFilesPath[0].fsPath];
+                    } else {
+                        const testDir = path.join(rootDir, 'test');
+                
+                        // Check if the test directory exists, if not, create it
+                        if (!fs.existsSync(testDir)) {
+                            fs.mkdirSync(testDir, { recursive: true });
+                        }
+                        
+                        const defaultTestFilePath = path.join(testDir, 'test_' + path.basename(sourceFilePath));
+                        testFilePaths.push(defaultTestFilePath);
+                        
+                        if (!fs.existsSync(defaultTestFilePath)) {
+                            vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
+                            
+                            const testContent = `import sys\n` +
+                                `import os\n\n` +
+                                `parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '${ParentDir}'))\n\n` +
+                                `sys.path.insert(0, parent_dir)\n\n`+
+                                `import ${MainFileName} # checking coverage for file - do not remove\n\n`+
+                                `def test_dummy():\n` +
+                                `    assert True\n`;
+                            
+                            fs.writeFileSync(defaultTestFilePath, testContent);
+                        }
                     }
-                    console.log(sourceFilePath , testFilePath , "python wala");
-                    command = `pytest --cov=${path.basename(sourceFilePath,'.py')} --cov-report=xml:coverage.xml ${testFilePath}`;
+                    command = `${pythonCommand} -m pytest --cov=${path.basename(sourceFilePath, '.py')} --cov-report=xml:coverage.xml ${testFilePaths[0]}`;
                     coverageReportPath = "./coverage.xml";
+    
+                } else if (extension === '.java') {
+                      // **Java (.java) File Handling with Package Name Extraction**
 
-                }else if (extension === '.java') {
-                    const testDir = path.join(rootDir, 'src', 'test', 'java');
-                    const testFileName = path.basename(sourceFilePath).replace('.java', 'Test.java');
-                    testFilePath = path.join(testDir, testFileName);
+    // Define the root test directory for Java tests
+                const testDir = path.join(rootDir, 'src', 'test', 'java');
 
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        fs.writeFileSync(testFilePath, `// Test file for ${testFilePath}`);
+                // Read the source Java file to extract the package name
+                let packageName = 'default'; // Default package name if not found
+                try {
+                 const javaFileContent = fs.readFileSync(sourceFilePath, 'utf-8');
+                const packageLine = javaFileContent.split('\n').find(line => line.trim().startsWith('package '));
+                if (packageLine) {
+                    const parts = packageLine.trim().split(' ');
+                    if (parts.length >= 2) {
+                        packageName = parts[1].replace(';', '').trim(); // Remove trailing semicolon if present
+                        console.log(`🐰 Extracted package name: ${packageName}`);
+                    } else {
+                        console.log('❌ Unable to parse package name. Using default "default".');
                     }
-                    command = `mvn clean test jacoco:report`;
-                    coverageReportPath = "./target/site/jacoco/jacoco.xml";
+                } else {
+                    console.log('❌ No package declaration found. Using default "default".');
+                }
+            } catch (readError) {
+                console.log('❌ Error reading Java source file:', readError);
+            }
+
+            // Convert package name to directory path (e.g., com.example -> com/example)
+            const packagePath = packageName.split('.').join(path.sep);
+            const fullTestDir = path.join(testDir, packagePath);
+
+            // Ensure the test directory exists
+            if (!fs.existsSync(fullTestDir)) {
+                fs.mkdirSync(fullTestDir, { recursive: true });
+                console.log(`🐰 Created test directory: ${fullTestDir}`);
+            }
+
+            // Define the test file name by appending 'Test' to the original class name
+            const originalClassName = path.basename(sourceFilePath, '.java');
+            const testFileName = `${originalClassName}Tests.java`;
+            const testFilePath = path.join(fullTestDir, testFileName);
+            const JavaClassName = `${originalClassName}Tests`
+
+            testFilePaths.push(testFilePath);
+
+            if (!fs.existsSync(testFilePath)) {
+                vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
+
+                // **Create Test File Content with Proper Package and JUnit Imports**
+                const testFileContent = `package ${packageName};\n\n
+                    class ${JavaClassName} {\n
+                }\n`;
+
+                fs.writeFileSync(testFilePath, testFileContent);
+                vscode.window.showInformationMessage(`Created test file: ${testFilePath}`);
+                console.log(`🐰 Created test file with package name: ${testFilePath}`);
+            } else {
+                console.log(`✅ Test file already exists: ${testFilePath}`);
+            }
+
+            // **Set Command and Coverage Report Path for Java**
+            command = `mvn clean test jacoco:report`;
+            coverageReportPath = "./target/site/jacoco/jacoco.xml";
+    
                 } else if (extension === '.go') {
-                    testFilePath = path.join(rootDir, path.basename(sourceFilePath).replace('.go', '_test.go'));
-                    console.log(testFilePath , "in the go block");
-                    if (!fs.existsSync(testFilePath)) {
-                        vscode.window.showInformationMessage("Test doesn't exist", testFilePath);
-                        const uniqueFuncName = path.basename(sourceFilePath).replace('.go', 'Test');
-                        testFileContent = `package main\n\nimport "testing"`;
-                        fs.writeFileSync(testFilePath, testFileContent);                    }
-                    command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
-                    coverageReportPath = "./coverage.xml";
-                } 
-                 else {
+                    // Proceed as before for Go
+                    //todo: have to detect the package name and instead of package main that should go there.
+                   // **Go (.go) File Handling with Package Name Extraction**
+                    
+                   const TestFilePath = path.dirname(currentFilePath);
+                   console.log("TestFilePath is : ", TestFilePath);
+                   const defaultTestFilePath = path.join( TestFilePath,path.basename(sourceFilePath).replace('.go', '_test.go'));
+                   testFilePaths.push(defaultTestFilePath);
+
+                   if (!fs.existsSync(defaultTestFilePath)) {
+                    //    vscode.window.showInformationMessage("Test doesn't exist", defaultTestFilePath);
+                       
+                       // **Extract Package Name from Source File**
+                       let packageName = 'main'; // Default package name if not found
+                       try {
+                           const goFileContent = fs.readFileSync(sourceFilePath, 'utf-8');
+                           const packageLine = goFileContent.split('\n').find(line => line.trim().startsWith('package '));
+                           if (packageLine) {
+                               const parts = packageLine.trim().split(' ');
+                               if (parts.length >= 2) {
+                                   packageName = parts[1].trim();
+                                   console.log(`🐰 Extracted package name: ${packageName}`);
+                               } else {
+                                   console.log('❌ Unable to parse package name. Using default "main".');
+                               }
+                           } else {
+                               console.log('❌ No package declaration found. Using default "main".');
+                           }
+                       } catch (readError) {
+                           console.log('❌ Error reading Go source file:', readError);
+                       }
+
+                       // **Create Test File Content with Extracted Package Name**
+                       testFileContent = `package ${packageName}`;
+                       fs.writeFileSync(defaultTestFilePath, testFileContent);
+                       vscode.window.showInformationMessage(`Created test file with package name: ${defaultTestFilePath}`);
+                   }
+
+                   // **Set Command and Coverage Report Path for Go**
+                   command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
+                   coverageReportPath = "./coverage.xml";
+                } else {
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
                     return;
                 }
 
-                 terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePath}" "${coverageReportPath}" "${command}";`);
+                console.log("additional_prompts" , additional_prompts);
+                if(!additional_prompts){
+                    additional_prompts = "";
+                }
 
-                 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-                 // Add a 5-second delay before calling the API
-                 await delay(5000);
- 
-
-                 try {
-                    if(token){
-                        // console.log("token inside the try block in utg.ts" , token);
+                if(!CodeLensefunctionName){
+                    CodeLensefunctionName = ""
+                }
+    
+                // Adjust the terminal command to include the test file path
+                terminal.sendText(`sh "${scriptPath}" "${sourceFilePath}" "${testFilePaths[0]}" "${coverageReportPath}" "${command}" "${additional_prompts}" "${CodeLensefunctionName}";`);
+    
+                const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+                // Add a 5-second delay before calling the API
+                await delay(5000);
+    
+                try {
+                    if (token) {
                         apiResponse = await makeApiRequest(token) || 'no response';
                         const response = JSON.parse(apiResponse);
                         await context.globalState.update('apiResponse', apiResponse);
-                        if(response.usedCall === response.totalCall ){
-                            await context.globalState.update('SubscriptionEnded' , true);
+                        if (response.usedCall === response.totalCall) {
+                            await context.globalState.update('SubscriptionEnded', true);
                         }
-                    }else{
+                    } else {
                         console.log("token not found");
                     }
                 } catch (apiError) {
                     vscode.window.showErrorMessage('Error during API request: ' + apiError);
                 }
-
+    
                 const disposable = vscode.window.onDidCloseTerminal(eventTerminal => {
                     if (eventTerminal === terminal) {
                         disposable.dispose();
                         resolve();
                     }
-
-               
-    
                 });
-            }  catch (error) {
+            } catch (error) {
                 console.log(error);
                 vscode.window.showErrorMessage('Error occurred Keploy utg: ' + error);
                 reject(error);
@@ -151,6 +270,7 @@ async function Utg(context: vscode.ExtensionContext) {
         throw error;
     }
 }
+
 
 // Separate function for making the API request using axios
 export async function makeApiRequest(token:string): Promise<string | null> {
@@ -220,6 +340,25 @@ async function ensureTestFileExists(sourceFilePath: string , DirectoryPath:strin
     } else {
         vscode.window.showInformationMessage(`Test file already exists: ${testFilePath}`);
     }
+}
+
+async function getPythonVersion(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        exec('python --version', (error, stdout, stderr) => {
+            if (error) {
+                exec('python3 --version', (error3, stdout3, stderr3) => {
+                    if (error3) {
+                        vscode.window.showErrorMessage('Python is not installed.');
+                        reject('Python not found');
+                    } else {
+                        resolve('python3');
+                    }
+                });
+            } else {
+                resolve('python');
+            }
+        });
+    });
 }
 
 export default Utg;

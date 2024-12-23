@@ -9,12 +9,34 @@
   let initialiseConfigButton;
   const vscode = acquireVsCodeApi();
 
+  let isPrecheckDone = false;
+  let projectType = "";
+  function handleProjectTypeDetection(event) {
+    if (event.data && event.data.type === 'projectDetected') {
+      projectType = event.data.projectType;
+      console.log("Project type detected:", projectType);
+      isPrecheckDone = true;
+    }
+  }
+
   onMount(() => {
+    vscode.postMessage({
+      type: 'detectProjectType', 
+    });
     vscode.postMessage({
       type: "openConfigFile",
       value: `/keploy.yml`,
     });
-
+    if (!window.hasProjectTypeListener) {
+      window.addEventListener('message', handleProjectTypeDetection);
+      window.hasProjectTypeListener = true; // Mark that the listener has been added
+    }
+    return () => {
+      if (window.hasProjectTypeListener) {
+        window.removeEventListener('message', handleProjectTypeDetection);
+        window.hasProjectTypeListener = false;
+      }
+    };
   });
 
  
@@ -97,27 +119,39 @@
             id="configCommand"
           />
           <div class="language-icons">
-            <div class="language-icons-row">
-              <div class="icon-info">
-                <span class="golang-icon"></span>
-                <p>go run main.go</p>
+              <div class="language-icons-row">
+                {#if projectType === 'go'}
+                <div class="icon-info">
+                  <span class="golang-icon"></span>
+                  <p>go run main.go</p>
+                </div>
+                {/if}
+
+                {#if projectType === 'javascript'}
+                <div class="icon-info">
+                  <span class="node-icon"></span>
+                  <p>npm run start</p>
+                </div>
+                {/if}
               </div>
-              <div class="icon-info">
-                <span class="node-icon"></span>
-                <p>npm run start</p>
+
+              <div class="language-icons-row">
+                {#if projectType === 'python'}
+                <div class="icon-info">
+                  <span class="python-icon"></span>
+                  <p>Python3 main.py</p>
+                </div>
+                {/if}
+
+                {#if projectType === 'java'}
+                <div class="icon-info">
+                  <span class="java-icon"></span>
+                  <p>java xyz.jar</p>
+                </div>
+                {/if}
               </div>
-            </div>
-            <div class="language-icons-row">
-              <div class="icon-info">
-                <span class="python-icon"></span>
-                <p>Python3 main.py</p>
-              </div>
-              <div class="icon-info">
-                <span class="java-icon"></span>
-                <p>java xyz.jar</p>
-              </div>
-            </div>
           </div>
+
         </div>
       </div>
       
@@ -565,7 +599,8 @@
    display: flex;
    flex-direction: row;
    align-items: start;
-   padding: 5vw;
+
+   padding: 2.5vw 5vw;
    width: 100%; /* Full width of the container */
    justify-content: flex-end; /* Align icons to the left */
  }
@@ -580,7 +615,8 @@
     border: 1px solid #f77b3e;
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: inset 0px 4px 36px 1px rgba(255, 145, 77, 0.8),
+
+    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
               inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
   }
   .text {

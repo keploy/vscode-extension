@@ -5,10 +5,43 @@ import { getNonce } from "./Utils";
 import { startRecording, stopRecording } from "./Record";
 import { startTesting, stopTesting, displayTestCases, displayPreviousTestResults } from "./Test";
 import { existsSync } from "fs";
-import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile } from "./Config";
-import SignIn from "./SignIn";
+import { handleInitializeKeployConfigFile, handleOpenKeployConfigFile,updateKeployYaml,PartialKeployConfig } from "./Config";
 import SignInWithGitHub from "./SignIn";
 import oneClickInstall from './OneClickInstall';
+import * as path from 'path';
+import * as fs from 'fs';
+import { workspace } from 'vscode';
+const yaml = require('js-yaml');
+
+function precheckFunction(): Promise<string> {
+  const workspacePath = workspace.workspaceFolders ? workspace.workspaceFolders[0].uri.fsPath : '';
+
+  return new Promise((resolve, reject) => {
+    try {
+      if (!workspacePath) {
+        return reject('Workspace path not found.');
+      }
+
+      const pomFilePath = path.join(workspacePath, 'pom.xml');
+      const goModFilePath = path.join(workspacePath, 'go.mod');
+      const packageJsonFilePath = path.join(workspacePath, 'package.json');
+
+      let projectType: string = 'python'; // Default project type is python
+      if (fs.existsSync(pomFilePath)) {
+        projectType = 'java';
+      } else if (fs.existsSync(goModFilePath)) {
+        projectType = 'go';
+      } else if (fs.existsSync(packageJsonFilePath)) {
+        projectType = 'javascript';
+      }
+      resolve(projectType);
+    } catch (error) {
+      reject(`Error checking project files: ${(error as Error).message}`);
+    }
+  });
+}
+
+
 
 const recordOptions: vscode.OpenDialogOptions = {
   canSelectFolders: true,
@@ -30,12 +63,52 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   _doc?: vscode.TextDocument;
   _interval?: NodeJS.Timeout; // Store the interval reference
 
-  constructor(private readonly _extensionUri: vscode.Uri ,   private readonly _context: vscode.ExtensionContext) {
+  constructor(private readonly _extensionUri: vscode.Uri, private readonly _context: vscode.ExtensionContext) {
   }
 
-  public postMessage(type: any, value: any) {
-    console.log('postMessage');
-    this._view?.webview.postMessage({ type: type, value: value });
+  public postMessage(value: any) {
+    if (!this._view) {
+      vscode.window.showErrorMessage('Webview is not available');
+      return;
+    }
+  
+    let webviewView = this._view;
+
+    try {
+      console.log('Navigate to ' + value);
+      let sveltePageJs: vscode.Uri;
+      let sveltePageCss: vscode.Uri;
+         if(value == "KeployChatBot"){
+        sveltePageJs = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
+        );
+        sveltePageCss = webviewView.webview.asWebviewUri(
+          vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
+        );
+      }
+        else if (value === 'Config') {
+
+          sveltePageJs = webviewView.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.js")
+          );
+          sveltePageCss = webviewView.webview.asWebviewUri(
+            vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "Config.css")
+          );
+
+      }
+      else {
+        throw new Error("Unsupported navigation value");
+      }
+
+      // Save the language state
+      // vscode.getState().then(() => {
+      //   vscode.setState({ language: data.language });
+      // });
+
+      webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, sveltePageCss, sveltePageJs);
+    } catch (error) {
+      this._view?.webview.postMessage({ type: 'error', value: `Failed to open page ${error}` });
+    }
   }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
@@ -57,8 +130,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
     const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
     const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
+    const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true; 
+    
 
-    console.log("signedIn others  value" , signedIn);
+    console.log("signedIn others  value", signedIn);
 
 
     let scriptUri = webviewView.webview.asWebviewUri(
@@ -70,13 +145,13 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
 
     webviewView.webview.html = this._getHtmlForWebview(webviewView.webview, compiledCSSUri, scriptUri);
- 
-    this._sendApiResponseToWebview(apiResponse,signedIn);
+
+    this._sendApiResponseToWebview(apiResponse, signedIn);
 
 
     // Start sending the updated `apiResponse` to the webview every 3 seconds
     this._startApiResponseUpdates();
-;
+    ;
 
 
 
@@ -87,6 +162,34 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
     });
     webviewView.webview.onDidReceiveMessage(async (data) => {
       switch (data.type) {
+        case "getKeployConfig":{
+          // Load the keploy.yml config file
+          const workspaceFolders = vscode.workspace.workspaceFolders;
+          if (!workspaceFolders) {
+            vscode.window.showErrorMessage('No workspace folder found');
+            return;
+          }
+    
+          const keployFilePath = path.join(workspaceFolders[0].uri.fsPath, 'keploy.yml');
+          
+          if (!fs.existsSync(keployFilePath)) {
+            vscode.window.showErrorMessage('keploy.yml file not found');
+            return;
+          }
+    
+          try {
+            const fileContents = fs.readFileSync(keployFilePath, 'utf8');
+            const config = yaml.load(fileContents); // Parse YAML into JS object
+            
+            // Send the config data back to the webview
+            webviewView.webview.postMessage({
+              type: 'keployConfig',
+              config: config,
+            });
+          } catch (err) {
+            vscode.window.showErrorMessage(`Error reading keploy.yml: ${err}`);
+          }
+        }
         case "onInfo": {
           if (!data.value) {
             return;
@@ -141,7 +244,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
             console.log('Start Recording button clicked');
 
             const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_record_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.zsh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_record_script.sh");
             const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "record_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
@@ -190,7 +293,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           try {
             console.log('Start Testing button clicked');
             const bashScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "bash", "keploy_test_script.sh");
-            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_test_script.zsh");
+            const zshScript = vscode.Uri.joinPath(this._extensionUri, "scripts", "zsh", "keploy_test_script.sh");
             const logfilePath = vscode.Uri.joinPath(this._extensionUri, "scripts", "logs", "test_mode.log");
             let wslscriptPath = bashScript.fsPath;
             let wsllogPath = logfilePath.fsPath;
@@ -289,7 +392,16 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
               sveltePageCss = webviewView.webview.asWebviewUri(
                 vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployHome.css")
               );
-            } else {
+            }else if(data.value = "KeployChatBot"){
+              sveltePageJs = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.js")
+              );
+              sveltePageCss = webviewView.webview.asWebviewUri(
+                vscode.Uri.joinPath(this._extensionUri, "out", "compiled", "KeployChat.css")
+              );
+    
+            }
+            else {
               throw new Error("Unsupported navigation value");
             }
 
@@ -307,16 +419,35 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 
         case "signinwithstate": {
           try {
-              await vscode.commands.executeCommand('keploy.SignInWithOthers');
+            await vscode.commands.executeCommand('keploy.SignInWithOthers');
           } catch (error) {
-              console.error('Error while signing in:', error);
-              vscode.window.showErrorMessage('Failed to sign in. Please try again.');
+            console.error('Error while signing in:', error);
+            vscode.window.showErrorMessage('Failed to sign in. Please try again.');
           }
           break;
       }
+      //cannot make it a case of generate unit test as we will taking the input from the user and keploy gen with additional prompts will from a cta hence making a new case for it.
+        case "keployGenWithAdditionalPrompts":{
+          try{
+            const additional_prompts = data.prompt;
+            // const editor = vscode.window.activeTextEditor;
+         
+            console.log("additional prompts and uri: ", additional_prompts );
+            await vscode.commands.executeCommand('keploy.runAdditionalPrompts',additional_prompts);
+          }catch(error){
+            console.error("Error executing keploy.runAdditionalPrompts command:", error);
+          }
+        }
+        case "progressStatus":{
+          if(progressBarVisible == true && data.value == "false"){
+            console.log("progressbarVisible and data value: ",progressBarVisible,data.value);
+            await this._context.globalState.update("progressVisible", false);
+          }
 
-        case "openLink":{
-      
+          break;
+        }
+        case "openLink": {
+
           try {
             console.log("Opening external link: " + data.url);
             vscode.env.openExternal(vscode.Uri.parse(data.url));
@@ -427,42 +558,65 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           }
           break;
         }
-        // case "signIn": {
-        //   if (!data.value) {
-        //     return;
-        //   }
-        //   try {
-        //     console.log('Signing in...');
-        //     const response: any = await SignIn();
-        //     console.log('Response from SignIn', response);
-        //   } catch (error) {
-        //     this._view?.webview.postMessage({ type: 'error', value: `Failed to sign in ${error}` });
-        //   }
-        //   break;
-        // }
+        case "detectProjectType": {
+          try {
+            console.log('Detecting Project Type...');
+            precheckFunction()
+              .then(projectType => {
+                console.log("Project type detected:", projectType);
+                this._view?.webview.postMessage({ type: 'projectDetected', projectType: projectType });
+              })
+              .catch(error => {
+                console.error("Error detecting project type:", error);
+              });
+          } catch (error) {
+            console.log('Error in detecting project type', error);
+          }
+          break;
+        }
+        
+        case "updateKeployConfig": {
+          // Collect the updated data from the UI
+          const newConfig: PartialKeployConfig = {
+            appName: data.config.appName,
+            command: data.config.command,
+            containerName: data.config.containerName,
+            networkName: data.config.networkName,
+            test: {
+              delay: data.config.test?.delay,
+              apiTimeout: data.config.test?.apiTimeout,
+              mongoPassword: data.config.test?.mongoPassword,
+            },
+          };
+
+          // Call the function to update the YAML config
+          await updateKeployYaml(newConfig);
+          break;
+        }
 
       }
 
     });
+    
   }
-   private _startApiResponseUpdates() {
+  private _startApiResponseUpdates() {
     this._interval = setInterval(() => {
       const apiResponse = this._context.globalState.get<string>('apiResponse') || "No response";
       const signedIn = this._context.globalState.get<string>('SignedOthers') || "false";
 
-      this._sendApiResponseToWebview(apiResponse , signedIn);
+      this._sendApiResponseToWebview(apiResponse, signedIn);
     }, 3000); // 3 seconds
   }
 
   // Stop the interval when the webview is no longer active
   public dispose() {
-    if (this._interval) {
+    if (this._interval) { 
       clearInterval(this._interval);
     }
   }
 
   // Helper function to send `apiResponse` to the webview
-  private _sendApiResponseToWebview(apiResponse: string , signedIn:string) {
+  private _sendApiResponseToWebview(apiResponse: string, signedIn: string) {
     if (this._view) {
       // console.log("api response withing 3 seconds" , apiResponse);
       this._view.webview.postMessage({
@@ -474,6 +628,15 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
         type: 'signedIn',
         value: signedIn,
       });
+
+      const progressBarVisible = this._context.globalState.get<boolean>('progressVisible') ?? true;
+
+
+      this._view.webview.postMessage({
+        type: 'progressBarStatus',
+        value: progressBarVisible,
+      });
+
     }
   }
   public revive(panel: vscode.WebviewView) {

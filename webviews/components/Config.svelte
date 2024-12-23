@@ -1,10 +1,11 @@
 <script>
   import { onMount } from "svelte";
 
-let showSettings = false;
-
+  let showSettings = false;
+  let isLoading = true; // Loading state
   const vscode = acquireVsCodeApi();
   let userSignedIn = false;
+  const loader = document.getElementById("loader");
 
   function navigateToKeploy() {
     vscode.postMessage({
@@ -12,26 +13,34 @@ let showSettings = false;
     });
   }
 
-
   onMount(() => {
     // Add event listener for messages from the VSCode extension
     window.addEventListener("message", (event) => {
       const message = event.data;
-     
-      if(message.type === "signedIn"){
+
+      if (message.type === "signedIn") {
         const signedInResponse = message.value;
-          if(signedInResponse == "false"){
-              userSignedIn = false;
-              // console.log("Progress Bar is not Visible")
-          }else{
-            // console.log("Progress Bar is  Visible")
-            userSignedIn = true;
-          }
+        if (signedInResponse === "false") {
+          userSignedIn = false;
+        } else {
+          userSignedIn = true;
+        }
+        isLoading = false; // Set loading to false after receiving message
       }
     });
+
+    setTimeout(() => {
+      if (isLoading) {
+        isLoading = false; 
+      }
+    }, 3000); 
   });
 
   function handleTestSelection(testType) {
+    if (isLoading) {
+      // Prevent action when still loading
+      return;
+    }
 
     if(testType != "Unit Testing"){
       if(userSignedIn){
@@ -82,6 +91,9 @@ let showSettings = false;
         on:click={() => handleTestSelection("Integration Testing")}
         >Generate Integration tests</button
       >
+      {#if isLoading}
+      <div class="loader" id="loader"></div>
+    {/if}
     </div>
   </div>
 </div>
@@ -122,11 +134,12 @@ let showSettings = false;
     border: 1px solid #f77b3e;
     border-radius: 5px;
     transition: all 0.3s ease;
-    box-shadow: inset 0px 4px 36px 1px rgba(255, 145, 77, 0.8),
+    box-shadow: inset 0px 4px 20px 1px rgba(255, 145, 77, 0.8),
+
               inset 0px 4px 4px 0px rgba(255, 153, 0, 0.8);
   }
   .logo {
-    height: 40px;
+    height: 65px;
     vertical-align: top;
   }
 
@@ -162,7 +175,8 @@ let showSettings = false;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+
+    padding: 20px;
   }
 
   .header {
@@ -172,35 +186,33 @@ let showSettings = false;
     justify-content: center;
   }
 
-  .logo {
-    height: 14vw;
-  }
-  @media screen and (max-width: 475px) {
 
-}
   .welcome-heading {
-    font-size: 8vw; 
+    font-size: 40px; 
     font-weight: bold;
     padding: 15px 0;
   }
 
   .body-text {
-    flex: 0 0 20%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-bottom: 5%;
-  }
-  .body-text p:first-child {
-    font-size: 6vw;
-  }
+  flex: 0 0 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 5%;
+}
 
-  .body-text p:nth-child(2) {
-    margin-top: 40px;
-    font-size: 5vw;
-    line-height: 1.5;
-  }
+.body-text p:first-child {
+  font-size: 28px;
+  font-weight: bold; /* Make the first line bold for contrast */
+}
 
+
+.body-text p:nth-child(2) {
+  margin-top: 40px;
+  font-size: 22px;
+  line-height: 1.5;
+  font-weight: 300 !important; /* Lighter font weight for the second line */
+}
   .highlight {
     background: linear-gradient(90deg, #ffb388 0%, #ff5c00 50%, #f76b1c 100%);
     -webkit-background-clip: text;
@@ -213,15 +225,15 @@ let showSettings = false;
     flex-direction: column;
     justify-content: initial;
     align-items: center;
-    margin-top: 20px;
+    margin: 20px 0px;
   }
 
 
   .btn {
     font-family: 'Montserrat', sans-serif; 
-    width: 65vw; 
-    font-size: 4vw; 
-    padding: 3vw;
+    width: 300px; 
+    font-size: 20px; 
+
     margin: 20px 0;
     text-decoration: none;
     color: white;
@@ -232,12 +244,41 @@ let showSettings = false;
     text-align: center;
     transition: all 0.3s ease;
     box-shadow: 0 0 20px rgba(255, 145, 77, 0.8); /* Glowing shadow effect based on #ff914d */
+
   }
   .logo-header{
     display: flex;
     justify-content: flex-start;
     width: 100vw;
     margin-left: 9vw;
+  }
+  .btn:hover {
+  box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */
+  transform: scale(1.1); 
+}
+@media screen and (max-width: 480px) {
+  .welcome-heading {
+    font-size: 8vw; 
+  }
+  .logo-header{
+    width: 100vw;
+    margin-left: 9vw;
+  }
+  .btn {
+    width: 65vw; 
+    font-size: 4vw; 
+    padding: 3vw;
+  }
+  .body-text p:first-child {
+  font-size: 6vw;
+}
+
+.body-text p:nth-child(2) {
+  font-size: 4.5vw;
+}
+.logo {
+    height: 14vw;
+  }
   }
   .btn:hover {
   box-shadow: 0 0 20px rgba(255, 153, 0, 1), 0 0 40px rgba(255, 153, 0, 0.5);  /* Stronger glow on hover */

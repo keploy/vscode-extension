@@ -59,3 +59,32 @@ First Release for Vs Code Extension.
 ## [1.0.13]
 
 - Separate release for arm and amd user
+
+## [1.0.14]
+
+- Back button refactored for better User Experience
+
+## [1.0.15]
+
+- Reverting to universal release
+
+## [1.0.16]
+- Enhanced UI for updating the config file.
+- Added support for a chatbot to provide additional prompts.
+- Improved Keploy binary update experience.
+- Enhanced signup/sign-in experience for users.
+- Added support for new imports and installations of new libraries.
+
+## [1.0.17]
+- Enhanced path detection of test in Javascript, Python and Go.
+- Increase file size limit to 1MB.
+
+## [1.0.18]
+- Enhances path detection for python
+- Optimised keploy config screen
+
+## [1.0.19]
+- Enhanced UT generation
+
+## [1.0.20]
+- Added support to create unit tests for individual function. 

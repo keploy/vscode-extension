@@ -4,3 +4,5 @@ node_modules
 intellijpublish.yml
 *.log
 out
+coverage
+keploy-logs.txt

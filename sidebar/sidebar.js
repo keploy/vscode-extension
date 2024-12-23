@@ -42,6 +42,7 @@ let actionStarted = false;
 const navigateToConfigButton = document.getElementById('backtoHome');
 const backtoHome = document.getElementById('backArrow');
 const selectedIconButton = document.getElementById('selectedIconNumber');
+const ProgressStepperContainer = document.getElementById('progress-stepper');
 let FilePath = "";
 
 //cleanup required
@@ -131,6 +132,7 @@ if (rerunTestSuiteButton) {
 
 if(backConfigbutton){
   backConfigbutton.addEventListener('click',async () =>{
+    console.log("back button clicked man." , selectedIconButton.textContent);
     if(selectedIconButton.textContent == '1'){
       console.log("selectedIconButton: " , selectedIconButton.textContent );
       console.log("backconfig button clicked")
@@ -394,6 +396,8 @@ document.addEventListener('ciCdStepClick', function (e) {
       type: "openLink",
       url: "https://keploy.io/docs", // Replace this with the URL you want to navigate to
     });// Example of opening a link
+
+    
   }
 });
 
@@ -407,13 +411,42 @@ document.addEventListener('addUsersClick', function (e) {
       type: "openLink",
       url: "https://app.keploy.io", // Replace this with the URL you want to navigate to
     });// Example of opening a link
+
+    vscode.postMessage({
+      type:"progressStatus", 
+      value:"false"
+    })
   }
 });
+
+// Listen for custom events from the Svelte component
+document.addEventListener('getKeployConfigForSvelte', () => {
+  vscode.postMessage({
+    type: 'getKeployConfig',
+  });
+});
+
+
+document.addEventListener('updateKeployConfig', (e) => {
+  const config = e.detail.config;
+  vscode.postMessage({
+    type: 'updateKeployConfig',
+    config: config,
+  });
+});
+
 
 // Handle messages sent from the extension
 window.addEventListener('message', event => {
   const message = event.data;
-  // console.log("message", message);
+  console.log("message", message);
+
+  if(message.type === "progressBarStatus"){
+    if(message.value == false){
+      ProgressStepperContainer.style.display = "none";
+    }
+  }
+
 
   if (message.type === 'navigateToHome') {
     vscode.postMessage({
@@ -442,6 +475,9 @@ window.addEventListener('message', event => {
   }
   else if (message.type === 'testcaserecorded') {
     console.log("message.textContent", message.textContent);
+    if(stopRecordingButton){
+      stopRecordingButton.click();
+    }
     recordStatus.style.display = "block";
     recordedTestCasesDiv.style.display = "grid";
 
