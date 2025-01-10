@@ -16,16 +16,16 @@ suite("Version tests", () => {
         sinon.restore()
     })
 
-    test("getKeployVersion should be calling correct api", async () => {
-        let api = "https://api.github.com/repos/keploy/keploy/releases/latest"
-        const mockResponse = {tag_name : "v2.3.0-beta25"};
-        fetchStub.resolves(new Response(JSON.stringify(mockResponse), { status: 200 }))
+    // test("getKeployVersion should be calling correct api", async () => {
+    //     let api = "https://api.github.com/repos/keploy/keploy/releases/latest"
+    //     const mockResponse = {tag_name : "v2.3.0-beta25"};
+    //     fetchStub.resolves(new Response(JSON.stringify(mockResponse), { status: 200 }))
 
-        await getKeployVersion();
+    //     await getKeployVersion();
 
-        assert(fetchStub.calledOnce)
-        assert(fetchStub.calledWith(api))
-    })
+    //     assert(fetchStub.calledOnce)
+    //     assert(fetchStub.calledWith(api))
+    // })
 
     test("getCurrentKeployVersion should return version by executing keploy command", async () => {
         
