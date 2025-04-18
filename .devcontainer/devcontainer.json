@@ -1,0 +1,20 @@
+{
+  "name": "mansar-portal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^13.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "msal": "^2.19.0"         /* pour Azure AD B2C */
+  }
+}{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {}
+}
