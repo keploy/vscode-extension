@@ -29,26 +29,6 @@ async function fetchGitHubEmail(accessToken: string): Promise<string | null> {
         return null;
     }
 }
-async function starGitHubRepo(accessToken: string, owner: string, repo: string): Promise<void> {
-    console.log('Starring the repository:', owner, repo, accessToken);
-    try {
-        const response = await axios.put(`https://api.github.com/user/starred/${owner}/${repo}`, null, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Accept': 'application/vnd.github+json',
-                'Content-Length': '0',
-            },
-        });
-
-        if (response.status === 204) {
-            console.log(`Successfully starred the repository`);
-        } else {
-            throw new Error(`Failed to star repository. GitHub API responded with status ${response.status}`);
-        }
-    } catch (error) {
-        vscode.window.showErrorMessage(`Failed to star repository: ${error}`);
-    }
-}
 
 export async function getGitHubAccessToken() {
     try {
@@ -60,10 +40,7 @@ export async function getGitHubAccessToken() {
 
             // Fetch the user's email
             const email = await fetchGitHubEmail(accessToken);
-            const owner = 'keploy';
-            const repo = 'keploy';   
-            await starGitHubRepo(accessToken, owner, repo);
-
+        
             return { accessToken, email };
         } else {
             vscode.window.showErrorMessage('Failed to get GitHub session.');
