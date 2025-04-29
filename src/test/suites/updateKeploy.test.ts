@@ -32,16 +32,19 @@ suite("updateKeploy Test", function () {
         execStub.restore();
     });
 
+    afterEach(() => {
+        sinon.restore();
+    });
+
     test('downloading and updating binary should execute correct command with exec', async () => {
         sinon.stub(process, 'platform').value('linux');
+        sinon.stub(version, 'getKeployVersion').resolves('v2.3.0-beta25');
 
-        const curlCmd = `curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh -noRoot`;
+        const curlCmd = `curl --silent -L https://keploy.io/install.sh -o /tmp/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh -v v2.3.0-beta25 -noRoot`;
 
-        const promise = updateKeploy.downloadAndInstallKeployBinary();
+        await updateKeploy.downloadAndInstallKeployBinary();
 
         assert.strictEqual(execStub.calledOnceWith(curlCmd), true);
-
-        await promise;
     });
 
     test('Download from docker should create a terminal and run the curl command on non-Windows platform', async () => {

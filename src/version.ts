@@ -1,17 +1,19 @@
 
 import { execShell } from './execShell';
+import * as path from 'path';
+import * as fs from 'fs';
 export async function getKeployVersion() {
-    // GitHub repository details
-    const repoOwner = "keploy";
-    const repoName = "keploy";
+    const packagePath = path.resolve(__dirname, '../package.json');
+    const packageContent = fs.readFileSync(packagePath, 'utf-8');
+    const packageData = JSON.parse(packageContent);
 
-    const apiURL = `https://api.github.com/repos/${repoOwner}/${repoName}/releases/latest`;
+    const keployVersionJsonPath = path.resolve(__dirname, '../keploy-version.json');
+    const keployVersionJsonContent = fs.readFileSync(keployVersionJsonPath, 'utf-8');
+    const keployVersionJson = JSON.parse(keployVersionJsonContent);
 
-    // Get the latest release
-    const response = await fetch(apiURL);
-    const data: any = await response.json();
-    const latestVersion = data.tag_name;
-    return latestVersion;
+    const keployVersion = keployVersionJson[`${packageData.version}`];
+
+    return keployVersion;
 }
 
 export async function getCurrentKeployVersion() {
@@ -24,7 +26,7 @@ export async function getCurrentKeployVersion() {
     output = await execShell('/usr/local/bin/keploybin --version');
         }catch(error){
             console.log("Error Fetching version With Absolute path " + error);
-            throw error;
+            return '';
         }
     }
     console.log('output:', output);
