@@ -84,3 +84,12 @@ fi
 # Run the keploy command
 # echo "Running: $keployCommand"
 eval $keployCommand
+
+# Remove the dummy test
+if [ "$extension" = "py" ]; then
+  sed -i '/def test_dummy():/,+1d' "$testFilePath"
+fi
+
+if [ "$extension" = "js" ] || [ "$extension" = "ts" ]; then
+  sed -i '/describe('\''Dummy test'\'', () => {/,+4d' "$testFilePath"
+fi
