@@ -215,6 +215,53 @@ async function Utg(context: vscode.ExtensionContext , CodeLensefunctionName?:str
                    // **Set Command and Coverage Report Path for Go**
                    command = `go test -v ./... -coverprofile=coverage.out && gocov convert coverage.out | gocov-xml > coverage.xml`;
                    coverageReportPath = "./coverage.xml";
+                } else if (extension === '.rs') {
+                    // For Rust files, tests are typically in the same file or in a tests module
+                    if (testFilesPath && testFilesPath.length > 0) {
+                        testFilePaths = [testFilesPath[0].fsPath];
+                    } else {
+                        // Check if the file already has a tests module
+                        const fileContent = fs.readFileSync(sourceFilePath, 'utf-8');
+                        const hasTestModule = fileContent.includes('#[cfg(test)]');
+                        
+                        if (!hasTestModule) {
+                            // Append test module to the source file
+                            const testModule = `
+
+                                #[cfg(test)]
+                                mod tests {
+                                    use super::*;
+
+                                    #[test]
+                                    fn test_dummy() {
+                                        assert!(true);
+                                    }
+                                }
+                                `;
+                            fs.appendFileSync(sourceFilePath, testModule);
+                            vscode.window.showInformationMessage('Added test module to the source file');
+                        }
+                        
+                        testFilePaths.push(sourceFilePath);
+                    }
+
+                    // Install required dependencies if not present
+                    if (!fs.existsSync(path.join(rootDir, 'Cargo.toml'))) {
+                        vscode.window.showErrorMessage('Cargo.toml not found. Please ensure this is a Rust project.');
+                        return;
+                    }
+
+                    // Check if grcov is installed
+                    exec('cargo install grcov', (error) => {
+                        if (error) {
+                            vscode.window.showErrorMessage('Failed to install grcov. Please install it manually: cargo install grcov');
+                        }
+                    });
+
+                    // Command to run tests with coverage using grcov
+                    command = `CARGO_INCREMENTAL=0 RUSTFLAGS="-Cinstrument-coverage" LLVM_PROFILE_FILE="cargo-test-%p-%m.profraw" cargo test && grcov . --binary-path ./target/debug/deps/ -s . -t cobertura --branch --ignore-not-existing --ignore "/*" -o coverage.xml`;
+                    coverageReportPath = "./coverage.xml";
+
                 } else {
                     vscode.window.showErrorMessage(`Unsupported file type: ${extension}`);
                     return;

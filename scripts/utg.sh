@@ -51,6 +51,38 @@ if [ "$extension" = "go" ]; then
   export PATH=$PATH:$(go env GOPATH)/bin
 fi
 
+if [ "$extension" = "rs" ]; then
+  echo "Setting up Rust testing environment..."
+  
+  # Check if rustup is installed
+  if ! command -v rustup &> /dev/null; then
+    echo "rustup is not installed. Please install Rust toolchain first."
+    exit 1
+  fi
+  
+  # Check if cargo-llvm-cov is installed
+  if ! cargo install --list | grep -q "cargo-llvm-cov"; then
+    echo "Installing cargo-llvm-cov..."
+    cargo install cargo-llvm-cov
+  else
+    echo "cargo-llvm-cov is already installed."
+  fi
+  
+  # Check if the project has a Cargo.toml file
+  if [ ! -f "Cargo.toml" ]; then
+    echo "No Cargo.toml found. Please ensure you're in a Rust project directory."
+    exit 1
+  fi
+  
+  # Install llvm-tools-preview component if not already installed
+  rustup component add llvm-tools-preview
+  
+  # Set default test command if none provided
+  if [ -z "$command" ]; then
+    command="cargo llvm-cov --html --output-dir \"$coverageReportPath\""
+  fi
+fi
+
 # Construct the keploy gen command
 if [ "$extension" = "java" ]; then
   keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
@@ -61,6 +93,15 @@ if [ "$extension" = "java" ]; then
     --llmBaseUrl \"https://api.keploy.io\" \
     --max-iterations \"5\" \
     --coverageFormat jacoco"
+elif [ "$extension" = "rs" ]; then
+  keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
+    --test-file-path=\"$testFilePath\" \
+    --test-command=\"$command\" \
+    --coverage-report-path=\"$coverageReportPath\" \
+    --llmApiVersion \"2024-02-01\" \
+    --llmBaseUrl \"https://api.keploy.io\" \
+    --max-iterations \"5\" \
+    --coverageFormat lcov"
 else
   keployCommand="keploy gen --source-file-path=\"$sourceFilePath\" \
     --test-file-path=\"$testFilePath\" \
@@ -82,5 +123,4 @@ if [ -n "$CodeLensefunctionName" ] && [ "$CodeLensefunctionName" != " " ]; then
 fi
 
 # Run the keploy command
-# echo "Running: $keployCommand"
 eval $keployCommand
